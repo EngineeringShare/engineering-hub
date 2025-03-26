@@ -1,0 +1,25 @@
+<input type="text" id="search-input" placeholder="Search...">
+<ul id="results-container"></ul>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/1.9.2/simple-jekyll-search.min.js"></script>
+<script>
+  SimpleJekyllSearch({
+    searchInput: document.getElementById('search-input'),
+    resultsContainer: document.getElementById('results-container'),
+    json: '/search.json',
+    searchResultTemplate: '<li><a href="{url}">{title}</a></li>',
+    noResultsText: 'No results found',
+    limit: 10
+  })
+</script>
+Generate search.json automatically
+If you're using Jekyll, add this to _config.yml:
+
+yaml
+Copy
+Edit
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-json-feed
