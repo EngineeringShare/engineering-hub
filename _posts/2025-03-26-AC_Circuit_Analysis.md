@@ -9,9 +9,10 @@ blah blah blah
 
 ## Presentation:
 
-<div style="max-width: 100%; overflow: hidden;">
-  <iframe src="https://EngineeringShare.github.io/engineering-hub/presentations/AC-Circuit-Analysis/AC Circuit Analysis.pdf"     width="100%" height="600px" style="max-width: 100%;">
-  </iframe>
+<div style="position: relative; width: 100%; height: 0; padding-top: 75%;">
+    <iframe src="/assets/presentations/example.pdf" 
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;">
+    </iframe>
 </div>
 
 [🏠 Home]("https://engineeringshare.github.io/engineering-hub")
