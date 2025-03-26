@@ -9,7 +9,7 @@ blah blah blah
 
 ## Presentation:
 
-<iframe src="https://EngineeringShare.github.io/engineering-hub/presentations/AC-Circuit-Analysis/AC Circuit Analysis.pdf" width="104%" height="600px">
+<iframe src="https://EngineeringShare.github.io/engineering-hub/presentations/AC-Circuit-Analysis/AC Circuit Analysis.pdf" width="100%" height="600px">
 </iframe>
 
 [🏠 Home]("https://engineeringshare.github.io/engineering-hub")
