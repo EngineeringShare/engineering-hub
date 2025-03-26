@@ -3,7 +3,7 @@ title: "AC Circuit Analysis"
 date: 2025-03-26
 ---
 
-[🏠 Home]('https://engineeringshare.github.io/engineering-hub/')
+[🏠 Home]('index.md')
 
 
 ## Intro:
