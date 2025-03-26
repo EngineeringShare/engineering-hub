@@ -15,3 +15,6 @@ blah blah blah
 </iframe>
 
 <object data="https://EngineeringShare.github.io/engineering-hub/presentations/AC-Circuit-Analysis/AC Circuit Analysis.pdf" width="1000" height="1000" type='application/pdf'></object>
+
+<embed src="https://EngineeringShare.github.io/engineering-hub/presentations/AC-Circuit-Analysis/AC Circuit Analysis.pdf" width="500" height="375" 
+ type="application/pdf">
