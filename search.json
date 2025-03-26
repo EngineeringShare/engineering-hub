@@ -3,7 +3,7 @@ layout: null
 permalink: /search.json
 ---
 [
-  {% for post in site.posts %}
+  {% for post in site.pages%}
     {
       "title": "{{ post.title | escape }}",
       "url": "{{ post.url | relative_url }}",
