@@ -3,6 +3,10 @@ title: "AC Circuit Analysis"
 date: 2025-03-26
 ---
 
+## Intro:
+
+blah blah blah
+
 ## Presentation:
 
 [📄 View the PDF](https://github.com/EngineeringShare/engineering-hub/blob/main/presentations/AC-Circuit-Analysis/AC%20Circuit%20Analysis.pdf)
