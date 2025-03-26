@@ -2,6 +2,14 @@
 title: "AC Circuit Analysis"
 date: 2025-03-26
 ---
+<nav style="background: #333; padding: 10px;">
+  <a href="{{ '/' | relative_url }}" style="color: white; text-decoration: none; font-size: 18px; padding: 10px;">
+  🏠 Home
+  </a>
+</nav>
+
+
+
 
 ## Intro:
 
