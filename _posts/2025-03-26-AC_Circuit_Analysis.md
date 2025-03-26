@@ -3,9 +3,6 @@ title: "AC Circuit Analysis"
 date: 2025-03-26
 ---
 
-[🏠 Home]("https://engineeringshare.github.io/engineering-hub")
-
-
 ## Intro:
 
 blah blah blah
@@ -14,3 +11,5 @@ blah blah blah
 
 <iframe src="https://EngineeringShare.github.io/engineering-hub/presentations/AC-Circuit-Analysis/AC Circuit Analysis.pdf" width="100%" height="600px">
 </iframe>
+
+[🏠 Home]("https://engineeringshare.github.io/engineering-hub")
