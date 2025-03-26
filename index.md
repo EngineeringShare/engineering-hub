@@ -1,6 +1,7 @@
 ---
 title: "Homepage"
 date: 26-03-2025
+layout: slate
 ---
 
 ## Welcome
