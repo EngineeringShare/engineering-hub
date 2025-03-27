@@ -4,6 +4,7 @@ description: Collection of class materials and activities by James Absolom
 remote_theme: pages-themes/primer@v0.6.0
 
 plugins:
+  - search.json
   - jekyll-feed
   - jekyll-seo-tag
   - jekyll-sitemap
