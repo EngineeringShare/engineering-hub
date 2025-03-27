@@ -1,7 +1,8 @@
 ---
 title: "Resistors, Capacitors and Inductors in AC Circuits"
 date: 2025-03-27
-tags: ["electronics", "AC", "Sinusoidal", "Power", "Circuit", "RLC", "Resitor", "Capacitor", "Inductor", "Impedance"]
+tags: ["Sinusoidal", "Power", "Circuit", "RLC", "Resitor", "Capacitor", "Inductor", "Impedance"]
+subject: ["electronics", "AC"]
 ---
 
 ## Intro:
