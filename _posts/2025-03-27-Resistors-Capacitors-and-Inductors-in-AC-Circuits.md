@@ -1,7 +1,7 @@
 ---
 title: "Resistors, Capacitors and Inductors in AC Circuits"
 date: 2025-03-27
-tags: ["electronics", "AC", "Sinusoidal", "Power", "Circuit", "RLC", "Resitor", "Capacitor", "Inductor"]
+tags: ["electronics", "AC", "Sinusoidal", "Power", "Circuit", "RLC", "Resitor", "Capacitor", "Inductor", "Impedance"]
 ---
 
 ## Intro:
@@ -17,7 +17,7 @@ blah blah blah
 </div>
 
 ## Other Materials:
-* [Youtube: AC Analysis: Series/Parallel RLC Circuit](https://youtu.be/s3Daf4GC_u4?si=kmnGRi-z6lBIl9oi)
+* [Impedance](https://www.youtube.com/watch?v=8D9XPDNY3Mk)
 * [Youtube: Series RLC Circuits, Resonant Frequency, Inductive Reactance & Capacitive Reactance - AC Circuits](https://www.youtube.com/watch?v=2GvqQvohP2k)
 
 ## ---
