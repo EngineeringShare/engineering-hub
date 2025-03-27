@@ -17,7 +17,7 @@ blah blah blah
 </div>
 
 ## Other Materials:
-* [Impedance](https://www.youtube.com/watch?v=8D9XPDNY3Mk)
+* [Youtube: Impedance](https://www.youtube.com/watch?v=8D9XPDNY3Mk)
 * [Youtube: Series RLC Circuits, Resonant Frequency, Inductive Reactance & Capacitive Reactance - AC Circuits](https://www.youtube.com/watch?v=2GvqQvohP2k)
 
 ## ---
