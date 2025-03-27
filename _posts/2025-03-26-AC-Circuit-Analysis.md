@@ -16,6 +16,7 @@ blah blah blah
 </div>
 
 ## Other Materials:
-[AC Analysis: Series/Parallel RLC Circuit](https://youtu.be/s3Daf4GC_u4?si=kmnGRi-z6lBIl9oi)
+[Youtube: AC Analysis: Series/Parallel RLC Circuit](https://youtu.be/s3Daf4GC_u4?si=kmnGRi-z6lBIl9oi)
+[Youtube: Series RLC Circuits, Resonant Frequency, Inductive Reactance & Capacitive Reactance - AC Circuits](https://www.youtube.com/watch?v=2GvqQvohP2k)
 
 <a href="https://engineeringshare.github.io/engineering-hub">🏠 Home</a>
