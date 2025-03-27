@@ -11,7 +11,7 @@ blah blah blah
 ## Presentation:
 
 <div style="position: relative; width: 100%; height: 0; padding-top: 75%;">
-    <iframe src="https://EngineeringShare.github.io/engineering-hub/presentations/AC-Circuit-Analysis/AC Circuit Analysis.pdf" 
+    <iframe src="https://EngineeringShare.github.io/engineering-hub/presentations/AC-Circuit-Analysis/AC Components.pdf" 
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;">
     </iframe>
 </div>
