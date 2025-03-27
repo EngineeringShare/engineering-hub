@@ -15,4 +15,7 @@ blah blah blah
     </iframe>
 </div>
 
+## Other Materials:
+[AC Analysis: Series/Parallel RLC Circuit](https://youtu.be/s3Daf4GC_u4?si=kmnGRi-z6lBIl9oi)
+
 <a href="https://engineeringshare.github.io/engineering-hub">🏠 Home</a>
