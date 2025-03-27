@@ -1,7 +1,7 @@
 ---
-title: "AC Circuit Analysis"
+title: "RLC Circuit Analysis"
 date: 2025-03-26
-tags: ["electronics", "AC", "Sinusoidal", "Power", "Circuit"]
+tags: ["electronics", "AC", "Sinusoidal", "Power", "Circuit", "RLC"]
 ---
 
 ## Intro:
