@@ -1,6 +1,6 @@
 ---
 title: T-Level Year 1 Hub
-permalink: /classes/t-level-year-1/
+permalink: classes/t-level-year-1/
 ---
 
 <h1>T-Level Year 1 Hub</h1>
