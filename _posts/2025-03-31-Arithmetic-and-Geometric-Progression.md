@@ -23,8 +23,9 @@ blah blah blah
 <iframe src="" width="640" height="3030" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
 
 ## Other Materials:
-* [YouTube: What is Encoder?](https://youtu.be/k2GQVJ4z0kM?si=-SW8ePlzyHZbWG5e)
-* [YouTube: What is the Difference between Absolute and Incremental Encoders?](https://youtu.be/-Qk--Sjgq78?si=s1kasEenWSG5rYGT)
+* [YouTube: Arithmetic Sequences and Arithmetic Series - Basic Introduction](https://youtu.be/XZJdyPkCxuE?si=JFnA5o9zKdyc8yk1)
+* [YouTube: Geometric Series and Geometric Sequences - Basic Introduction](https://youtu.be/zRKZ0-kOUZM)
+* [YouTube: Arithmetic Sequences and Arithmetic Series - Basic Introduction](https://youtu.be/XZJdyPkCxuE)
 
 ## ---
 
