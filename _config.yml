@@ -2,6 +2,7 @@ title: Engineering Hub
 author: James Absolom
 description: Collection of class materials and activities by James Absolom
 remote_theme: pages-themes/primer@v0.6.0
+baseurl: "/engineering-hub"
 
 include:
   - _pages
