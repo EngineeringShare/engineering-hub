@@ -2,7 +2,7 @@
 title: "Arithmetic & Geometric Progressions"
 date: 2025-03-31
 tags: ["maths", "sequences"]
-subject: "maths"
+subject: "Maths"
 classes: ["HNC HTQ Year 1 Maths"]
 ---
 
