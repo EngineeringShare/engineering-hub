@@ -1,6 +1,6 @@
 ---
 title: HNC HTQ Year 1 Maths Hub
-permalink: /classes/HNC-HTQ-Year-1-Maths/
+permalink: /classes/hnc-htq-year-1-maths/
 ---
 
 <h1>T-Level Year 1 Hub</h1>
