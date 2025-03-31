@@ -4,7 +4,7 @@ permalink: /classes/t-level-year-1/
 ---
 
 <h1>T-Level Year 1 Hub</h1>
-<p>Here are all posts related to Power Systems:</p>
+<p>Here are all posts related to your class:</p>
 
 <ul>
   {% for post in site.posts %}
