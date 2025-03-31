@@ -9,7 +9,7 @@ permalink: /classes/t-level-year-1/
 <ul>
   {% for post in site.posts %}
     {% if post.classes contains "T-Level Year 1" %}
-      <li><a href="{{"engineering-hub | append: post.url }}">{{ post.title }}</a></li>
+      <li><a href="{{'/engineering-hub/' | append: post.url }}">{{ post.title }}</a></li>
     {% endif %}
   {% endfor %}
 </ul>
