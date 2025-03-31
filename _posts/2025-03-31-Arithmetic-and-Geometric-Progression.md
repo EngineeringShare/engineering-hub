@@ -18,10 +18,6 @@ blah blah blah
     </iframe>
 </div>
 
-## Quiz:
-
-<iframe src="" width="640" height="3030" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
-
 ## Other Materials:
 * [YouTube: Arithmetic Sequences and Arithmetic Series - Basic Introduction](https://youtu.be/XZJdyPkCxuE?si=JFnA5o9zKdyc8yk1)
 * [YouTube: Geometric Series and Geometric Sequences - Basic Introduction](https://youtu.be/zRKZ0-kOUZM)
