@@ -1,6 +1,6 @@
 ---
 title: "Title"
-date: YYYY-MM-DD
+date: 2001-12-28
 tags: ["tag1", "tag2"]
 subject: "subject area"
 classes: ["Class1", "Class2"]
