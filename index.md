@@ -38,7 +38,8 @@ This hub is the location to find all my class materials for the different lesson
   {% endfor %}
 
   {% for class in all_classes %}
-    <li><a href="{{ '/classes/' | append: class | relative_url }}">{{ class }}</a></li>
+    {% assign slugified_class = class | slugify %}
+    <li><a href="{{ '/classes/' | append: slugified_class | relative_url }}">{{ class }}</a></li>
   {% endfor %}
 </ul>
 
