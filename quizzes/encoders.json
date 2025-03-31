@@ -1,1 +1,12 @@
-
+[
+  {
+    "question": "What is an encoder, and why is it used in mechatronic systems?",
+    "choices": ["A sensor that measures temperature changes in mechanical systems.", "A device that converts mechanical motion into electrical signals for position or speed measurement.", "A motor controller that adjusts rotational speed in real-time.", "A component that amplifies electrical signals for better motor efficiency."],
+    "answer": 2
+  },
+  {
+    "question": "What is the unit of electrical power?",
+    "choices": ["Joule", "Watt", "Ampere"],
+    "answer": 1
+  }
+]
