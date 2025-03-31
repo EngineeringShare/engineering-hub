@@ -1,0 +1,31 @@
+---
+title: "Arithmetic & Geometric Progressions"
+date: 2025-03-31
+tags: ["maths", "sequences"]
+subject: "maths"
+classes: ["HNC HTQ Year 1 Maths"]
+---
+
+## Intro:
+
+blah blah blah
+
+## Presentation:
+
+<div style="position: relative; width: 100%; height: 0; padding-top: 75%;">
+    <iframe src="https://EngineeringShare.github.io/engineering-hub/presentations/Arithmetic and Geometric Progression.pdf" 
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;">
+    </iframe>
+</div>
+
+## Quiz:
+
+<iframe src="" width="640" height="3030" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+
+## Other Materials:
+* [YouTube: What is Encoder?](https://youtu.be/k2GQVJ4z0kM?si=-SW8ePlzyHZbWG5e)
+* [YouTube: What is the Difference between Absolute and Incremental Encoders?](https://youtu.be/-Qk--Sjgq78?si=s1kasEenWSG5rYGT)
+
+## ---
+
+<a href="https://engineeringshare.github.io/engineering-hub">🏠 Home</a>
