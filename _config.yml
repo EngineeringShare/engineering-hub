@@ -3,6 +3,9 @@ author: James Absolom
 description: Collection of class materials and activities by James Absolom
 remote_theme: pages-themes/primer@v0.6.0
 
+include:
+  - _pages
+
 header_pages:
   - class-index.md
 
