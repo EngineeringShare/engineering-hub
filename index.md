@@ -8,7 +8,7 @@ date: 26-03-2025
 </head>
 
 ## Welcome
-This hub is the location to find all my class materials for the different lessons I teach. Below you can find all materials split into subject areas. Each subject area will have a presentation on the 
+This hub serves as a central place for all my class materials across the lessons I teach. You'll find a search bar below to easily look up subjects, followed by a class breakdown where you can select your class and access its materials.
 
 ## Search
 
