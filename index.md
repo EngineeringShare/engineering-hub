@@ -3,7 +3,7 @@ title: "Homepage"
 date: 26-03-2025
 ---
 <head>
-  <link rel="shortcut icon" type="image/png" href="favicon.png">
+  <link rel="shortcut icon" type="image/png" href="https://engineeringshare.github.io/engineering-hub/favicon.png">
 </head>
 
 ## Welcome
