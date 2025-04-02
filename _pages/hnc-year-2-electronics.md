@@ -1,5 +1,5 @@
 ---
-title: HNC HTQ Year 1 Electronics Hub
+title: HNC Year 2 Electronics Hub
 permalink: /classes/hnc-year-2-electronics/
 ---
 
