@@ -49,7 +49,7 @@ This hub serves as a central place for all my class materials across the lessons
 </ul>
 
 ## Engineering Fun Fact
-<script src="https://engineeringshare.github.io/engineering-hub/fun-fact.js"></script>
+<script src="https://engineeringshare.github.io/engineering-hub/fun-fact.js" defer></script>
 
 
 
