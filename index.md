@@ -10,6 +10,9 @@ date: 26-03-2025
 ## Welcome
 This hub serves as a central place for all my class materials across the lessons I teach. You'll find a search bar below to easily look up subjects, followed by a class breakdown where you can select your class and access its materials.
 
+## Engineering Fun Fact
+<script src="fun-fact.js"></script>
+
 ## Search
 
 <input type="text" id="search-input" placeholder="Search...">
