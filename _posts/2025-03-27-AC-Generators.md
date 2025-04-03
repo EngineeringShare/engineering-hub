@@ -3,6 +3,7 @@ title: "AC Generators"
 date: 2025-03-27
 tags: ["generator", "AC", "electronics"]
 subject: "electronic devices"
+classes: ["BTEC Year 2 Electrical Devices"]
 ---
 
 ## Intro:
