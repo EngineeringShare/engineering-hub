@@ -40,13 +40,16 @@ This hub serves as a central place for all my class materials across the lessons
       {% endunless %}
     {% endfor %}
   {% endfor %}
-
-## Engineering Fun Fact
-<script src="fun-fact.js"></script>
+  </ul>
 
   {% for class in all_classes %}
     {% assign slugified_class = class | slugify %}
     <li><a href="{{ '/classes/' | append: slugified_class | relative_url }}">{{ class }}</a></li>
   {% endfor %}
-</ul>
+
+## Engineering Fun Fact
+<script src="fun-fact.js"></script>
+
+
+
 
