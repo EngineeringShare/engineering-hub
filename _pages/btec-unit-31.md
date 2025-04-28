@@ -1,5 +1,5 @@
 ---
-title: BTEC Unit 31: Electrical Machines
+title: BTEC Unit 31 - Electrical Machines
 permalink: /classes/btec-unit-31/
 ---
 
