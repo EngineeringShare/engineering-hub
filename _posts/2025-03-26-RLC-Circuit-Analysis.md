@@ -3,12 +3,10 @@ title: "RLC Circuit Analysis"
 date: 2025-03-26
 tags: ["Sinusoidal", "Power", "Circuit", "RLC", "AC"]
 subject: "electronics"
-classes: ["HNC HTQ Year 1 Electronics", "HNC Year 2 Electronics"]
+units: ["HTQ Unit 4019"]
 ---
 
 ## Intro:
-
-blah blah blah
 
 ## Presentation:
 
