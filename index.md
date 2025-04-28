@@ -2,13 +2,13 @@
 title: "Homepage"
 date: 26-03-2025
 ---
-
 <head>
   <link rel="shortcut icon" type="image/png" href="https://engineeringshare.github.io/engineering-hub/favicon.png">
 </head>
 
 ## Welcome
-This hub serves as a central place for all my class materials across the lessons I teach. You'll find a search bar below to easily look up subjects, followed by a class breakdown where you can select your class and access its materials.
+
+This hub serves as a central place for all my class materials across the lessons I teach. You'll find a search bar below to easily look up subjects, followed by a class breakdown where you can select your class and access its materials..
 
 ## Search
 
@@ -16,6 +16,7 @@ This hub serves as a central place for all my class materials across the lessons
 <ul id="results-container"></ul>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/1.9.2/simple-jekyll-search.min.js"></script>
+
 <script>
   SimpleJekyllSearch({
     searchInput: document.getElementById('search-input'),
@@ -43,15 +44,13 @@ This hub serves as a central place for all my class materials across the lessons
 
   {% for class in all_classes %}
     {% assign slugified_class = class | slugify %}
-    <li><a href="{{ '/classes/' | append: slugified_class | relative_url }}">{{ class }}</a></li>
+    `<li><a href="{{ '/classes/' | append: slugified_class | relative_url }}">`{{ class }}`</a></li>`
   {% endfor %}
 
 </ul>
 
 ## Engineering Fun Fact
-<span id="fun-fact">Loading...</span>
+
+`<span id="fun-fact">`Loading...
+
 <script src="https://engineeringshare.github.io/engineering-hub/fun-fact.js" defer></script>
-
-
-
-
