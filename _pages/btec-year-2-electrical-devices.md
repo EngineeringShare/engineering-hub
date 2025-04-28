@@ -1,6 +1,6 @@
 ---
-title: BTEC Year 2 Electrical Devices Hub
-permalink: /classes/btec-year-2-electrical-devices/
+title: BTEC Unit 31: Electrical Machines
+permalink: /classes/btec-unit-31/
 ---
 
 <h1>BTEC Electrical Devices Year 2 Hub</h1>
@@ -8,7 +8,7 @@ permalink: /classes/btec-year-2-electrical-devices/
 
 <ul>
   {% for post in site.posts %}
-    {% if post.classes contains "BTEC Year 2 Electrical Devices" %}
+    {% if post.units contains "BTEC Unit 31" %}
       <li><a href="{{'/engineering-hub' | append: post.url }}">{{ post.title }}</a></li>
     {% endif %}
   {% endfor %}
