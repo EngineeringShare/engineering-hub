@@ -1,14 +1,14 @@
 ---
-title: HNC HTQ Year 1 Maths Hub
-permalink: /classes/hnc-htq-year-1-maths/
+title: HTQ Unit 4002 - Engineering Maths
+permalink: /classes/htq-unit-4002/
 ---
 
-<h1>HNC/HTQ Maths Year 1 Hub</h1>
+<h1>HTQ Unit 4002 (Maths) Hub</h1>
 <p>Here are all posts related to your class:</p>
 
 <ul>
   {% for post in site.posts %}
-    {% if post.classes contains "HNC HTQ Year 1 Maths" %}
+    {% if post.units contains "HTQ Unit 4002" %}
       <li><a href="{{'/engineering-hub' | append: post.url }}">{{ post.title }}</a></li>
     {% endif %}
   {% endfor %}
