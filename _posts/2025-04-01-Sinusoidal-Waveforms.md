@@ -3,12 +3,10 @@ title: "Sinusoidal Waveforms"
 date: 2025-04-01
 tags: ["maths", "vectors", "sinusoidal", "AC"]
 subject: "maths"
-classes: ["HNC HTQ Year 1 Maths", "HNC HTQ Year 1 Electronics", "HNC Year 2 Electronics"]
+units: ["HTQ Unit 4002", "HTQ Unit 4019"]
 ---
 
 ## Intro:
-
-blah blah blah
 
 ## Presentation:
 
