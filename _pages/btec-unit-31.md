@@ -3,7 +3,7 @@ title: BTEC Unit 31 - Electrical Machines
 permalink: /classes/btec-unit-31/
 ---
 
-<h1>BTEC Electrical Devices Year 2 Hub</h1>
+<h1>BTEC Unit 31 (Electrical Machines) Hub</h1>
 <p>Here are all posts related to your class:</p>
 
 <ul>
