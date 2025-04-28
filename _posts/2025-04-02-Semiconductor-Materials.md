@@ -3,12 +3,10 @@ title: "Semiconductor Materials"
 date: 2025-04-02
 tags: ["Semiconductors", "components"]
 subject: "electronics"
-classes: ["HNC HTQ Year 1 Electronics", "HNC Year 2 Electronics"]
+units: ["HTQ Unit 4019"]
 ---
 
 ## Intro:
-
-blah blah blah
 
 ## Presentation:
 
