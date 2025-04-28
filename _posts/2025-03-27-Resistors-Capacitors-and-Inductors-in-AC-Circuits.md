@@ -3,12 +3,10 @@ title: "Resistors, Capacitors and Inductors in AC Circuits"
 date: 2025-03-27
 tags: ["Sinusoidal", "Power", "Circuit", "RLC", "Resitor", "Capacitor", "Inductor", "Impedance", "AC"]
 subject: "electronics"
-classes: ["HNC HTQ Year 1 Electronics", "HNC Year 2 Electronics"]
+units: ["HTQ Unit 4019"]
 ---
 
 ## Intro:
-
-blah blah blah
 
 ## Presentation:
 
