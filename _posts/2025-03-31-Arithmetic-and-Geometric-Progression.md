@@ -3,12 +3,10 @@ title: "Arithmetic & Geometric Progressions"
 date: 2025-03-31
 tags: ["maths", "sequences"]
 subject: "Maths"
-classes: ["HNC HTQ Year 1 Maths"]
+units: ["HTQ Unit 4002"]
 ---
 
 ## Intro:
-
-blah blah blah
 
 ## Presentation:
 
