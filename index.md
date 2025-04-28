@@ -34,7 +34,7 @@ This hub serves as a central place for all my class materials across the lessons
 <ul>
   {% assign all_classes = "" | split: "," %}
   {% for post in site.posts %}
-    {% for class in post.classes %}
+    {% for class in post.units %}
       {% unless all_classes contains class %}
         {% assign all_classes = all_classes | push: class %}
       {% endunless %}
