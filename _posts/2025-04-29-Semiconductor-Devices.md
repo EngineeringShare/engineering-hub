@@ -1,6 +1,6 @@
 ---
 title: "Semiconductor Devices"
-date: 2025-04-02
+date: 2025-04-29
 tags: ["Semiconductors", "components", "Diodes", "Transistor"]
 subject: "electronics"
 units: ["HTQ Unit 4019"]
