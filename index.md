@@ -54,3 +54,6 @@ This hub is the central place for all the learning materials related to my class
 <span id="fun-fact">Loading...
 
 <script src="https://engineeringshare.github.io/engineering-hub/fun-fact.js" defer></script>
+
+## Credit
+All course materials, as well as the design and development of this website, have been produced by James Absolom.
