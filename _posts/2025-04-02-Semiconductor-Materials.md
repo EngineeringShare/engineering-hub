@@ -1,7 +1,7 @@
 ---
 title: "Semiconductor Materials"
 date: 2025-04-02
-tags: ["Semiconductors", "components"]
+tags: ["Semiconductors", "components", "PN", "Doping"]
 subject: "electronics"
 units: ["HTQ Unit 4019"]
 ---
