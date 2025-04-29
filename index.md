@@ -44,13 +44,13 @@ This hub serves as a central place for all my class materials across the lessons
 
   {% for class in all_classes %}
     {% assign slugified_class = class | slugify %}
-    `<li><a href="{{ '/classes/' | append: slugified_class | relative_url }}">`{{ class }}`</a></li>`
+    <li><a href="{{ '/classes/' | append: slugified_class | relative_url }}">{{ class }}</a></li>
   {% endfor %}
 
 </ul>
 
 ## Engineering Fun Fact
 
-`<span id="fun-fact">`Loading...
+<span id="fun-fact">Loading...
 
 <script src="https://engineeringshare.github.io/engineering-hub/fun-fact.js" defer></script>
