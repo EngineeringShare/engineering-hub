@@ -6,11 +6,11 @@ date: 26-03-2025
   <link rel="shortcut icon" type="image/png" href="https://engineeringshare.github.io/engineering-hub/favicon.png">
 </head>
 
-## Welcome
+## Welcome to the Engineering Hub!
 
-This hub serves as a central place for all my class materials across the lessons I teach. You'll find a search bar below to easily look up subjects, followed by a class breakdown where you can select your class and access its materials..
+This hub is the central place for all the learning materials related to my classes. Whether you're revisiting class slides or reviewing tutorial resources, everything you need is organised right here. Use the search bar below to quickly find topics, or browse by unit using the breakdown further down — each section links directly to materials for the lessons I teach. It's all designed to help you stay on track and make the most of your studies.
 
-## Search
+## Search for topic
 
 <input type="text" id="search-input" placeholder="Search...">
 <ul id="results-container"></ul>
@@ -28,9 +28,9 @@ This hub serves as a central place for all my class materials across the lessons
   })
 </script>
 
-## Class Hub
+## Unit Hub
 
-<p>Select a class to see relevant posts:</p>
+<p>Select a unit to see relevant posts:</p>
 
 <ul>
   {% assign all_classes = "" | split: "," %}
