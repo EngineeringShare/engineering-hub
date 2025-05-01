@@ -42,6 +42,8 @@ This hub is the central place for all the learning materials related to my class
     {% endfor %}
   {% endfor %}
 
+  {% assign all_classes = all_classes | sort %}
+
   {% for class in all_classes %}
     {% assign slugified_class = class | slugify %}
     <li><a href="{{ '/classes/' | append: slugified_class | relative_url }}">{{ class }}</a></li>
