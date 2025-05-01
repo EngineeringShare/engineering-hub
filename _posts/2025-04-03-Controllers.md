@@ -1,6 +1,6 @@
 ---
 title: "Controllers"
-date: 2001-12-28
+date: 2025-04-03
 tags: ["Microcontrollers", "Microcomputers", "systems", "control"]
 subject: "mechatronics"
 units: ["T-Level"]
@@ -17,15 +17,6 @@ In mechatronics, controllers are essential components that regulate the behavior
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;">
     </iframe>
 </div>
-
-<!--
-## Quiz:
-
-<iframe src="" width="640" height="3030" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
-
-## Other Materials:
-* [Link 1](https://youtu.be/dQw4w9WgXcQ?si=0gbGiJQm7Vf2r9Oc)
--->
 
 ## ---
 
