@@ -59,3 +59,11 @@ This hub is the central place for all the learning materials related to my class
 
 ## Credit
 All course materials, as well as the design and development of this website, have been produced by James Absolom.
+
+## Contact Me
+If there is anything out of place with this website or something missing please contact me here:
+
+<ul>
+Email: James-Absolom@yorkcollege.ac.uk
+Teams: James Absolom
+</ul>
