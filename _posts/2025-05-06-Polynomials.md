@@ -17,7 +17,7 @@ units: ["HTQ Unit 4002"]
 </div>
 
 ## Other Materials:
-* [Polynomials - Adding, Subtracting, Multiplying and Dividing Algebraic Expressions](https://youtu.be/ZvL9aDGNHqA?si=Uo-_-9ivTWwerjVY)
+* [YouTube: Polynomials - Adding, Subtracting, Multiplying and Dividing Algebraic Expressions](https://youtu.be/ZvL9aDGNHqA?si=Uo-_-9ivTWwerjVY)
 
 
 ## ---
