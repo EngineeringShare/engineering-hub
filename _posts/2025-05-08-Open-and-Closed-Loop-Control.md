@@ -16,6 +16,10 @@ units: ["T-Level"]
     </iframe>
 </div>
 
+## Other Materials:
+* [YouTube: Open Loop Systems](https://youtu.be/DE0hWLdkckg?si=nfoYuunOkl2AwdQV)
+* [YouTube: Closed Loop Systems](https://youtu.be/O-OqgFE9SD4)
+
 ## ---
 
 <a href="https://engineeringshare.github.io/engineering-hub">🏠 Home</a>
