@@ -64,6 +64,6 @@ All course materials, as well as the design and development of this website, hav
 If there is anything out of place with this website or something missing please contact me here:
 
 <ul>
-Email: James-Absolom@yorkcollege.ac.uk
-Teams: James Absolom
+<li>Email: James-Absolom@yorkcollege.ac.uk</li>
+<li>Teams: James Absolom</li>
 </ul>
