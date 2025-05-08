@@ -3,7 +3,7 @@ title: "Advanced Logic Circuits"
 date: 2025-05-08
 tags: ["logic", "binary", "control", "gates", "flip", "flop"]
 subject: "mechatronics"
-units: ["T-Level", "btec-unit-24"]
+units: ["T-Level", "BTEC Unit 24"]
 ---
 
 ## Intro:
