@@ -8,6 +8,8 @@ units: ["T-Level", "BTEC Unit 19"]
 
 ## Intro:
 
+A PLC is defined as a ruggedized computer utilized for industrial automation. Developed to address the limitations of previous relay control panels, the presentation explores several different types of PLCs, including Unitary, Modular, and Rack Mounted types, detailing their features, advantages, and limitations.
+
 ## Audio:
 
 <audio controls>
