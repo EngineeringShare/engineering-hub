@@ -17,7 +17,7 @@ units: ["T-Level", "BTEC Unit 19"]
 </div>
 
 ## Other Materials:
-* [Programable Logic Controller Basics Explained - automation engineering](https://youtu.be/uOtdWHMKhnw)
+* [YouTube: Programable Logic Controller Basics Explained - automation engineering](https://youtu.be/uOtdWHMKhnw)
 
 ## ---
 
