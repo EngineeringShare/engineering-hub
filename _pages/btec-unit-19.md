@@ -7,7 +7,8 @@ permalink: /classes/btec-unit-19/
 <p>Here are all posts related to your class:</p>
 
 <ul>
-  {% for post in site.posts %}
+  {% assign all_posts = site.posts | sort %}
+  {% for post all_posts %}
     {% if post.units contains "BTEC Unit 19" %}
       <li><a href="{{'/engineering-hub' | append: post.url }}">{{ post.title }}</a></li>
     {% endif %}
