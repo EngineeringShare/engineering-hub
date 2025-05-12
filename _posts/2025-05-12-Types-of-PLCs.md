@@ -8,6 +8,13 @@ units: ["T-Level", "BTEC Unit 19"]
 
 ## Intro:
 
+## Audio:
+
+<audio controls>
+    <source src="https://EngineeringShare.github.io/engineering-hub/audio/PLC Theory - Types of PLCs.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
 ## Presentation:
 
 <div style="position: relative; width: 100%; height: 0; padding-top: 75%;">
