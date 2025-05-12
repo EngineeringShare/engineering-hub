@@ -1,6 +1,6 @@
 ---
 title: "PLC Theory - Types of PLCs"
-date: 2025-05-01
+date: 2025-05-12
 tags: ["PLC", "Unitary", "Modular", "Rack Mounted", "History"]
 subject: "PLCs"
 units: ["T-Level", "BTEC Unit 19"]
