@@ -1,6 +1,6 @@
 ---
 title: "PLC Programming - Sequential Programming"
-date: 2025-05-12
+date: 2025-05-14
 tags: ["PLC", "Move", "Sequence", "Comparator"]
 subject: "PLCs"
 units: ["T-Level", "BTEC Unit 19"]
