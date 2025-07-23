@@ -7,7 +7,7 @@ permalink: /classes/btec-unit-24/
   <style>
     .projects {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1.5rem;
       margin-top: 2rem;
     }
@@ -38,7 +38,7 @@ permalink: /classes/btec-unit-24/
       color: #1f2937;
       margin: 0.5rem 0 0;
       text-align: center;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
     }
 
     h1 {

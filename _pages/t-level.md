@@ -7,7 +7,7 @@ permalink: /classes/t-level/
   <style>
     .projects {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1.5rem;
       margin-top: 2rem;
     }
