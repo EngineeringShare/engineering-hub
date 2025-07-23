@@ -18,7 +18,7 @@ units: ["HTQ Unit 4019", "T-Level", "BTEC Unit 19"]
 
 ## Other Materials:
 * [YouTube: Physics - Waves - Analogue and Digital Signals](https://youtu.be/XCu6L4kQF3k?si=UCaScr82F8xvw51n)
-* [YouTube: Analog vs. digital signals | Waves | Middle school physics | Khan Academy](https://youtu.be/PEYdn56pdcQ)
+* [YouTube: Analog vs. digital signals - Waves - Middle school physics - Khan Academy](https://youtu.be/PEYdn56pdcQ)
 
 ## ---
 
