@@ -38,7 +38,7 @@ permalink: /classes/btec-unit-19/
       color: #1f2937;
       margin: 0.5rem 0 0;
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 1rem;
     }
 
     h1 {
