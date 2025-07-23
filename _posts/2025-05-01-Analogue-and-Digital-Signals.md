@@ -3,7 +3,7 @@ title: "Analogue & Digital Signals"
 date: 2025-05-01
 tags: ["Signal", "Control", "electronics", "Devices", "PWM", "Data"]
 subject: "electronic devices"
-units: ["HTQ Unit 4019", "T-Level", "BTEC Unit 19"]
+units: ["HTQ Unit 4019", "T-Level", "BTEC Unit 19", "HTQ Unit 4015"]
 ---
 
 ## Intro:
