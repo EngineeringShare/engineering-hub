@@ -12,7 +12,7 @@ A PLC is defined as a ruggedized computer utilized for industrial automation. De
 
 ## Identification Tree
 
-<img src="images/PLCTypeTree.png" alt="An identification tree for indetifying PLC types" />
+<img src="https://EngineeringShare.github.io/engineering-hub/images/PLCTypeTree.png" alt="An identification tree for indetifying PLC types" />
 
 ## Audio:
 
