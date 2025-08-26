@@ -13,7 +13,7 @@ A Programmable Logic Controller (PLC) is a rugged industrial computer designed t
 ## Audio:
 
 <audio controls>
-    <source src="https://EngineeringShare.github.io/engineering-hub/audio/PLC Theory - PLC Architecture" type="audio/mpeg">
+    <source src="https://EngineeringShare.github.io/engineering-hub/audio/PLC Theory - PLC Architecture.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
