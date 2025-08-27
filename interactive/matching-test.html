@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Matching Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+
+
+        .game-section {
+            padding: 30px;
+            display: none;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .score {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .reset-button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .reset-button:hover {
+            background: #ff5252;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .column {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .column h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .item {
+            background: white;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            user-select: none;
+        }
+
+        .item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .item.selected {
+            border-color: #4facfe;
+            background: #e3f2fd;
+            transform: scale(1.02);
+        }
+
+        .item.matched {
+            background: #c8e6c9;
+            border-color: #4caf50;
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .item.wrong {
+            background: #ffcdd2;
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+            color: white;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .completion-message h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+
+
+        @media (max-width: 768px) {
+            .game-board {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Interactive Matching Game</h1>
+            <p>Perfect for revision and learning - customize with your own content!</p>
+        </div>
+
+
+
+        <div class="game-section" id="gameSection" style="display: block;">
+            <div class="game-info">
+                <div class="score">
+                    Score: <span id="score">0</span> / <span id="total">0</span>
+                </div>
+                <button class="reset-button" onclick="resetGame()">🔄 Reset Game</button>
+            </div>
+
+            <div class="game-board">
+                <div class="column">
+                    <h3>📖 Terms</h3>
+                    <div id="leftColumn"></div>
+                </div>
+                <div class="column">
+                    <h3>💡 Definitions</h3>
+                    <div id="rightColumn"></div>
+                </div>
+            </div>
+
+            <div class="completion-message" id="completionMessage">
+                <h2>🎉 Congratulations!</h2>
+                <p>You've successfully matched all pairs! Great job on your revision!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 🎯 CUSTOMIZE YOUR MATCHES HERE 🎯
+        // Replace this dictionary with your own terms and definitions
+        let gameData = {
+            "test 1": "test 1",
+            "test 2": "test 2"
+        };
+        
+        let selectedLeft = null;
+        let selectedRight = null;
+        let matches = {};
+        let score = 0;
+
+        function initializeGame() {
+            const leftColumn = document.getElementById('leftColumn');
+            const rightColumn = document.getElementById('rightColumn');
+            
+            // Clear previous game
+            leftColumn.innerHTML = '';
+            rightColumn.innerHTML = '';
+            matches = {};
+            score = 0;
+            selectedLeft = null;
+            selectedRight = null;
+            
+            // Get terms and definitions
+            const terms = Object.keys(gameData);
+            const definitions = Object.values(gameData);
+            
+            // Shuffle definitions for the game
+            const shuffledDefinitions = [...definitions].sort(() => Math.random() - 0.5);
+            
+            // Create term items (left column)
+            terms.forEach((term, index) => {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.textContent = term;
+                item.dataset.key = term;
+                item.onclick = () => selectLeft(item);
+                leftColumn.appendChild(item);
+            });
+            
+            // Create definition items (right column)
+            shuffledDefinitions.forEach((definition, index) => {
+                const item = document.createElement('div');
+                item.className = 'item';
+                item.textContent = definition;
+                item.dataset.value = definition;
+                item.onclick = () => selectRight(item);
+                rightColumn.appendChild(item);
+            });
+            
+            // Update score display
+            document.getElementById('total').textContent = terms.length;
+            document.getElementById('score').textContent = '0';
+            document.getElementById('completionMessage').style.display = 'none';
+        }
+
+        function selectLeft(item) {
+            if (item.classList.contains('matched')) return;
+            
+            // Clear previous selection
+            if (selectedLeft) {
+                selectedLeft.classList.remove('selected');
+            }
+            
+            selectedLeft = item;
+            item.classList.add('selected');
+            
+            checkMatch();
+        }
+
+        function selectRight(item) {
+            if (item.classList.contains('matched')) return;
+            
+            // Clear previous selection
+            if (selectedRight) {
+                selectedRight.classList.remove('selected');
+            }
+            
+            selectedRight = item;
+            item.classList.add('selected');
+            
+            checkMatch();
+        }
+
+        function checkMatch() {
+            if (!selectedLeft || !selectedRight) return;
+            
+            const term = selectedLeft.dataset.key;
+            const definition = selectedRight.dataset.value;
+            const correctDefinition = gameData[term];
+            
+            if (definition === correctDefinition) {
+                // Correct match!
+                selectedLeft.classList.add('matched');
+                selectedRight.classList.add('matched');
+                selectedLeft.classList.remove('selected');
+                selectedRight.classList.remove('selected');
+                
+                matches[term] = definition;
+                score++;
+                document.getElementById('score').textContent = score;
+                
+                // Check if game is complete
+                if (score === Object.keys(gameData).length) {
+                    setTimeout(() => {
+                        document.getElementById('completionMessage').style.display = 'block';
+                    }, 500);
+                }
+                
+            } else {
+                // Wrong match
+                selectedLeft.classList.add('wrong');
+                selectedRight.classList.add('wrong');
+                
+                setTimeout(() => {
+                    selectedLeft.classList.remove('wrong', 'selected');
+                    selectedRight.classList.remove('wrong', 'selected');
+                }, 500);
+            }
+            
+            selectedLeft = null;
+            selectedRight = null;
+        }
+
+        function resetGame() {
+            if (Object.keys(gameData).length > 0) {
+                initializeGame();
+            }
+        }
+
+        // Start the game automatically when page loads
+        window.onload = function() {
+            initializeGame();
+        };
+    </script>
+</body>
+</html>
