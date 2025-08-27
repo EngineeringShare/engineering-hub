@@ -44,7 +44,11 @@ permalink: /interactive-hub/
 
 # Interactive Learning Hub
 
-Explore bite-sized interactive activities. This page updates automatically based on files in **/interactive/**.
+---
+
+## 🎮 Interactive Games
+
+Explore bite-sized interactive activities for quick revision and practice. Click a card to launch a game.
 
 <div class="projects">
   {%- assign games = site.static_files
