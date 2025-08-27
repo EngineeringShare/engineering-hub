@@ -72,18 +72,6 @@ This site is your one-stop destination for accessing class slides, assignments, 
 
 ---
 
-## 🎮 Interactive
-
-<div class="projects">
-  <a class="card-link" href="{{ '/interactive-hub/' | relative_url }}">
-    <div class="card">
-      <h3>Interactive Learning Hub</h3>
-    </div>
-  </a>
-</div>
-
----
-
 ## 📚 Unit Hub
 
 <p>Select a unit to view posts and resources:</p>
@@ -107,6 +95,18 @@ This site is your one-stop destination for accessing class slides, assignments, 
       </div>
     </a>
   {% endfor %}
+</div>
+
+---
+
+## 🎮 Interactive
+
+<div class="projects">
+  <a class="card-link" href="{{ '/interactive-hub/' | relative_url }}">
+    <div class="card">
+      <h3>Interactive Learning Hub</h3>
+    </div>
+  </a>
 </div>
 
 ---
