@@ -26,62 +26,57 @@ permalink: /interactive-hub/
       height: 100%;
     }
     .card:hover { transform: scale(1.03); }
+    .card img {
+      max-width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
     .card h3 {
       color: #1f2937;
-      margin: 0.5rem 0 0;
+      margin: 0.75rem 0 0;
       text-align: center;
       font-size: 1rem;
+      line-height: 1.2;
     }
-    h1 { font-size: 2rem; margin-top: 2rem; }
-    p  { font-size: 1.1rem; }
   </style>
 </head>
 
 # Interactive Learning Hub
 
-Explore bite-sized interactive activities for quick revision and practice. Click a card to launch a game.
-
----
-
-## 🎮 Interactive Games
+Explore bite-sized interactive activities. This page updates automatically based on files in **/interactive/**.
 
 <div class="projects">
-  <!-- Matching Game -->
-  <a class="card-link" href="{{ '/matching-test.html' | relative_url }}">
-    <div class="card">
-      <h3>Matching Game</h3>
-    </div>
-  </a>
+  {%- assign games = site.static_files
+      | where_exp: "f", "f.path contains '/interactive/'"
+      | where_exp: "f", "f.extname == '.html'"
+      | sort: "name" -%}
 
-  <!-- Add more games here as you create separate HTML files -->
-  {%- comment -%}
-  <a class="card-link" href="{{ '/circuit-quiz.html' | relative_url }}">
-    <div class="card">
-      <h3>Circuit Symbols Quiz</h3>
-    </div>
-  </a>
-  <a class="card-link" href="{{ '/ohms-law-practice.html' | relative_url }}">
-    <div class="card">
-      <h3>Ohm’s Law Practice</h3>
-    </div>
-  </a>
-  {%- endcomment -%}
-</div>
+  {%- for f in games -%}
+    {%- comment -%}
+      Derive a display title from the filename:
+      "matching-test.html" -> "Matching Test"
+    {%- endcomment -%}
+    {%- assign base = f.basename | replace: '-', ' ' | replace: '_', ' ' -%}
+    {%- assign words = base | split: ' ' -%}
+    {%- capture title -%}
+      {%- for w in words -%}{{ w | capitalize }}{% unless forloop.last %} {% endunless %}{%- endfor -%}
+    {%- endcapture -%}
 
----
+    {%- comment -%}
+      Optional thumbnail support:
+      If /interactive/<name>.png exists, show it.
+    {%- endcomment -%}
+    {%- assign thumb_path = f.path | replace: f.extname, '.png' -%}
+    {%- assign thumb = site.static_files | where: "path", thumb_path | first -%}
 
-## 📘 (Optional) Interactive Lessons & Activities from Posts
-<p>Posts tagged to your interactive unit can also appear here.</p>
-
-<div class="projects">
-  {% assign all_posts = site.posts | sort: "title" %}
-  {% for post in all_posts %}
-    {% if post.units contains "HTQ Unit 4019" or post.categories contains "interactive" %}
-      <a class="card-link" href="{{ post.url | relative_url }}">
-        <div class="card">
-          <h3>{{ post.title }}</h3>
-        </div>
-      </a>
-    {% endif %}
-  {% endfor %}
+    <a class="card-link" href="{{ f.path | relative_url }}">
+      <div class="card">
+        {%- if thumb -%}
+          <img src="{{ thumb.path | relative_url }}" alt="{{ title }} thumbnail">
+        {%- endif -%}
+        <h3>{{ title }}</h3>
+      </div>
+    </a>
+  {%- endfor -%}
 </div>
