@@ -95,9 +95,9 @@ Type to find a game, or browse all cards below.
     <a class="card-link" href="{{ f.path | relative_url }}">
       <div class="card">
         {%- if thumb -%}
-          <img src="{{ thumb.path | relative_url }}" alt="{{ title | strip }} thumbnail" style="max-width:100%;height:120px;object-fit:cover;border-radius:6px;">
+          <img src="{{ thumb.path | relative_url }}" alt="{{title}} thumbnail" style="max-width:100%;height:120px;object-fit:cover;border-radius:6px;">
         {%- endif -%}
-        <h3>{{ title}}</h3>
+        <h3>{{title}}</h3>
       </div>
     </a>
   {%- endfor -%}
