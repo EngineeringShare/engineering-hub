@@ -1,5 +1,5 @@
 ---
-title: T-Level Unit 8 Hub
+title: T-Level Unit 08 Hub
 permalink: /classes/t-level-unit-8/
 ---
 
