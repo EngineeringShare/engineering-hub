@@ -44,7 +44,7 @@ permalink: /classes/htq-unit-4015/
       color: #1f2937;
       margin: 0.5rem 0 0;
       text-align: center;
-      font-size: 1.2rem;
+      font-size: 1rem;
     }
 
     h1 {
