@@ -85,9 +85,11 @@ Type to find a game, or browse all cards below.
       | where_exp: "f", "f.extname == '.html'"
       | sort: "name" -%}
   {%- for f in games -%}
-    {%- assign base = f.basename | replace: '-', ' ' | replace: '_', ' ' -%}
-    {%- assign words = base | split: ' ' -%}
-    {%- capture title -%}{% for w in words %}{{ w | capitalize }}{% unless forloop.last %} {% endunless %}{% endfor %}{%- endcapture -%}
+    {%- assign title = f.basename 
+   | replace: '-', ' ' 
+   | replace: '_', ' ' 
+   | strip -%}
+
 
     {%- assign thumb_path = f.path | replace: f.extname, '.png' -%}
     {%- assign thumb = site.static_files | where: "path", thumb_path | first -%}
