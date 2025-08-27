@@ -3,7 +3,7 @@ title: "Flux Density, Field Strength & Motor Effect"
 date: 2025-05-12
 tags: ["Motor", "Drawing"]
 subject: "magnetics"
-units: ["BTEC Unit 56"]
+units: ["BTEC Unit 56", "T-Level Unit 8"]
 ---
 
 ## Intro:

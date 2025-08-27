@@ -3,7 +3,7 @@ title: "PLC Programming - Basic Functions"
 date: 2025-05-22
 tags: ["PLC", "Programming", "Rungs"]
 subject: "PLCs"
-units: ["T-Level", "BTEC Unit 19", "HTQ Unit 4015"]
+units: ["T-Level Unit 9", "BTEC Unit 19", "HTQ Unit 4015"]
 ---
 
 ## Intro:

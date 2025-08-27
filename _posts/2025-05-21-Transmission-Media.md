@@ -3,7 +3,7 @@ title: "Transmission Media"
 date: 2025-05-21
 tags: ["Wire", "Fibre Optic", "Coaxial", "Twisted Pairs"]
 subject: "PLCs"
-units: ["BTEC Unit 19"]
+units: ["BTEC Unit 19", "T-Level Unit 8"]
 ---
 
 ## Intro:

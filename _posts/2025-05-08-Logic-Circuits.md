@@ -3,7 +3,7 @@ title: "Logic Circuits"
 date: 2025-05-08
 tags: ["logic", "binary", "control", "gates"]
 subject: "mechatronics"
-units: ["T-Level", "BTEC Unit 24"]
+units: ["T-Level Unit 10", "BTEC Unit 24"]
 ---
 
 ## Intro:

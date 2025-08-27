@@ -3,7 +3,7 @@ title: "DC Motors Speed Control"
 date: 2025-04-29
 tags: ["Motors", "DC", "electronics", "Devices", "Control"]
 subject: "electronic devices"
-units: ["BTEC Unit 56", "BTEC Unit 31", "T-Level"]
+units: ["BTEC Unit 56", "BTEC Unit 31", "T-Level Unit 9"]
 ---
 
 ## Intro:

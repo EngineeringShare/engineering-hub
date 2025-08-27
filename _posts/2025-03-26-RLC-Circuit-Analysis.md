@@ -3,7 +3,7 @@ title: "RLC Circuit Analysis"
 date: 2025-03-26
 tags: ["Sinusoidal", "Power", "Circuit", "RLC", "AC"]
 subject: "electronics"
-units: ["HTQ Unit 4019", "BTEC Unit 56"]
+units: ["HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 8"]
 ---
 
 ## Intro:
