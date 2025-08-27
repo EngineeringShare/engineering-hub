@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Matching Game</title>
+    <title>Control Systems Matching</title>
     <style>
         * {
             margin: 0;
@@ -221,8 +221,14 @@
         // 🎯 CUSTOMIZE YOUR MATCHES HERE 🎯
         // Replace this dictionary with your own terms and definitions
         let gameData = {
-            "test 1": "test 1",
-            "test 2": "test 2"
+            "Control system": "A system that manages, directs, or regulates behaviour to achieve a desired output.",
+            "Input (reference signal)": "The desired value or setpoint the system aims to achieve.",
+            "Controller": "The decision-making unit that processes the input and decides how to control the system (e.g., a PLC/thermostat).",
+            "Process / System": "The system being controlled; the thing whose state you’re changing via the controller.",
+            "Actuator": "Device that converts the controller’s output signal into physical action (e.g., motor, valve).",
+            "Output": "The actual response/result of the system after processing (e.g., room temperature).",
+            "Feedback": "Sensor signal that measures the output and returns it to the controller (closed-loop only).",
+            "Disturbance": "External factor that affects performance (e.g., wind on a drone).",
         };
         
         let selectedLeft = null;
