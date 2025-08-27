@@ -12,17 +12,13 @@ date: 2025-07-23
       gap: 1.5rem;
       margin-top: 2rem;
     }
-
-    .card-link {
-      text-decoration: none;
-    }
-
+    .card-link { text-decoration: none; }
     .card {
       background: #ffffff;
       border: 1px solid #e5e7eb;
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
       transition: transform 0.2s ease;
       display: flex;
       flex-direction: column;
@@ -30,22 +26,14 @@ date: 2025-07-23
       padding: 1rem;
       height: 100%;
     }
-
-    .card:hover {
-      transform: scale(1.03);
-    }
-
+    .card:hover { transform: scale(1.03); }
     .card h3 {
       color: #1f2937;
       margin: 0.5rem 0 0;
       text-align: center;
       font-size: 1.2rem;
     }
-
-    .search-container {
-      margin: 2rem 0;
-    }
-
+    .search-container { margin: 2rem 0; }
     #search-input {
       width: 100%;
       padding: 0.75rem;
@@ -53,16 +41,13 @@ date: 2025-07-23
       border-radius: 8px;
       border: 1px solid #ccc;
     }
-
-    #results-container {
-      margin-top: 1rem;
-    }
+    #results-container { margin-top: 1rem; }
   </style>
 </head>
 
 ## Welcome to the Engineering Hub!
 
-This site is your one-stop destination for accessing class slides, assignments, resources, and tutorials. Explore your units below or use the search bar to find something quickly.
+This site is your one-stop destination for accessing class slides, assignments, resources, tutorials, and interactive activities.
 
 ---
 
@@ -84,6 +69,18 @@ This site is your one-stop destination for accessing class slides, assignments, 
     limit: 20
   })
 </script>
+
+---
+
+## 🎮 Interactive
+
+<div class="projects">
+  <a class="card-link" href="{{ '/interactive-hub/' | relative_url }}">
+    <div class="card">
+      <h3>Interactive Learning Hub</h3>
+    </div>
+  </a>
+</div>
 
 ---
 
