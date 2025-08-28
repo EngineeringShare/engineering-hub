@@ -16,6 +16,10 @@ units: ["HTQ Unit 4019", "T-Level Unit 8", "BTEC Unit 19", "HTQ Unit 4015"]
     </iframe>
 </div>
 
+## Interactive Tools:
+
+<a href="https://engineeringshare.github.io/engineering-hub/interactive/Analogue%20Digital%20Sort.html">🧩 Sort Game</a>
+
 ## Other Materials:
 * [YouTube: Physics - Waves - Analogue and Digital Signals](https://youtu.be/XCu6L4kQF3k?si=UCaScr82F8xvw51n)
 * [YouTube: Analog vs. digital signals - Waves - Middle school physics - Khan Academy](https://youtu.be/PEYdn56pdcQ)

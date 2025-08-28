@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Ladder Logic Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .task-description {
+            background: #3498db;
+            color: white;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+            padding: 20px;
+            min-height: 500px;
+        }
+
+        .toolbox {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .toolbox h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .branch-controls {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .branch-btn {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .branch-btn:hover {
+            background: #c0392b;
+        }
+
+        .branch {
+            position: absolute;
+            height: 3px;
+            background: #2c3e50;
+            top: 0;
+        }
+
+        .branch-vertical {
+            position: absolute;
+            width: 3px;
+            background: #2c3e50;
+            left: 0;
+        }
+
+        .symbol {
+            width: 60px;
+            height: 40px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            margin: 5px;
+            cursor: grab;
+            font-weight: bold;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .symbol:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .symbol:active {
+            cursor: grabbing;
+        }
+
+        .ladder-area {
+            background: #ffffff;
+            border: 2px solid #bdc3c7;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .rung {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            min-height: 60px;
+            position: relative;
+        }
+
+        .power-rail {
+            width: 4px;
+            height: 100%;
+            background: #2c3e50;
+            position: absolute;
+            left: 10px;
+            top: 0;
+        }
+
+        .power-rail.right {
+            right: 10px;
+            left: auto;
+        }
+
+        .rung-line {
+            flex: 1;
+            height: 3px;
+            background: #2c3e50;
+            margin: 0 30px;
+            position: relative;
+        }
+
+        .slot {
+            width: 70px;
+            height: 50px;
+            border: 2px dashed #bdc3c7;
+            border-radius: 5px;
+            position: absolute;
+            top: -25px;
+            background: #ecf0f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .address-label {
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-weight: bold;
+            color: #2c3e50;
+            background: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            border: 1px solid #bdc3c7;
+        }
+
+        .slot.drag-over {
+            border-color: #3498db;
+            background: #e3f2fd;
+            transform: scale(1.05);
+        }
+
+        .slot.filled {
+            border: 2px solid #27ae60;
+            background: #d5f4e6;
+        }
+
+        .slot:nth-child(1) { left: 100px; }
+        .slot:nth-child(2) { left: 200px; }
+        .slot:nth-child(3) { left: 300px; }
+        .slot:nth-child(4) { left: 400px; }
+
+        .output-slot {
+            right: 100px;
+            left: auto;
+        }
+
+        .placed-symbol {
+            width: 60px;
+            height: 40px;
+            background: #27ae60;
+            color: white;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .placed-symbol:hover {
+            background: #229954;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-disabled {
+            background: #bdc3c7;
+            color: #7f8c8d;
+            cursor: not-allowed;
+        }
+
+        .btn-disabled:hover {
+            background: #bdc3c7;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+
+        .status {
+            text-align: center;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .status.success {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+
+        .status.error {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+
+        .legend {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #3498db;
+        }
+
+        .legend h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .legend-symbol {
+            width: 40px;
+            height: 25px;
+            background: #3498db;
+            color: white;
+            border-radius: 3px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>🔧 PLC Ladder Logic Game</h1>
+            <p>Drag symbols to build working ladder logic circuits</p>
+        </div>
+
+        <div class="task-description">
+            <strong>Task 1:</strong> Create a circuit where input I0.0 AND input I0.1 will turn on output Q0.0. Use normally open contacts for both inputs.
+        </div>
+
+        <div class="legend">
+            <h4>Symbol Legend:</h4>
+            <div class="legend-item">
+                <div class="legend-symbol">—| |—</div>
+                <span>Normally Open Contact (NO)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-symbol">—|/|—</div>
+                <span>Normally Closed Contact (NC)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-symbol">—( )—</div>
+                <span>Output Coil</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-symbol">TON</div>
+                <span>Timer On-Delay</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-symbol">TOF</div>
+                <span>Timer Off-Delay</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-symbol">CTU</div>
+                <span>Count Up Counter</span>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="toolbox">
+                <h3>Symbol Toolbox</h3>
+                <div class="symbol" draggable="true" data-type="NO">—| |—</div>
+                <div class="symbol" draggable="true" data-type="NC">—|/|—</div>
+                <div class="symbol" draggable="true" data-type="OUTPUT">—( )—</div>
+                <div class="symbol" draggable="true" data-type="TON">TON</div>
+                <div class="symbol" draggable="true" data-type="TOF">TOF</div>
+                <div class="symbol" draggable="true" data-type="CTU">CTU</div>
+                
+                <div class="branch-controls">
+                    <h4 style="color: #2c3e50; margin-bottom: 10px; font-size: 1rem;">Branches</h4>
+                    <button class="branch-btn" onclick="addBranch()">Add Branch</button>
+                    <button class="branch-btn" onclick="removeBranch()">Remove Branch</button>
+                </div>
+            </div>
+
+            <div class="ladder-area">
+                <div class="power-rail"></div>
+                <div class="power-rail right"></div>
+                
+                <div class="rung" id="ladder-rung">
+                    <div class="rung-line" id="rung-line">
+                        <!-- Slots will be dynamically generated -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="testCircuit()">🔍 Test Circuit</button>
+            <button class="btn btn-warning" onclick="clearCircuit()">🗑️ Clear All</button>
+            <button class="btn btn-disabled" id="nextTaskBtn" onclick="nextTask()">➡️ Next Task</button>
+        </div>
+
+        <div class="status" id="status"></div>
+    </div>
+
+    <script>
+        let currentTask = 1;
+        let circuit = {};
+        let draggedElement = null;
+        let branches = [];
+        let branchCounter = 0;
+        let completedTasks = new Set();
+
+        // Task configurations
+        const taskConfigs = {
+            1: {
+                description: 'Create a circuit where input I0.0 AND input I0.1 will turn on output Q0.0. Use normally open contacts for both inputs.',
+                inputs: ['I0.0', 'I0.1'],
+                outputs: ['Q0.0'],
+                check: () => {
+                    const slot0 = circuit['0'];
+                    const slot1 = circuit['1'];
+                    const output = circuit['output'];
+                    
+                    // Check if both slots have NO contacts and correct addresses (in any order)
+                    const hasI00 = (slot0 && slot0.type === 'NO' && slot0.address === 'I0.0') ||
+                                   (slot1 && slot1.type === 'NO' && slot1.address === 'I0.0');
+                    const hasI01 = (slot0 && slot0.type === 'NO' && slot0.address === 'I0.1') ||
+                                   (slot1 && slot1.type === 'NO' && slot1.address === 'I0.1');
+                    
+                    return hasI00 && hasI01 && slot0 && slot1 &&
+                           output && output.type === 'OUTPUT' && output.address === 'Q0.0';
+                }
+            },
+            2: {
+                description: 'Create a circuit where output Q0.0 turns on when input I0.0 is pressed OR input I0.1 is NOT pressed. (Use branches for OR logic)',
+                inputs: ['I0.0'],
+                outputs: ['Q0.0'],
+                check: () => {
+                    const hasBranch = branches.length > 0;
+                    const mainPath = circuit['0'];
+                    const branchPath = circuit['branch-0'];
+                    const output = circuit['output'];
+                    
+                    // Check if we have valid combinations for OR logic
+                    const validCombination1 = mainPath && mainPath.type === 'NO' && mainPath.address === 'I0.0' &&
+                                            branchPath && branchPath.type === 'NC' && branchPath.address === 'I0.1';
+                    
+                    const validCombination2 = mainPath && mainPath.type === 'NC' && mainPath.address === 'I0.1' &&
+                                            branchPath && branchPath.type === 'NO' && branchPath.address === 'I0.0';
+                    
+                    return hasBranch && (validCombination1 || validCombination2) &&
+                           output && output.type === 'OUTPUT' && output.address === 'Q0.0';
+                }
+            },
+            3: {
+                description: 'Create a timer circuit that activates output Q0.0 five seconds after input I0.0 is pressed. Use the correct timer type and set PT to 5 seconds!',
+                inputs: ['I0.0'],
+                outputs: ['Q0.0'],
+                check: () => {
+                    const slot0 = circuit['0'];
+                    const slot1 = circuit['1'];
+                    const output = circuit['output'];
+                    
+                    return slot0 && slot0.type === 'NO' && slot0.address === 'I0.0' &&
+                           slot1 && slot1.type === 'TON' && (slot1.address === 'T0' || slot1.address === 'T1') && 
+                           slot1.presetTime && (slot1.presetTime === '5s' || slot1.presetTime === '5' || slot1.presetTime === 't#5s') &&
+                           output && output.type === 'OUTPUT' && output.address === 'Q0.0';
+                }
+            },
+            4: {
+                description: 'Advanced: Create a circuit where output Q0.0 turns on when (I0.0 AND I0.1) OR (I0.2 is NOT pressed). Combine AND and OR logic!',
+                inputs: ['I0.0', 'I0.1'],
+                outputs: ['Q0.0'],
+                check: () => {
+                    const slot0 = circuit['0'];
+                    const slot1 = circuit['1'];
+                    const branchPath = circuit['branch-0'];
+                    const output = circuit['output'];
+                    const hasBranch = branches.length > 0;
+                    
+                    // Main path: I0.0 AND I0.1 (both NO)
+                    const mainPathCorrect = slot0 && slot0.type === 'NO' && slot0.address === 'I0.0' &&
+                                          slot1 && slot1.type === 'NO' && slot1.address === 'I0.1';
+                    
+                    // Branch path: I0.2 NOT pressed (NC)
+                    const branchPathCorrect = branchPath && branchPath.type === 'NC' && branchPath.address === 'I0.2';
+                    
+                    // Output correct
+                    const outputCorrect = output && output.type === 'OUTPUT' && output.address === 'Q0.0';
+                    
+                    return hasBranch && mainPathCorrect && branchPathCorrect && outputCorrect;
+                }
+            },
+            5: {
+                description: 'Memory Circuit (SET/RESET Latch): Create a latching circuit where I0.0 turns ON Q0.0, and I0.1 turns OFF Q0.0. Main path: NC I0.1 and NO Q0.0 (either order). Branch: NO I0.0.',
+                inputs: ['I0.1', 'Q0.0'],
+                outputs: ['Q0.0'],
+                check: () => {
+                    const hasBranch = branches.length > 0;
+                    const mainPath0 = circuit['0'];
+                    const mainPath1 = circuit['1'];
+                    const branchPath = circuit['branch-0'];
+                    const output = circuit['output'];
+                    
+                    // Check for NC I0.1 and NO Q0.0 in either order on main path
+                    const hasResetContact = (mainPath0 && mainPath0.type === 'NC' && mainPath0.address === 'I0.1') ||
+                                           (mainPath1 && mainPath1.type === 'NC' && mainPath1.address === 'I0.1');
+                    const hasMemoryContact = (mainPath0 && mainPath0.type === 'NO' && mainPath0.address === 'Q0.0') ||
+                                            (mainPath1 && mainPath1.type === 'NO' && mainPath1.address === 'Q0.0');
+                    
+                    // Branch path: NO I0.0 (SET)
+                    const setPath = branchPath && branchPath.type === 'NO' && branchPath.address === 'I0.0';
+                    
+                    // Output correct
+                    const outputCorrect = output && output.type === 'OUTPUT' && output.address === 'Q0.0';
+                    
+                    return hasBranch && hasResetContact && hasMemoryContact && setPath && outputCorrect && mainPath0 && mainPath1;
+                }
+            },
+            6: {
+                description: 'Counter Circuit: Create a circuit that counts I0.0 presses and turns on Q0.0 after 3 counts. Use CTU counter with PV=3!',
+                inputs: ['I0.0'],
+                outputs: ['Q0.0'],
+                check: () => {
+                    const slot0 = circuit['0'];
+                    const slot1 = circuit['1'];
+                    const output = circuit['output'];
+                    
+                    return slot0 && slot0.type === 'NO' && slot0.address === 'I0.0' &&
+                           slot1 && slot1.type === 'CTU' && (slot1.address === 'C0' || slot1.address === 'C1') && 
+                           slot1.presetValue && (slot1.presetValue === '3' || slot1.presetValue === 'pv#3') &&
+                           output && output.type === 'OUTPUT' && output.address === 'Q0.0';
+                }
+            },
+            7: {
+                description: 'Advanced Timer: Create a circuit with cascaded timers - I0.0 starts T0 (3s), when T0 completes it starts T1 (2s), then T1 turns on Q0.0!',
+                inputs: ['I0.0'],
+                outputs: ['Q0.0'],
+                check: () => {
+                    const slot0 = circuit['0'];
+                    const slot1 = circuit['1'];
+                    const slot2 = circuit['2'];
+                    const output = circuit['output'];
+                    
+                    // First timer triggered by input
+                    const firstTimer = slot0 && slot0.type === 'NO' && slot0.address === 'I0.0' &&
+                                      slot1 && slot1.type === 'TON' && (slot1.address === 'T0') && 
+                                      slot1.presetTime && (slot1.presetTime === '3s' || slot1.presetTime === '3');
+                    
+                    // Second timer triggered by first timer's contact
+                    const secondTimer = slot2 && slot2.type === 'TON' && (slot2.address === 'T1') && 
+                                       slot2.presetTime && (slot2.presetTime === '2s' || slot2.presetTime === '2');
+                    
+                    // Output correct
+                    const outputCorrect = output && output.type === 'OUTPUT' && output.address === 'Q0.0';
+                    
+                    return firstTimer && secondTimer && outputCorrect;
+                }
+            }
+        };
+
+        function generateSlots() {
+            const config = taskConfigs[currentTask];
+            const rungLine = document.getElementById('rung-line');
+            rungLine.innerHTML = '';
+            
+            let slotPosition = 100;
+            let slotIndex = 0;
+            
+            // Generate input slots
+            config.inputs.forEach((address, index) => {
+                const slot = document.createElement('div');
+                slot.className = 'slot';
+                slot.dataset.slot = index.toString();
+                slot.dataset.slotIndex = slotIndex.toString();
+                slot.style.left = slotPosition + 'px';
+                
+                rungLine.appendChild(slot);
+                slotPosition += 100;
+                slotIndex++;
+            });
+            
+            // Add extra slots for complex tasks
+            if (currentTask === 3 || currentTask === 6) {
+                const extraSlot = document.createElement('div');
+                extraSlot.className = 'slot';
+                extraSlot.dataset.slot = '1';
+                extraSlot.dataset.slotIndex = slotIndex.toString();
+                extraSlot.style.left = slotPosition + 'px';
+                
+                rungLine.appendChild(extraSlot);
+                slotPosition += 100;
+                slotIndex++;
+            }
+            
+            // Add third slot for task 7 (cascaded timers)
+            if (currentTask === 7) {
+                const slot2 = document.createElement('div');
+                slot2.className = 'slot';
+                slot2.dataset.slot = '1';
+                slot2.dataset.slotIndex = slotIndex.toString();
+                slot2.style.left = slotPosition + 'px';
+                
+                rungLine.appendChild(slot2);
+                slotPosition += 100;
+                slotIndex++;
+                
+                const slot3 = document.createElement('div');
+                slot3.className = 'slot';
+                slot3.dataset.slot = '2';
+                slot3.dataset.slotIndex = slotIndex.toString();
+                slot3.style.left = slotPosition + 'px';
+                
+                rungLine.appendChild(slot3);
+                slotPosition += 100;
+                slotIndex++;
+            }
+            
+            // Generate output slot
+            config.outputs.forEach((address, index) => {
+                const slot = document.createElement('div');
+                slot.className = 'slot output-slot';
+                slot.dataset.slot = 'output';
+                slot.dataset.slotIndex = slotIndex.toString();
+                slot.style.right = '100px';
+                slot.style.left = 'auto';
+                
+                rungLine.appendChild(slot);
+            });
+            
+            // Redraw existing branches
+            drawBranches();
+        }
+
+        function addBranch() {
+            const rungLine = document.getElementById('rung-line');
+            
+            // Create branch data - connect just before output
+            const branch = {
+                id: branchCounter++,
+                startX: 50,
+                endX: 350, // Connect before output at 400px
+                yOffset: 80 + (branches.length * 80)
+            };
+            
+            branches.push(branch);
+            drawBranches();
+            
+            // Add single slot for the new branch
+            const branchSlot = document.createElement('div');
+            branchSlot.className = 'slot';
+            branchSlot.dataset.slot = `branch-${branches.length - 1}`;
+            branchSlot.dataset.slotIndex = branches.length.toString();
+            branchSlot.style.left = '100px'; // Single slot position
+            branchSlot.style.top = (branch.yOffset - 25) + 'px';
+            
+            rungLine.appendChild(branchSlot);
+            
+            updateStatus('Branch added! You can now create parallel paths for OR logic.', '');
+        }
+
+        function removeBranch() {
+            if (branches.length === 0) return;
+            
+            // Remove the last branch
+            const removedBranch = branches.pop();
+            
+            // Remove branch slots
+            const branchSlots = document.querySelectorAll(`[data-slot^="branch-"]`);
+            branchSlots.forEach(slot => {
+                const slotId = slot.dataset.slot;
+                delete circuit[slotId];
+                slot.remove();
+            });
+            
+            drawBranches();
+            updateStatus('Branch removed.', '');
+        }
+
+        function drawBranches() {
+            // Remove existing branch lines
+            document.querySelectorAll('.branch, .branch-vertical').forEach(el => el.remove());
+            
+            const rungLine = document.getElementById('rung-line');
+            
+            branches.forEach(branch => {
+                // Horizontal branch line
+                const branchLine = document.createElement('div');
+                branchLine.className = 'branch';
+                branchLine.style.left = branch.startX + 'px';
+                branchLine.style.width = (branch.endX - branch.startX) + 'px';
+                branchLine.style.top = branch.yOffset + 'px';
+                rungLine.appendChild(branchLine);
+                
+                // Vertical connectors
+                const startConnector = document.createElement('div');
+                startConnector.className = 'branch-vertical';
+                startConnector.style.left = branch.startX + 'px';
+                startConnector.style.top = '0px';
+                startConnector.style.height = branch.yOffset + 'px';
+                rungLine.appendChild(startConnector);
+                
+                const endConnector = document.createElement('div');
+                endConnector.className = 'branch-vertical';
+                endConnector.style.left = branch.endX + 'px';
+                endConnector.style.top = '0px';
+                endConnector.style.height = branch.yOffset + 'px';
+                rungLine.appendChild(endConnector);
+            });
+        }
+
+        function getValidAddresses(symbolType, slotId) {
+            // Return valid addresses based on task and symbol type
+            const task = taskConfigs[currentTask];
+            
+            switch(symbolType) {
+                case 'NO':
+                case 'NC':
+                    if (currentTask === 1) {
+                        return ['I0.0', 'I0.1'];
+                    } else if (currentTask === 2) {
+                        return ['I0.0', 'I0.1'];
+                    } else if (currentTask === 3) {
+                        return ['I0.0'];
+                    } else if (currentTask === 4) {
+                        return ['I0.0', 'I0.1', 'I0.2'];
+                    } else if (currentTask === 5) {
+                        return ['I0.0', 'I0.1', 'Q0.0'];
+                    } else if (currentTask === 6) {
+                        return ['I0.0'];
+                    } else if (currentTask === 7) {
+                        return ['I0.0', 'T0'];
+                    }
+                    break;
+                case 'OUTPUT':
+                    return ['Q0.0'];
+                case 'TON':
+                case 'TOF':
+                    return ['T0', 'T1'];
+                case 'CTU':
+                    return ['C0', 'C1'];
+                default:
+                    return [];
+            }
+            return [];
+        }
+
+        function validateAddress(symbolType, address, slotId) {
+            const validAddresses = getValidAddresses(symbolType, slotId);
+            return validAddresses.includes(address.toUpperCase());
+        }
+
+        // Drag and drop functionality
+        document.addEventListener('dragstart', (e) => {
+            if (e.target.classList.contains('symbol')) {
+                draggedElement = e.target;
+                e.target.style.opacity = '0.5';
+            }
+        });
+
+        document.addEventListener('dragend', (e) => {
+            if (e.target.classList.contains('symbol')) {
+                e.target.style.opacity = '1';
+                draggedElement = null;
+            }
+        });
+
+        document.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        document.addEventListener('dragenter', (e) => {
+            if (e.target.classList.contains('slot')) {
+                e.target.classList.add('drag-over');
+            }
+        });
+
+        document.addEventListener('dragleave', (e) => {
+            if (e.target.classList.contains('slot')) {
+                e.target.classList.remove('drag-over');
+            }
+        });
+
+        document.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (e.target.classList.contains('slot') && draggedElement) {
+                const slot = e.target;
+                const slotId = slot.dataset.slot;
+                const slotIndex = parseInt(slot.dataset.slotIndex);
+                const symbolType = draggedElement.dataset.type;
+                
+                // Clear existing symbol in slot
+                slot.innerHTML = '';
+                slot.classList.remove('drag-over');
+                
+                // Create address input field
+                const addressInput = document.createElement('input');
+                addressInput.type = 'text';
+                addressInput.className = 'address-input';
+                addressInput.placeholder = 'Enter address';
+                addressInput.style.cssText = `
+                    position: absolute;
+                    top: -25px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    width: 60px;
+                    height: 18px;
+                    font-size: 10px;
+                    font-weight: bold;
+                    text-align: center;
+                    border: 1px solid #bdc3c7;
+                    border-radius: 3px;
+                    background: white;
+                    color: #2c3e50;
+                    z-index: 10;
+                `;
+                
+                // Create PT input field for timers and PV input for counters
+                let ptInput = null;
+                if (symbolType === 'TON' || symbolType === 'TOF') {
+                    ptInput = document.createElement('input');
+                    ptInput.type = 'text';
+                    ptInput.className = 'pt-input';
+                    ptInput.placeholder = 'PT (5s)';
+                    ptInput.style.cssText = `
+                        position: absolute;
+                        top: 45px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 60px;
+                        height: 18px;
+                        font-size: 10px;
+                        font-weight: bold;
+                        text-align: center;
+                        border: 1px solid #bdc3c7;
+                        border-radius: 3px;
+                        background: white;
+                        color: #2c3e50;
+                        z-index: 10;
+                    `;
+                } else if (symbolType === 'CTU') {
+                    ptInput = document.createElement('input');
+                    ptInput.type = 'text';
+                    ptInput.className = 'pv-input';
+                    ptInput.placeholder = 'PV (3)';
+                    ptInput.style.cssText = `
+                        position: absolute;
+                        top: 45px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 60px;
+                        height: 18px;
+                        font-size: 10px;
+                        font-weight: bold;
+                        text-align: center;
+                        border: 1px solid #bdc3c7;
+                        border-radius: 3px;
+                        background: white;
+                        color: #2c3e50;
+                        z-index: 10;
+                    `;
+                }
+                
+                // Add symbol
+                const placedSymbol = document.createElement('div');
+                placedSymbol.className = 'placed-symbol';
+                placedSymbol.innerHTML = draggedElement.innerHTML;
+                placedSymbol.onclick = () => removeSymbol(slotId);
+                
+                slot.appendChild(addressInput);
+                if (ptInput) slot.appendChild(ptInput);
+                slot.appendChild(placedSymbol);
+                slot.classList.add('filled');
+                
+                // Store symbol type in circuit (address will be validated later)
+                circuit[slotId] = { type: symbolType, address: '', presetTime: '', presetValue: '' };
+                
+                // Handle address input validation
+                addressInput.addEventListener('blur', () => {
+                    const address = addressInput.value.toUpperCase();
+                    if (validateAddress(symbolType, address, slotId)) {
+                        circuit[slotId].address = address;
+                        addressInput.style.borderColor = '#27ae60';
+                        addressInput.style.backgroundColor = '#d5f4e6';
+                        updateStatus('Address accepted!', '');
+                    } else {
+                        addressInput.style.borderColor = '#e74c3c';
+                        addressInput.style.backgroundColor = '#fadbd8';
+                        circuit[slotId].address = '';
+                        updateStatus('Invalid address! Check the task requirements.', 'error');
+                    }
+                });
+                
+                addressInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        addressInput.blur();
+                    }
+                });
+                
+                // Handle PT input validation for timers and PV for counters
+                if (ptInput) {
+                    ptInput.addEventListener('blur', () => {
+                        if (symbolType === 'TON' || symbolType === 'TOF') {
+                            const presetTime = ptInput.value.toLowerCase();
+                            const validTimes = ['5s', '5', 't#5s', '3s', '3', 't#3s', '2s', '2', 't#2s'];
+                            if (validTimes.includes(presetTime)) {
+                                circuit[slotId].presetTime = presetTime;
+                                ptInput.style.borderColor = '#27ae60';
+                                ptInput.style.backgroundColor = '#d5f4e6';
+                                updateStatus('Timer preset accepted!', '');
+                            } else {
+                                ptInput.style.borderColor = '#e74c3c';
+                                ptInput.style.backgroundColor = '#fadbd8';
+                                circuit[slotId].presetTime = '';
+                                updateStatus('Check the task requirements for correct timer value!', 'error');
+                            }
+                        } else if (symbolType === 'CTU') {
+                            const presetValue = ptInput.value.toLowerCase();
+                            if (presetValue === '3' || presetValue === 'pv#3') {
+                                circuit[slotId].presetValue = presetValue;
+                                ptInput.style.borderColor = '#27ae60';
+                                ptInput.style.backgroundColor = '#d5f4e6';
+                                updateStatus('Counter preset accepted!', '');
+                            } else {
+                                ptInput.style.borderColor = '#e74c3c';
+                                ptInput.style.backgroundColor = '#fadbd8';
+                                circuit[slotId].presetValue = '';
+                                updateStatus('Counter must be set to 3 (enter "3")!', 'error');
+                            }
+                        }
+                    });
+                    
+                    ptInput.addEventListener('keypress', (e) => {
+                        if (e.key === 'Enter') {
+                            ptInput.blur();
+                        }
+                    });
+                }
+                
+                // Focus the input for immediate typing
+                setTimeout(() => addressInput.focus(), 100);
+                
+                updateStatus('Symbol placed! Now enter the correct address for this symbol.', '');
+            }
+        });
+
+        function removeSymbol(slotId) {
+            const slot = document.querySelector(`[data-slot="${slotId}"]`);
+            slot.innerHTML = '';
+            slot.classList.remove('filled');
+            delete circuit[slotId];
+            updateStatus('Symbol removed.', '');
+        }
+
+        function testCircuit() {
+            const task = taskConfigs[currentTask];
+            if (task && task.check()) {
+                completedTasks.add(currentTask);
+                updateNextButton();
+                updateStatus('🎉 Correct! Circuit works perfectly! You can now proceed to the next task.', 'success');
+            } else {
+                updateStatus('❌ Circuit incomplete or incorrect. Check the task requirements.', 'error');
+            }
+        }
+
+        function clearCircuit() {
+            document.querySelectorAll('.slot').forEach(slot => {
+                slot.innerHTML = '';
+                slot.classList.remove('filled');
+            });
+            circuit = {};
+            branches = [];
+            branchCounter = 0;
+            generateSlots(); // Regenerate to remove branches
+            updateStatus('Circuit cleared.', '');
+        }
+
+        function updateNextButton() {
+            const nextBtn = document.getElementById('nextTaskBtn');
+            if (completedTasks.has(currentTask)) {
+                nextBtn.className = 'btn btn-success';
+                nextBtn.disabled = false;
+            } else {
+                nextBtn.className = 'btn btn-disabled';
+                nextBtn.disabled = true;
+            }
+        }
+
+        function nextTask() {
+            if (!completedTasks.has(currentTask)) {
+                updateStatus('❌ Please complete the current task before proceeding!', 'error');
+                return;
+            }
+            
+            // Check if all tasks are completed
+            if (completedTasks.size === 7) {
+                showWinScreen();
+                return;
+            }
+            
+            currentTask = currentTask < 7 ? currentTask + 1 : 1;
+            clearCircuit();
+            
+            const config = taskConfigs[currentTask];
+            const taskDesc = document.querySelector('.task-description');
+            taskDesc.innerHTML = `<strong>Task ${currentTask}:</strong> ${config.description}`;
+            
+            generateSlots();
+            updateNextButton();
+            updateStatus(`Switched to Task ${currentTask}`, '');
+        }
+
+        function showWinScreen() {
+            // Create win screen overlay
+            const winOverlay = document.createElement('div');
+            winOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.9);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 1000;
+                animation: fadeIn 0.5s ease-in;
+            `;
+            
+            // Create win content
+            const winContent = document.createElement('div');
+            winContent.style.cssText = `
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 40px;
+                border-radius: 20px;
+                text-align: center;
+                max-width: 600px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                animation: slideIn 0.7s ease-out;
+            `;
+            
+            winContent.innerHTML = `
+                <div style="font-size: 4rem; margin-bottom: 20px;">🎉🏆🎉</div>
+                <h1 style="font-size: 3rem; margin-bottom: 20px; color: #FFD700;">CONGRATULATIONS!</h1>
+                <h2 style="font-size: 1.8rem; margin-bottom: 30px;">PLC Master Achieved!</h2>
+                <p style="font-size: 1.3rem; margin-bottom: 30px; line-height: 1.6;">
+                    You've successfully completed all 7 ladder logic challenges!<br>
+                    You've mastered:
+                </p>
+                <div style="text-align: left; max-width: 400px; margin: 0 auto 30px;">
+                    <div style="margin: 10px 0; font-size: 1.1rem;">✅ Basic AND/OR Logic</div>
+                    <div style="margin: 10px 0; font-size: 1.1rem;">✅ Timer Circuits</div>
+                    <div style="margin: 10px 0; font-size: 1.1rem;">✅ Counter Circuits</div>
+                    <div style="margin: 10px 0; font-size: 1.1rem;">✅ Memory/Latch Circuits</div>
+                    <div style="margin: 10px 0; font-size: 1.1rem;">✅ Advanced Combinations</div>
+                </div>
+                <p style="font-size: 1.2rem; margin-bottom: 30px; color: #FFD700;">
+                    You're now ready to tackle real-world PLC programming!
+                </p>
+                <button onclick="restartGame()" style="
+                    background: #27ae60;
+                    color: white;
+                    border: none;
+                    padding: 15px 30px;
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    margin: 10px;
+                    transition: all 0.2s;
+                " onmouseover="this.style.background='#229954'" onmouseout="this.style.background='#27ae60'">
+                    🔄 Play Again
+                </button>
+                <button onclick="closeWinScreen()" style="
+                    background: #3498db;
+                    color: white;
+                    border: none;
+                    padding: 15px 30px;
+                    font-size: 1.2rem;
+                    font-weight: bold;
+                    border-radius: 10px;
+                    cursor: pointer;
+                    margin: 10px;
+                    transition: all 0.2s;
+                " onmouseover="this.style.background='#2980b9'" onmouseout="this.style.background='#3498db'">
+                    ✨ Continue Exploring
+                </button>
+            `;
+            
+            winOverlay.appendChild(winContent);
+            document.body.appendChild(winOverlay);
+            
+            // Add CSS animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes slideIn {
+                    from { transform: translateY(-50px) scale(0.8); opacity: 0; }
+                    to { transform: translateY(0) scale(1); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Store reference for removal
+            window.currentWinScreen = winOverlay;
+        }
+
+        function restartGame() {
+            // Reset all progress
+            completedTasks.clear();
+            currentTask = 1;
+            clearCircuit();
+            
+            // Update UI
+            const config = taskConfigs[currentTask];
+            const taskDesc = document.querySelector('.task-description');
+            taskDesc.innerHTML = `<strong>Task ${currentTask}:</strong> ${config.description}`;
+            
+            generateSlots();
+            updateNextButton();
+            updateStatus('Game restarted! Good luck mastering PLC logic again!', '');
+            
+            // Close win screen
+            closeWinScreen();
+        }
+
+        function closeWinScreen() {
+            if (window.currentWinScreen) {
+                window.currentWinScreen.remove();
+                window.currentWinScreen = null;
+            }
+        }
+
+        function updateStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+
+        // Initialize
+        generateSlots();
+        updateNextButton();
+        updateStatus('Drag symbols from the toolbox into the slots to build your circuit!', '');
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9764cf8331845395',t:'MTc1NjM5NDYxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
