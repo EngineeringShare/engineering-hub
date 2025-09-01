@@ -213,7 +213,7 @@
     </nav>
     <div class="quiz-container">
         <div class="quiz-header">
-            <h1 class="quiz-title">🧠 Encoders Quiz</h1>
+            <h1 class="quiz-title">🧠 Sinusoidals Quiz</h1>
         </div>
 
         <div class="quiz-stats">
@@ -255,68 +255,54 @@
         // 🎯 CUSTOMIZE YOUR QUIZ HERE 🎯
         // Format: "Question": ["Correct Answer", "Wrong Answer 1", "Wrong Answer 2", "Wrong Answer 3", TimeInSeconds]
         let gameData = {
-            "What is an encoder, and why is it used in mechatronic systems?": [
-                "A device that converts mechanical motion into electrical signals for position or speed measurement.",
-                "A sensor that measures temperature changes in mechanical systems.",
-                "A motor controller that adjusts rotational speed in real-time.",
-                "A component that amplifies electrical signals for better motor efficiency.",
-                30
-            ],
-            "A rotary optical encoder has a resolution of 400 increments per rotation. How far has it rotated from the start position after 80 increments?": [
-                "20% of a full rotation",
-                "25% of a full rotation",
-                "10% of a full rotation",
-                "50% of a full rotation",
-                30
-            ],
-            "What is the difference between incremental and absolute encoders, and what are the advantages of each?": [
-                "Incremental encoders need a reference to determine position, while absolute encoders retain position data even when power is lost.",
-                "Incremental encoders store absolute position values internally.",
-                "Absolute encoders are less precise than incremental encoders.",
-                "Incremental encoders provide a continuous position, while absolute encoders count pulses from a reference point.",
-                30
-            ],
-            "Which of the following is NOT a common type of encoder?": [
-                "Fluid encoder",
-                "Optical encoder",
-                "Magnetic encoder",
-                "Capacitive encoder",
+            "What is the equation for a sine wave?": [
+                "y=Asin(ωt+ϕ)",
+                "y=Acos(ωt)",
+                "y=Atan(ωt+ϕ)",
+                "y=Asin(ωt)+ϕ",
                 20
             ],
-            "What is the primary purpose of an optical encoder?": [
-                "To track position and speed by detecting changes in light patterns.",
-                "To measure temperature variations in mechanical systems.",
-                "To convert analogue signals into digital ones for processing.",
-                "To amplify electrical signals in sensor networks.",
-                25
+            "A sine wave has an amplitude of 5 units and a period of 2 seconds. What is its equation?": [
+                "y=5sin(πt)",
+                "y=5sin(4πt)",
+                "y=5sin(0.5πt)",
+                "y=5sin(2πt)",
+                30
             ],
-            "How does an absolute encoder differ from an incremental encoder in terms of output?": [
-                "Absolute encoders provide a unique position value for each shaft position, while incremental encoders output pulses that must be counted.",
-                "Incremental encoders output a digital code for each unique position, while absolute encoders output only pulses.",
-                "Absolute encoders need a reference point to start counting, while incremental encoders always provide exact position data.",
-                "There is no functional difference; they both work the same way.",
-                45
+            "A sinusoidal wave is described by the equation y(t)=4sin(2πt). Find the instantaneous displacement at t=0.25s.": [
+                "4",
+                "-4",
+                "0",
+                "2",
+                30
             ],
-            "What additional component is often required for an incremental encoder to determine an absolute position upon startup?": [
-                "A homing or reference sensor",
-                "A signal amplifier",
-                "A second encoder",
-                "A backup battery",
+            "Which of these functions shows a horizontal shift 4 spaces to the left?": [
+                "y=sin(x+4)",
+                "y=sin(x)+4",
+                "y=sin(x)-4",
+                "y=sin(x-4)",
                 20
             ],
-            "What is a typical use case for a magnetic encoder instead of an optical encoder?": [
-                "In environments with high levels of dust or contamination",
-                "In applications requiring the highest possible resolution",
-                "In consumer-grade office equipment",
-                "In systems where weight must be minimized",
+            "The equation of a sine wave is given by y=3sin(2x). What is the amplitude, period, and frequency?": [
+                "Amplitude = 3, Period = π, Frequency = 2Hz",
+                "Amplitude = 1, Period = π, Frequency = 3Hz",
+                "Amplitude = 2, Period = 2π, Frequency = 3Hz",
+                "Amplitude = 3, Period = 2π, Frequency = 1Hz",
                 25
             ],
-            "Which of the following factors most affects the resolution of an optical encoder?": [
-                "The number of divisions on the encoder disk",
-                "The colour of the LED light source",
-                "The shape of the encoder housing",
-                "The material of the encoder disk",
-                25
+            "The equation of a wave is y=4sin(x−π/4​). What is the phase shift and direction?": [
+                "Phase shift = 4/π to the right",
+                "Phase shift = 4/π to the left",
+                "Phase shift = 4π to the right",
+                "No Phase Shift",
+                30
+            ],
+            "A sinusoidal wave travels at a speed of 10 m/s and has a frequency of 5 Hz. What is its wavelength?  ": [
+                "2m",
+                "1m",
+                "5m",
+                "0.5m",
+                30
             ]
         };
 

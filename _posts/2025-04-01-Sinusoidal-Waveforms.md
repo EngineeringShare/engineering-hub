@@ -22,9 +22,9 @@ units: ["HTQ Unit 4002", "HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 8"]
 * [YouTube: Adding Phasors - The Basics](https://youtu.be/_aOftEfyHgI?si=EXJOflpkDNYLGFlK)
 * [YouTube: Adding Phasors - HV Chart](https://youtu.be/Aeq1pceXSWs?si=0N-8Ht3W7fQBXaMf)
 
-## Quiz:
+## Interactive Tools:
 
-<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSemgIAKfjYEeMTQucKNtZq-oWeIwmdef5HN7Hfum7ocSzQRjg/viewform?embedded=true" width="640" height="2297" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+<a href="https://engineeringshare.github.io/engineering-hub/interactive/Sinusoidals%20Quiz.html">📝 Quiz</a>
 
 ## ---
 
