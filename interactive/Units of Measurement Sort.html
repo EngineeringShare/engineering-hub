@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Units of Measurement Sort</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .game-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .game-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .game-content {
+            padding: 40px;
+        }
+
+        .bins-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .bin {
+            flex: 1;
+            min-width: 250px;
+            min-height: 200px;
+            background: #f8f9fa;
+            border: 3px dashed #dee2e6;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .bin.drag-over {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            transform: scale(1.02);
+        }
+
+        .bin-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bin-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 120px;
+        }
+
+        .cards-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            min-height: 100px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px dashed #dee2e6;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #333;
+            padding: 15px 20px;
+            border-radius: 12px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            max-width: 200px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card:active {
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+
+        .card.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .card.in-bin {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            cursor: pointer;
+        }
+
+        .card.in-bin:hover {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 20px;
+        }
+
+        .feedback {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .game-title {
+                font-size: 2rem;
+            }
+            
+            .bins-container {
+                flex-direction: column;
+            }
+            
+            .bin {
+                min-width: 100%;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav style="max-width:1000px;margin:0 auto 10px auto;">
+        <a href="https://engineeringshare.github.io/engineering-hub/interactive-hub/" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px">
+            ← Back to Interactive Hub
+        </a>
+    </nav>
+    <div class="game-container">
+        <div class="game-header">
+            <h1 class="game-title">🎯 Sorting Game</h1>
+            <p class="game-subtitle">Drag and drop items into the correct categories</p>
+        </div>
+        
+        <div class="game-content">
+            <div class="score" id="score">Score: 0 / 0</div>
+            
+            <div class="feedback" id="feedback"></div>
+            
+            <div class="bins-container" id="binsContainer"></div>
+            
+            <div class="cards-container" id="cardsContainer"></div>
+            
+            <div class="controls">
+                <button class="btn btn-primary" onclick="checkAnswers()">Check Answers</button>
+                <button class="btn btn-secondary" onclick="resetGame()">Reset Game</button>
+                <button class="btn btn-secondary" onclick="shuffleCards()">Shuffle Cards</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 🎯 CUSTOMIZE YOUR MATCHES HERE 🎯
+        // SI Units Sorting Game: Base vs Derived
+        let gameData = {
+            "metre (m)": "Base",
+            "kilogram (kg)": "Base",
+            "second (s)": "Base",
+            "ampere (A)": "Base",
+            "kelvin (K)": "Base",
+            "mole (mol)": "Base",
+            "candela (cd)": "Base",
+            "newton (N)": "Derived",
+            "joule (J)": "Derived",
+            "watt (W)": "Derived",
+            "pascal (Pa)": "Derived",
+            "coulomb (C)": "Derived",
+            "volt (V)": "Derived",
+            "ohm (Ω)": "Derived",
+            "hertz (Hz)": "Derived",
+            "tesla (T)": "Derived",
+            "lumen (lm)": "Derived",
+            "lux (lx)": "Derived"
+        };
+
+        let score = 0;
+        let totalItems = 0;
+        let gameState = {};
+
+        function initializeGame() {
+            const categories = [...new Set(Object.values(gameData))];
+            const items = Object.keys(gameData);
+            totalItems = items.length;
+            
+            // Create bins
+            const binsContainer = document.getElementById('binsContainer');
+            binsContainer.innerHTML = '';
+            
+            categories.forEach(category => {
+                const bin = document.createElement('div');
+                bin.className = 'bin';
+                bin.dataset.category = category;
+                bin.innerHTML = `
+                    <div class="bin-title">${category}</div>
+                    <div class="bin-items" id="bin-${category}"></div>
+                `;
+                
+                // Add drop event listeners
+                bin.addEventListener('dragover', handleDragOver);
+                bin.addEventListener('drop', handleDrop);
+                bin.addEventListener('dragleave', handleDragLeave);
+                
+                binsContainer.appendChild(bin);
+            });
+            
+            // Create cards
+            createCards();
+            updateScore();
+        }
+
+        function createCards() {
+            const cardsContainer = document.getElementById('cardsContainer');
+            cardsContainer.innerHTML = '';
+            
+            const items = Object.keys(gameData);
+            const shuffledItems = [...items].sort(() => Math.random() - 0.5);
+            
+            shuffledItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.draggable = true;
+                card.textContent = item;
+                card.dataset.item = item;
+                card.dataset.correctCategory = gameData[item];
+                
+                // Add drag event listeners
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+                
+                cardsContainer.appendChild(card);
+            });
+        }
+
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.item);
+            e.target.classList.add('dragging');
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const bin = e.currentTarget;
+            bin.classList.remove('drag-over');
+            
+            const item = e.dataTransfer.getData('text/plain');
+            const card = document.querySelector(`[data-item="${item}"]`);
+            
+            if (card) {
+                // Move card to bin
+                const binItems = bin.querySelector('.bin-items');
+                card.classList.add('in-bin');
+                card.draggable = true; // Keep draggable so users can move it back
+                
+                // Add click to remove functionality
+                card.onclick = function() {
+                    moveCardBack(this);
+                };
+                
+                binItems.appendChild(card);
+                gameState[item] = bin.dataset.category;
+            }
+        }
+
+        function moveCardBack(card) {
+            const cardsContainer = document.getElementById('cardsContainer');
+            card.classList.remove('in-bin');
+            card.onclick = null;
+            cardsContainer.appendChild(card);
+            delete gameState[card.dataset.item];
+        }
+
+        function checkAnswers() {
+            let correct = 0;
+            const feedback = document.getElementById('feedback');
+            
+            Object.keys(gameState).forEach(item => {
+                const userCategory = gameState[item];
+                const correctCategory = gameData[item];
+                const card = document.querySelector(`[data-item="${item}"]`);
+                
+                if (userCategory === correctCategory) {
+                    correct++;
+                    card.style.border = '2px solid #28a745';
+                } else {
+                    card.style.border = '2px solid #dc3545';
+                }
+            });
+            
+            score = correct;
+            updateScore();
+            
+            if (correct === totalItems && Object.keys(gameState).length === totalItems) {
+                feedback.textContent = '🎉 Perfect! All items are correctly sorted!';
+                feedback.className = 'feedback success';
+            } else if (correct === Object.keys(gameState).length && Object.keys(gameState).length > 0) {
+                feedback.textContent = `✅ Great! ${correct} items are correct. Place the remaining items to complete the game.`;
+                feedback.className = 'feedback success';
+            } else {
+                feedback.textContent = `❌ ${correct} out of ${Object.keys(gameState).length} placed items are correct. Try again!`;
+                feedback.className = 'feedback error';
+            }
+            
+            feedback.style.display = 'block';
+            
+            // Clear borders after 3 seconds
+            setTimeout(() => {
+                document.querySelectorAll('.card').forEach(card => {
+                    card.style.border = '2px solid transparent';
+                });
+                feedback.style.display = 'none';
+            }, 3000);
+        }
+
+        function resetGame() {
+            gameState = {};
+            score = 0;
+            
+            // Move all cards back to the main container and reset their state
+            const cardsContainer = document.getElementById('cardsContainer');
+            document.querySelectorAll('.card').forEach(card => {
+                card.style.border = '2px solid transparent';
+                card.classList.remove('in-bin');
+                card.onclick = null;
+                cardsContainer.appendChild(card);
+            });
+            
+            document.getElementById('feedback').style.display = 'none';
+            updateScore();
+            
+            // Shuffle the cards after reset
+            shuffleCards();
+        }
+
+        function shuffleCards() {
+            const cardsContainer = document.getElementById('cardsContainer');
+            const cards = Array.from(cardsContainer.children);
+            
+            // Shuffle array
+            for (let i = cards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [cards[i], cards[j]] = [cards[j], cards[i]];
+            }
+            
+            // Re-append in new order
+            cards.forEach(card => cardsContainer.appendChild(card));
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = `Score: ${score} / ${totalItems}`;
+        }
+
+        // Initialize the game when page loads
+        window.addEventListener('load', initializeGame);
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'975c0269a15c732f',t:'MTc1NjMwMjMyNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
