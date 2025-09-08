@@ -52,7 +52,7 @@ permalink: /technical-skills/
   </style>
 </head>
 
-# 🧭 Technical Skills for Engineers
+# 🛠️ Technical Skills for Engineers
 
 ---
 
@@ -62,4 +62,18 @@ permalink: /technical-skills/
       <h3>📒 Technical Writing Skills</h3>
     </div>
   </a>
+
+  <a class="card-link" href="https://notebooklm.google.com/notebook/f0d27344-9032-4307-9ede-e5a0b2587f52?artifactId=26f397f1-7dd8-44ca-8de5-eee7d9b20d4b">
+    <div class="card">
+      <h3>📒 Havard Referencing and Mendeley Add-In for Word</h3>
+    </div>
+  </a>
+
+  <a class="card-link" href="https://notebooklm.google.com/notebook/1759abcd-3205-4147-8ba5-dc837dc6d36f?artifactId=329adc16-08f3-4522-82ae-70f63375c59f">
+    <div class="card">
+      <h3>📒 Evaluating Information Sources</h3>
+    </div>
+  </a>
 </div>
+
+
