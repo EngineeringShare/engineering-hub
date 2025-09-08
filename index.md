@@ -99,6 +99,16 @@ This site is your one-stop destination for accessing class slides, assignments, 
 
 ---
 
+## Technical Skills
+
+<div class="projects">
+  <a class="card-link" href="{{ '/technical-skills/' | relative_url }}">
+    <div class="card">
+      <h3>Technical Skills Hub</h3>
+    </div>
+  </a>
+</div>
+
 ## 🎮 Interactive
 
 <div class="projects">
