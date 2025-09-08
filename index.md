@@ -99,7 +99,7 @@ This site is your one-stop destination for accessing class slides, assignments, 
 
 ---
 
-## Technical Skills
+## 🛠️ Technical Skills
 
 <div class="projects">
   <a class="card-link" href="{{ '/technical-skills/' | relative_url }}">

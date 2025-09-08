@@ -56,8 +56,10 @@ permalink: /technical-skills/
 
 ---
 
-<a class="card-link" href="https://notebooklm.google.com/notebook/1575696b-556d-4f8f-99e6-6392da109b11?artifactId=1a2fcaee-fe5a-4e0d-90bd-b9a2e9434c52">
-  <div class="card">
-    <h3>{{📒 Technical Writing Skills }}</h3>
-  </div>
-</a>
+<div class="projects">
+  <a class="card-link" href="https://notebooklm.google.com/notebook/1575696b-556d-4f8f-99e6-6392da109b11?artifactId=1a2fcaee-fe5a-4e0d-90bd-b9a2e9434c52">
+    <div class="card">
+      <h3>📒 Technical Writing Skills</h3>
+    </div>
+  </a>
+</div>
