@@ -8,6 +8,8 @@ units: ["T-Level Unit 9", "BTEC Unit 19", "HTQ Unit 4015"]
 
 ## Intro:
 
+Ladder Logic is a graphical programming language used to program Programmable Logic Controllers (PLCs) in industrial automation. It is designed to resemble electrical relay logic diagrams, making it easier for engineers and technicians familiar with traditional control systems to understand and implement. Ladder Logic consists of rungs, which represent individual control instructions, and various symbols that denote different types of inputs, outputs, and functions. This page explores the basic functions of Ladder Logic programming, including the use of contacts, coils, timers, counters, and other essential elements that form the foundation of PLC programming.
+
 ## Presentation:
 
 <div style="position: relative; width: 100%; height: 0; padding-top: 75%;">

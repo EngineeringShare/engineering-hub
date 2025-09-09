@@ -8,6 +8,8 @@ units: ["T-Level Unit 9", "BTEC Unit 19", "HTQ Unit 4015"]
 
 ## Intro:
 
+Sequential programming in PLCs involves creating a series of steps or operations that are executed in a specific order to control machinery or processes. This type of programming is essential for applications that require a defined sequence of actions, such as assembly lines, packaging systems, and automated manufacturing processes. Sequential programming often utilizes instructions like MOVE, which transfers data from one location to another, and comparators, which evaluate conditions to determine the flow of the program. This page explores the concepts and techniques used in sequential programming for PLCs, including the use of state machines, step sequences, and timing functions to achieve precise control over industrial processes.
+
 ## Presentation:
 
 <div style="position: relative; width: 100%; height: 0; padding-top: 75%;">

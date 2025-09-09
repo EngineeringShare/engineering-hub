@@ -8,6 +8,8 @@ units: ["HTQ Unit 4002"]
 
 ## Intro:
 
+Grouped data refers to data that has been organized into groups or intervals, making it easier to analyze and interpret. This is particularly useful when dealing with large datasets, as it allows for a clearer understanding of the distribution and trends within the data. Common methods for summarizing grouped data include calculating measures of central tendency (mean, median, mode) and measures of dispersion (range, variance, standard deviation). This page explores the techniques used to work with grouped data, including calculating these statistical measures and interpreting their significance in various contexts.
+
 ## Presentation:
 
 <div style="position: relative; width: 100%; height: 0; padding-top: 75%;">

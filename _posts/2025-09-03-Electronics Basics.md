@@ -8,6 +8,8 @@ units: ["HTQ Unit 4019", "T-Level Unit 8"]
 
 ## Intro:
 
+Electronics is the branch of science and technology that deals with the study and application of electrical circuits, devices, and systems that use the flow of electrons to perform various functions. It encompasses a wide range of topics, including the behavior of electrons in different materials, the design and operation of electronic components such as resistors, capacitors, and transistors, and the development of complex electronic systems used in communication, computing, and control applications. Electronics plays a crucial role in modern society, enabling advancements in technology and improving our daily lives through devices like smartphones, computers, and medical equipment. This page provides an overview of the fundamental concepts and principles of electronics, including electrical quantities, charge, electric force, and energy, as well as the atomic structure that underpins electronic behavior.
+
 ## Audio:
 
 <audio controls>

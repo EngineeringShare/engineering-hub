@@ -1,12 +1,14 @@
 ---
 title: "Integrals"
 date: 2025-06-03
-tags: ["maths", "vectors", "integration"]
+tags: ["maths", "integration"]
 subject: "Maths"
 units: ["HTQ Unit 4002"]
 ---
 
 ## Intro:
+
+Integration is a fundamental concept in calculus that involves finding the integral of a function, which represents the accumulation of quantities such as area under a curve, total distance traveled, or accumulated growth. It is the reverse process of differentiation and is used to solve problems involving rates of change and accumulation. This page explores the basic principles of integration, including definite and indefinite integrals, common techniques for finding integrals, and their applications in various fields such as physics, engineering, and economics.
 
 ## Presentation:
 

@@ -8,6 +8,8 @@ units: ["BTEC Unit 56", "T-Level Unit 8"]
 
 ## Intro:
 
+Electromagnetic effects refer to the phenomena associated with the interaction between electric and magnetic fields. These effects are governed by fundamental principles such as Faraday's Law of Electromagnetic Induction, which states that a changing magnetic field within a closed loop induces an electromotive force (EMF) in the conductor. Lenz's Law further explains that the direction of the induced EMF opposes the change in magnetic flux that caused it. Maxwell's equations provide a comprehensive framework for understanding how electric and magnetic fields propagate and interact. Electromagnetic effects are crucial in various applications, including electric generators, transformers, inductors, and wireless communication systems. This page explores the key concepts and applications of electromagnetic effects in modern technology.
+
 ## Presentation:
 
 <div style="position: relative; width: 100%; height: 0; padding-top: 75%;">

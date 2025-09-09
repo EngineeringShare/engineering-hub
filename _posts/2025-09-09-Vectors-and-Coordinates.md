@@ -8,6 +8,8 @@ units: ["T-Level Unit 5"]
 
 ## Intro:
 
+Vectors and coordinates are fundamental concepts in physics and engineering that help us describe and analyze physical quantities and positions in space. A vector is a quantity that has both magnitude (size) and direction, such as velocity or force, while a scalar is a quantity that has only magnitude, like temperature or mass. This page will explore the basics of vectors and coordinates, including how to represent them in two-dimensional space using Cartesian and polar coordinate systems.
+
 ## Audio:
 
 <audio controls>
