@@ -1,6 +1,6 @@
 ---
 title: "Test"
-tags: ["Vectors", "Coordinates", "Scalars", "2D", "Magnitude", "Direction", "Cartesian", "Polar"]
+tags: ["Design", "Skills"]
 subject: "Science"
 ---
 
