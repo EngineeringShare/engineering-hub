@@ -56,24 +56,30 @@ permalink: /technical-skills/
 
 ---
 
-<div class="projects">
-  <a class="card-link" href="https://notebooklm.google.com/notebook/1575696b-556d-4f8f-99e6-6392da109b11?artifactId=1a2fcaee-fe5a-4e0d-90bd-b9a2e9434c52">
-    <div class="card">
-      <h3>📒 Technical Writing Skills</h3>
-    </div>
-  </a>
+<div id="hub-cards" class="projects">
+  {%- assign games = site.static_files
+      | where_exp: "f", "f.path contains '/design_skills/'"
+      | where_exp: "f", "f.extname == '.md'"
+      | sort: "name" -%}
+  {%- for f in games -%}
+    {%- assign title = f.basename 
+   | replace: '-', ' ' 
+   | replace: '_', ' ' 
+   | strip -%}
 
-  <a class="card-link" href="https://notebooklm.google.com/notebook/f0d27344-9032-4307-9ede-e5a0b2587f52?artifactId=26f397f1-7dd8-44ca-8de5-eee7d9b20d4b">
-    <div class="card">
-      <h3>📒 Havard Referencing and Mendeley Add-In for Word</h3>
-    </div>
-  </a>
 
-  <a class="card-link" href="https://notebooklm.google.com/notebook/1759abcd-3205-4147-8ba5-dc837dc6d36f?artifactId=329adc16-08f3-4522-82ae-70f63375c59f">
-    <div class="card">
-      <h3>📒 Evaluating Information Sources</h3>
-    </div>
-  </a>
+    {%- assign thumb_path = f.path | replace: f.extname, '.png' -%}
+    {%- assign thumb = site.static_files | where: "path", thumb_path | first -%}
+
+    <a class="card-link" href="{{ f.path | relative_url }}">
+      <div class="card">
+        {%- if thumb -%}
+          <img src="{{ thumb.path | relative_url }}" alt="{{title}} thumbnail" style="max-width:100%;height:120px;object-fit:cover;border-radius:6px;">
+        {%- endif -%}
+        <h3>{{title}}</h3>
+      </div>
+    </a>
+  {%- endfor -%}
 </div>
 
 
