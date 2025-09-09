@@ -108,7 +108,7 @@ This site is your one-stop destination for accessing class slides, assignments, 
     </div>
   </a>
 
-  <a class="card-link" href="{{ '/technical-skills/' | relative_url }}">
+  <a class="card-link" href="{{ '/design-skills/' | relative_url }}">
     <div class="card">
       <h3>Design Skills Hub</h3>
     </div>

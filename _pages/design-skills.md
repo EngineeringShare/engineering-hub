@@ -1,6 +1,6 @@
 ---
-title: Technical Skills
-permalink: /technical-skills/
+title: Design Skills
+permalink: /design-skills/
 ---
 
 <head>
