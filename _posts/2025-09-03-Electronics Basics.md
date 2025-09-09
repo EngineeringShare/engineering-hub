@@ -8,6 +8,13 @@ units: ["HTQ Unit 4019", "T-Level Unit 8"]
 
 ## Intro:
 
+## Audio:
+
+<audio controls>
+    <source src="https://EngineeringShare.github.io/engineering-hub/audio/Electronics Basics.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
 ## Presentation:
 
 <div style="position: relative; width: 100%; height: 0; padding-top: 75%;">
