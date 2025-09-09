@@ -90,7 +90,6 @@ Type to find a game, or browse all cards below.
    | replace: '_', ' ' 
    | strip -%}
 
-
     {%- assign thumb_path = f.path | replace: f.extname, '.png' -%}
     {%- assign thumb = site.static_files | where: "path", thumb_path | first -%}
 

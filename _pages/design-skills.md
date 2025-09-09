@@ -57,9 +57,10 @@ permalink: /design-skills/
 ---
 
 <div id="hub-cards" class="projects">
-  {%- assign pages_ds = site.pages 
-      | where_exp: "p", "p.path contains '/design_skills/'" 
+  {%- assign pages_ds = site.pages
+      | where_exp: "p", "p.path contains 'design_skills/'"
       | sort: "name" -%}
+
   {%- for p in pages_ds -%}
     {%- assign title = p.title 
         | default: p.name 
@@ -69,16 +70,19 @@ permalink: /design-skills/
         | strip -%}
 
     {%- comment -%}
-      If you keep a thumbnail PNG next to each .md with the same basename,
-      this finds it (e.g., design_skills/test.md -> design_skills/test.png)
+      Looks for a sibling PNG with the same basename as the .md
+      e.g. design_skills/test.md -> design_skills/test.png
     {%- endcomment -%}
-    {%- assign thumb_path = '/' | append: p.path | replace: '.md', '.png' -%}
-    {%- assign thumb = site.static_files | where: "path", thumb_path | first -%}
+    {%- assign thumb_name = p.path | replace: '.md', '.png' -%}
+    {%- assign thumb = site.static_files 
+        | where_exp: "sf", "sf.path contains thumb_name" 
+        | first -%}
 
     <a class="card-link" href="{{ p.url | relative_url }}">
       <div class="card">
         {%- if thumb -%}
-          <img src="{{ thumb.path | relative_url }}" alt="{{ title }} thumbnail" style="max-width:100%;height:120px;object-fit:cover;border-radius:6px;">
+          <img src="{{ thumb.path | relative_url }}" alt="{{ title }} thumbnail"
+               style="max-width:100%;height:120px;object-fit:cover;border-radius:6px;">
         {%- endif -%}
         <h3>{{ title }}</h3>
       </div>
