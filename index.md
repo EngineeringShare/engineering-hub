@@ -148,3 +148,7 @@ If anything looks off or you're missing materials, contact me directly:
   - [James Absolom](https://www.linkedin.com/in/james-absolom/)
   - Graeme Woodhall
   - Matt Milner
+
+## License
+
+This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License. See the [LICENSE](https://engineeringshare.github.io/engineering-hub/LICENSE) file for details.
