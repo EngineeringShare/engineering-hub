@@ -1,6 +1,6 @@
 ---
-title: T-Level Unit 08 Hub
-permalink: /classes/t-level-unit-08/
+title: BTEC Unit 40 - Industrial Robotics
+permalink: /classes/btec-unit-40/
 ---
 
 <head>
@@ -52,16 +52,16 @@ permalink: /classes/t-level-unit-08/
   </style>
 </head>
 
-# 🧭 T-Level Engineering Hub
+# 🤖 BTEC Unit 40 – Industrial Robotics
 
-This is the hub for T-Level Unit 8: Electrical and Electronic Principles — covering circuit theory, DC and AC networks, magnetism and electromagnetism, semiconductors, and signals. Use the cards below to access lessons, assignments, and support materials.
+Welcome to the Unit 40 class hub. Here you’ll find everything from robot types to applications in industry. Click a card to view lessons, assignments, or reference material.
 
 ---
 
 <div class="projects">
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
-    {% if post.units contains "T-Level Unit 08" %}
+    {% if post.units contains "BTEC Unit 40" %}
       <a class="card-link" href="{{ '/engineering-hub' | append: post.url }}">
         <div class="card">
           <h3>{{ post.title }}</h3>

@@ -61,7 +61,7 @@ This is the hub for T-Level Unit 5: Engineering Science — covering mechanical 
 <div class="projects">
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
-    {% if post.units contains "T-Level Unit 5" %}
+    {% if post.units contains "T-Level Unit 05" %}
       <a class="card-link" href="{{ '/engineering-hub' | append: post.url }}">
         <div class="card">
           <h3>{{ post.title }}</h3>
