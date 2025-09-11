@@ -134,22 +134,22 @@ This site is your one-stop destination for accessing class slides, assignments, 
 
 ---
 
+## Credits
+
+- **Site by:** [James Absolom](https://wiprobotics.github.io/Portfolio/)
+- **Content by:** 
+  - [James Absolom](https://wiprobotics.github.io/Portfolio/)
+  - Graeme Woodhall
+  - Matt Milner
+
+---
+
 ## 📬 Contact Me
 
 If anything looks off or you're missing materials, contact me directly:
 
 - **Email:** James-Absolom@yorkcollege.ac.uk  
 - **Teams:** James Absolom
-
----
-
-## Credits
-
-- **Site by:** [James Absolom](https://www.linkedin.com/in/james-absolom/)
-- **Content by:** 
-  - [James Absolom](https://www.linkedin.com/in/james-absolom/)
-  - Graeme Woodhall
-  - Matt Milner
 
 ---
 
