@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2D Robot Arm Designer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .control-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 320px;
+            height: fit-content;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .canvas-container {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 24px;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #555;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .joint-item {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .joint-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+        
+        .joint-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .joint-title {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .remove-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s ease;
+        }
+        
+        .remove-btn:hover {
+            background: #ff3742;
+        }
+        
+        .input-group {
+            margin-bottom: 10px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .range-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .btn.secondary {
+            background: #48dbfb;
+        }
+        
+        .btn.secondary:hover {
+            background: #0abde3;
+        }
+        
+        .canvas-area {
+            flex: 1;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            position: relative;
+            min-height: 500px;
+            background: #fafafa;
+            overflow: hidden;
+        }
+        
+        #robotCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .animate-btn {
+            background: #2ed573;
+        }
+        
+        .animate-btn:hover {
+            background: #26d467;
+        }
+        
+        .animate-btn.active {
+            background: #ff4757;
+        }
+        
+        .animate-btn.active:hover {
+            background: #ff3742;
+        }
+        
+        .info-text {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="control-panel">
+        <h1>🤖 Robot Arm Designer</h1>
+        
+        <div class="info-text">
+            Design your robot arm by adding joints and segments. Set motion ranges and visualize the full workspace!
+        </div>
+        
+        <button class="btn" onclick="addJoint()">➕ Add Joint</button>
+        
+        <div class="controls-row">
+            <button class="btn secondary" onclick="showWorkspace()">Show Workspace</button>
+            <button class="btn animate-btn" id="animateBtn" onclick="toggleAnimation()">▶️ Animate</button>
+        </div>
+        
+        <div class="controls-row">
+            <button class="btn" onclick="zoomOut()">🔍➖ Zoom Out</button>
+            <button class="btn" onclick="zoomIn()">🔍➕ Zoom In</button>
+            <button class="btn" onclick="resetZoom()">🎯 Reset</button>
+        </div>
+        
+        <h2>Joints & Segments</h2>
+        <div id="jointsList">
+            <!-- Joints will be added here -->
+        </div>
+    </div>
+    
+    <div class="canvas-container">
+        <h2>Robot Arm Visualization</h2>
+        <div class="canvas-area">
+            <canvas id="robotCanvas"></canvas>
+        </div>
+    </div>
+
+    <script>
+        class RobotArm {
+            constructor() {
+                this.joints = [];
+                this.canvas = document.getElementById('robotCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.animating = false;
+                this.animationId = null;
+                this.showingWorkspace = false;
+                this.workspacePoints = [];
+                this.zoomLevel = 1;
+                this.panX = 0;
+                this.panY = 0;
+                
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+                
+                // Click listener removed - using checkboxes for joint control instead
+                
+                // Add mouse wheel zoom
+                this.canvas.addEventListener('wheel', (e) => this.handleWheel(e));
+                
+                // Add initial joint
+                this.addJoint();
+                this.draw();
+            }
+            
+            resizeCanvas() {
+                const container = this.canvas.parentElement;
+                const containerWidth = container.clientWidth - 4;
+                const containerHeight = container.clientHeight - 4;
+                
+                // Set canvas to full container size but maintain 1:1 pixel ratio
+                this.canvas.width = containerWidth;
+                this.canvas.height = containerHeight;
+                this.canvas.style.width = containerWidth + 'px';
+                this.canvas.style.height = containerHeight + 'px';
+                
+                this.centerX = this.canvas.width / 2;
+                this.centerY = this.canvas.height / 2;
+                this.draw();
+            }
+            
+            addJoint() {
+                const joint = {
+                    id: Date.now(),
+                    length: 100,
+                    minAngle: -90,
+                    maxAngle: 90,
+                    currentAngle: 0,
+                    animationDirection: 1,
+                    isActive: true
+                };
+                this.joints.push(joint);
+                this.updateJointsList();
+                this.draw();
+            }
+            
+            removeJoint(id) {
+                this.joints = this.joints.filter(joint => joint.id !== id);
+                this.updateJointsList();
+                this.draw();
+            }
+            
+            updateJoint(id, property, value) {
+                const joint = this.joints.find(j => j.id === id);
+                if (joint) {
+                    if (property === 'isActive') {
+                        joint[property] = value;
+                    } else {
+                        joint[property] = parseFloat(value) || 0;
+                    }
+                    
+                    // Ensure current angle is within bounds
+                    if (property === 'minAngle' || property === 'maxAngle') {
+                        joint.currentAngle = Math.max(joint.minAngle, Math.min(joint.maxAngle, joint.currentAngle));
+                    }
+                    
+                    this.draw();
+                }
+            }
+            
+            updateJointsList() {
+                const container = document.getElementById('jointsList');
+                container.innerHTML = '';
+                
+                this.joints.forEach((joint, index) => {
+                    const jointDiv = document.createElement('div');
+                    jointDiv.className = 'joint-item';
+                    jointDiv.innerHTML = `
+                        <div class="joint-header">
+                            <span class="joint-title">${index === 0 ? 'Base' : 'Joint ' + index}</span>
+                            ${this.joints.length > 1 ? `<button class="remove-btn" onclick="robotArm.removeJoint(${joint.id})">Remove</button>` : ''}
+                        </div>
+                        <div class="input-group">
+                            <label style="display: flex; align-items: center; gap: 8px;">
+                                <input type="checkbox" ${joint.isActive ? 'checked' : ''} 
+                                       onchange="robotArm.updateJoint(${joint.id}, 'isActive', this.checked)">
+                                <span>Actuate in Animation</span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <label>Length (px):</label>
+                            <input type="number" value="${joint.length}" min="20" max="200" 
+                                   onchange="robotArm.updateJoint(${joint.id}, 'length', this.value)">
+                        </div>
+                        <div class="range-inputs">
+                            <div class="input-group">
+                                <label>Min Angle (°):</label>
+                                <input type="number" value="${joint.minAngle}" min="-180" max="180" 
+                                       onchange="robotArm.updateJoint(${joint.id}, 'minAngle', this.value)">
+                            </div>
+                            <div class="input-group">
+                                <label>Max Angle (°):</label>
+                                <input type="number" value="${joint.maxAngle}" min="-180" max="180" 
+                                       onchange="robotArm.updateJoint(${joint.id}, 'maxAngle', this.value)">
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(jointDiv);
+                });
+            }
+            
+            calculatePositions() {
+                const positions = [{x: this.centerX, y: this.centerY}];
+                let cumulativeAngle = 0;
+                
+                this.joints.forEach((joint, index) => {
+                    cumulativeAngle += joint.currentAngle;
+                    const radians = (cumulativeAngle * Math.PI) / 180;
+                    const prevPos = positions[index];
+                    
+                    const newPos = {
+                        x: prevPos.x + joint.length * Math.cos(radians),
+                        y: prevPos.y + joint.length * Math.sin(radians)
+                    };
+                    positions.push(newPos);
+                });
+                
+                return positions;
+            }
+            
+            generateWorkspace() {
+                this.workspaceLayers = [];
+                const resolution = 10; // degrees
+                
+                // Generate workspace for each joint layer (cumulative)
+                for (let layerIndex = 0; layerIndex < this.joints.length; layerIndex++) {
+                    const allPoints = [];
+                    
+                    // Recursive function to generate all combinations up to current layer
+                    const generateCombinations = (jointIndex, angles) => {
+                        if (jointIndex > layerIndex) {
+                            // Calculate end effector position for this angle combination
+                            let x = this.centerX;
+                            let y = this.centerY;
+                            let cumulativeAngle = 0;
+                            
+                            for (let i = 0; i <= layerIndex; i++) {
+                                cumulativeAngle += angles[i];
+                                const radians = (cumulativeAngle * Math.PI) / 180;
+                                x += this.joints[i].length * Math.cos(radians);
+                                y += this.joints[i].length * Math.sin(radians);
+                            }
+                            
+                            allPoints.push({x, y});
+                            return;
+                        }
+                        
+                        const joint = this.joints[jointIndex];
+                        for (let angle = joint.minAngle; angle <= joint.maxAngle; angle += resolution) {
+                            generateCombinations(jointIndex + 1, [...angles, angle]);
+                        }
+                    };
+                    
+                    generateCombinations(0, []);
+                    
+                    // Remove duplicate points
+                    const uniquePoints = [];
+                    const tolerance = 3;
+                    allPoints.forEach(point => {
+                        const isDuplicate = uniquePoints.some(existing => 
+                            Math.abs(existing.x - point.x) < tolerance && 
+                            Math.abs(existing.y - point.y) < tolerance
+                        );
+                        if (!isDuplicate) {
+                            uniquePoints.push(point);
+                        }
+                    });
+                    
+                    // Create convex hull for this layer
+                    const layerPoints = this.convexHull(uniquePoints);
+                    
+                    // Define colors for each layer
+                    const colors = [
+                        { fill: 'rgba(255, 71, 87, 0.2)', stroke: 'rgba(255, 71, 87, 0.6)' },    // Red for base
+                        { fill: 'rgba(102, 126, 234, 0.2)', stroke: 'rgba(102, 126, 234, 0.6)' }, // Blue for joint 1
+                        { fill: 'rgba(46, 213, 115, 0.2)', stroke: 'rgba(46, 213, 115, 0.6)' },  // Green for joint 2
+                        { fill: 'rgba(255, 159, 67, 0.2)', stroke: 'rgba(255, 159, 67, 0.6)' },  // Orange for joint 3
+                        { fill: 'rgba(156, 136, 255, 0.2)', stroke: 'rgba(156, 136, 255, 0.6)' }, // Purple for joint 4
+                        { fill: 'rgba(72, 219, 251, 0.2)', stroke: 'rgba(72, 219, 251, 0.6)' },  // Cyan for joint 5
+                    ];
+                    
+                    this.workspaceLayers.push({
+                        points: layerPoints,
+                        color: colors[layerIndex % colors.length],
+                        jointIndex: layerIndex
+                    });
+                }
+                
+                // Keep the old workspacePoints for backward compatibility
+                this.workspacePoints = this.workspaceLayers.length > 0 ? 
+                    this.workspaceLayers[this.workspaceLayers.length - 1].points : [];
+            }
+            
+            // Graham scan algorithm for convex hull
+            convexHull(points) {
+                if (points.length < 3) return points;
+                
+                // Find the bottom-most point (or left most in case of tie)
+                let start = 0;
+                for (let i = 1; i < points.length; i++) {
+                    if (points[i].y < points[start].y || 
+                        (points[i].y === points[start].y && points[i].x < points[start].x)) {
+                        start = i;
+                    }
+                }
+                
+                const startPoint = points[start];
+                
+                // Sort points by polar angle with respect to start point
+                const sortedPoints = points.filter((_, i) => i !== start).sort((a, b) => {
+                    const angleA = Math.atan2(a.y - startPoint.y, a.x - startPoint.x);
+                    const angleB = Math.atan2(b.y - startPoint.y, b.x - startPoint.x);
+                    if (angleA === angleB) {
+                        // If angles are equal, sort by distance
+                        const distA = Math.pow(a.x - startPoint.x, 2) + Math.pow(a.y - startPoint.y, 2);
+                        const distB = Math.pow(b.x - startPoint.x, 2) + Math.pow(b.y - startPoint.y, 2);
+                        return distA - distB;
+                    }
+                    return angleA - angleB;
+                });
+                
+                const hull = [startPoint];
+                
+                for (const point of sortedPoints) {
+                    // Remove points that make clockwise turn
+                    while (hull.length > 1 && this.crossProduct(hull[hull.length-2], hull[hull.length-1], point) <= 0) {
+                        hull.pop();
+                    }
+                    hull.push(point);
+                }
+                
+                return hull;
+            }
+            
+            crossProduct(o, a, b) {
+                return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
+            }
+            
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Apply zoom and pan transformations
+                this.ctx.save();
+                this.ctx.translate(this.panX, this.panY);
+                this.ctx.scale(this.zoomLevel, this.zoomLevel);
+                
+                // Draw workspace layers if enabled (draw from largest to smallest)
+                if (this.showingWorkspace && this.workspaceLayers && this.workspaceLayers.length > 0) {
+                    // Draw layers in reverse order so smaller ones appear on top
+                    for (let i = this.workspaceLayers.length - 1; i >= 0; i--) {
+                        const layer = this.workspaceLayers[i];
+                        if (layer.points.length > 0) {
+                            this.ctx.fillStyle = layer.color.fill;
+                            this.ctx.strokeStyle = layer.color.stroke;
+                            this.ctx.lineWidth = 2 / this.zoomLevel;
+                            this.ctx.setLineDash([5 / this.zoomLevel, 5 / this.zoomLevel]);
+                            
+                            this.ctx.beginPath();
+                            layer.points.forEach((point, index) => {
+                                if (index === 0) {
+                                    this.ctx.moveTo(point.x, point.y);
+                                } else {
+                                    this.ctx.lineTo(point.x, point.y);
+                                }
+                            });
+                            this.ctx.closePath();
+                            this.ctx.fill();
+                            this.ctx.stroke();
+                        }
+                    }
+                    this.ctx.setLineDash([]); // Reset line dash
+                }
+                
+                if (this.joints.length > 0) {
+                    const positions = this.calculatePositions();
+                    
+                    // Draw arm segments
+                    this.ctx.strokeStyle = '#333';
+                    this.ctx.lineWidth = 8 / this.zoomLevel;
+                    this.ctx.lineCap = 'round';
+                    
+                    for (let i = 0; i < positions.length - 1; i++) {
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(positions[i].x, positions[i].y);
+                        this.ctx.lineTo(positions[i + 1].x, positions[i + 1].y);
+                        this.ctx.stroke();
+                    }
+                    
+                    // Draw joints
+                    positions.forEach((pos, index) => {
+                        this.ctx.fillStyle = index === 0 ? '#ff4757' : '#667eea';
+                        this.ctx.beginPath();
+                        this.ctx.arc(pos.x, pos.y, (index === 0 ? 12 : 8) / this.zoomLevel, 0, 2 * Math.PI);
+                        this.ctx.fill();
+                        
+                        // Draw joint outline
+                        this.ctx.strokeStyle = 'white';
+                        this.ctx.lineWidth = 2 / this.zoomLevel;
+                        this.ctx.stroke();
+                    });
+                    
+                    // Draw end effector
+                    if (positions.length > 1) {
+                        const endPos = positions[positions.length - 1];
+                        this.ctx.fillStyle = '#2ed573';
+                        this.ctx.beginPath();
+                        this.ctx.arc(endPos.x, endPos.y, 6 / this.zoomLevel, 0, 2 * Math.PI);
+                        this.ctx.fill();
+                    }
+                    
+                    // Draw coordinate system
+                    this.drawCoordinateSystem();
+                }
+                
+                this.ctx.restore();
+                
+                // Draw zoom level indicator (not affected by zoom)
+                this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                this.ctx.font = '12px Arial';
+                this.ctx.fillText(`Zoom: ${(this.zoomLevel * 100).toFixed(0)}%`, 20, this.canvas.height - 20);
+                
+                // Draw workspace legend if showing (not affected by zoom)
+                if (this.showingWorkspace && this.workspaceLayers && this.workspaceLayers.length > 0) {
+                    this.ctx.font = 'bold 14px Arial';
+                    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                    this.ctx.fillText('Workspace Layers:', 20, 30);
+                    
+                    // Draw legend for each layer
+                    this.workspaceLayers.forEach((layer, index) => {
+                        const y = 55 + index * 25;
+                        
+                        // Draw color swatch
+                        this.ctx.fillStyle = layer.color.fill;
+                        this.ctx.strokeStyle = layer.color.stroke;
+                        this.ctx.lineWidth = 2;
+                        this.ctx.fillRect(20, y - 12, 20, 15);
+                        this.ctx.strokeRect(20, y - 12, 20, 15);
+                        
+                        // Draw label
+                        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                        this.ctx.font = '12px Arial';
+                        const jointName = index === 0 ? 'Base Joint' : `Joint ${index}`;
+                        this.ctx.fillText(jointName, 50, y);
+                    });
+                }
+            }
+            
+            drawCoordinateSystem() {
+                const size = 30 / this.zoomLevel;
+                this.ctx.strokeStyle = '#999';
+                this.ctx.lineWidth = 2 / this.zoomLevel;
+                
+                // X axis
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.centerX, this.centerY);
+                this.ctx.lineTo(this.centerX + size, this.centerY);
+                this.ctx.stroke();
+                
+                // Y axis
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.centerX, this.centerY);
+                this.ctx.lineTo(this.centerX, this.centerY - size);
+                this.ctx.stroke();
+                
+                // Labels
+                this.ctx.fillStyle = '#666';
+                this.ctx.font = `${12 / this.zoomLevel}px Arial`;
+                this.ctx.fillText('X', this.centerX + size + 5 / this.zoomLevel, this.centerY + 5 / this.zoomLevel);
+                this.ctx.fillText('Y', this.centerX + 5 / this.zoomLevel, this.centerY - size - 5 / this.zoomLevel);
+            }
+            
+            animate() {
+                if (!this.animating) return;
+                
+                this.joints.forEach(joint => {
+                    // Only animate joints that are checked as active
+                    if (joint.isActive) {
+                        joint.currentAngle += joint.animationDirection * 2;
+                        
+                        if (joint.currentAngle >= joint.maxAngle) {
+                            joint.currentAngle = joint.maxAngle;
+                            joint.animationDirection = -1;
+                        } else if (joint.currentAngle <= joint.minAngle) {
+                            joint.currentAngle = joint.minAngle;
+                            joint.animationDirection = 1;
+                        }
+                    }
+                });
+                
+                this.draw();
+                this.animationId = requestAnimationFrame(() => this.animate());
+            }
+            
+            toggleAnimation() {
+                this.animating = !this.animating;
+                const btn = document.getElementById('animateBtn');
+                
+                if (this.animating) {
+                    btn.textContent = '⏸️ Stop';
+                    btn.classList.add('active');
+                    this.animate();
+                } else {
+                    btn.textContent = '▶️ Animate';
+                    btn.classList.remove('active');
+                    if (this.animationId) {
+                        cancelAnimationFrame(this.animationId);
+                    }
+                }
+            }
+            
+            toggleWorkspace() {
+                this.showingWorkspace = !this.showingWorkspace;
+                if (this.showingWorkspace) {
+                    this.generateWorkspace();
+                }
+                this.draw();
+            }
+            
+            // Canvas click handling removed - using checkbox controls for joint animation
+            
+            handleWheel(e) {
+                e.preventDefault();
+                
+                const rect = this.canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                
+                const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+                const newZoom = Math.max(0.1, Math.min(5, this.zoomLevel * zoomFactor));
+                
+                // Zoom towards mouse position
+                const worldX = (mouseX - this.panX) / this.zoomLevel;
+                const worldY = (mouseY - this.panY) / this.zoomLevel;
+                
+                this.zoomLevel = newZoom;
+                
+                this.panX = mouseX - worldX * this.zoomLevel;
+                this.panY = mouseY - worldY * this.zoomLevel;
+                
+                this.draw();
+            }
+            
+            zoomIn() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                
+                const worldX = (centerX - this.panX) / this.zoomLevel;
+                const worldY = (centerY - this.panY) / this.zoomLevel;
+                
+                this.zoomLevel = Math.min(5, this.zoomLevel * 1.2);
+                
+                this.panX = centerX - worldX * this.zoomLevel;
+                this.panY = centerY - worldY * this.zoomLevel;
+                
+                this.draw();
+            }
+            
+            zoomOut() {
+                const centerX = this.canvas.width / 2;
+                const centerY = this.canvas.height / 2;
+                
+                const worldX = (centerX - this.panX) / this.zoomLevel;
+                const worldY = (centerY - this.panY) / this.zoomLevel;
+                
+                this.zoomLevel = Math.max(0.1, this.zoomLevel * 0.8);
+                
+                this.panX = centerX - worldX * this.zoomLevel;
+                this.panY = centerY - worldY * this.zoomLevel;
+                
+                this.draw();
+            }
+            
+            resetZoom() {
+                this.zoomLevel = 1;
+                this.panX = 0;
+                this.panY = 0;
+                this.draw();
+            }
+            
+            // Inverse kinematics functions removed - using checkbox controls for joint animation
+        }
+        
+        // Initialize the robot arm
+        const robotArm = new RobotArm();
+        
+        // Global functions for button clicks
+        function addJoint() {
+            robotArm.addJoint();
+        }
+        
+        function toggleAnimation() {
+            robotArm.toggleAnimation();
+        }
+        
+        function showWorkspace() {
+            robotArm.toggleWorkspace();
+        }
+        
+        function zoomIn() {
+            robotArm.zoomIn();
+        }
+        
+        function zoomOut() {
+            robotArm.zoomOut();
+        }
+        
+        function resetZoom() {
+            robotArm.resetZoom();
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97d852fef6c41b7e',t:'MTc1NzYwNTg2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
