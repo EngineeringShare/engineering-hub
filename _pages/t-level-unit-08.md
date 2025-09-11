@@ -1,6 +1,6 @@
 ---
-title: T-Level Unit 09 Hub
-permalink: /classes/t-level-unit-9/
+title: T-Level Unit 08 Hub
+permalink: /classes/t-level-unit-08/
 ---
 
 <head>
@@ -54,14 +54,14 @@ permalink: /classes/t-level-unit-9/
 
 # 🧭 T-Level Engineering Hub
 
-This is the hub for T-Level Unit 9: Mechatronics — covering sensors and transducers, actuators, control systems, robotics, and system integration. Use the cards below to access lessons, assignments, and support materials.
+This is the hub for T-Level Unit 8: Electrical and Electronic Principles — covering circuit theory, DC and AC networks, magnetism and electromagnetism, semiconductors, and signals. Use the cards below to access lessons, assignments, and support materials.
 
 ---
 
 <div class="projects">
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
-    {% if post.units contains "T-Level Unit 9" %}
+    {% if post.units contains "T-Level Unit 8" %}
       <a class="card-link" href="{{ '/engineering-hub' | append: post.url }}">
         <div class="card">
           <h3>{{ post.title }}</h3>

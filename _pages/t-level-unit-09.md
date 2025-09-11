@@ -1,6 +1,6 @@
 ---
-title: T-Level Unit 05 Hub
-permalink: /classes/t-level-unit-5/
+title: T-Level Unit 09 Hub
+permalink: /classes/t-level-unit-09/
 ---
 
 <head>
@@ -54,14 +54,14 @@ permalink: /classes/t-level-unit-5/
 
 # 🧭 T-Level Engineering Hub
 
-This is the hub for T-Level Unit 5: Engineering Science — covering mechanical principles, materials science, thermal physics, and electrical principles. Use the cards below to access lessons, assignments, and support materials.
+This is the hub for T-Level Unit 9: Mechatronics — covering sensors and transducers, actuators, control systems, robotics, and system integration. Use the cards below to access lessons, assignments, and support materials.
 
 ---
 
 <div class="projects">
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
-    {% if post.units contains "T-Level Unit 5" %}
+    {% if post.units contains "T-Level Unit 9" %}
       <a class="card-link" href="{{ '/engineering-hub' | append: post.url }}">
         <div class="card">
           <h3>{{ post.title }}</h3>

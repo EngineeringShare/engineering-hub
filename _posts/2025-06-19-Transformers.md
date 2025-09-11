@@ -3,7 +3,7 @@ title: "Transformers"
 date: 2025-06-19
 tags: ["Transformers", "Coils", "AC"]
 subject: "electronic devices"
-units: ["BTEC Unit 31", "T-Level Unit 8"]
+units: ["BTEC Unit 31", "T-Level Unit 08"]
 ---
 
 ## Intro:

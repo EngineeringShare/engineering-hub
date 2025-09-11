@@ -3,7 +3,7 @@ title: "AC Generators"
 date: 2025-03-27
 tags: ["generator", "AC", "electronics"]
 subject: "electronic devices"
-units: ["BTEC Unit 31", "T-Level Unit 8"]
+units: ["BTEC Unit 31", "T-Level Unit 08"]
 ---
 
 ## Intro:

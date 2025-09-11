@@ -3,7 +3,7 @@ title: "Sensors, Actuators and Controllers"
 date: 2025-05-01
 tags: ["Microcontrollers", "Microcomputers", "systems", "control", "motors", "sensors"]
 subject: "mechatronics"
-units: ["T-Level Unit 9"]
+units: ["T-Level Unit 09"]
 ---
 
 ## Intro:

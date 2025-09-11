@@ -3,7 +3,7 @@ title: "DC Generators"
 date: 2025-05-01
 tags: ["Generators", "DC", "electronics", "Devices"]
 subject: "electronic devices"
-units: ["BTEC Unit 56", "BTEC Unit 31", "T-Level Unit 8"]
+units: ["BTEC Unit 56", "BTEC Unit 31", "T-Level Unit 08"]
 ---
 
 ## Intro:

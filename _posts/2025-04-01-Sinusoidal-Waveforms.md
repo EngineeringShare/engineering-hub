@@ -3,7 +3,7 @@ title: "Sinusoidal Waveforms"
 date: 2025-04-01
 tags: ["maths", "vectors", "sinusoidal", "AC", "phasors"]
 subject: "maths"
-units: ["HTQ Unit 4002", "HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 8"]
+units: ["HTQ Unit 4002", "HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 08"]
 ---
 
 ## Intro:

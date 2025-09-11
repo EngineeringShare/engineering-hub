@@ -3,7 +3,7 @@ title: "PLC Theory - PLC Architecture"
 date: 2025-05-22
 tags: ["PLC", "Scan Cycle", "CPU"]
 subject: "PLCs"
-units: ["T-Level Unit 9", "BTEC Unit 19", "HTQ Unit 4015"]
+units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
 ---
 
 ## Intro:

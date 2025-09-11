@@ -3,7 +3,7 @@ title: "Permeability & Ferromagnetic Materials"
 date: 2025-05-12
 tags: ["hysteresis", "magnet", "iron"]
 subject: "magnetics"
-units: ["BTEC Unit 56", "T-Level Unit 8"]
+units: ["BTEC Unit 56", "T-Level Unit 08"]
 ---
 
 ## Intro:

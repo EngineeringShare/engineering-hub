@@ -3,7 +3,7 @@ title: "Resistors, Capacitors and Inductors in AC Circuits"
 date: 2025-03-27
 tags: ["Sinusoidal", "Power", "Circuit", "RLC", "Resitor", "Capacitor", "Inductor", "Impedance", "AC"]
 subject: "electronics"
-units: ["HTQ Unit 4019", "T-Level Unit 8"]
+units: ["HTQ Unit 4019", "T-Level Unit 08"]
 ---
 
 ## Intro:

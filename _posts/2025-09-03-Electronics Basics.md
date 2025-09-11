@@ -3,7 +3,7 @@ title: "Electronics Basics"
 date: 2025-09-03
 tags: ["Power", "Voltage", "Current", "Resistance", "Energy", "Force", "Joules", "Watts", "Atomic Structure", "Electron", "Flow", "Conventional"]
 subject: "electronics"
-units: ["HTQ Unit 4019", "T-Level Unit 8"]
+units: ["HTQ Unit 4019", "T-Level Unit 08"]
 ---
 
 ## Intro:

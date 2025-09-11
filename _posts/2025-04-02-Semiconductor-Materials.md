@@ -3,7 +3,7 @@ title: "Semiconductor Materials"
 date: 2025-04-02
 tags: ["Semiconductors", "components", "PN", "Doping"]
 subject: "electronics"
-units: ["HTQ Unit 4019", "T-Level Unit 8"]
+units: ["HTQ Unit 4019", "T-Level Unit 08"]
 ---
 
 ## Intro:

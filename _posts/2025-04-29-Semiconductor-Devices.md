@@ -3,7 +3,7 @@ title: "Semiconductor Devices"
 date: 2025-04-29
 tags: ["Semiconductors", "components", "Diodes", "Transistor"]
 subject: "electronics"
-units: ["HTQ Unit 4019", "T-Level Unit 8"]
+units: ["HTQ Unit 4019", "T-Level Unit 08"]
 ---
 
 ## Intro:
