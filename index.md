@@ -141,6 +141,8 @@ If anything looks off or you're missing materials, contact me directly:
 - **Email:** James-Absolom@yorkcollege.ac.uk  
 - **Teams:** James Absolom
 
+---
+
 ## Credits
 
 - **Site by:** [James Absolom](https://www.linkedin.com/in/james-absolom/)
@@ -148,6 +150,8 @@ If anything looks off or you're missing materials, contact me directly:
   - [James Absolom](https://www.linkedin.com/in/james-absolom/)
   - Graeme Woodhall
   - Matt Milner
+
+---
 
 ## License
 
