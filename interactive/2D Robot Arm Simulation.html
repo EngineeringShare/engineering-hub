@@ -196,11 +196,6 @@
 </head>
 <body>
     <div class="control-panel">
-        <nav style="max-width:1000px;margin:0 auto 10px auto;">
-            <a href="https://engineeringshare.github.io/engineering-hub/interactive-hub/" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px">
-                ← Back to Interactive Hub
-            </a>
-        </nav>
         <h1>🤖 Robot Arm Designer</h1>
         
         <div class="info-text">
@@ -377,67 +372,58 @@
             
             generateWorkspace() {
                 this.workspaceLayers = [];
-                const resolution = 10; // degrees
+                const resolution = 4; // degrees - finer resolution for better boundary
                 
                 // Generate workspace for each joint layer (cumulative)
                 for (let layerIndex = 0; layerIndex < this.joints.length; layerIndex++) {
                     const allPoints = [];
                     
-                    // Recursive function to generate all combinations up to current layer
-                    const generateCombinations = (jointIndex, angles) => {
+                    // Generate dense point cloud of reachable positions
+                    const generatePoints = (jointIndex, jointAngles) => {
                         if (jointIndex > layerIndex) {
-                            // Calculate end effector position for this angle combination
+                            // Calculate the position of the end of joint at layerIndex
                             let x = this.centerX;
                             let y = this.centerY;
                             let cumulativeAngle = 0;
                             
+                            // Forward kinematics
                             for (let i = 0; i <= layerIndex; i++) {
-                                cumulativeAngle += angles[i];
+                                cumulativeAngle += jointAngles[i];
                                 const radians = (cumulativeAngle * Math.PI) / 180;
                                 x += this.joints[i].length * Math.cos(radians);
                                 y += this.joints[i].length * Math.sin(radians);
                             }
                             
-                            allPoints.push({x, y});
+                            allPoints.push({x, y, angles: [...jointAngles]});
                             return;
                         }
                         
                         const joint = this.joints[jointIndex];
+                        
+                        // Generate angles with fine resolution
                         for (let angle = joint.minAngle; angle <= joint.maxAngle; angle += resolution) {
-                            generateCombinations(jointIndex + 1, [...angles, angle]);
+                            generatePoints(jointIndex + 1, [...jointAngles, angle]);
                         }
                     };
                     
-                    generateCombinations(0, []);
+                    // Generate all reachable points
+                    generatePoints(0, []);
                     
-                    // Remove duplicate points
-                    const uniquePoints = [];
-                    const tolerance = 3;
-                    allPoints.forEach(point => {
-                        const isDuplicate = uniquePoints.some(existing => 
-                            Math.abs(existing.x - point.x) < tolerance && 
-                            Math.abs(existing.y - point.y) < tolerance
-                        );
-                        if (!isDuplicate) {
-                            uniquePoints.push(point);
-                        }
-                    });
-                    
-                    // Create convex hull for this layer
-                    const layerPoints = this.convexHull(uniquePoints);
+                    // Now compute the concave hull (alpha shape) of these points
+                    const boundaryPoints = this.computeConcaveHull(allPoints);
                     
                     // Define colors for each layer
                     const colors = [
-                        { fill: 'rgba(255, 71, 87, 0.2)', stroke: 'rgba(255, 71, 87, 0.6)' },    // Red for base
-                        { fill: 'rgba(102, 126, 234, 0.2)', stroke: 'rgba(102, 126, 234, 0.6)' }, // Blue for joint 1
-                        { fill: 'rgba(46, 213, 115, 0.2)', stroke: 'rgba(46, 213, 115, 0.6)' },  // Green for joint 2
-                        { fill: 'rgba(255, 159, 67, 0.2)', stroke: 'rgba(255, 159, 67, 0.6)' },  // Orange for joint 3
-                        { fill: 'rgba(156, 136, 255, 0.2)', stroke: 'rgba(156, 136, 255, 0.6)' }, // Purple for joint 4
-                        { fill: 'rgba(72, 219, 251, 0.2)', stroke: 'rgba(72, 219, 251, 0.6)' },  // Cyan for joint 5
+                        { fill: 'rgba(255, 71, 87, 0.15)', stroke: 'rgba(255, 71, 87, 0.8)' },    // Red for base
+                        { fill: 'rgba(102, 126, 234, 0.15)', stroke: 'rgba(102, 126, 234, 0.8)' }, // Blue for joint 1
+                        { fill: 'rgba(46, 213, 115, 0.15)', stroke: 'rgba(46, 213, 115, 0.8)' },  // Green for joint 2
+                        { fill: 'rgba(255, 159, 67, 0.15)', stroke: 'rgba(255, 159, 67, 0.8)' },  // Orange for joint 3
+                        { fill: 'rgba(156, 136, 255, 0.15)', stroke: 'rgba(156, 136, 255, 0.8)' }, // Purple for joint 4
+                        { fill: 'rgba(72, 219, 251, 0.15)', stroke: 'rgba(72, 219, 251, 0.8)' },  // Cyan for joint 5
                     ];
                     
                     this.workspaceLayers.push({
-                        points: layerPoints,
+                        points: boundaryPoints,
                         color: colors[layerIndex % colors.length],
                         jointIndex: layerIndex
                     });
@@ -446,6 +432,223 @@
                 // Keep the old workspacePoints for backward compatibility
                 this.workspacePoints = this.workspaceLayers.length > 0 ? 
                     this.workspaceLayers[this.workspaceLayers.length - 1].points : [];
+            }
+            
+            // Compute concave hull with gap detection
+            computeConcaveHull(points) {
+                if (points.length < 3) return points;
+                
+                const centerX = this.centerX;
+                const centerY = this.centerY;
+                
+                // Convert to polar coordinates and group by angle
+                const polarPoints = points.map(p => ({
+                    ...p,
+                    angle: Math.atan2(p.y - centerY, p.x - centerX),
+                    radius: Math.sqrt((p.x - centerX) ** 2 + (p.y - centerY) ** 2)
+                }));
+                
+                // Sort by angle
+                polarPoints.sort((a, b) => a.angle - b.angle);
+                
+                // For each angular direction, find the boundary points
+                const angleStep = Math.PI / 180; // 1 degree
+                const boundaryPoints = [];
+                
+                for (let angle = -Math.PI; angle < Math.PI; angle += angleStep) {
+                    // Find points in this angular direction (within a small tolerance)
+                    const tolerance = angleStep * 1.5;
+                    const nearbyPoints = polarPoints.filter(p => 
+                        Math.abs(p.angle - angle) < tolerance ||
+                        Math.abs(p.angle - angle + 2 * Math.PI) < tolerance ||
+                        Math.abs(p.angle - angle - 2 * Math.PI) < tolerance
+                    );
+                    
+                    if (nearbyPoints.length > 0) {
+                        // Find the point with maximum radius (outermost boundary)
+                        const maxRadiusPoint = nearbyPoints.reduce((max, p) => 
+                            p.radius > max.radius ? p : max
+                        );
+                        boundaryPoints.push(maxRadiusPoint);
+                    }
+                }
+                
+                // Remove duplicate points that are too close together
+                const filteredBoundary = [];
+                const minDistance = 3;
+                
+                for (const point of boundaryPoints) {
+                    const isDuplicate = filteredBoundary.some(existing => 
+                        Math.sqrt((existing.x - point.x) ** 2 + (existing.y - point.y) ** 2) < minDistance
+                    );
+                    if (!isDuplicate) {
+                        filteredBoundary.push(point);
+                    }
+                }
+                
+                // Sort final boundary points by angle to ensure proper polygon drawing
+                filteredBoundary.sort((a, b) => a.angle - b.angle);
+                
+                // Now detect gaps and create separate polygons
+                return this.handleWorkspaceGaps(filteredBoundary, centerX, centerY);
+            }
+            
+            // Handle gaps in workspace by creating separate polygons
+            handleWorkspaceGaps(boundaryPoints, centerX, centerY) {
+                if (boundaryPoints.length < 3) return boundaryPoints;
+                
+                const maxGapDistance = 80; // Maximum distance between consecutive points before considering it a gap
+                const gapPoints = [];
+                const continuousSegments = [];
+                let currentSegment = [];
+                
+                // First pass: identify gaps and continuous segments
+                for (let i = 0; i < boundaryPoints.length; i++) {
+                    const currentPoint = boundaryPoints[i];
+                    const nextPoint = boundaryPoints[(i + 1) % boundaryPoints.length];
+                    
+                    currentSegment.push(currentPoint);
+                    
+                    // Calculate distance to next point
+                    const distance = Math.sqrt(
+                        (nextPoint.x - currentPoint.x) ** 2 + 
+                        (nextPoint.y - currentPoint.y) ** 2
+                    );
+                    
+                    // If there's a large gap, end current segment and record gap
+                    if (distance > maxGapDistance) {
+                        if (currentSegment.length >= 2) {
+                            continuousSegments.push([...currentSegment]);
+                        }
+                        
+                        // Record the gap for smart connection
+                        gapPoints.push({
+                            from: currentPoint,
+                            to: nextPoint,
+                            gapSize: distance
+                        });
+                        
+                        currentSegment = [];
+                    }
+                }
+                
+                // Handle the last segment
+                if (currentSegment.length >= 2) {
+                    // Check if it connects back to the first segment
+                    if (continuousSegments.length > 0) {
+                        const firstPoint = continuousSegments[0][0];
+                        const lastPoint = currentSegment[currentSegment.length - 1];
+                        const distanceToFirst = Math.sqrt(
+                            (firstPoint.x - lastPoint.x) ** 2 + 
+                            (firstPoint.y - lastPoint.y) ** 2
+                        );
+                        
+                        if (distanceToFirst <= maxGapDistance) {
+                            // Merge with first segment to close the loop
+                            continuousSegments[0] = [...currentSegment, ...continuousSegments[0]];
+                        } else {
+                            continuousSegments.push(currentSegment);
+                        }
+                    } else {
+                        continuousSegments.push(currentSegment);
+                    }
+                }
+                
+                // Now create the final boundary by connecting segments intelligently
+                if (continuousSegments.length === 0) {
+                    return boundaryPoints;
+                }
+                
+                // Find the largest continuous segment as our main boundary
+                const mainSegment = continuousSegments.reduce((largest, current) => 
+                    current.length > largest.length ? current : largest
+                );
+                
+                // For gaps, connect to the closest reachable point instead of center
+                const finalBoundary = [...mainSegment];
+                
+                // If we have gaps, we need to close them smartly
+                if (gapPoints.length > 0) {
+                    // Find the inner boundary (smaller workspace from previous joint layer)
+                    const innerBoundaryPoints = this.getInnerBoundaryPoints(centerX, centerY);
+                    
+                    // For each gap, find the best connection points
+                    gapPoints.forEach(gap => {
+                        // Find the closest point on the inner boundary to bridge the gap
+                        if (innerBoundaryPoints.length > 0) {
+                            const closestToFrom = this.findClosestPoint(gap.from, innerBoundaryPoints);
+                            const closestToTo = this.findClosestPoint(gap.to, innerBoundaryPoints);
+                            
+                            // Add these connection points to create a more natural boundary
+                            const gapStartIndex = finalBoundary.findIndex(p => 
+                                Math.abs(p.x - gap.from.x) < 1 && Math.abs(p.y - gap.from.y) < 1
+                            );
+                            
+                            if (gapStartIndex !== -1) {
+                                // Insert the bridging points
+                                finalBoundary.splice(gapStartIndex + 1, 0, closestToFrom, closestToTo);
+                            }
+                        } else {
+                            // Fallback to center connection
+                            const gapStartIndex = finalBoundary.findIndex(p => 
+                                Math.abs(p.x - gap.from.x) < 1 && Math.abs(p.y - gap.from.y) < 1
+                            );
+                            
+                            if (gapStartIndex !== -1) {
+                                finalBoundary.splice(gapStartIndex + 1, 0, {x: centerX, y: centerY});
+                            }
+                        }
+                    });
+                }
+                
+                return finalBoundary;
+            }
+            
+            // Get inner boundary points from previous joint layer
+            getInnerBoundaryPoints(centerX, centerY) {
+                // If we have previous workspace layers, use the boundary from the previous layer
+                if (this.workspaceLayers && this.workspaceLayers.length > 0) {
+                    const previousLayer = this.workspaceLayers[this.workspaceLayers.length - 1];
+                    if (previousLayer && previousLayer.points) {
+                        return previousLayer.points;
+                    }
+                }
+                
+                // Fallback: create a small circle around the center
+                const innerPoints = [];
+                const radius = 20; // Small radius for inner boundary
+                for (let angle = 0; angle < 2 * Math.PI; angle += Math.PI / 8) {
+                    innerPoints.push({
+                        x: centerX + radius * Math.cos(angle),
+                        y: centerY + radius * Math.sin(angle)
+                    });
+                }
+                return innerPoints;
+            }
+            
+            // Find the closest point in a set of points
+            findClosestPoint(targetPoint, candidatePoints) {
+                if (candidatePoints.length === 0) return targetPoint;
+                
+                let closestPoint = candidatePoints[0];
+                let minDistance = Math.sqrt(
+                    (targetPoint.x - closestPoint.x) ** 2 + 
+                    (targetPoint.y - closestPoint.y) ** 2
+                );
+                
+                for (let i = 1; i < candidatePoints.length; i++) {
+                    const distance = Math.sqrt(
+                        (targetPoint.x - candidatePoints[i].x) ** 2 + 
+                        (targetPoint.y - candidatePoints[i].y) ** 2
+                    );
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestPoint = candidatePoints[i];
+                    }
+                }
+                
+                return closestPoint;
             }
             
             // Graham scan algorithm for convex hull
@@ -506,11 +709,11 @@
                     // Draw layers in reverse order so smaller ones appear on top
                     for (let i = this.workspaceLayers.length - 1; i >= 0; i--) {
                         const layer = this.workspaceLayers[i];
-                        if (layer.points.length > 0) {
+                        if (layer.points.length > 2) {
+                            // Draw filled shape with proper boundary
                             this.ctx.fillStyle = layer.color.fill;
                             this.ctx.strokeStyle = layer.color.stroke;
                             this.ctx.lineWidth = 2 / this.zoomLevel;
-                            this.ctx.setLineDash([5 / this.zoomLevel, 5 / this.zoomLevel]);
                             
                             this.ctx.beginPath();
                             layer.points.forEach((point, index) => {
@@ -525,7 +728,6 @@
                             this.ctx.stroke();
                         }
                     }
-                    this.ctx.setLineDash([]); // Reset line dash
                 }
                 
                 if (this.joints.length > 0) {
@@ -765,5 +967,5 @@
             robotArm.resetZoom();
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97d852fef6c41b7e',t:'MTc1NzYwNTg2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97dfa42937e22207',t:'MTc1NzY4MjU4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
