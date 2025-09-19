@@ -10,6 +10,13 @@ units: ["BTEC Unit 40", "HTQ Unit 4015"]
 
 Effective workspace organisation is crucial in robotics and manufacturing environments to ensure efficient operations, safety, and productivity. A well-organised workspace facilitates smooth material flow, reduces downtime, and enhances the overall performance of robotic systems. Key aspects of workspace organisation include the layout of equipment, the arrangement of tools and materials, and the implementation of standard operating procedures. Additionally, the concept of "robot-to-robot" communication and collaboration is becoming increasingly important as robots are integrated into more complex workflows. This page explores the principles of workspace organisation, including strategies for optimising material flow, enhancing robot-to-robot interactions, and creating a safe and efficient working environment.
 
+## Audio:
+
+<audio controls>
+    <source src="https://EngineeringShare.github.io/engineering-hub/audio/Workspace Organisation.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
 ## Presentation:
 
 <div style="position: relative; width: 100%; height: 0; padding-top: 75%;">
