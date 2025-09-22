@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PID Water Tank Simulator — Canva Code</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Tailwind CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    /* Beautiful background and subtle animations */
+    body {
+      background: radial-gradient(1200px 800px at 10% 10%, #0ea5e9 0%, #1e293b 40%, #0b1324 80%);
+      min-height: 100vh;
+    }
+    .glass {
+      background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #22d3ee, #0ea5e9);
+      color: #031523;
+      transition: transform .15s ease, filter .15s ease;
+    }
+    .btn-primary:hover { filter: brightness(1.05); transform: translateY(-1px); }
+    .btn-secondary {
+      background: linear-gradient(135deg, #a78bfa, #6366f1);
+      color: white;
+    }
+    .btn-danger {
+      background: linear-gradient(135deg, #fb7185, #ef4444);
+      color: white;
+    }
+
+    /* Tank water style */
+    .water {
+      background: linear-gradient(180deg, #38bdf8 0%, #0284c7 60%, #075985 100%);
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      transition: height 120ms ease-out;
+      overflow: hidden;
+    }
+    .water::after {
+      /* subtle waves */
+      content: "";
+      position: absolute;
+      left: -50%; right: -50%;
+      top: -12px;
+      height: 24px;
+      background: radial-gradient(18px 10px at 18px 10px, rgba(255,255,255,0.65) 32%, rgba(255,255,255,0) 33%) repeat-x;
+      opacity: .25;
+      animation: wave 3.2s linear infinite;
+    }
+    @keyframes wave {
+      from { transform: translateX(0); }
+      to   { transform: translateX(36px); }
+    }
+
+    /* Lose overlay */
+    .overlay {
+      background: radial-gradient(500px 300px at 50% 30%, rgba(255,255,255,0.08), rgba(0,0,0,0.6));
+      backdrop-filter: blur(6px);
+    }
+    .pop { animation: pop .28s ease-out both; }
+    @keyframes pop {
+      from { transform: scale(.9); opacity: 0; }
+      to   { transform: scale(1); opacity: 1; }
+    }
+    .bounce {
+      animation: bounce 1.6s ease-in-out infinite;
+      transform-origin: center bottom;
+    }
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* Mini badge */
+    .pill {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    /* Canvas fit */
+    .spark {
+      width: 100%;
+      height: 84px;
+      display: block;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    /* Force all text to white for better contrast */
+    body, body * { color: #fff !important; }
+  </style>
+</head>
+<body class="text-slate-100 antialiased">
+  <div class="max-w-7xl mx-auto p-6 md:p-8 space-y-6">
+    <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">PID Water Tank Simulator</h1>
+        <p class="text-slate-300 mt-1">Tune Kp, Ki, Kd to keep the water between the underfill line and the top without spilling.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="pill px-3 py-1 rounded-full text-sm">Made by Canva Code</div>
+        <div class="pill px-3 py-1 rounded-full text-sm">Goal: Survive as long as you can</div>
+      </div>
+    </header>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+      <!-- Left: Tank + Controls -->
+      <section class="glass rounded-2xl p-5 md:p-6 space-y-5">
+        <!-- Stats -->
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+          <div class="pill rounded-xl p-4">
+            <div class="text-slate-300 text-xs uppercase tracking-wider">Water Level</div>
+            <div id="ui-level" class="text-2xl font-bold mt-1">0%</div>
+          </div>
+          <div class="pill rounded-xl p-4">
+            <div class="text-slate-300 text-xs uppercase tracking-wider">Time Alive</div>
+            <div id="ui-time" class="text-2xl font-bold mt-1">0.0s</div>
+          </div>
+          <div class="pill rounded-xl p-4">
+            <div class="text-slate-300 text-xs uppercase tracking-wider">Best Time</div>
+            <div id="ui-best" class="text-2xl font-bold mt-1">0.0s</div>
+          </div>
+          <div class="pill rounded-xl p-4">
+            <div class="text-slate-300 text-xs uppercase tracking-wider">Valve (Inflow)</div>
+            <div id="ui-inflow" class="text-2xl font-bold mt-1">0.00</div>
+          </div>
+          <div class="pill rounded-xl p-4">
+            <div class="text-xs uppercase tracking-wider">Difficulty</div>
+            <div id="ui-diff" class="text-2xl font-bold mt-1">x1.0</div>
+          </div>
+          <!-- Score tile removed from the top stats; score now lives below the tank -->
+        </div>
+
+        <!-- Tank -->
+        <div class="relative rounded-2xl overflow-hidden p-4 glass">
+          <div class="flex items-center justify-between mb-3">
+            <div class="font-semibold">Tank</div>
+            <div>Don't let water over or under flow</div>
+          </div>
+          <div class="relative mx-auto" style="max-width:520px;">
+            <div class="relative mx-auto border-2 border-sky-300/60 rounded-xl" style="height: 360px;">
+              <!-- Top label -->
+              <div class="absolute top-0 left-0 right-0">
+                <div class="flex items-center justify-between px-3 pt-2">
+                  <span class="text-xs text-slate-300">Top (Overflow)</span>
+                  <span id="ui-setpoint" class="text-xs text-sky-200">Setpoint: 65%</span>
+                </div>
+              </div>
+
+              <!-- Underfill line -->
+              <div id="underfillLine" class="absolute left-0 right-0" style="height: 0;">
+                <div class="border-t-2 border-amber-400/80"></div>
+              </div>
+              <div class="absolute left-2 -translate-y-1/2" id="underfillLabel">
+                <span class="bg-amber-400 text-slate-900 text-[10px] font-bold px-2 py-0.5 rounded">Underfill</span>
+              </div>
+
+              <!-- Setpoint line -->
+              <div id="setpointLine" class="absolute left-0 right-0" style="height: 0;">
+                <div class="border-t border-dashed border-sky-300/70"></div>
+              </div>
+
+              <!-- Water fill -->
+              <div id="water" class="water rounded-b-xl" style="height: 50%;"></div>
+
+              <!-- Scale marks removed as requested (keeping only underflow line) -->
+            </div>
+          </div>
+          <div class="mt-3 text-xs text-slate-300">
+            Tip: Start the sim, then tweak Kp, Ki, Kd. Too much Kp makes it twitchy; Ki removes steady error; Kd dampens overshoot.
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <form id="pidForm" class="glass rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between gap-3">
+            <h3 class="font-semibold text-lg">PID Controls</h3>
+            <div class="text-slate-300 text-xs">Setpoint is the middle of the safe zone</div>
+          </div>
+          <div class="grid sm:grid-cols-3 gap-4">
+            <label class="block">
+              <span class="text-sm">Kp</span>
+              <input id="kp" type="text" inputmode="decimal" autocomplete="off" pattern="[0-9]*[.,]?[0-9]*" value="2.0" aria-label="Kp" title="Enter a number"
+                     class="mt-1 w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 text-black" style="color:#000 !important;" />
+            </label>
+            <label class="block">
+              <span class="text-sm">Ki</span>
+              <input id="ki" type="text" inputmode="decimal" autocomplete="off" pattern="[0-9]*[.,]?[0-9]*" value="0.5" aria-label="Ki" title="Enter a number"
+                     class="mt-1 w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 text-black" style="color:#000 !important;" />
+            </label>
+            <label class="block">
+              <span class="text-sm">Kd</span>
+              <input id="kd" type="text" inputmode="decimal" autocomplete="off" pattern="[0-9]*[.,]?[0-9]*" value="0.3" aria-label="Kd" title="Enter a number"
+                     class="mt-1 w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 text-black" style="color:#000 !important;"
+            </label>
+          </div>
+          <div class="flex flex-wrap items-center gap-3">
+            <button id="applyBtn" class="btn-primary px-4 py-2 rounded-lg font-semibold" type="submit">Apply PID</button>
+            <button id="startBtn" class="btn-secondary px-4 py-2 rounded-lg font-semibold" type="button">Start</button>
+            <button id="pauseBtn" class="px-4 py-2 rounded-lg font-semibold bg-slate-700 hover:bg-slate-600" type="button">Pause</button>
+            <button id="resetBtn" class="btn-danger px-4 py-2 rounded-lg font-semibold" type="button">Reset</button>
+            <span id="statusDot" class="ml-auto inline-flex items-center gap-2 text-sm">
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400" id="statusLight"></span>
+              <span id="statusLabel" class="text-slate-300">Ready</span>
+            </span>
+          </div>
+        </form>
+      </section>
+
+      <!-- Right: Outflows & graphs -->
+      <section class="space-y-5">
+        <div class="glass rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-semibold text-lg">Outflows</h3>
+            <div class="text-sm text-slate-300">Total Outflow: <span id="ui-outflow" class="font-bold text-slate-100">0.00</span></div>
+          </div>
+          <div class="grid gap-4">
+            <!-- Constant Leak -->
+            <div class="pill rounded-xl p-4">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                  <div class="font-semibold">Leak (steady)</div>
+                </div>
+                <div class="text-sm text-slate-300">Flow: <span id="ui-leak" class="font-bold">0.00</span></div>
+              </div>
+              <canvas id="graph-leak" class="spark"></canvas>
+            </div>
+            <!-- Random Valve -->
+            <div class="pill rounded-xl p-4">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+                  <div class="font-semibold">Random Valve (bursts)</div>
+                </div>
+                <div class="text-sm text-slate-300">Flow: <span id="ui-random" class="font-bold">0.00</span></div>
+              </div>
+              <canvas id="graph-random" class="spark"></canvas>
+            </div>
+            <!-- Tide -->
+            <div class="pill rounded-xl p-4">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                  <div class="font-semibold">Tide (slow wave)</div>
+                </div>
+                <div class="text-sm text-slate-300">Flow: <span id="ui-tide" class="font-bold">0.00</span></div>
+              </div>
+              <canvas id="graph-tide" class="spark"></canvas>
+            </div>
+            <!-- Pulse Ramp (unlock 15s) -->
+            <div id="card-pulse" class="pill rounded-xl p-4 hidden">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
+                  <div class="font-semibold">Pulse Ramp (unlock 15s)</div>
+                </div>
+                <div class="text-sm text-slate-300">Flow: <span id="ui-pulse" class="font-bold">0.00</span></div>
+              </div>
+              <canvas id="graph-pulse" class="spark"></canvas>
+            </div>
+            <!-- Shock Spikes (unlock 30s) -->
+            <div id="card-shock" class="pill rounded-xl p-4 hidden">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                  <div class="font-semibold">Shock Spikes (unlock 30s)</div>
+                </div>
+                <div class="text-sm text-slate-300">Flow: <span id="ui-shock" class="font-bold">0.00</span></div>
+              </div>
+              <canvas id="graph-shock" class="spark"></canvas>
+            </div>
+            <!-- Drift (unlock 45s) -->
+            <div id="card-drift" class="pill rounded-xl p-4 hidden">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-fuchsia-500"></span>
+                  <div class="font-semibold">Drift (unlock 45s)</div>
+                </div>
+                <div class="text-sm text-slate-300">Flow: <span id="ui-drift" class="font-bold">0.00</span></div>
+              </div>
+              <canvas id="graph-drift" class="spark"></canvas>
+            </div>
+            <!-- Surge (unlock 60s) -->
+            <div id="card-surge" class="pill rounded-xl p-4 hidden">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+                  <div class="font-semibold">Surge (unlock 60s)</div>
+                </div>
+                <div class="text-sm text-slate-300">Flow: <span id="ui-surge" class="font-bold">0.00</span></div>
+              </div>
+              <canvas id="graph-surge" class="spark"></canvas>
+            </div>
+            <!-- Noise (unlock 75s) -->
+            <div id="card-noise" class="pill rounded-xl p-4 hidden">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-gray-300"></span>
+                  <div class="font-semibold">Noise (unlock 75s)</div>
+                </div>
+                <div class="text-sm text-slate-300">Flow: <span id="ui-noise" class="font-bold">0.00</span></div>
+              </div>
+              <canvas id="graph-noise" class="spark"></canvas>
+            </div>
+            <!-- Squall (unlock 90s) -->
+            <div id="card-squall" class="pill rounded-xl p-4 hidden">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-400"></span>
+                  <div class="font-semibold">Squall (unlock 90s)</div>
+                </div>
+                <div class="text-sm">Flow: <span id="ui-squall" class="font-bold">0.00</span></div>
+              </div>
+              <canvas id="graph-squall" class="spark"></canvas>
+            </div>
+            <!-- Maelstrom (unlock 120s) -->
+            <div id="card-maelstrom" class="pill rounded-xl p-4 hidden">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-yellow-300"></span>
+                  <div class="font-semibold">Maelstrom (unlock 120s)</div>
+                </div>
+                <div class="text-sm">Flow: <span id="ui-maelstrom" class="font-bold">0.00</span></div>
+              </div>
+              <canvas id="graph-maelstrom" class="spark"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Score box under tank -->
+        <div class="glass rounded-2xl p-5">
+          <h3 class="font-semibold mb-2">Score</h3>
+          <div class="text-3xl font-extrabold" id="ui-score-box">0</div>
+          <p class="text-sm opacity-80 mt-1">Earns +10 × multiplier every second you survive.</p>
+        </div>
+
+        <!-- How to win -->
+        <div class="glass rounded-2xl p-5">
+          <h3 class="font-semibold mb-2 text-white">How to play</h3>
+          <ul class="list-disc list-inside text-white space-y-1 text-sm">
+            <li>Click Start, then tune Kp, Ki, Kd to keep the water between the underfill line and the top.</li>
+            <li>If you overflow, it spills and you lose. If you drop below the underfill line, you lose.</li>
+            <li>Each outflow has a live graph so you can see what's stealing your water.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Lose overlay -->
+  <div id="loseOverlay" class="fixed inset-0 hidden items-center justify-center overlay z-50">
+    <div class="max-w-md w-[94%] mx-auto glass rounded-2xl p-6 text-center pop">
+      <div id="loseEmoji" class="text-6xl mb-3 bounce">💦</div>
+      <h2 id="loseTitle" class="text-2xl font-extrabold mb-1">Overflow!</h2>
+      <p id="loseSub" class="text-slate-300 mb-4">You turned the lab into a splash park. The janitor says thanks for the job security.</p>
+      <div class="flex items-center justify-center gap-3 mb-4">
+        <div class="pill px-3 py-1 rounded-full text-sm">Time Alive: <span id="loseTime" class="font-bold">0.0s</span></div>
+        <div class="pill px-3 py-1 rounded-full text-sm">Best: <span id="loseBest" class="font-bold">0.0s</span></div>
+      </div>
+      <button id="playAgain" class="btn-primary px-4 py-2 rounded-lg font-semibold">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    // Simulation state
+    const dt = 0.05; // seconds per tick
+    let running = false;
+    let elapsed = 0;
+    let bestTime = parseFloat(localStorage.getItem('pid_best_time') || '0') || 0;
+
+    // Tank and limits
+    let level = 0.5; // 0..1
+    const lowerLimit = 0.30; // underfill
+    const upperLimit = 1.00; // tank top
+    const maxInflow = 5.0;
+
+    // PID
+    let Kp = 2.0, Ki = 0.5, Kd = 0.3;
+    let integral = 0;
+    let prevError = 0;
+    function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+
+    // Outflows
+    let difficulty = 1.0; // scales all disturbances over time
+
+    const baseLeak = 0.18; // steady trickle base
+    let leakConst = baseLeak;
+
+    let randomOn = false, randomTimer = 0, randomFlow = 0;
+    const baseRandomAmp = 0.5;
+    let randomAmp = baseRandomAmp;
+
+    let t = 0;
+    const baseTideAmp = 0.25; // wave amplitude base
+    let tideAmp = baseTideAmp;
+    const baseTidePeriod = 20.0; // seconds for a full wave (will shorten slowly)
+    let tidePeriod = baseTidePeriod;
+
+    // New dynamic outflows (locked at start)
+    let pulse = 0, shock = 0, drift = 0, surge = 0, noise = 0, squall = 0, maelstrom = 0;
+    let pulsePhase = 0, shockTimer = 0, driftBase = 0, surgePhase = 0, noiseTimer = 0, squallPhase = 0, maelPhase = 0;
+    let pulseUnlocked = false, shockUnlocked = false, driftUnlocked = false, surgeUnlocked = false, noiseUnlocked = false, squallUnlocked = false, maelUnlocked = false;
+
+    // UI elements
+    const ui = {
+      level: document.getElementById('ui-level'),
+      time: document.getElementById('ui-time'),
+      best: document.getElementById('ui-best'),
+      inflow: document.getElementById('ui-inflow'),
+      outflow: document.getElementById('ui-outflow'),
+      leak: document.getElementById('ui-leak'),
+      random: document.getElementById('ui-random'),
+      tide: document.getElementById('ui-tide'),
+      statusLight: document.getElementById('statusLight'),
+      statusLabel: document.getElementById('statusLabel'),
+      setpointLabel: document.getElementById('ui-setpoint'),
+      water: document.getElementById('water'),
+      underfillLine: document.getElementById('underfillLine'),
+      underfillLabel: document.getElementById('underfillLabel'),
+      setpointLine: document.getElementById('setpointLine'),
+      graphs: {
+        leak: document.getElementById('graph-leak'),
+        random: document.getElementById('graph-random'),
+        tide: document.getElementById('graph-tide'),
+        pulse: document.getElementById('graph-pulse'),
+        shock: document.getElementById('graph-shock'),
+        drift: document.getElementById('graph-drift'),
+        surge: document.getElementById('graph-surge'),
+        noise: document.getElementById('graph-noise'),
+        squall: document.getElementById('graph-squall'),
+        maelstrom: document.getElementById('graph-maelstrom')
+      },
+      cards: {
+        pulse: document.getElementById('card-pulse'),
+        shock: document.getElementById('card-shock'),
+        drift: document.getElementById('card-drift'),
+        surge: document.getElementById('card-surge'),
+        noise: document.getElementById('card-noise'),
+        squall: document.getElementById('card-squall'),
+        maelstrom: document.getElementById('card-maelstrom')
+      },
+      diff: document.getElementById('ui-diff'),
+      score: null,
+      scoreBox: document.getElementById('ui-score-box')
+    };
+    ui.best.textContent = bestTime.toFixed(1) + 's';
+
+    // Controls
+    const kpEl = document.getElementById('kp');
+    const kiEl = document.getElementById('ki');
+    const kdEl = document.getElementById('kd');
+    const form = document.getElementById('pidForm');
+    const startBtn = document.getElementById('startBtn');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resetBtn = document.getElementById('resetBtn');
+
+    // Lose overlay
+    const loseOverlay = document.getElementById('loseOverlay');
+    const loseTime = document.getElementById('loseTime');
+    const loseBest = document.getElementById('loseBest');
+    const loseTitle = document.getElementById('loseTitle');
+    const loseSub = document.getElementById('loseSub');
+    const loseEmoji = document.getElementById('loseEmoji');
+    const playAgain = document.getElementById('playAgain');
+
+    // Graph buffers
+    const historyLength = 240; // ~12s of history at 20Hz
+    const hist = {
+      leak: Array(historyLength).fill(0),
+      random: Array(historyLength).fill(0),
+      tide: Array(historyLength).fill(0),
+      pulse: Array(historyLength).fill(0),
+      shock: Array(historyLength).fill(0),
+      drift: Array(historyLength).fill(0),
+      surge: Array(historyLength).fill(0),
+      noise: Array(historyLength).fill(0),
+      squall: Array(historyLength).fill(0),
+      maelstrom: Array(historyLength).fill(0)
+    };
+
+    // Resize canvases for crisp drawing
+    function setupCanvas(canvas) {
+      if (!canvas) return null; // guard if panel not created yet
+      const ratio = window.devicePixelRatio || 1;
+      let w = canvas.clientWidth;
+      let h = canvas.clientHeight;
+      // If hidden or zero-sized, fallback to sensible defaults
+      if (w < 2 || h < 2) { w = 400; h = 84; }
+      canvas.width = Math.max(1, Math.floor(w * ratio));
+      canvas.height = Math.max(1, Math.floor(h * ratio));
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return ctx;
+    }
+    const ctxs = {
+      leak: null,
+      random: null,
+      tide: null,
+      pulse: null,
+      shock: null,
+      drift: null,
+      surge: null,
+      noise: null,
+      squall: null,
+      maelstrom: null
+    };
+
+    function initBaseCanvases() {
+      ctxs.leak = setupCanvas(ui.graphs.leak);
+      ctxs.random = setupCanvas(ui.graphs.random);
+      ctxs.tide = setupCanvas(ui.graphs.tide);
+    }
+
+    function initOptionalCanvas(key) {
+      if (key === 'pulse') ctxs.pulse = setupCanvas(ui.graphs.pulse);
+      if (key === 'shock') ctxs.shock = setupCanvas(ui.graphs.shock);
+      if (key === 'drift') ctxs.drift = setupCanvas(ui.graphs.drift);
+      if (key === 'surge') ctxs.surge = setupCanvas(ui.graphs.surge);
+      if (key === 'noise') ctxs.noise = setupCanvas(ui.graphs.noise);
+      if (key === 'squall') ctxs.squall = setupCanvas(ui.graphs.squall);
+      if (key === 'maelstrom') ctxs.maelstrom = setupCanvas(ui.graphs.maelstrom);
+    }
+    window.addEventListener('resize', () => {
+      if (!ctxs.leak) initBaseCanvases(); else ctxs.leak = setupCanvas(ui.graphs.leak);
+      ctxs.random = setupCanvas(ui.graphs.random);
+      ctxs.tide = setupCanvas(ui.graphs.tide);
+      if (pulseUnlocked) ctxs.pulse = setupCanvas(ui.graphs.pulse);
+      if (shockUnlocked) ctxs.shock = setupCanvas(ui.graphs.shock);
+      if (driftUnlocked) ctxs.drift = setupCanvas(ui.graphs.drift);
+      if (surgeUnlocked) ctxs.surge = setupCanvas(ui.graphs.surge);
+      if (noiseUnlocked) ctxs.noise = setupCanvas(ui.graphs.noise);
+      if (squallUnlocked) ctxs.squall = setupCanvas(ui.graphs.squall);
+      if (maelUnlocked) ctxs.maelstrom = setupCanvas(ui.graphs.maelstrom);
+      drawAllGraphs();
+    });
+
+    // Wait for layout, then init base canvases safely
+    window.addEventListener('load', () => {
+      initBaseCanvases();
+      drawAllGraphs();
+    });
+
+    // Setpoint is the middle of safe band
+    function getSetpoint() {
+      return (lowerLimit + upperLimit) / 2;
+    }
+
+    function layoutTankLines() {
+      // Compute pixel positions relative to tank box
+      const tankBox = ui.water.parentElement; // the border container
+      const rect = tankBox.getBoundingClientRect();
+      const height = rect.height;
+
+      // Underfill line position from top
+      const underfillY = (1 - lowerLimit) * height;
+      ui.underfillLine.style.top = underfillY + 'px';
+      ui.underfillLabel.style.top = underfillY + 'px';
+
+      // Setpoint line
+      const setpoint = getSetpoint();
+      const setpointY = (1 - setpoint) * height;
+      ui.setpointLine.style.top = setpointY + 'px';
+
+      // Update setpoint label
+      ui.setpointLabel.textContent = 'Setpoint: ' + Math.round(setpoint * 100) + '%';
+    }
+
+    // Initialize random valve timer
+    function resetRandomTimer() {
+      // Choose next state duration
+      if (randomOn) {
+        // Switch off duration
+        randomTimer = 0.5 + Math.random() * 2.5;
+      } else {
+        // Switch on duration
+        randomTimer = 1.0 + Math.random() * 2.0;
+      }
+    }
+    resetRandomTimer();
+
+    // PID application handler
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Support commas and spaces in input
+      const toNum = (v) => {
+        if (typeof v !== 'string') return 0;
+        return parseFloat(v.replace(',', '.').trim()) || 0;
+      };
+      Kp = Math.max(0, toNum(kpEl.value));
+      Ki = Math.max(0, toNum(kiEl.value));
+      Kd = Math.max(0, toNum(kdEl.value));
+      // Reset integral to avoid sudden windup with new gains
+      integral = 0;
+      prevError = 0;
+      flashStatus('Applied', '#22d3ee');
+    });
+
+    startBtn.addEventListener('click', () => {
+      if (!running) {
+        running = true;
+        flashStatus('Running', '#34d399');
+      }
+    });
+    pauseBtn.addEventListener('click', () => {
+      running = !running;
+      flashStatus(running ? 'Running' : 'Paused', running ? '#34d399' : '#f59e0b');
+    });
+    resetBtn.addEventListener('click', () => {
+      hardReset();
+      flashStatus('Reset', '#a78bfa');
+    });
+    playAgain.addEventListener('click', () => {
+      loseOverlay.classList.add('hidden');
+      hardReset();
+      running = true;
+      flashStatus('Running', '#34d399');
+    });
+
+    function flashStatus(text, color) {
+      ui.statusLabel.textContent = text;
+      ui.statusLight.style.background = color;
+      setTimeout(() => {
+        if (running) {
+          ui.statusLabel.textContent = 'Running';
+          ui.statusLight.style.background = '#34d399';
+        } else {
+          ui.statusLabel.textContent = 'Ready';
+          ui.statusLight.style.background = '#f59e0b';
+        }
+      }, 800);
+    }
+
+    function hardReset() {
+      // Reset sim
+      running = false;
+      elapsed = 0;
+      window._score = 0;
+      if (ui.scoreBox) ui.scoreBox.textContent = '0';
+      level = 0.5;
+      integral = 0;
+      prevError = 0;
+      randomOn = false;
+      randomTimer = 0;
+      resetRandomTimer();
+      t = 0;
+
+      // Reset difficulty and unlocks
+      difficulty = 1.0;
+      if (ui.diff) ui.diff.textContent = 'x1.0';
+      pulseUnlocked = false;
+      shockUnlocked = false;
+      driftUnlocked = false;
+      pulse = 0; shock = 0; drift = 0;
+      pulsePhase = 0; shockTimer = 0; driftBase = 0;
+
+      // Hide optional cards
+      if (ui.cards && ui.cards.pulse) ui.cards.pulse.classList.add('hidden');
+      if (ui.cards && ui.cards.shock) ui.cards.shock.classList.add('hidden');
+      if (ui.cards && ui.cards.drift) ui.cards.drift.classList.add('hidden');
+
+      // Reset contexts to re-init on unlock
+      if (typeof ctxs !== 'undefined') { ctxs.pulse = null; ctxs.shock = null; ctxs.drift = null; }
+
+      // Clear histories
+      if (hist.leak) hist.leak.fill(0);
+      if (hist.random) hist.random.fill(0);
+      if (hist.tide) hist.tide.fill(0);
+      if (hist.pulse) hist.pulse.fill(0);
+      if (hist.shock) hist.shock.fill(0);
+      if (hist.drift) hist.drift.fill(0);
+
+      // UI
+      updateUI(0, 0, 0, 0, 0, 0, 0);
+      drawAllGraphs();
+      layoutTankLines();
+    }
+
+    function showLose(reason) {
+      running = false;
+      // Update best time
+      if (elapsed > bestTime) {
+        bestTime = elapsed;
+        localStorage.setItem('pid_best_time', String(bestTime));
+      }
+      loseTime.textContent = elapsed.toFixed(1) + 's';
+      loseBest.textContent = bestTime.toFixed(1) + 's';
+
+      if (reason === 'overflow') {
+        loseTitle.textContent = 'Overflow!';
+        loseSub.textContent = 'You turned the lab into a splash park. The janitor says thanks for the job security.';
+        loseEmoji.textContent = '💦';
+      } else {
+        loseTitle.textContent = 'Underfilled!';
+        loseSub.textContent = 'The tank dried up. Even the rubber duck filed a complaint.';
+        loseEmoji.textContent = '🦆';
+      }
+      loseOverlay.classList.remove('hidden');
+      ui.statusLabel.textContent = 'Game Over';
+      ui.statusLight.style.background = '#ef4444';
+    }
+
+    function step() {
+      if (running) {
+        elapsed += dt;
+        // Score: +10 * multiplier per second
+        if (!window._score) window._score = 0;
+        window._score += difficulty * 10 * dt;
+        if (ui.scoreBox) ui.scoreBox.textContent = Math.round(window._score).toLocaleString();
+      }
+
+      // Difficulty scaling over time
+      if (running) {
+        // Gently ramp up: every 10s increase by ~10%, capped at x3
+        const target = 1 + Math.min(2, Math.floor(elapsed / 10) * 0.1 * 10 / 10); // stepwise 10%
+        difficulty = 0.98 * difficulty + 0.02 * target; // smooth toward target
+        ui.diff.textContent = 'x' + difficulty.toFixed(1);
+
+        // Unlock extra drains at milestones
+        if (!pulseUnlocked && elapsed >= 15) { pulseUnlocked = true; ui.cards.pulse.classList.remove('hidden'); initOptionalCanvas('pulse'); }
+        if (!shockUnlocked && elapsed >= 30) { shockUnlocked = true; ui.cards.shock.classList.remove('hidden'); initOptionalCanvas('shock'); }
+        if (!driftUnlocked && elapsed >= 45) { driftUnlocked = true; ui.cards.drift.classList.remove('hidden'); initOptionalCanvas('drift'); }
+        if (!surgeUnlocked && elapsed >= 60) {
+          surgeUnlocked = true;
+          ui.cards.surge.classList.remove('hidden');
+          // Wait a tick to ensure it has layout, then init
+          setTimeout(() => { initOptionalCanvas('surge'); drawAllGraphs(); }, 0);
+        }
+        if (!noiseUnlocked && elapsed >= 75) {
+          noiseUnlocked = true;
+          ui.cards.noise.classList.remove('hidden');
+          setTimeout(() => { initOptionalCanvas('noise'); drawAllGraphs(); }, 0);
+        }
+        if (!squallUnlocked && elapsed >= 90) {
+          squallUnlocked = true;
+          ui.cards.squall.classList.remove('hidden');
+          setTimeout(() => { initOptionalCanvas('squall'); drawAllGraphs(); }, 0);
+        }
+        if (!maelUnlocked && elapsed >= 120) { maelUnlocked = true; ui.cards.maelstrom.classList.remove('hidden'); initOptionalCanvas('maelstrom'); }
+
+        // Scale base parameters
+        leakConst = baseLeak * difficulty;
+        randomAmp = baseRandomAmp * difficulty;
+        tideAmp = baseTideAmp * difficulty;
+        tidePeriod = Math.max(8, baseTidePeriod - (difficulty - 1) * 4); // shorter period over time
+      }
+
+      // Outflows
+      // 1) Leak: steady
+      const leak = leakConst;
+
+      // 2) Random bursts
+      randomTimer -= dt;
+      if (randomTimer <= 0) {
+        randomOn = !randomOn;
+        resetRandomTimer();
+      }
+      randomFlow = randomOn ? randomAmp : 0;
+
+      // 3) Tide (smooth wave)
+      t += dt;
+      const tide = tideAmp * (0.5 + 0.5 * Math.sin((2 * Math.PI / tidePeriod) * t));
+
+      // 4) Pulse Ramp (triangular-ish saw)
+      if (pulseUnlocked) {
+        pulsePhase += dt * (0.6 + 0.4 * difficulty); // faster as difficulty rises
+        const s = (pulsePhase % 2);
+        const tri = s < 1 ? s : 2 - s; // 0->1->0
+        pulse = tri * 0.6 * Math.min(1.5, difficulty);
+      } else { pulse = 0; }
+
+      // 5) Shock Spikes (rare, hard hits)
+      if (shockUnlocked) {
+        shockTimer -= dt;
+        if (shockTimer <= 0) {
+          // Next spike in 1.5-4s, stronger over time
+          shock = 0.6 * Math.min(2.0, difficulty) * (0.8 + Math.random() * 0.6);
+          shockTimer = 1.5 + Math.random() * 2.5;
+        } else {
+          // Exponential decay of shock
+          shock *= Math.exp(-6 * dt);
+          if (shock < 0.01) shock = 0;
+        }
+      } else { shock = 0; }
+
+      // 6) Drift (slowly creeping baseline)
+      if (driftUnlocked) {
+        driftBase += dt * 0.01 * Math.min(2.0, difficulty); // slow creep
+        drift = Math.min(0.8, driftBase + 0.05 * Math.sin(t * 0.4));
+      } else { drift = 0; }
+
+      // 7) Surge (fast sine burst)
+      if (surgeUnlocked) {
+        surgePhase += dt * (1.2 + 0.8 * difficulty);
+        surge = 0.5 * (0.5 + 0.5 * Math.sin(surgePhase * 2*Math.PI));
+        surge *= Math.min(2.0, difficulty);
+      } else { surge = 0; }
+
+      // 8) Noise (random jitter)
+      if (noiseUnlocked) {
+        noiseTimer -= dt;
+        if (noiseTimer <= 0) {
+          noiseTimer = 0.05 + Math.random() * 0.15;
+          noise = Math.random() * 0.3 * Math.min(2.0, difficulty);
+        }
+        // quick decay to keep it spiky
+        noise *= Math.exp(-10 * dt);
+      } else { noise = 0; }
+
+      // 9) Squall (longer stormy ramp)
+      if (squallUnlocked) {
+        squallPhase += dt * 0.25;
+        const ramp = Math.min(1, squallPhase / 6); // 0->1 over ~24s
+        const mod = 0.6 + 0.4 * Math.sin(t * 0.7);
+        squall = ramp * mod * 0.8 * Math.min(2.2, difficulty);
+      } else { squall = 0; }
+
+      // 10) Maelstrom (endgame chaos)
+      if (maelUnlocked) {
+        maelPhase += dt * 0.18;
+        const swell = 0.4 + 0.6 * Math.sin(maelPhase * 2 * Math.PI);
+        const chaos = 0.2 * (Math.random() - 0.5);
+        maelstrom = Math.max(0, (swell + chaos)) * Math.min(2.5, difficulty);
+      } else { maelstrom = 0; }
+
+      const totalOut = leak + randomFlow + tide + pulse + shock + drift + surge + noise + squall + maelstrom;
+
+      // PID inflow
+      const setpoint = getSetpoint();
+      const error = setpoint - level;
+
+      // Anti-windup: clamp integral contribution to keep output within [0, maxInflow]
+      integral += error * dt;
+      const iTerm = Ki * integral;
+      const dTerm = Kd * ((error - prevError) / dt);
+      let control = Kp * error + iTerm + dTerm;
+
+      // Saturate inflow
+      let inflow = clamp(control, 0, maxInflow);
+
+      // If saturated, apply conditional integration to reduce windup
+      if ((inflow === 0 && error < 0) || (inflow === maxInflow && error > 0)) {
+        integral -= error * dt * 0.7;
+      }
+
+      prevError = error;
+
+      // Tank level update
+      if (running) {
+        level += (inflow - totalOut) * dt;
+      }
+
+      // Lose checks
+      if (level > upperLimit) {
+        level = upperLimit;
+        showLose('overflow');
+      } else if (level < lowerLimit) {
+        level = lowerLimit;
+        showLose('underfill');
+      }
+
+      // Update UI and graphs
+      updateUI(inflow, leak, randomFlow, tide, pulse, shock, drift);
+      recordAndDraw(leak, randomFlow, tide, pulse, shock, drift);
+    }
+
+    function updateUI(inflow, leak, random, tide, pulse=0, shock=0, drift=0) {
+      ui.level.textContent = Math.round(level * 100) + '%';
+      ui.time.textContent = elapsed.toFixed(1) + 's';
+      ui.best.textContent = bestTime.toFixed(1) + 's';
+      ui.inflow.textContent = inflow.toFixed(2);
+      ui.outflow.textContent = (leak + random + tide + pulse + shock + drift + surge + noise + squall + maelstrom).toFixed(2);
+      if (ui.scoreBox) ui.scoreBox.textContent = Math.round((window._score || 0)).toLocaleString();
+      ui.leak.textContent = leak.toFixed(2);
+      ui.random.textContent = random.toFixed(2);
+      ui.tide.textContent = tide.toFixed(2);
+      const pulseEl = document.getElementById('ui-pulse'); if (pulseEl) pulseEl.textContent = pulse.toFixed(2);
+      const shockEl = document.getElementById('ui-shock'); if (shockEl) shockEl.textContent = shock.toFixed(2);
+      const driftEl = document.getElementById('ui-drift'); if (driftEl) driftEl.textContent = drift.toFixed(2);
+      const surgeEl = document.getElementById('ui-surge'); if (surgeEl) surgeEl.textContent = surge.toFixed(2);
+      const noiseEl = document.getElementById('ui-noise'); if (noiseEl) noiseEl.textContent = noise.toFixed(2);
+      const squallEl = document.getElementById('ui-squall'); if (squallEl) squallEl.textContent = squall.toFixed(2);
+      const maelEl = document.getElementById('ui-maelstrom'); if (maelEl) maelEl.textContent = maelstrom.toFixed(2);
+
+      // Water fill height
+      ui.water.style.height = (clamp(level, 0, 1) * 100) + '%';
+
+      // Position guides (in case of resize)
+      layoutTankLines();
+    }
+
+    function recordAndDraw(leak, random, tide, pulse=0, shock=0, drift=0) {
+      // Shift histories for all drains
+      hist.leak.push(leak); hist.leak.shift();
+      hist.random.push(random); hist.random.shift();
+      hist.tide.push(tide); hist.tide.shift();
+      hist.pulse.push(pulse); hist.pulse.shift();
+      hist.shock.push(shock); hist.shock.shift();
+      hist.drift.push(drift); hist.drift.shift();
+      hist.surge.push(surge); hist.surge.shift();
+      hist.noise.push(noise); hist.noise.shift();
+      hist.squall.push(squall); hist.squall.shift();
+      hist.maelstrom.push(maelstrom); hist.maelstrom.shift();
+      drawAllGraphs();
+    }
+
+    function drawGraph(ctx, values, color) {
+      if (!ctx) return;
+      const canvas = ctx.canvas;
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      // Axes baseline
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, h - 1);
+      ctx.lineTo(w, h - 1);
+      ctx.stroke();
+
+      const n = values.length;
+      if (n <= 1) return;
+      // Determine y based on 0..1 range (flows are configured in 0..~1)
+      const maxY = 1.0; // fixed scale for consistency
+      const dx = w / (n - 1);
+
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      for (let i = 0; i < n; i++) {
+        const v = clamp(values[i], 0, maxY);
+        const x = i * dx;
+        const y = h - (v / maxY) * (h - 2) - 1;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Fill under curve (nice glow)
+      const grad = ctx.createLinearGradient(0, 0, 0, h);
+      try {
+        grad.addColorStop(0, color.replace('1)', '0.25)'));
+        grad.addColorStop(1, color.replace('1)', '0)'));
+      } catch (e) {
+        // fallback if color string not as expected
+        grad.addColorStop(0, 'rgba(255,255,255,0.12)');
+        grad.addColorStop(1, 'rgba(255,255,255,0)');
+      }
+      ctx.fillStyle = grad;
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function drawAllGraphs() {
+      if (!ctxs.leak || !ctxs.random || !ctxs.tide) initBaseCanvases();
+      // Always draw base graphs
+      drawGraph(ctxs.leak, hist.leak, 'rgba(56,189,248,1)');   // cyan-400
+      drawGraph(ctxs.random, hist.random, 'rgba(244,63,94,1)'); // rose-500
+      drawGraph(ctxs.tide, hist.tide, 'rgba(52,211,153,1)');    // emerald-400
+
+      // Ensure optional canvases are initialized when unlocked
+      if (pulseUnlocked && !ctxs.pulse) initOptionalCanvas('pulse');
+      if (shockUnlocked && !ctxs.shock) initOptionalCanvas('shock');
+      if (driftUnlocked && !ctxs.drift) initOptionalCanvas('drift');
+      if (surgeUnlocked && !ctxs.surge) { initOptionalCanvas('surge'); }
+      if (noiseUnlocked && !ctxs.noise) { initOptionalCanvas('noise'); }
+      if (squallUnlocked && !ctxs.squall) { initOptionalCanvas('squall'); }
+      if (maelUnlocked && !ctxs.maelstrom) { initOptionalCanvas('maelstrom'); }
+
+      // Draw all optional graphs if contexts exist (and canvas has size)
+      if (ctxs.pulse) drawGraph(ctxs.pulse, hist.pulse, 'rgba(129,140,248,1)');  // indigo-400
+      if (ctxs.shock) drawGraph(ctxs.shock, hist.shock, 'rgba(251,191,36,1)');  // amber-400
+      if (ctxs.drift) drawGraph(ctxs.drift, hist.drift, 'rgba(217,70,239,1)');  // fuchsia-500
+      if (ctxs.surge && ctxs.surge.canvas.width > 0) drawGraph(ctxs.surge, hist.surge, 'rgba(56,189,248,1)');  // sky/cyan tone
+      if (ctxs.noise && ctxs.noise.canvas.width > 0) drawGraph(ctxs.noise, hist.noise, 'rgba(209,213,219,1)'); // gray-300
+      if (ctxs.squall && ctxs.squall.canvas.width > 0) drawGraph(ctxs.squall, hist.squall, 'rgba(248,113,113,1)'); // red-400
+      if (ctxs.maelstrom && ctxs.maelstrom.canvas.width > 0) drawGraph(ctxs.maelstrom, hist.maelstrom, 'rgba(253,224,71,1)'); // yellow-300
+    }
+
+    // Initial layout and UI
+    layoutTankLines();
+    updateUI(0, 0, 0, 0);
+    drawAllGraphs();
+
+    // Main loop
+    setInterval(step, dt * 1000);
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'981a8c04469bccb2',t:'MTc1ODMwMDI1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
