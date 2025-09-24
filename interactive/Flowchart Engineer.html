@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flowchart Builder Game</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .drag-item { cursor: grab; transition: all 0.2s ease; }
+    .drag-item:active { cursor: grabbing; transform: scale(1.05); }
+    .drop-zone { transition: all 0.3s ease; border: 2px dashed #cbd5e1; }
+    .drop-zone.drag-over { border-color: #3b82f6; background-color: #eff6ff; transform: scale(1.02); }
+    .drop-zone.filled { border-color: #10b981; background-color: #f0fdf4; }
+    .symbol { display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; text-align: center; font-size: 14px; }
+    .start-end { background: linear-gradient(135deg, #8b5cf6, #a855f7); border-radius: 50px; }
+    .process   { background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 8px; }
+    .decision  { background: linear-gradient(135deg, #f59e0b, #d97706); clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); border-radius: 0; }
+    .decision span { transform: none; }
+    .label-token { background: #f1f5f9; color: #334155; border-radius: 9999px; font-weight: 700; padding: 0 6px; }
+    .dz-label { width: 3.25rem; height: 1.75rem; border-radius: 9999px; display:flex; align-items:center; justify-content:center; font-weight:700; color:#334155; }
+
+    /* Big canvas + subtle grid */
+    #flowchart-canvas {
+      overflow: hidden;
+      background-image:
+        linear-gradient(to right, rgba(148,163,184,0.18) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148,163,184,0.18) 1px, transparent 1px);
+      background-size: 24px 24px, 24px 24px;
+      background-color: #f8fafc;
+      border: 1px solid #e5e7eb;
+    }
+
+    .zoom-btn { background:#fff; box-shadow:0 1px 2px rgba(0,0,0,.06); padding:.25rem .5rem; border-radius:.5rem; border:1px solid #e2e8f0; color:#334155; font-weight:600; }
+    .zoom-btn:hover { background:#f8fafc; }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-100 to-purple-100 min-h-screen p-6">
+  <nav style="max-width:1000px;margin:0 auto 10px auto;">
+    <a href="https://engineeringshare.github.io/engineering-hub/interactive-hub/" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px">
+        ← Back to Interactive Hub
+    </a>
+  </nav>
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">🔄 Flowchart Builder</h1>
+      <p class="text-lg text-gray-600">Drag the correct symbols to complete the flowchart.</p>
+      <div class="mt-4 flex justify-center items-center gap-4">
+        <div class="bg-white px-4 py-2 rounded-lg shadow">
+          <span class="text-sm text-gray-600">Challenge:</span>
+          <span id="challenge-counter" class="font-bold text-blue-600 ml-1">1 / 4</span>
+        </div>
+        <div class="bg-white px-4 py-2 rounded-lg shadow">
+          <span class="text-sm text-gray-600">Score:</span>
+          <span id="score" class="font-bold text-green-600 ml-1">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <!-- Palette -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-bold text-gray-800 mb-4">🎯 Symbol Palette</h3>
+          <div id="symbol-palette" class="space-y-3"></div>
+
+          <div class="mt-6 pt-4 border-t border-gray-200">
+            <h4 class="font-semibold text-gray-700 mb-3">Legend</h4>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center gap-2"><div class="w-4 h-4 start-end"></div><span>Start/End</span></div>
+              <div class="flex items-center gap-2"><div class="w-4 h-4 process"></div><span>Process</span></div>
+              <div class="flex items-center gap-2"><div class="w-4 h-4 decision"></div><span>Decision</span></div>
+              <div class="flex items-center gap-2"><div class="w-4 h-4 rounded-full bg-slate-200"></div><span>Yes/No label</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main -->
+      <div class="lg:col-span-3">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 id="challenge-title" class="text-xl font-bold text-gray-800">Challenge 1: Simple Process</h3>
+            <div class="flex items-center gap-2">
+              <button id="zoom-out" class="zoom-btn" title="Zoom out (Ctrl + wheel)">–</button>
+              <button id="zoom-in" class="zoom-btn" title="Zoom in (Ctrl + wheel)">＋</button>
+              <button id="zoom-reset" class="zoom-btn" title="Reset view">Reset</button>
+              <button id="reset-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1.5 rounded-lg transition-colors ml-3">🔄 Reset Level</button>
+            </div>
+          </div>
+
+          <div id="challenge-description" class="bg-blue-50 border-l-4 border-blue-400 p-3 mb-4 rounded">
+            <p class="text-blue-800">Create a flowchart that shows: Start → Process data → End</p>
+          </div>
+
+          <!-- Viewport (large) -->
+          <div id="flowchart-canvas" class="relative rounded-lg h-[820px] md:h-[920px] lg:h-[1040px]">
+            <div id="workspace" class="absolute inset-0">
+              <div id="content" class="absolute inset-0" style="transform-origin: 0 0;"></div>
+            </div>
+            <div class="absolute bottom-3 right-3 bg-white/80 text-slate-600 text-xs px-2 py-1 rounded shadow">
+              Hold <kbd class="px-1 border rounded">Space</kbd> and drag · Ctrl + wheel to zoom
+            </div>
+          </div>
+
+          <div class="flex justify-center gap-4 mt-6">
+            <button id="check-btn" class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">✅ Check Solution</button>
+            <button id="next-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors hidden">➡️ Next Challenge</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-50">
+      <div class="bg-white rounded-xl p-8 max-w-md mx-4 text-center">
+        <div class="text-6xl mb-4">🎉</div>
+        <h3 class="text-2xl font-bold text-gray-800 mb-2">Excellent Work!</h3>
+        <p id="success-message" class="text-gray-600 mb-6">You've completed the challenge correctly!</p>
+        <button id="continue-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class FlowchartGame {
+      constructor() {
+        this.currentChallenge = 0;
+        this.score = 0;
+
+        // View (pan/zoom) on #content
+        this.view = { scale: 1, tx: 0, ty: 0, panning: false, space: false, startX: 0, startY: 0, startTx: 0, startTy: 0 };
+        this.SCALE_MIN = 0.5; this.SCALE_MAX = 2.5; this.SCALE_STEP = 0.1;
+
+        // ----- Compact layouts -----
+        this.challenges = [
+          // Level 1 (tighter vertical spacing)
+          {
+            title: "Challenge 1: Simple Process",
+            description: "Create a flowchart that shows: Start → Process data → End",
+            layout: [
+              { id: 'start', kind:'node', type: 'start-end', text: 'Start',        x: 50, y: 12 },
+              { id: 'proc',  kind:'node', type: 'process',   text: 'Process\nData',x: 50, y: 26 },
+              { id: 'end',   kind:'node', type: 'start-end', text: 'End',          x: 50, y: 40 }
+            ],
+            palette: [
+              { type:'start-end', text:'Start' },
+              { type:'process',   text:'Process\nData' },
+              { type:'start-end', text:'End' }
+            ],
+          },
+          // Level 2 (branches closer to decision; end closer)
+          {
+            title: "Challenge 2: Decision Making",
+            description: "Start → Number > 10?  If YES: Print \"Big\"; if NO: Print \"Small\" → End",
+            layout: [
+              { id: 'start',    kind:'node', type: 'start-end', text: 'Start',        x: 50, y: 10 },
+              { id: 'decision', kind:'node', type: 'decision',  text: 'Number\n> 10?',x: 50, y: 22 },
+              { id: 'branchL',  kind:'node', type: 'process',   allowedTexts: ['Print\n"Big"','Print\n"Small"'], x: 30, y: 34 },
+              { id: 'branchR',  kind:'node', type: 'process',   allowedTexts: ['Print\n"Big"','Print\n"Small"'], x: 70, y: 34 },
+              { id: 'end',      kind:'node', type: 'start-end', text: 'End',          x: 50, y: 46 },
+              { id: 'slotL',    kind:'label-slot', x: 40, y: 28 },
+              { id: 'slotR',    kind:'label-slot', x: 60, y: 28 }
+            ],
+            palette: [
+              { type:'start-end', text:'Start' },
+              { type:'decision',  text:'Number\n> 10?' },
+              { type:'process',   text:'Print\n"Big"' },
+              { type:'process',   text:'Print\n"Small"' },
+              { type:'start-end', text:'End' },
+              { type:'label-token', text:'Yes' },
+              { type:'label-token', text:'No' }
+            ],
+          },
+          // Level 3 (loop tightened; inc/end brought up)
+          {
+            title: "Challenge 3: Loop Structure",
+            description: "Start → Counter = 0 → Counter < 5?  YES: Counter++ (loop back from top), NO: End",
+            layout: [
+              { id: 'start',     kind:'node',  type: 'start-end', text: 'Start',        x: 50, y: 12 },
+              { id: 'init',      kind:'node',  type: 'process',   text: 'Counter\n= 0', x: 50, y: 24 },
+              { id: 'decision3', kind:'node',  type: 'decision',  text: 'Counter\n< 5?',x: 50, y: 36 },
+              { id: 'inc',       kind:'node',  type: 'process',   text: 'Counter\n++',  x: 18, y: 56 },
+              { id: 'end',       kind:'node',  type: 'start-end', text: 'End',          x: 82, y: 56 },
+              { id: 'slotL3',    kind:'label-slot', x: 38, y: 33 }, /* just above left branch line */
+              { id: 'slotR3',    kind:'label-slot', x: 62, y: 36 }
+            ],
+            palette: [
+              { type:'start-end', text:'Start' },
+              { type:'process',   text:'Counter\n= 0' },
+              { type:'decision',  text:'Counter\n< 5?' },
+              { type:'process',   text:'Counter\n++' },
+              { type:'start-end', text:'End' },
+              { type:'label-token', text:'Yes' },
+              { type:'label-token', text:'No' }
+            ],
+          },
+          // Level 4 (two decisions, compressed)
+          {
+            title: "Challenge 4: Validate & Classify Number",
+            description: "Start → Read number → Valid?  YES → Even? → YES: Print \"Even\", NO: Print \"Odd\";  NO: Print \"Error\" → End.\nPlace YES/NO labels for BOTH decisions.",
+            layout: [
+              { id: 'start4',    kind:'node',  type: 'start-end', text: 'Start',           x: 50, y: 10 },
+              { id: 'read',      kind:'node',  type: 'process',   text: 'Read\nNumber',    x: 50, y: 22 },
+              { id: 'valid',     kind:'node',  type: 'decision',  text: 'Valid?',          x: 50, y: 34 },
+              { id: 'evenq',     kind:'node',  type: 'decision',  text: 'Even?',           x: 30, y: 46 },
+              { id: 'err',       kind:'node',  type: 'process',   text: 'Print\n"Error"',  x: 70, y: 46 },
+              { id: 'even',      kind:'node',  type: 'process',   text: 'Print\n"Even"',   x: 22, y: 58 },
+              { id: 'odd',       kind:'node',  type: 'process',   text: 'Print\n"Odd"',    x: 38, y: 58 },
+              { id: 'end4',      kind:'node',  type: 'start-end', text: 'End',             x: 84, y: 66 },
+              { id: 'slotV_yes', kind:'label-slot', x: 42, y: 31 },
+              { id: 'slotV_no',  kind:'label-slot', x: 58, y: 36 },
+              { id: 'slotE_yes', kind:'label-slot', x: 24, y: 43 },
+              { id: 'slotE_no',  kind:'label-slot', x: 36, y: 49 }
+            ],
+            palette: [
+              { type:'start-end', text:'Start' },
+              { type:'process',   text:'Read\nNumber' },
+              { type:'decision',  text:'Valid?' },
+              { type:'decision',  text:'Even?' },
+              { type:'process',   text:'Print\n"Error"' },
+              { type:'process',   text:'Print\n"Even"' },
+              { type:'process',   text:'Print\n"Odd"' },
+              { type:'start-end', text:'End' },
+              { type:'label-token', text:'Yes' },
+              { type:'label-token', text:'No' },
+              { type:'label-token', text:'Yes' },
+              { type:'label-token', text:'No' }
+            ]
+          }
+        ];
+
+        this.init();
+      }
+
+      init() {
+        this.setupEventListeners();
+        this.loadChallenge();
+        this.createPalette();
+        this.bindViewControls();
+      }
+
+      setupEventListeners() {
+        document.getElementById('check-btn').addEventListener('click', () => this.checkSolution());
+        document.getElementById('next-btn').addEventListener('click', () => this.nextChallenge());
+        document.getElementById('reset-btn').addEventListener('click', () => this.resetChallenge());
+        document.getElementById('continue-btn').addEventListener('click', () => this.hideSuccessModal());
+      }
+
+      createPalette() {
+        const palette = document.getElementById('symbol-palette');
+        const { palette: items } = this.challenges[this.currentChallenge];
+        palette.innerHTML = '';
+
+        items.forEach(sym => {
+          const el = document.createElement('div');
+          if (sym.type === 'label-token') {
+            el.className = 'label-token drag-item w-full h-10 flex items-center justify-center';
+          } else {
+            el.className = `symbol ${sym.type} drag-item w-full h-12 flex items-center justify-center rounded-lg`;
+          }
+          el.draggable = true;
+          el.dataset.type = sym.type;
+          el.dataset.text = sym.text || '';
+          el.innerHTML = `<span>${sym.text || ''}</span>`;
+          el.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', JSON.stringify({type:sym.type, text:sym.text||''}));
+            el.style.opacity = '0.5';
+          });
+          el.addEventListener('dragend', () => { el.style.opacity = '1'; });
+          palette.appendChild(el);
+        });
+      }
+
+      loadChallenge() {
+        const ch = this.challenges[this.currentChallenge];
+        document.getElementById('challenge-title').textContent = ch.title;
+        document.getElementById('challenge-description').innerHTML = `<p class="text-blue-800">${ch.description.replace(/\n/g,'<br/>')}</p>`;
+        document.getElementById('challenge-counter').textContent = `${this.currentChallenge + 1} / ${this.challenges.length}`;
+        this.buildCanvas(ch.layout);
+        this.createPalette();
+      }
+
+      // Build into #content (transformed group)
+      buildCanvas(layout) {
+        const content = document.getElementById('content');
+        content.innerHTML = '';
+
+        layout.forEach(item => {
+          const dz = document.createElement('div');
+          if (item.kind === 'label-slot') {
+            dz.className = 'drop-zone dz-label absolute';
+          } else {
+            dz.className = 'drop-zone absolute w-24 h-16 flex items-center justify-center rounded-lg';
+          }
+          dz.style.left = `${item.x}%`;
+          dz.style.top = `${item.y}%`;
+          dz.style.transform = 'translate(-50%, -50%)';
+
+          dz.dataset.id = item.id;
+          dz.dataset.kind = item.kind;
+          if (item.kind === 'node') {
+            dz.dataset.expectedType = item.type;
+            if (item.text) dz.dataset.expectedText = item.text;
+            if (item.allowedTexts) dz.dataset.allowedTexts = JSON.stringify(item.allowedTexts);
+          }
+
+          dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.classList.add('drag-over'); });
+          dz.addEventListener('dragleave', () => dz.classList.remove('drag-over'));
+          dz.addEventListener('drop', (e) => {
+            e.preventDefault();
+            let payload;
+            try { payload = JSON.parse(e.dataTransfer.getData('text/plain')); }
+            catch { payload = { type: e.dataTransfer.getData('text/plain'), text: '' }; }
+            this.placeSymbol(dz, payload);
+            dz.classList.remove('drag-over');
+            this.drawConnections();
+          });
+
+          content.appendChild(dz);
+        });
+
+        // SVG overlay inside #content so it shares the same transform
+        const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('id', 'conn-svg');
+        svg.setAttribute('class', 'absolute inset-0 pointer-events-none');
+        svg.setAttribute('width', '100%');
+        svg.setAttribute('height', '100%');
+        svg.style.left = 0; svg.style.top = 0; svg.style.position = 'absolute';
+
+        const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+        marker.setAttribute('id', 'arrow');
+        marker.setAttribute('markerUnits', 'userSpaceOnUse');
+        marker.setAttribute('viewBox', '0 0 8 7');
+        marker.setAttribute('markerWidth', '8');
+        marker.setAttribute('markerHeight', '7');
+        marker.setAttribute('refX', '8');
+        marker.setAttribute('refY', '3.5');
+        marker.setAttribute('orient', 'auto');
+        const arrowPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        arrowPath.setAttribute('d', 'M0,0 L0,7 L8,3.5 z');
+        arrowPath.setAttribute('fill', '#6b7280');
+        marker.appendChild(arrowPath);
+        defs.appendChild(marker);
+        svg.appendChild(defs);
+        content.appendChild(svg);
+
+        this.drawConnections();
+        window.addEventListener('resize', () => this.drawConnections(), { passive: true });
+      }
+
+      // Geometry in untransformed content space
+      _metrics(el) {
+        const w = el.offsetWidth, h = el.offsetHeight;
+        const cx = el.offsetLeft;
+        const cy = el.offsetTop;
+        return {
+          cx, cy,
+          left: cx - w/2, right: cx + w/2,
+          top:  cy - h/2, bottom: cy + h/2
+        };
+      }
+      _anchor(m, side) {
+        if (side === 'top') return { x: m.cx, y: m.top };
+        if (side === 'bottom') return { x: m.cx, y: m.bottom };
+        if (side === 'left') return { x: m.left, y: m.cy };
+        if (side === 'right') return { x: m.right, y: m.cy };
+        return { x: m.cx, y: m.cy };
+      }
+
+      drawConnections() {
+        const TIP_GAP = 4, OUT = 12;
+        const content = document.getElementById('content');
+        const svg = document.getElementById('conn-svg');
+        if (!svg) return;
+
+        while (svg.lastChild && svg.lastChild.nodeName !== 'defs') svg.removeChild(svg.lastChild);
+
+        const zones = Array.from(content.querySelectorAll('.drop-zone'));
+        const byId = {}; zones.forEach(z => byId[z.dataset.id] = z);
+
+        const addPath = (pts) => {
+          const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+          const d = `M ${pts[0].x} ${pts[0].y}` + pts.slice(1).map(p => ` L ${p.x} ${p.y}`).join('');
+          path.setAttribute('d', d);
+          path.setAttribute('fill', 'none');
+          path.setAttribute('stroke', '#6b7280');
+          path.setAttribute('stroke-width', '2');
+          path.setAttribute('stroke-linejoin', 'round');
+          path.setAttribute('stroke-linecap', 'butt');
+          path.setAttribute('marker-end', 'url(#arrow)');
+          svg.appendChild(path);
+        };
+
+        const routePorts = (fromId, fromSide, toId, toSide, opt=null) => {
+          const a = this._metrics(byId[fromId]);
+          const b = this._metrics(byId[toId]);
+          const s = this._anchor(a, fromSide);
+          const e = this._anchor(b, toSide);
+          const out1 = { x: s.x + (fromSide==='right'?OUT:fromSide==='left'?-OUT:0),
+                         y: s.y + (fromSide==='bottom'?OUT:fromSide==='top'?-OUT:0) };
+          const end = { x: e.x + (toSide==='left'?TIP_GAP:toSide==='right'?-TIP_GAP:0),
+                        y: e.y + (toSide==='top'?TIP_GAP:toSide==='bottom'?-TIP_GAP:0) };
+
+          let opts = {};
+          if (typeof opt === 'number') opts.viaY = opt;
+          else if (typeof opt === 'object' && opt) opts = opt;
+
+          const pts = [s, out1];
+          if (opts.viaY !== undefined) {
+            const vy = opts.viaY;
+            pts.push({x: out1.x, y: vy});
+            pts.push({x: end.x,  y: vy});
+          } else if (opts.viaX !== undefined) {
+            const vx = (opts.viaX === 'mid') ? (out1.x + end.x) / 2 : opts.viaX;
+            pts.push({x: vx, y: out1.y});
+            pts.push({x: vx, y: end.y});
+          } else {
+            if (fromSide==='top' || fromSide==='bottom') {
+              const midY = (out1.y + end.y) / 2;
+              pts.push({x: out1.x, y: midY});
+              pts.push({x: end.x,  y: midY});
+            } else {
+              const midX = (out1.x + end.x) / 2;
+              pts.push({x: midX, y: out1.y});
+              pts.push({x: midX, y: end.y});
+            }
+          }
+          pts.push(end);
+          addPath(pts);
+        };
+
+        const chIdx = this.currentChallenge;
+
+        if (chIdx === 0) {
+          routePorts('start','bottom','proc','top');
+          routePorts('proc','bottom','end','top');
+        } else if (chIdx === 1) {
+          routePorts('start','bottom','decision','top');
+          routePorts('decision','bottom','branchL','top');
+          routePorts('decision','bottom','branchR','top');
+          routePorts('branchL','bottom','end','top');
+          routePorts('branchR','bottom','end','top');
+        } else if (chIdx === 2) {
+          routePorts('start','bottom','init','top');
+          routePorts('init','bottom','decision3','top');
+          const aDec = this._metrics(byId['decision3']);
+          routePorts('decision3','left','inc','right', { viaX: 'mid' });   // elbow mid
+          routePorts('decision3','right','end','top', aDec.cy + 12);       // slight drop
+          const above = aDec.top - 28;                                     // loop above
+          routePorts('inc','top','decision3','top', above);
+        } else if (chIdx === 3) {
+          routePorts('start4','bottom','read','top');
+          routePorts('read','bottom','valid','top');
+
+          const mV = this._metrics(byId['valid']);
+          routePorts('valid','left','evenq','right', { viaX: 'mid' });
+          routePorts('valid','right','err','top', mV.cy + 12);
+
+          const mE = this._metrics(byId['evenq']);
+          routePorts('evenq','left','even','right', { viaX: 'mid' });
+          routePorts('evenq','right','odd','top', mE.cy + 12);
+
+          routePorts('even','bottom','end4','top');
+          routePorts('odd','bottom','end4','top');
+          routePorts('err','bottom','end4','top');
+        }
+      }
+
+      placeSymbol(dropZone, payload) {
+        const kind = dropZone.dataset.kind;
+        const type = payload.type;
+        if (kind === 'label-slot' && type !== 'label-token') return;
+        if (kind === 'node' && type === 'label-token') return;
+
+        dropZone.innerHTML = '';
+        dropZone.classList.remove('filled');
+
+        if (type === 'label-token') {
+          const el = document.createElement('div');
+          el.className = 'label-token w-full h-full flex items-center justify-center';
+          el.textContent = payload.text;
+          el.dataset.type = 'label-token';
+          el.dataset.text = payload.text;
+          dropZone.appendChild(el);
+        } else {
+          const el = document.createElement('div');
+          el.className = `symbol ${type} w-full h-full`;
+          el.innerHTML = `<span>${payload.text || ''}</span>`;
+          el.dataset.type = type;
+          el.dataset.text = payload.text || '';
+          dropZone.appendChild(el);
+        }
+
+        dropZone.classList.add('filled');
+      }
+
+      // Validation (same rules as before)
+      checkSolution() {
+        const chIdx = this.currentChallenge;
+        const content = document.getElementById('content');
+        const zones = Array.from(content.querySelectorAll('.drop-zone'));
+        const byId = {}; zones.forEach(z => byId[z.dataset.id] = z);
+
+        for (const z of zones) { if (!z.firstElementChild) { alert('Please fill all positions before checking!'); return; } }
+
+        for (const z of zones) {
+          if (z.dataset.kind !== 'node') continue;
+          const sym = z.firstElementChild;
+          const gotType = sym.dataset.type || (sym.className.includes('symbol') ? sym.className.split(' ')[1] : '');
+          const gotText = (sym.textContent || '').trim();
+          const expType = z.dataset.expectedType;
+          const exactText = z.dataset.expectedText;
+          const allowed = z.dataset.allowedTexts ? JSON.parse(z.dataset.allowedTexts) : null;
+
+          if (gotType !== expType) { alert('Not quite right. Check the shape types.'); return; }
+          if (allowed) {
+            if (!allowed.includes(gotText)) { alert('Not quite right. The branch process text doesn’t match expected options.'); return; }
+          } else if (exactText && gotText !== exactText) {
+            alert('Not quite right. Text inside a node is mismatched.'); return;
+          }
+        }
+
+        if (chIdx === 1) {
+          const leftText  = (byId['branchL'].firstElementChild.textContent || '').trim();
+          const rightText = (byId['branchR'].firstElementChild.textContent || '').trim();
+          const leftLab   = (byId['slotL'].firstElementChild.textContent || '').trim();
+          const rightLab  = (byId['slotR'].firstElementChild.textContent || '').trim();
+          const isLeftBig  = leftText  === 'Print\n"Big"';
+          const isRightBig = rightText === 'Print\n"Big"';
+          const ok = (isLeftBig && leftLab==='Yes' && rightLab==='No') ||
+                     (isRightBig && rightLab==='Yes' && leftLab==='No');
+          if (!ok) { alert('Decision labels are wrong. YES must label the branch that goes to "Print \\"Big\\"" and NO the other.'); return; }
+        } else if (chIdx === 2) {
+          const leftLab  = (byId['slotL3'].firstElementChild.textContent || '').trim();
+          const rightLab = (byId['slotR3'].firstElementChild.textContent || '').trim();
+          if (!(leftLab === 'Yes' && rightLab === 'No')) { alert('Place YES on the increment branch and NO on the End branch.'); return; }
+        } else if (chIdx === 3) {
+          const vYes = (byId['slotV_yes'].firstElementChild.textContent || '').trim() === 'Yes';
+          const vNo  = (byId['slotV_no'].firstElementChild.textContent || '').trim()  === 'No';
+          const eYes = (byId['slotE_yes'].firstElementChild.textContent || '').trim() === 'Yes';
+          const eNo  = (byId['slotE_no'].firstElementChild.textContent || '').trim()  === 'No';
+          if (!(vYes && vNo && eYes && eNo)) { alert('Place YES/NO correctly for both decisions.'); return; }
+        }
+
+        this.score += 100;
+        document.getElementById('score').textContent = this.score;
+        this.showSuccessModal();
+      }
+
+      showSuccessModal() {
+        const modal = document.getElementById('success-modal');
+        const message = document.getElementById('success-message');
+        message.textContent = (this.currentChallenge === this.challenges.length - 1)
+          ? `Congratulations! You've completed all challenges with a score of ${this.score}!`
+          : `Great job! You earned 100 points. Ready for the next challenge?`;
+        modal.classList.remove('hidden');
+      }
+      hideSuccessModal() {
+        document.getElementById('success-modal').classList.add('hidden');
+        if (this.currentChallenge < this.challenges.length - 1) this.nextChallenge(); else this.resetGame();
+      }
+      nextChallenge() {
+        if (this.currentChallenge < this.challenges.length - 1) {
+          this.currentChallenge++;
+          this.loadChallenge();
+          document.getElementById('next-btn').classList.add('hidden');
+          document.getElementById('check-btn').classList.remove('hidden');
+        }
+      }
+      resetChallenge() { this.loadChallenge(); }
+      resetGame() { this.currentChallenge = 0; this.score = 0; document.getElementById('score').textContent = this.score; this.loadChallenge(); }
+
+      // View (pan/zoom) — applied to #content only
+      bindViewControls() {
+        const viewport = document.getElementById('flowchart-canvas');
+        const content = document.getElementById('content');
+        const apply = () => { content.style.transform = `translate(${this.view.tx}px, ${this.view.ty}px) scale(${this.view.scale})`; };
+
+        document.getElementById('zoom-in').addEventListener('click', () => {
+          this.view.scale = Math.min(this.SCALE_MAX, +(this.view.scale + this.SCALE_STEP).toFixed(3)); apply();
+        });
+        document.getElementById('zoom-out').addEventListener('click', () => {
+          this.view.scale = Math.max(this.SCALE_MIN, +(this.view.scale - this.SCALE_STEP).toFixed(3)); apply();
+        });
+        document.getElementById('zoom-reset').addEventListener('click', () => {
+          this.view = { ...this.view, scale: 1, tx: 0, ty: 0, panning:false }; apply();
+        });
+
+        // Ctrl + wheel zoom to cursor
+        viewport.addEventListener('wheel', (e) => {
+          if (!e.ctrlKey) return;
+          e.preventDefault();
+          const rect = viewport.getBoundingClientRect();
+          const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+          const oldScale = this.view.scale;
+          const dir = e.deltaY > 0 ? -1 : 1;
+          const newScale = Math.min(this.SCALE_MAX, Math.max(this.SCALE_MIN, +(oldScale + dir * this.SCALE_STEP).toFixed(3)));
+          if (newScale === oldScale) return;
+          const wx = (mx - this.view.tx) / oldScale;
+          const wy = (my - this.view.ty) / oldScale;
+          this.view.tx = mx - wx * newScale;
+          this.view.ty = my - wy * newScale;
+          this.view.scale = newScale;
+          apply();
+        }, { passive: false });
+
+        // Space+drag or middle button pan
+        const startPan = (e) => {
+          if (!(this.view.space || e.button === 1)) return;
+          e.preventDefault();
+          this.view.panning = true;
+          this.view.startX = e.clientX; this.view.startY = e.clientY;
+          this.view.startTx = this.view.tx; this.view.startTy = this.view.ty;
+          document.body.style.cursor = 'grabbing';
+          viewport.setPointerCapture(e.pointerId || 1);
+        };
+        const doPan = (e) => {
+          if (!this.view.panning) return;
+          const dx = e.clientX - this.view.startX;
+          const dy = e.clientY - this.view.startY;
+          this.view.tx = this.view.startTx + dx;
+          this.view.ty = this.view.startTy + dy;
+          apply();
+        };
+        const endPan = (e) => {
+          if (!this.view.panning) return;
+          this.view.panning = false;
+          document.body.style.cursor = this.view.space ? 'grab' : '';
+          try { viewport.releasePointerCapture(e.pointerId || 1); } catch {}
+        };
+
+        window.addEventListener('keydown', (e) => { if (e.code === 'Space') { this.view.space = true; document.body.style.cursor = 'grab'; }});
+        window.addEventListener('keyup',   (e) => { if (e.code === 'Space') { this.view.space = false; if (!this.view.panning) document.body.style.cursor = ''; }});
+
+        viewport.addEventListener('pointerdown', startPan);
+        viewport.addEventListener('pointermove', doPan);
+        viewport.addEventListener('pointerup', endPan);
+        viewport.addEventListener('pointerleave', endPan);
+
+        apply();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { new FlowchartGame(); });
+  </script>
+</body>
+</html>
