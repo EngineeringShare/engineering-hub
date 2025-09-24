@@ -3,7 +3,7 @@ title: "Capacitors"
 date: 2025-04-29
 tags: ["components", "electronics", "Devices"]
 subject: "electronic devices"
-units: ["T-Level Unit 08"]
+units: ["T-Level Unit 08", "BTEC Unit 56"]
 ---
 
 ## Intro:
