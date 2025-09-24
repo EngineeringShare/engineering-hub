@@ -18,6 +18,8 @@ units: ["HTQ Unit 4002"]
 
 ## Other Materials:
 
+* [YouTube: Dimensional Analysis](https://youtu.be/vWovdihteqs?si=77iziw5kXnqq7i6q)
+
 ## ---
 
 <a href="https://engineeringshare.github.io/engineering-hub">🏠 Home</a>
