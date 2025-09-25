@@ -33,13 +33,9 @@ The scientific method is fundamental to scientific inquiry and helps ensure that
     </iframe>
 </div>
 
-## Interactive Tools:
-
-<a href="https://engineeringshare.github.io/engineering-hub/interactive/Units%20of%20Measurement%20Sort.html">🧩 Sort Game</a>
-
 ## Other Materials:
 
-* [PDF 26th CGPM](https://www.google.com/url?sa=i&url=https%3A%2F%2Freport.ndc.gov.tw%2FReportFront%2FPageSystem%2FreportFileDownload%2FC10702021%2F006&psig=AOvVaw2ZoN5QR6Uk7ORXwPdnrLQ5&ust=1756900711069000&source=images&cd=vfe&opi=89978449&ved=0CBkQjhxqFwoTCPCl4KiDuo8DFQAAAAAdAAAAABAE)
+* [YouTube: The Scientific Method](https://youtu.be/c6Gp2R0wzhU?si=xwzaB54BuKcqpN9Q)
 
 ## ---
 
