@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resistor Color Code Game — Canva Code</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Small helper for smooth focus outlines */
+    :focus-visible { outline: 3px solid rgba(99,102,241,.6); outline-offset: 2px; }
+    /* Prevent layout shift when showing feedback */
+    .min-h-feedback { min-height: 2.25rem; } /* ~36px */
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-indigo-900 via-violet-900 to-fuchsia-800 text-slate-100">
+  <div class="max-w-5xl mx-auto p-6 lg:p-10">
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">Resistor Color Code Challenge</h1>
+        <p class="text-slate-300 mt-2">Read the color bands, enter the resistance value, and check your answer. Supports 4-band and 5-band resistors.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-200 text-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          Made by Canva Code
+        </span>
+      </div>
+    </header>
+
+    <!-- Game Card -->
+    <main class="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 shadow-xl">
+      <!-- Controls -->
+      <section class="p-5 md:p-6 border-b border-white/10">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <label for="modeSelect" class="text-sm text-slate-200">Mode</label>
+            <select id="modeSelect" class="px-3 py-2 rounded-lg bg-white/10 text-slate-100 border border-white/10 focus:ring-2 focus:ring-indigo-400">
+              <option value="mixed">Mixed (4 & 5 bands)</option>
+              <option value="4">4-band only</option>
+              <option value="5">5-band only</option>
+            </select>
+          </div>
+          <label class="inline-flex items-center gap-2">
+            <input id="hardToggle" type="checkbox" class="h-4 w-4 rounded border-white/20 bg-white/10">
+            <span class="text-sm text-slate-200">Hard mode (work out tolerance)</span>
+          </label>
+          <div class="flex flex-wrap items-center gap-3">
+            <button id="newBtn" class="px-4 py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 active:bg-indigo-700 transition font-semibold">
+              New Resistor
+            </button>
+            <button id="hintBtn" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition font-semibold">
+              Show Reference
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Resistor + Input -->
+      <section class="p-5 md:p-8 grid lg:grid-cols-2 gap-8 items-center">
+        <!-- Resistor Visual -->
+        <div class="bg-slate-900/40 rounded-xl border border-white/10 p-4 md:p-6">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-sm text-slate-300">
+              Bands: <span id="bandCount" class="font-bold text-slate-100">4</span>
+            </div>
+            <div class="text-sm text-slate-300 hidden" id="tolWrap">
+              Tolerance (expected): <span id="tolText" class="font-bold text-slate-100">±5%</span>
+            </div>
+          </div>
+
+          <!-- SVG Resistor -->
+          <div class="w-full overflow-hidden rounded-lg bg-slate-800/60 border border-white/10">
+            <svg id="resistorSVG" viewBox="0 0 700 220" class="w-full h-auto block">
+              <!-- Leads -->
+              <line x1="20" y1="110" x2="230" y2="110" stroke="#B0BEC5" stroke-width="10" />
+              <line x1="470" y1="110" x2="680" y2="110" stroke="#B0BEC5" stroke-width="10" />
+              <!-- Body -->
+              <rect x="230" y="55" width="240" height="110" rx="24" ry="24" fill="#EAD7B7" stroke="#d7c2a3" stroke-width="2"></rect>
+              <!-- Bands will be injected here -->
+              <g id="bandsGroup"></g>
+              <!-- Direction hint removed as requested -->
+            </svg>
+          </div>
+
+          <!-- Color labels for accessibility (visually hidden but screen-reader friendly) -->
+          <div id="srColors" class="sr-only" aria-live="polite"></div>
+        </div>
+
+        <!-- Input & Feedback -->
+        <div class="bg-slate-900/40 rounded-xl border border-white/10 p-5 md:p-6">
+          <h2 class="text-lg font-semibold mb-4">Your Answer</h2>
+
+          <form id="answerForm" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <div class="sm:col-span-2">
+                <label class="block text-sm text-slate-300 mb-1" for="valueInput">Value</label>
+                <input id="valueInput" type="number" step="any" inputmode="decimal"
+                       class="w-full px-3 py-2 rounded-lg bg-white/10 text-slate-100 border border-white/10 placeholder-slate-400"
+                       placeholder="e.g. 4.7" required />
+              </div>
+              <div>
+                <label class="block text-sm text-slate-300 mb-1" for="unitSelect">Units</label>
+                <select id="unitSelect"
+                        class="w-full px-3 py-2 rounded-lg bg-white/10 text-slate-100 border border-white/10">
+                  <option value="1">Ω</option>
+                  <option value="1000">kΩ</option>
+                  <option value="1000000">MΩ</option>
+                </select>
+              </div>
+              <div id="tolField">
+                <label class="block text-sm text-slate-300 mb-1" for="tolInput">Tolerance (%)</label>
+                <input id="tolInput" type="text" inputmode="decimal"
+                       class="w-full px-3 py-2 rounded-lg bg-white/10 text-slate-100 border border-white/10 placeholder-slate-400"
+                       placeholder="e.g. 5" />
+              </div>
+            </div>
+
+            <div class="flex gap-3">
+              <button id="checkBtn" class="px-4 py-2 rounded-lg bg-emerald-500 hover:bg-emerald-600 active:bg-emerald-700 transition font-semibold">
+                Check
+              </button>
+              <button id="revealBtn" type="button" class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition font-semibold">
+                Reveal
+              </button>
+              <button id="skipBtn" type="button" class="ml-auto px-4 py-2 rounded-lg bg-rose-500/80 hover:bg-rose-600 active:bg-rose-700 transition font-semibold">
+                Skip
+              </button>
+            </div>
+
+            <div id="feedback" class="min-h-feedback text-base font-semibold"></div>
+          </form>
+
+          <!-- Scoreboard -->
+          <div class="mt-6 grid grid-cols-3 gap-3">
+            <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+              <div class="text-xs uppercase tracking-wider text-slate-300">Score</div>
+              <div id="scoreText" class="text-2xl font-extrabold">0</div>
+            </div>
+            <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+              <div class="text-xs uppercase tracking-wider text-slate-300">Streak</div>
+              <div id="streakText" class="text-2xl font-extrabold">0</div>
+            </div>
+            <div class="p-4 rounded-lg bg-white/5 border border-white/10">
+              <div class="text-xs uppercase tracking-wider text-slate-300">Attempts</div>
+              <div id="attemptsText" class="text-2xl font-extrabold">0</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reference (collapsible) -->
+      <section class="px-5 md:px-8 pb-8">
+        <div id="refPanel" class="overflow-hidden transition-all duration-300 rounded-xl border border-white/10" style="max-height: 0">
+          <div class="bg-slate-900/50 p-5 md:p-6">
+            <h3 class="text-lg font-bold mb-3">Quick Reference</h3>
+            <div class="grid md:grid-cols-2 gap-6">
+              <!-- Digit Colors -->
+              <div>
+                <h4 class="font-semibold mb-2">Digits (Band 1–3)</h4>
+                <ul class="text-sm space-y-2">
+                  <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-black border border-white/20"></span> Black = 0</li>
+                  <li class="flex items-center gap-3"><span class="w-5 h-5 rounded" style="background:#8B4513"></span> Brown = 1</li>
+                  <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#D32F2F]"></span> Red = 2</li>
+                  <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#F57C00]"></span> Orange = 3</li>
+                  <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#FBC02D]"></span> Yellow = 4</li>
+                  <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#388E3C]"></span> Green = 5</li>
+                  <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#1976D2]"></span> Blue = 6</li>
+                  <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#7B1FA2]"></span> Violet = 7</li>
+                  <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#9E9E9E]"></span> Grey = 8</li>
+                  <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-white border border-slate-300"></span> White = 9</li>
+                </ul>
+              </div>
+              <!-- Multiplier + Tolerance -->
+              <div class="grid sm:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold mb-2">Multiplier (Band 3/4)</h4>
+                  <ul class="text-sm space-y-2">
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#C0C0C0] border border-white/40"></span> Silver = ×0.01</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded" style="background:#C9A227"></span> Gold = ×0.1</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-black border border-white/20"></span> Black = ×1</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded" style="background:#8B4513"></span> Brown = ×10</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#D32F2F]"></span> Red = ×100</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#F57C00]"></span> Orange = ×1k</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#FBC02D]"></span> Yellow = ×10k</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#388E3C]"></span> Green = ×100k</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#1976D2]"></span> Blue = ×1M</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#7B1FA2]"></span> Violet = ×10M</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 class="font-semibold mb-2">Tolerance (Last Band)</h4>
+                  <ul class="text-sm space-y-2">
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded" style="background:#8B4513"></span> Brown = ±1%</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#D32F2F]"></span> Red = ±2%</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#388E3C]"></span> Green = ±0.5%</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#1976D2]"></span> Blue = ±0.25%</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#7B1FA2]"></span> Violet = ±0.1%</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#9E9E9E]"></span> Grey = ±0.05%</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded" style="background:#C9A227"></span> Gold = ±5%</li>
+                    <li class="flex items-center gap-3"><span class="w-5 h-5 rounded bg-[#C0C0C0] border border-white/40"></span> Silver = ±10%</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <p class="text-slate-300 text-sm mt-4">4-band: [Digit 1][Digit 2][Multiplier][Tolerance] • 5-band: [Digit 1][Digit 2][Digit 3][Multiplier][Tolerance]</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Tiny tip -->
+    <p class="text-center text-slate-300 mt-6 text-sm">Tip: Enter the number and choose the unit (Ω, kΩ, or MΩ), then press Check.</p>
+  </div>
+
+  <script>
+    // Color definitions
+    const DIGIT_COLORS = [
+      { name: 'Black',  value: 0, hex: '#000000', stroke:'#1f2937' },
+      { name: 'Brown',  value: 1, hex: '#8B4513', stroke:'#5b2f0d' },
+      { name: 'Red',    value: 2, hex: '#D32F2F', stroke:'#7f1d1d' },
+      { name: 'Orange', value: 3, hex: '#F57C00', stroke:'#9a4a00' },
+      { name: 'Yellow', value: 4, hex: '#FBC02D', stroke:'#a17f13' },
+      { name: 'Green',  value: 5, hex: '#388E3C', stroke:'#1b5e20' },
+      { name: 'Blue',   value: 6, hex: '#1976D2', stroke:'#0b3f80' },
+      { name: 'Violet', value: 7, hex: '#7B1FA2', stroke:'#4a1264' },
+      { name: 'Grey',   value: 8, hex: '#9E9E9E', stroke:'#6b7280' },
+      { name: 'White',  value: 9, hex: '#FFFFFF', stroke:'#cbd5e1' }
+    ];
+
+    const MULTIPLIERS = [
+      { name:'Silver', factor: 0.01, hex:'#C0C0C0', stroke:'#9ca3af' },
+      { name:'Gold',   factor: 0.1,  hex:'#C9A227', stroke:'#8b6b1f' },
+      // 10^0 .. 10^9 using same colors as digits
+      { ...DIGIT_COLORS[0], factor: 1 },         // Black
+      { ...DIGIT_COLORS[1], factor: 10 },        // Brown
+      { ...DIGIT_COLORS[2], factor: 100 },       // Red
+      { ...DIGIT_COLORS[3], factor: 1_000 },     // Orange
+      { ...DIGIT_COLORS[4], factor: 10_000 },    // Yellow
+      { ...DIGIT_COLORS[5], factor: 100_000 },   // Green
+      { ...DIGIT_COLORS[6], factor: 1_000_000 }, // Blue
+      { ...DIGIT_COLORS[7], factor: 10_000_000 },// Violet
+      { ...DIGIT_COLORS[8], factor: 100_000_000 },// Grey
+      { ...DIGIT_COLORS[9], factor: 1_000_000_000 }// White
+    ];
+
+    const TOLERANCES = [
+      { name:'Brown',  pct:1,    hex:'#8B4513', stroke:'#5b2f0d' },
+      { name:'Red',    pct:2,    hex:'#D32F2F', stroke:'#7f1d1d' },
+      { name:'Green',  pct:0.5,  hex:'#388E3C', stroke:'#1b5e20' },
+      { name:'Blue',   pct:0.25, hex:'#1976D2', stroke:'#0b3f80' },
+      { name:'Violet', pct:0.1,  hex:'#7B1FA2', stroke:'#4a1264' },
+      { name:'Grey',   pct:0.05, hex:'#9E9E9E', stroke:'#6b7280' },
+      { name:'Gold',   pct:5,    hex:'#C9A227', stroke:'#8b6b1f' },
+      { name:'Silver', pct:10,   hex:'#C0C0C0', stroke:'#9ca3af' }
+    ];
+
+    // UI elements
+    const modeSelect   = document.getElementById('modeSelect');
+    const bandCountEl  = document.getElementById('bandCount');
+    const tolTextEl    = document.getElementById('tolText');
+    const tolWrap      = document.getElementById('tolWrap');
+    const hardToggle   = document.getElementById('hardToggle');
+    const svg          = document.getElementById('resistorSVG');
+    const bandsGroup   = document.getElementById('bandsGroup');
+    const srColors     = document.getElementById('srColors');
+    const valueInput   = document.getElementById('valueInput');
+    const unitSelect   = document.getElementById('unitSelect');
+    const tolInput     = document.getElementById('tolInput');
+    const checkBtn     = document.getElementById('checkBtn');
+    const revealBtn    = document.getElementById('revealBtn');
+    const newBtn       = document.getElementById('newBtn');
+    const skipBtn      = document.getElementById('skipBtn');
+    const feedbackEl   = document.getElementById('feedback');
+    const scoreText    = document.getElementById('scoreText');
+    const streakText   = document.getElementById('streakText');
+    const attemptsText = document.getElementById('attemptsText');
+    const refPanel     = document.getElementById('refPanel');
+    const hintBtn      = document.getElementById('hintBtn');
+    const form         = document.getElementById('answerForm');
+
+    // State
+    const state = {
+      mode: 'mixed',
+      type: 4,           // 4 or 5
+      digits: [],        // e.g., [4,7] or [1,0,0]
+      multiplier: null,  // {name, factor, hex}
+      tolerance: null,   // {name, pct, hex}
+      valueOhms: 0,      // numeric value in ohms
+      score: 0,
+      attempts: 0,
+      streak: 0,
+      hard: true
+    };
+
+    function randInt(min, max) { // inclusive
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function pick(array) {
+      return array[randInt(0, array.length - 1)];
+    }
+
+    function generateDigits(count) {
+      const ds = [];
+      // First digit cannot be 0
+      ds.push(randInt(1, 9));
+      for (let i = 1; i < count; i++) ds.push(randInt(0, 9));
+      return ds;
+    }
+
+    function chooseMultiplier() {
+      // Keep values reasonable for practice: allow from ×0.01 up to ×1,000,000
+      const allowed = MULTIPLIERS.filter(m => m.factor >= 0.01 && m.factor <= 1_000_000);
+      return pick(allowed);
+    }
+
+    function chooseTolerance() {
+      // Common tolerances; use all from defined list
+      return pick(TOLERANCES);
+    }
+
+    function computeValue(digits, multiplier) {
+      let n = 0;
+      for (const d of digits) n = n * 10 + d;
+      return n * multiplier.factor;
+    }
+
+    function formatOhms(value) {
+      if (value >= 1_000_000) return `${(+ (value / 1_000_000).toFixed(3)).toString().replace(/\.?0+$/,'')} MΩ`;
+      if (value >= 1_000)     return `${(+ (value / 1_000).toFixed(3)).toString().replace(/\.?0+$/,'')} kΩ`;
+      // Keep small values simple, but avoid too many decimals
+      return `${(+ value.toFixed(3)).toString().replace(/\.?0+$/,'')} Ω`;
+    }
+
+    function bandsToColors(type, digits, multiplier, tolerance) {
+      // Return array of color objs in order for the bands
+      const digitColors = digits.map(d => DIGIT_COLORS.find(c => c.value === d));
+      if (type === 4) {
+        return [digitColors[0], digitColors[1], multiplier, tolerance];
+      } else {
+        return [digitColors[0], digitColors[1], digitColors[2], multiplier, tolerance];
+      }
+    }
+
+    function drawBands(type, colors) {
+      // Clear existing
+      while (bandsGroup.firstChild) bandsGroup.removeChild(bandsGroup.firstChild);
+
+      const total = colors.length;
+      // Band layout across the body (x 240->470, body width is 240)
+      // We'll place equal-width stripes, leaving gentle margins.
+      const bodyX = 230, bodyW = 240;
+      const margin = 18;
+      const usable = bodyW - margin * 2;
+      const bandW = Math.min(22, Math.max(16, Math.floor(usable / (total * 1.6))));
+      const gap = (usable - bandW * total) / (total + 1);
+      const startX = bodyX + margin + gap;
+
+      for (let i = 0; i < total; i++) {
+        const color = colors[i];
+        const x = startX + i * (bandW + gap);
+        const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('x', x);
+        rect.setAttribute('y', 60);
+        rect.setAttribute('width', bandW);
+        rect.setAttribute('height', 100);
+        rect.setAttribute('rx', 4);
+        rect.setAttribute('fill', color.hex);
+        rect.setAttribute('stroke', color.stroke || '#0f172a');
+        rect.setAttribute('stroke-width', 3);
+        bandsGroup.appendChild(rect);
+      }
+
+      // Screen-reader text
+      const names = colors.map(c => c.name).join(', ');
+      srColors.textContent = `Band colors: ${names}.`;
+    }
+
+    function newResistor() {
+      // Decide type based on mode
+      const mode = state.mode;
+      const type = mode === 'mixed' ? (Math.random() < 0.5 ? 4 : 5) : Number(mode);
+      state.type = type;
+
+      const digits = generateDigits(type === 4 ? 2 : 3);
+      const multiplier = chooseMultiplier();
+      const tolerance = chooseTolerance();
+      const valueOhms = computeValue(digits, multiplier);
+
+      state.digits = digits;
+      state.multiplier = multiplier;
+      state.tolerance = tolerance;
+      state.valueOhms = valueOhms;
+
+      // Update UI
+      const colors = bandsToColors(type, digits, multiplier, tolerance);
+      drawBands(type, colors);
+      bandCountEl.textContent = String(type);
+      tolTextEl.textContent = `±${tolerance.pct}%`;
+
+      // Reset input/feedback
+      valueInput.value = '';
+      unitSelect.value = '1';
+      tolInput.value = '';
+      setFeedback('');
+      // Focus the input for quick play
+      setTimeout(() => valueInput.focus(), 0);
+    }
+
+    function setFeedback(html, tone = 'neutral') {
+      feedbackEl.className = 'min-h-feedback text-base font-semibold';
+      if (!html) return;
+      let colorClasses = 'text-slate-200';
+      if (tone === 'good') colorClasses = 'text-emerald-300';
+      if (tone === 'bad')  colorClasses = 'text-rose-300';
+      if (tone === 'info') colorClasses = 'text-indigo-200';
+      feedbackEl.className += ' ' + colorClasses;
+      feedbackEl.innerHTML = html;
+    }
+
+    function checkAnswer() {
+      const raw = valueInput.value.trim();
+      const unitFactor = Number(unitSelect.value || '1');
+      const tolRaw = tolInput.value.trim();
+      if (!raw || (state.hard && !tolRaw)) {
+        setFeedback(state.hard ? 'Please enter a value and tolerance.' : 'Please enter a value.', 'info');
+        return false;
+      }
+      const n = Number(raw);
+      const tolGuess = tolRaw ? Number(tolRaw.replace('%','')) : null;
+      if (isNaN(n) || n < 0) {
+        setFeedback('That doesn’t look like a valid number.', 'bad');
+        return false;
+      }
+      if (state.hard && (isNaN(tolGuess) || tolGuess < 0)) {
+        setFeedback('Please enter a valid tolerance like 5 or 1.', 'bad');
+        return false;
+      }
+
+      const guessOhms = Math.round(n * unitFactor * 1e6) / 1e6; // micro-ohm precision
+      const correct = Math.round(state.valueOhms * 1e6) / 1e6;
+
+      // Evaluate
+      state.attempts += 1;
+      const valueCorrect = Math.abs(guessOhms - correct) < 1e-9; // exact within rounding precision
+      const tolCorrect = state.hard ? Math.abs(tolGuess - state.tolerance.pct) < 1e-9 : true;
+      const isCorrect = valueCorrect && tolCorrect;
+
+      // Check if reference is open (no points if cheating)
+      const isRefOpen = refPanel.style.maxHeight && refPanel.style.maxHeight !== '0px';
+      
+      if (isCorrect) {
+        if (isRefOpen) {
+          setFeedback(`✅ Correct: ${formatOhms(correct)}${state.hard ? ` and ±${state.tolerance.pct}%` : ''}<br><span class="text-yellow-300">⚠️ No points earned - close reference to earn points!</span>`, 'info');
+        } else {
+          // Award points: 1 for easy mode, 2 for hard mode (value + tolerance)
+          const pointsEarned = state.hard ? 2 : 1;
+          state.score += pointsEarned;
+          state.streak += pointsEarned; // Streak counts total points earned in a row
+          setFeedback(`Nice! ✅ Correct: ${formatOhms(correct)}${state.hard ? ` and ±${state.tolerance.pct}%` : ''}<br><span class="text-emerald-200">+${pointsEarned} point${pointsEarned > 1 ? 's' : ''}!</span>`, 'good');
+        }
+        updateScoreboard();
+        setTimeout(newResistor, 700);
+      } else {
+        state.streak = 0;
+        setFeedback('Wrong! 🔴', 'bad');
+        updateScoreboard();
+        setTimeout(newResistor, 1000);
+      }
+      return true;
+    }
+
+    function revealAnswer() {
+      const correct = state.valueOhms;
+      const digitsText = state.digits.join('');
+      const bandsExplain = state.type === 4
+        ? `[${state.digits[0]}][${state.digits[1]}][×${formatMultiplier(state.multiplier.factor)}][±${state.tolerance.pct}%]`
+        : `[${state.digits[0]}][${state.digits[1]}][${state.digits[2]}][×${formatMultiplier(state.multiplier.factor)}][±${state.tolerance.pct}%]`;
+      setFeedback(`Answer: <span class="font-bold">${formatOhms(correct)}</span>${state.hard ? ` and <span class=\"font-bold\">±${state.tolerance.pct}%</span>` : ''}<br><span class="text-slate-300">Digits: ${digitsText}, Multiplier: ×${formatMultiplier(state.multiplier.factor)}${state.hard ? `, Tolerance: ±${state.tolerance.pct}%` : ''}</span><br><span class="text-slate-400 text-sm">${bandsExplain}</span>`, 'info');
+    }
+
+    function formatMultiplier(factor) {
+      if (factor >= 1_000_000) return (factor/1_000_000)+'M';
+      if (factor >= 1_000) return (factor/1_000)+'k';
+      if (factor === 1) return '1';
+      if (factor === 0.1) return '0.1';
+      if (factor === 0.01) return '0.01';
+      return factor.toString();
+    }
+
+    function updateScoreboard() {
+      scoreText.textContent = String(state.score);
+      streakText.textContent = String(state.streak);
+      attemptsText.textContent = String(state.attempts);
+    }
+
+    function toggleReference() {
+      const isOpen = refPanel.style.maxHeight && refPanel.style.maxHeight !== '0px';
+      if (isOpen) {
+        refPanel.style.maxHeight = '0';
+        hintBtn.textContent = 'Show Reference';
+      } else {
+        // Expand to content height
+        refPanel.style.maxHeight = refPanel.scrollHeight + 'px';
+        hintBtn.textContent = 'Hide Reference';
+        // Adjust after images/fonts rendering
+        setTimeout(() => {
+          refPanel.style.maxHeight = refPanel.scrollHeight + 'px';
+        }, 150);
+      }
+      // Generate new resistor to prevent cheating
+      newResistor();
+    }
+
+    // Events
+    modeSelect.addEventListener('change', () => {
+      state.mode = modeSelect.value;
+      newResistor();
+    });
+
+    hardToggle.addEventListener('change', () => {
+      state.hard = hardToggle.checked;
+      // Show tolerance text above only when not hard
+      tolWrap.classList.toggle('hidden', state.hard);
+      // Show/require tolerance input only when hard
+      document.getElementById('tolField').classList.toggle('hidden', !state.hard);
+      newResistor();
+    });
+
+    document.getElementById('answerForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      checkAnswer();
+    });
+
+    checkBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      checkAnswer();
+    });
+
+    revealBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      revealAnswer();
+    });
+
+    newBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      newResistor();
+    });
+
+    skipBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      state.attempts += 1;
+      state.streak = 0;
+      updateScoreboard();
+      setFeedback('Skipped. New resistor ready!', 'info');
+      newResistor();
+    });
+
+    hintBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleReference();
+    });
+
+    // Keyboard helper: Enter to check, Ctrl+Enter to reveal
+    valueInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey && !e.ctrlKey) {
+        e.preventDefault();
+        checkAnswer();
+      } else if ((e.key === 'Enter' && e.ctrlKey) || e.key === 'F2') {
+        e.preventDefault();
+        revealAnswer();
+      }
+    });
+
+    // Init
+    // Initialize UI based on hard mode
+    hardToggle.checked = state.hard;
+    tolWrap.classList.toggle('hidden', state.hard);
+    document.getElementById('tolField').classList.toggle('hidden', !state.hard);
+
+    newResistor();
+    updateScoreboard();
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98543d24812ab36a',t:'MTc1ODkwNTIwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
