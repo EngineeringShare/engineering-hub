@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circuit Quiz Game</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #4a5568;
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+        }
+        
+        .score-board {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .score-item {
+            background: #f7fafc;
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .score-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4299e1;
+        }
+        
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .circuit-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .question-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .circuit-svg {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            background: white;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .answer-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .answer-input:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+        
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #4a5568;
+            transform: translateY(-2px);
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .feedback.correct {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .feedback.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+        
+        .circuit-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .resistor-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .resistor-item {
+            background: #edf2f7;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .score-board {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav style="max-width:1000px;margin:0 auto 10px auto;">
+        <a href="https://engineeringshare.github.io/engineering-hub/interactive-hub/" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px">
+            ← Back to Interactive Hub
+        </a>
+    </nav>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Circuit Quiz Game</h1>
+            <p>Test your knowledge of series and parallel resistor circuits!</p>
+        </div>
+        
+        <div class="score-board">
+            <div class="score-item">
+                <div class="score-number" id="score">0</div>
+                <div>Score</div>
+            </div>
+            <div class="score-item">
+                <div class="score-number" id="streak">0</div>
+                <div>Streak</div>
+            </div>
+            <div class="score-item">
+                <div class="score-number" id="total">0</div>
+                <div>Total Questions</div>
+            </div>
+        </div>
+        
+        <div class="game-area">
+            <div class="circuit-panel">
+                <h3>Circuit Diagram</h3>
+                <svg class="circuit-svg" id="circuitSvg"></svg>
+                <div class="circuit-info">
+                    <strong>Circuit Information:</strong>
+                    <div>Voltage Source: <span id="voltageDisplay">12V</span></div>
+                    <div class="resistor-list" id="resistorList"></div>
+                </div>
+            </div>
+            
+            <div class="question-panel">
+                <h3>Question</h3>
+                <div class="question-text" id="questionText">Loading question...</div>
+                <input type="number" class="answer-input" id="answerInput" placeholder="Enter your answer" step="0.01">
+                <div>
+                    <button class="btn btn-primary" onclick="checkAnswer()">Submit Answer</button>
+                    <button class="btn btn-secondary" onclick="generateNewQuestion()">New Question</button>
+                </div>
+                <div class="feedback" id="feedback" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCircuit = null;
+        let currentQuestion = null;
+        let score = 0;
+        let streak = 0;
+        let totalQuestions = 0;
+
+        class Circuit {
+            constructor() {
+                this.voltage = 12; // Fixed 12V source
+                this.resistors = [];
+                this.connections = [];
+                this.generateRandomCircuit();
+            }
+
+            generateRandomCircuit() {
+                // Standard E12 resistor values (commonly available)
+                const standardValues = [10, 12, 15, 18, 22, 27, 33, 39, 47, 56, 68, 82, 100, 120, 150, 180, 220, 270, 330, 390, 470, 560, 680, 820];
+                
+                // Generate 3-4 resistors with standard values
+                const numResistors = Math.floor(Math.random() * 2) + 3; // 3 or 4 resistors
+                this.resistors = [];
+                
+                for (let i = 0; i < numResistors; i++) {
+                    const randomValue = standardValues[Math.floor(Math.random() * standardValues.length)];
+                    this.resistors.push({
+                        id: `R${i + 1}`,
+                        value: randomValue,
+                        x: 0,
+                        y: 0
+                    });
+                }
+
+                // Generate random circuit topology
+                this.generateTopology();
+            }
+
+            generateTopology() {
+                const topologies = [
+                    'series',
+                    'parallel',
+                    'mixed_series_parallel',
+                    'mixed_parallel_series'
+                ];
+                
+                const topology = topologies[Math.floor(Math.random() * topologies.length)];
+                this.topology = topology;
+                
+                switch (topology) {
+                    case 'series':
+                        this.connections = ['series'];
+                        break;
+                    case 'parallel':
+                        this.connections = ['parallel'];
+                        break;
+                    case 'mixed_series_parallel':
+                        // R1 and R2 in series, then parallel with R3
+                        this.connections = ['series_12_parallel_3'];
+                        break;
+                    case 'mixed_parallel_series':
+                        // R1 and R2 in parallel, then series with R3
+                        this.connections = ['parallel_12_series_3'];
+                        break;
+                }
+            }
+
+            calculateEquivalentResistance() {
+                switch (this.topology) {
+                    case 'series':
+                        return this.resistors.reduce((sum, r) => sum + r.value, 0);
+                    
+                    case 'parallel':
+                        const reciprocalSum = this.resistors.reduce((sum, r) => sum + (1 / r.value), 0);
+                        return 1 / reciprocalSum;
+                    
+                    case 'mixed_series_parallel':
+                        // R1 and R2 in series, then parallel with R3
+                        const seriesR12 = this.resistors[0].value + this.resistors[1].value;
+                        return 1 / (1/seriesR12 + 1/this.resistors[2].value);
+                    
+                    case 'mixed_parallel_series':
+                        // R1 and R2 in parallel, then series with R3
+                        const parallelR12 = 1 / (1/this.resistors[0].value + 1/this.resistors[1].value);
+                        return parallelR12 + this.resistors[2].value;
+                    
+                    default:
+                        return 0;
+                }
+            }
+
+            getTotalCurrent() {
+                return this.voltage / this.calculateEquivalentResistance();
+            }
+
+            getCurrentThroughResistor(resistorId) {
+                const totalCurrent = this.getTotalCurrent();
+                
+                switch (this.topology) {
+                    case 'series':
+                        return totalCurrent; // Same current through all resistors in series
+                    
+                    case 'parallel':
+                        const resistor = this.resistors.find(r => r.id === resistorId);
+                        return this.voltage / resistor.value; // V/R for each parallel branch
+                    
+                    case 'mixed_series_parallel':
+                        if (resistorId === 'R1' || resistorId === 'R2') {
+                            // Current through series branch
+                            const seriesR12 = this.resistors[0].value + this.resistors[1].value;
+                            return this.voltage / seriesR12;
+                        } else {
+                            // Current through R3 (parallel branch)
+                            return this.voltage / this.resistors[2].value;
+                        }
+                    
+                    case 'mixed_parallel_series':
+                        if (resistorId === 'R1' || resistorId === 'R2') {
+                            // Voltage across parallel section
+                            const parallelR12 = 1 / (1/this.resistors[0].value + 1/this.resistors[1].value);
+                            const voltageAcrossParallel = totalCurrent * parallelR12;
+                            const resistor = this.resistors.find(r => r.id === resistorId);
+                            return voltageAcrossParallel / resistor.value;
+                        } else {
+                            // R3 is in series, so same as total current
+                            return totalCurrent;
+                        }
+                    
+                    default:
+                        return 0;
+                }
+            }
+        }
+
+        class Question {
+            constructor(circuit) {
+                this.circuit = circuit;
+                this.generateQuestion();
+            }
+
+            generateQuestion() {
+                const questionTypes = [
+                    'equivalent_resistance',
+                    'total_current',
+                    'resistor_current'
+                ];
+                
+                this.type = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+                
+                switch (this.type) {
+                    case 'equivalent_resistance':
+                        this.text = "What is the equivalent resistance of the entire circuit?";
+                        this.answer = this.circuit.calculateEquivalentResistance();
+                        this.unit = "Ω";
+                        break;
+                    
+                    case 'total_current':
+                        this.text = "What is the total current from the voltage source?";
+                        this.answer = this.circuit.getTotalCurrent();
+                        this.unit = "A";
+                        break;
+                    
+                    case 'resistor_current':
+                        const randomResistor = this.circuit.resistors[Math.floor(Math.random() * this.circuit.resistors.length)];
+                        this.text = `What is the current through ${randomResistor.id}?`;
+                        this.answer = this.circuit.getCurrentThroughResistor(randomResistor.id);
+                        this.unit = "A";
+                        this.targetResistor = randomResistor.id;
+                        break;
+                }
+            }
+
+            checkAnswer(userAnswer) {
+                const tolerance = Math.abs(this.answer * 0.05); // 5% tolerance
+                return Math.abs(userAnswer - this.answer) <= tolerance;
+            }
+        }
+
+        function drawCircuit(circuit) {
+            const svg = document.getElementById('circuitSvg');
+            svg.innerHTML = '';
+            
+            const width = svg.clientWidth || 500;
+            const height = svg.clientHeight || 300;
+            
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+            
+            // Draw based on topology
+            switch (circuit.topology) {
+                case 'series':
+                    drawSeriesCircuit(svg, circuit, width, height);
+                    break;
+                case 'parallel':
+                    drawParallelCircuit(svg, circuit, width, height);
+                    break;
+                case 'mixed_series_parallel':
+                    drawMixedSeriesParallelCircuit(svg, circuit, width, height);
+                    break;
+                case 'mixed_parallel_series':
+                    drawMixedParallelSeriesCircuit(svg, circuit, width, height);
+                    break;
+            }
+        }
+
+        function drawSeriesCircuit(svg, circuit, width, height) {
+            const centerY = height / 2;
+            const startX = 50;
+            const spacing = (width - 100) / (circuit.resistors.length + 1);
+            
+            // Draw voltage source
+            drawVoltageSource(svg, startX, centerY, circuit.voltage);
+            
+            // Draw connecting wires and resistors
+            let currentX = startX + 60;
+            
+            for (let i = 0; i < circuit.resistors.length; i++) {
+                // Draw wire to resistor
+                drawWire(svg, currentX, centerY, currentX + spacing - 60, centerY);
+                
+                // Draw resistor
+                drawResistor(svg, currentX + spacing - 30, centerY, circuit.resistors[i]);
+                
+                currentX += spacing;
+            }
+            
+            // Close the circuit
+            drawWire(svg, currentX - 30, centerY, width - 50, centerY);
+            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
+            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
+            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
+            drawWire(svg, startX, centerY + 40, startX, centerY);
+        }
+
+        function drawParallelCircuit(svg, circuit, width, height) {
+            const centerY = height / 2;
+            const startX = 50;
+            
+            // Draw voltage source
+            drawVoltageSource(svg, startX, centerY, circuit.voltage);
+            
+            // Calculate branch positions
+            const branchStartX = startX + 120;
+            const branchEndX = width - 120;
+            const branchSpacing = Math.min(40, 120 / circuit.resistors.length);
+            const totalBranchHeight = (circuit.resistors.length - 1) * branchSpacing;
+            
+            // Draw left vertical connection line
+            const leftTopY = centerY - totalBranchHeight / 2;
+            const leftBottomY = centerY + totalBranchHeight / 2;
+            drawWire(svg, branchStartX, leftTopY, branchStartX, leftBottomY);
+            
+            // Draw right vertical connection line  
+            drawWire(svg, branchEndX, leftTopY, branchEndX, leftBottomY);
+            
+            // Connect voltage source to left junction
+            drawWire(svg, startX + 60, centerY, branchStartX, centerY);
+            
+            // Draw parallel branches
+            for (let i = 0; i < circuit.resistors.length; i++) {
+                const branchY = centerY - totalBranchHeight / 2 + i * branchSpacing;
+                
+                // Horizontal branch with resistor
+                const resistorX = (branchStartX + branchEndX) / 2;
+                drawWire(svg, branchStartX, branchY, resistorX - 30, branchY);
+                drawResistor(svg, resistorX, branchY, circuit.resistors[i]);
+                drawWire(svg, resistorX + 30, branchY, branchEndX, branchY);
+            }
+            
+            // Connect right junction to complete circuit
+            drawWire(svg, branchEndX, centerY, width - 50, centerY);
+            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
+            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
+            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
+            drawWire(svg, startX, centerY + 40, startX, centerY);
+        }
+
+        function drawMixedSeriesParallelCircuit(svg, circuit, width, height) {
+            const centerY = height / 2;
+            const startX = 50;
+            
+            // Draw voltage source
+            drawVoltageSource(svg, startX, centerY, circuit.voltage);
+            
+            // Draw R1 and R2 in series (top branch)
+            drawWire(svg, startX + 60, centerY, startX + 120, centerY);
+            drawResistor(svg, startX + 150, centerY, circuit.resistors[0]);
+            drawWire(svg, startX + 180, centerY, startX + 240, centerY);
+            drawResistor(svg, startX + 270, centerY, circuit.resistors[1]);
+            drawWire(svg, startX + 300, centerY, startX + 360, centerY);
+            
+            // Draw R3 in parallel (bottom branch)
+            drawWire(svg, startX + 120, centerY, startX + 120, centerY + 60);
+            drawWire(svg, startX + 120, centerY + 60, startX + 240, centerY + 60);
+            drawResistor(svg, startX + 270, centerY + 60, circuit.resistors[2]);
+            drawWire(svg, startX + 300, centerY + 60, startX + 360, centerY + 60);
+            drawWire(svg, startX + 360, centerY + 60, startX + 360, centerY);
+            
+            // Close circuit
+            drawWire(svg, startX + 360, centerY, width - 50, centerY);
+            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
+            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
+            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
+            drawWire(svg, startX, centerY + 40, startX, centerY);
+        }
+
+        function drawMixedParallelSeriesCircuit(svg, circuit, width, height) {
+            const centerY = height / 2;
+            const startX = 50;
+            
+            // Draw voltage source
+            drawVoltageSource(svg, startX, centerY, circuit.voltage);
+            
+            // Draw parallel section (R1 and R2)
+            drawWire(svg, startX + 60, centerY, startX + 120, centerY);
+            
+            // R1 branch
+            drawWire(svg, startX + 120, centerY, startX + 120, centerY - 30);
+            drawWire(svg, startX + 120, centerY - 30, startX + 180, centerY - 30);
+            drawResistor(svg, startX + 210, centerY - 30, circuit.resistors[0]);
+            drawWire(svg, startX + 240, centerY - 30, startX + 300, centerY - 30);
+            drawWire(svg, startX + 300, centerY - 30, startX + 300, centerY);
+            
+            // R2 branch
+            drawWire(svg, startX + 120, centerY, startX + 120, centerY + 30);
+            drawWire(svg, startX + 120, centerY + 30, startX + 180, centerY + 30);
+            drawResistor(svg, startX + 210, centerY + 30, circuit.resistors[1]);
+            drawWire(svg, startX + 240, centerY + 30, startX + 300, centerY + 30);
+            drawWire(svg, startX + 300, centerY + 30, startX + 300, centerY);
+            
+            // R3 in series
+            drawWire(svg, startX + 300, centerY, startX + 360, centerY);
+            drawResistor(svg, startX + 390, centerY, circuit.resistors[2]);
+            drawWire(svg, startX + 420, centerY, width - 50, centerY);
+            
+            // Close circuit
+            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
+            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
+            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
+            drawWire(svg, startX, centerY + 40, startX, centerY);
+        }
+
+        function drawVoltageSource(svg, x, y, voltage) {
+            // Draw battery symbol with proper connections
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            
+            // Connection wire from left
+            const leftWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            leftWire.setAttribute('x1', x);
+            leftWire.setAttribute('y1', y);
+            leftWire.setAttribute('x2', x + 20);
+            leftWire.setAttribute('y2', y);
+            leftWire.setAttribute('stroke', '#333');
+            leftWire.setAttribute('stroke-width', '2');
+            g.appendChild(leftWire);
+            
+            // Positive terminal (longer line)
+            const posLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            posLine.setAttribute('x1', x + 20);
+            posLine.setAttribute('y1', y - 20);
+            posLine.setAttribute('x2', x + 20);
+            posLine.setAttribute('y2', y + 20);
+            posLine.setAttribute('stroke', '#333');
+            posLine.setAttribute('stroke-width', '3');
+            g.appendChild(posLine);
+            
+            // Negative terminal (shorter line)
+            const negLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            negLine.setAttribute('x1', x + 40);
+            negLine.setAttribute('y1', y - 15);
+            negLine.setAttribute('x2', x + 40);
+            negLine.setAttribute('y2', y + 15);
+            negLine.setAttribute('stroke', '#333');
+            negLine.setAttribute('stroke-width', '3');
+            g.appendChild(negLine);
+            
+            // Connection wire to right
+            const rightWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            rightWire.setAttribute('x1', x + 40);
+            rightWire.setAttribute('y1', y);
+            rightWire.setAttribute('x2', x + 60);
+            rightWire.setAttribute('y2', y);
+            rightWire.setAttribute('stroke', '#333');
+            rightWire.setAttribute('stroke-width', '2');
+            g.appendChild(rightWire);
+            
+            // Voltage label
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', x + 30);
+            text.setAttribute('y', y - 25);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('font-size', '12');
+            text.setAttribute('font-weight', 'bold');
+            text.setAttribute('fill', '#333');
+            text.textContent = `${voltage}V`;
+            g.appendChild(text);
+            
+            // Polarity labels
+            const plusText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            plusText.setAttribute('x', x + 15);
+            plusText.setAttribute('y', y + 5);
+            plusText.setAttribute('text-anchor', 'middle');
+            plusText.setAttribute('font-size', '10');
+            plusText.setAttribute('font-weight', 'bold');
+            plusText.setAttribute('fill', '#333');
+            plusText.textContent = '+';
+            g.appendChild(plusText);
+            
+            const minusText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            minusText.setAttribute('x', x + 45);
+            minusText.setAttribute('y', y + 5);
+            minusText.setAttribute('text-anchor', 'middle');
+            minusText.setAttribute('font-size', '10');
+            minusText.setAttribute('font-weight', 'bold');
+            minusText.setAttribute('fill', '#333');
+            minusText.textContent = '−';
+            g.appendChild(minusText);
+            
+            svg.appendChild(g);
+        }
+
+        function drawResistor(svg, x, y, resistor) {
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            
+            // IEC standard resistor symbol (rectangle)
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('x', x - 20);
+            rect.setAttribute('y', y - 8);
+            rect.setAttribute('width', 40);
+            rect.setAttribute('height', 16);
+            rect.setAttribute('stroke', '#333');
+            rect.setAttribute('stroke-width', '2');
+            rect.setAttribute('fill', 'white');
+            g.appendChild(rect);
+            
+            // Connection wires
+            const leftWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            leftWire.setAttribute('x1', x - 30);
+            leftWire.setAttribute('y1', y);
+            leftWire.setAttribute('x2', x - 20);
+            leftWire.setAttribute('y2', y);
+            leftWire.setAttribute('stroke', '#333');
+            leftWire.setAttribute('stroke-width', '2');
+            g.appendChild(leftWire);
+            
+            const rightWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            rightWire.setAttribute('x1', x + 20);
+            rightWire.setAttribute('y1', y);
+            rightWire.setAttribute('x2', x + 30);
+            rightWire.setAttribute('y2', y);
+            rightWire.setAttribute('stroke', '#333');
+            rightWire.setAttribute('stroke-width', '2');
+            g.appendChild(rightWire);
+            
+            // Resistor label
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', x);
+            text.setAttribute('y', y - 15);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('font-size', '11');
+            text.setAttribute('font-weight', 'bold');
+            text.setAttribute('fill', '#333');
+            text.textContent = `${resistor.id}`;
+            g.appendChild(text);
+            
+            // Resistance value (inside the resistor)
+            const valueText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            valueText.setAttribute('x', x);
+            valueText.setAttribute('y', y + 3);
+            valueText.setAttribute('text-anchor', 'middle');
+            valueText.setAttribute('dominant-baseline', 'middle');
+            valueText.setAttribute('font-size', '9');
+            valueText.setAttribute('font-weight', 'bold');
+            valueText.setAttribute('fill', '#333');
+            valueText.textContent = `${resistor.value}Ω`;
+            g.appendChild(valueText);
+            
+            svg.appendChild(g);
+        }
+
+        function drawWire(svg, x1, y1, x2, y2) {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', x1);
+            line.setAttribute('y1', y1);
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+            line.setAttribute('stroke', '#333');
+            line.setAttribute('stroke-width', '2');
+            svg.appendChild(line);
+        }
+
+        function updateResistorList(circuit) {
+            const resistorList = document.getElementById('resistorList');
+            resistorList.innerHTML = '';
+            
+            circuit.resistors.forEach(resistor => {
+                const div = document.createElement('div');
+                div.className = 'resistor-item';
+                div.textContent = `${resistor.id}: ${resistor.value}Ω`;
+                resistorList.appendChild(div);
+            });
+        }
+
+        function generateNewQuestion() {
+            currentCircuit = new Circuit();
+            currentQuestion = new Question(currentCircuit);
+            
+            drawCircuit(currentCircuit);
+            updateResistorList(currentCircuit);
+            
+            document.getElementById('questionText').textContent = currentQuestion.text;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('voltageDisplay').textContent = `${currentCircuit.voltage}V`;
+            
+            // Focus on input
+            document.getElementById('answerInput').focus();
+        }
+
+        function checkAnswer() {
+            const userAnswer = parseFloat(document.getElementById('answerInput').value);
+            const feedback = document.getElementById('feedback');
+            
+            if (isNaN(userAnswer)) {
+                feedback.textContent = 'Please enter a valid number.';
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                return;
+            }
+            
+            totalQuestions++;
+            
+            if (currentQuestion.checkAnswer(userAnswer)) {
+                score++;
+                streak++;
+                feedback.textContent = `Correct! The answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}`;
+                feedback.className = 'feedback correct';
+            } else {
+                streak = 0;
+                feedback.textContent = `Incorrect. The correct answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}`;
+                feedback.className = 'feedback incorrect';
+            }
+            
+            feedback.style.display = 'block';
+            updateScoreBoard();
+        }
+
+        function updateScoreBoard() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('streak').textContent = streak;
+            document.getElementById('total').textContent = totalQuestions;
+        }
+
+        // Event listeners
+        document.getElementById('answerInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Initialize the game
+        generateNewQuestion();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'986b4f3bc104360d',t:'MTc1OTE0NzExNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
