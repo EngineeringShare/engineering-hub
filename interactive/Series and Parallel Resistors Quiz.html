@@ -35,6 +35,43 @@
             font-size: 2.5rem;
         }
         
+        .difficulty-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0 10px 0;
+        }
+        
+
+        
+        .btn-toggle {
+            padding: 10px 20px;
+            border: 2px solid #4299e1;
+            border-radius: 25px;
+            background: white;
+            color: #4299e1;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-toggle:hover {
+            background: #ebf8ff;
+            transform: translateY(-1px);
+        }
+        
+        .btn-toggle.active {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .difficulty-info {
+            text-align: center;
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
         .score-board {
             display: flex;
             justify-content: center;
@@ -203,6 +240,14 @@
         <div class="header">
             <h1>⚡ Circuit Quiz Game</h1>
             <p>Test your knowledge of series and parallel resistor circuits!</p>
+            <div class="difficulty-toggle">
+                <button class="btn-toggle active" id="easyBtn" onclick="setDifficulty('easy')">Easy Mode</button>
+                <button class="btn-toggle" id="hardBtn" onclick="setDifficulty('hard')">Hard Mode</button>
+            </div>
+            <div class="difficulty-info">
+                <span id="difficultyDescription">Easy: Only equivalent resistance questions</span>
+            </div>
+
         </div>
         
         <div class="score-board">
@@ -250,6 +295,9 @@
         let score = 0;
         let streak = 0;
         let totalQuestions = 0;
+        let difficulty = 'easy'; // 'easy' or 'hard'
+        const tolerancePercent = 2; // 2% tolerance
+        const toleranceAbsolute = 0.05; // ±0.05 units tolerance
 
         class Circuit {
             constructor() {
@@ -384,11 +432,17 @@
             }
 
             generateQuestion() {
-                const questionTypes = [
-                    'equivalent_resistance',
-                    'total_current',
-                    'resistor_current'
-                ];
+                let questionTypes;
+                
+                if (difficulty === 'easy') {
+                    questionTypes = ['equivalent_resistance'];
+                } else {
+                    questionTypes = [
+                        'equivalent_resistance',
+                        'total_current',
+                        'resistor_current'
+                    ];
+                }
                 
                 this.type = questionTypes[Math.floor(Math.random() * questionTypes.length)];
                 
@@ -416,8 +470,9 @@
             }
 
             checkAnswer(userAnswer) {
-                const tolerance = Math.abs(this.answer * 0.05); // 5% tolerance
-                return Math.abs(userAnswer - this.answer) <= tolerance;
+                const percentTolerance = Math.abs(this.answer * (tolerancePercent / 100));
+                const toleranceAmount = Math.max(percentTolerance, toleranceAbsolute);
+                return Math.abs(userAnswer - this.answer) <= toleranceAmount;
             }
         }
 
@@ -757,6 +812,12 @@
             document.getElementById('feedback').style.display = 'none';
             document.getElementById('voltageDisplay').textContent = `${currentCircuit.voltage}V`;
             
+            // Reset submit button state
+            const submitBtn = document.querySelector('.btn-primary');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Answer';
+            submitBtn.style.opacity = '1';
+            
             // Focus on input
             document.getElementById('answerInput').focus();
         }
@@ -764,6 +825,7 @@
         function checkAnswer() {
             const userAnswer = parseFloat(document.getElementById('answerInput').value);
             const feedback = document.getElementById('feedback');
+            const submitBtn = document.querySelector('.btn-primary');
             
             if (isNaN(userAnswer)) {
                 feedback.textContent = 'Please enter a valid number.';
@@ -772,13 +834,40 @@
                 return;
             }
             
+            // Check if this question has already been answered
+            if (currentQuestion.hasBeenAnswered) {
+                feedback.textContent = 'This question has already been answered. Generate a new question to continue.';
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                return;
+            }
+            
+            // Mark question as answered to prevent re-submission
+            currentQuestion.hasBeenAnswered = true;
+            
+            // Disable submit button to prevent spam clicking
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitted';
+            submitBtn.style.opacity = '0.6';
+            
             totalQuestions++;
             
             if (currentQuestion.checkAnswer(userAnswer)) {
-                score++;
-                streak++;
-                feedback.textContent = `Correct! The answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}`;
+                const pointsEarned = difficulty === 'hard' ? 2 : 1;
+                const streakIncrement = difficulty === 'hard' ? 2 : 1;
+                
+                score += pointsEarned;
+                streak += streakIncrement;
+                
+                const bonusText = difficulty === 'hard' ? ` (+${pointsEarned} points!)` : '';
+                feedback.textContent = `Correct! The answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}${bonusText}`;
                 feedback.className = 'feedback correct';
+                
+                // Automatically generate new question after 2 seconds when correct
+                setTimeout(() => {
+                    generateNewQuestion();
+                }, 2000);
+                
             } else {
                 streak = 0;
                 feedback.textContent = `Incorrect. The correct answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}`;
@@ -802,8 +891,27 @@
             }
         });
 
+        function setDifficulty(newDifficulty) {
+            difficulty = newDifficulty;
+            
+            // Update button states
+            document.getElementById('easyBtn').classList.toggle('active', difficulty === 'easy');
+            document.getElementById('hardBtn').classList.toggle('active', difficulty === 'hard');
+            
+            // Update description
+            const description = difficulty === 'easy' 
+                ? 'Easy: Only equivalent resistance questions'
+                : 'Hard: All question types (2x points & streak!)';
+            document.getElementById('difficultyDescription').textContent = description;
+            
+            // Generate new question with new difficulty
+            generateNewQuestion();
+        }
+
+
+
         // Initialize the game
         generateNewQuestion();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'986b4f3bc104360d',t:'MTc1OTE0NzExNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'987459a1259bd4ce',t:'MTc1OTI0MTkxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

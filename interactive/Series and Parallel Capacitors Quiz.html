@@ -35,6 +35,43 @@
             font-size: 2.5rem;
         }
         
+        .difficulty-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0 10px 0;
+        }
+        
+
+        
+        .btn-toggle {
+            padding: 10px 20px;
+            border: 2px solid #4299e1;
+            border-radius: 25px;
+            background: white;
+            color: #4299e1;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-toggle:hover {
+            background: #ebf8ff;
+            transform: translateY(-1px);
+        }
+        
+        .btn-toggle.active {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .difficulty-info {
+            text-align: center;
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
         .score-board {
             display: flex;
             justify-content: center;
@@ -194,10 +231,23 @@
     </style>
 </head>
 <body>
+    <nav style="max-width:1000px;margin:0 auto 10px auto;">
+        <a href="https://engineeringshare.github.io/engineering-hub/interactive-hub/" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px">
+            ← Back to Interactive Hub
+        </a>
+    </nav>
     <div class="container">
         <div class="header">
-            <h1>⚡ Capacitor Circuit Quiz</h1>
+            <h1>⚡ Capacitor Circuit Quiz Game</h1>
             <p>Test your knowledge of series and parallel capacitor circuits!</p>
+            <div class="difficulty-toggle">
+                <button class="btn-toggle active" id="easyBtn" onclick="setDifficulty('easy')">Easy Mode</button>
+                <button class="btn-toggle" id="hardBtn" onclick="setDifficulty('hard')">Hard Mode</button>
+            </div>
+            <div class="difficulty-info">
+                <span id="difficultyDescription">Easy: Only equivalent capacitance questions</span>
+            </div>
+
         </div>
         
         <div class="score-board">
@@ -245,6 +295,9 @@
         let score = 0;
         let streak = 0;
         let totalQuestions = 0;
+        let difficulty = 'easy'; // 'easy' or 'hard'
+        const tolerancePercent = 2; // 2% tolerance
+        const toleranceAbsolute = 0.05; // ±0.05 units tolerance
 
         class Circuit {
             constructor() {
@@ -308,12 +361,12 @@
             calculateEquivalentCapacitance() {
                 switch (this.topology) {
                     case 'series':
-                        // For capacitors in series: 1/Ctotal = 1/C1 + 1/C2 + ...
+                        // For capacitors in series: 1/Ceq = 1/C1 + 1/C2 + ...
                         const reciprocalSum = this.capacitors.reduce((sum, c) => sum + (1 / c.value), 0);
                         return 1 / reciprocalSum;
                     
                     case 'parallel':
-                        // For capacitors in parallel: Ctotal = C1 + C2 + ...
+                        // For capacitors in parallel: Ceq = C1 + C2 + ...
                         return this.capacitors.reduce((sum, c) => sum + c.value, 0);
                     
                     case 'mixed_series_parallel':
@@ -332,49 +385,40 @@
             }
 
             getTotalCharge() {
-                // Q = CV
                 return this.calculateEquivalentCapacitance() * this.voltage;
             }
 
-            getTotalEnergy() {
-                // E = 0.5 * C * V²
-                return 0.5 * this.calculateEquivalentCapacitance() * Math.pow(this.voltage, 2);
-            }
-
-            getVoltageAcrossCapacitor(capacitorId) {
+            getChargeOnCapacitor(capacitorId) {
+                const totalCharge = this.getTotalCharge();
+                
                 switch (this.topology) {
                     case 'series':
-                        // In series, voltage divides inversely proportional to capacitance
-                        const totalCapacitance = this.calculateEquivalentCapacitance();
-                        const capacitor = this.capacitors.find(c => c.id === capacitorId);
-                        return this.voltage * (totalCapacitance / capacitor.value);
+                        return totalCharge; // Same charge on all capacitors in series
                     
                     case 'parallel':
-                        // In parallel, all capacitors have same voltage as source
-                        return this.voltage;
+                        const capacitor = this.capacitors.find(c => c.id === capacitorId);
+                        return capacitor.value * this.voltage; // Q = CV for each parallel branch
                     
                     case 'mixed_series_parallel':
                         if (capacitorId === 'C1' || capacitorId === 'C2') {
-                            // Voltage across series combination
+                            // Charge on series branch
                             const seriesC12 = 1 / (1/this.capacitors[0].value + 1/this.capacitors[1].value);
-                            const capacitor = this.capacitors.find(c => c.id === capacitorId);
-                            return this.voltage * (seriesC12 / capacitor.value);
+                            return seriesC12 * this.voltage;
                         } else {
-                            // C3 is in parallel, so same voltage as source
-                            return this.voltage;
+                            // Charge on C3 (parallel branch)
+                            return this.capacitors[2].value * this.voltage;
                         }
                     
                     case 'mixed_parallel_series':
                         if (capacitorId === 'C1' || capacitorId === 'C2') {
                             // Voltage across parallel section
                             const parallelC12 = this.capacitors[0].value + this.capacitors[1].value;
-                            const totalC = this.calculateEquivalentCapacitance();
-                            return this.voltage * (totalC / parallelC12);
+                            const voltageAcrossParallel = totalCharge / parallelC12;
+                            const capacitor = this.capacitors.find(c => c.id === capacitorId);
+                            return capacitor.value * voltageAcrossParallel;
                         } else {
-                            // Voltage across C3 (series part)
-                            const parallelC12 = this.capacitors[0].value + this.capacitors[1].value;
-                            const totalC = this.calculateEquivalentCapacitance();
-                            return this.voltage * (totalC / this.capacitors[2].value);
+                            // C3 is in series, so same as total charge
+                            return totalCharge;
                         }
                     
                     default:
@@ -382,10 +426,10 @@
                 }
             }
 
-            getChargeOnCapacitor(capacitorId) {
-                const voltage = this.getVoltageAcrossCapacitor(capacitorId);
+            getVoltageAcrossCapacitor(capacitorId) {
+                const charge = this.getChargeOnCapacitor(capacitorId);
                 const capacitor = this.capacitors.find(c => c.id === capacitorId);
-                return capacitor.value * voltage;
+                return charge / capacitor.value; // V = Q/C
             }
         }
 
@@ -396,13 +440,18 @@
             }
 
             generateQuestion() {
-                const questionTypes = [
-                    'equivalent_capacitance',
-                    'total_charge',
-                    'total_energy',
-                    'capacitor_voltage',
-                    'capacitor_charge'
-                ];
+                let questionTypes;
+                
+                if (difficulty === 'easy') {
+                    questionTypes = ['equivalent_capacitance'];
+                } else {
+                    questionTypes = [
+                        'equivalent_capacitance',
+                        'total_charge',
+                        'capacitor_charge',
+                        'capacitor_voltage'
+                    ];
+                }
                 
                 this.type = questionTypes[Math.floor(Math.random() * questionTypes.length)];
                 
@@ -419,33 +468,28 @@
                         this.unit = "µC";
                         break;
                     
-                    case 'total_energy':
-                        this.text = "What is the total energy stored in the circuit?";
-                        this.answer = this.circuit.getTotalEnergy();
-                        this.unit = "µJ";
-                        break;
-                    
-                    case 'capacitor_voltage':
+                    case 'capacitor_charge':
                         const randomCapacitor = this.circuit.capacitors[Math.floor(Math.random() * this.circuit.capacitors.length)];
-                        this.text = `What is the voltage across ${randomCapacitor.id}?`;
-                        this.answer = this.circuit.getVoltageAcrossCapacitor(randomCapacitor.id);
-                        this.unit = "V";
+                        this.text = `What is the charge stored on ${randomCapacitor.id}?`;
+                        this.answer = this.circuit.getChargeOnCapacitor(randomCapacitor.id);
+                        this.unit = "µC";
                         this.targetCapacitor = randomCapacitor.id;
                         break;
                     
-                    case 'capacitor_charge':
+                    case 'capacitor_voltage':
                         const randomCap = this.circuit.capacitors[Math.floor(Math.random() * this.circuit.capacitors.length)];
-                        this.text = `What is the charge stored on ${randomCap.id}?`;
-                        this.answer = this.circuit.getChargeOnCapacitor(randomCap.id);
-                        this.unit = "µC";
+                        this.text = `What is the voltage across ${randomCap.id}?`;
+                        this.answer = this.circuit.getVoltageAcrossCapacitor(randomCap.id);
+                        this.unit = "V";
                         this.targetCapacitor = randomCap.id;
                         break;
                 }
             }
 
             checkAnswer(userAnswer) {
-                const tolerance = Math.abs(this.answer * 0.05); // 5% tolerance
-                return Math.abs(userAnswer - this.answer) <= tolerance;
+                const percentTolerance = Math.abs(this.answer * (tolerancePercent / 100));
+                const toleranceAmount = Math.max(percentTolerance, toleranceAbsolute);
+                return Math.abs(userAnswer - this.answer) <= toleranceAmount;
             }
         }
 
@@ -694,7 +738,7 @@
         function drawCapacitor(svg, x, y, capacitor) {
             const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
             
-            // Capacitor symbol (two parallel plates)
+            // Capacitor symbol (two parallel lines)
             const leftPlate = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             leftPlate.setAttribute('x1', x - 5);
             leftPlate.setAttribute('y1', y - 15);
@@ -792,6 +836,12 @@
             document.getElementById('feedback').style.display = 'none';
             document.getElementById('voltageDisplay').textContent = `${currentCircuit.voltage}V`;
             
+            // Reset submit button state
+            const submitBtn = document.querySelector('.btn-primary');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Answer';
+            submitBtn.style.opacity = '1';
+            
             // Focus on input
             document.getElementById('answerInput').focus();
         }
@@ -799,6 +849,7 @@
         function checkAnswer() {
             const userAnswer = parseFloat(document.getElementById('answerInput').value);
             const feedback = document.getElementById('feedback');
+            const submitBtn = document.querySelector('.btn-primary');
             
             if (isNaN(userAnswer)) {
                 feedback.textContent = 'Please enter a valid number.';
@@ -807,13 +858,40 @@
                 return;
             }
             
+            // Check if this question has already been answered
+            if (currentQuestion.hasBeenAnswered) {
+                feedback.textContent = 'This question has already been answered. Generate a new question to continue.';
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                return;
+            }
+            
+            // Mark question as answered to prevent re-submission
+            currentQuestion.hasBeenAnswered = true;
+            
+            // Disable submit button to prevent spam clicking
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitted';
+            submitBtn.style.opacity = '0.6';
+            
             totalQuestions++;
             
             if (currentQuestion.checkAnswer(userAnswer)) {
-                score++;
-                streak++;
-                feedback.textContent = `Correct! The answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}`;
+                const pointsEarned = difficulty === 'hard' ? 2 : 1;
+                const streakIncrement = difficulty === 'hard' ? 2 : 1;
+                
+                score += pointsEarned;
+                streak += streakIncrement;
+                
+                const bonusText = difficulty === 'hard' ? ` (+${pointsEarned} points!)` : '';
+                feedback.textContent = `Correct! The answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}${bonusText}`;
                 feedback.className = 'feedback correct';
+                
+                // Automatically generate new question after 2 seconds when correct
+                setTimeout(() => {
+                    generateNewQuestion();
+                }, 2000);
+                
             } else {
                 streak = 0;
                 feedback.textContent = `Incorrect. The correct answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}`;
@@ -837,8 +915,25 @@
             }
         });
 
+        function setDifficulty(newDifficulty) {
+            difficulty = newDifficulty;
+            
+            // Update button states
+            document.getElementById('easyBtn').classList.toggle('active', difficulty === 'easy');
+            document.getElementById('hardBtn').classList.toggle('active', difficulty === 'hard');
+            
+            // Update description
+            const description = difficulty === 'easy' 
+                ? 'Easy: Only equivalent capacitance questions'
+                : 'Hard: All question types (2x points & streak!)';
+            document.getElementById('difficultyDescription').textContent = description;
+            
+            // Generate new question with new difficulty
+            generateNewQuestion();
+        }
+
         // Initialize the game
         generateNewQuestion();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9873a458b2a8b343',t:'MTc1OTIzNDQ4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'987462c1410db343',t:'MTc1OTI0MjI4Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
