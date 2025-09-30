@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacitor Circuit Quiz Game</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #4a5568;
+            margin: 0 0 10px 0;
+            font-size: 2.5rem;
+        }
+        
+        .score-board {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .score-item {
+            background: #f7fafc;
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .score-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #4299e1;
+        }
+        
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .circuit-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .question-panel {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .circuit-svg {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            background: white;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-weight: 500;
+        }
+        
+        .answer-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .answer-input:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 10px;
+        }
+        
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: #718096;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #4a5568;
+            transform: translateY(-2px);
+        }
+        
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        .feedback.correct {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+        
+        .feedback.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+        
+        .circuit-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .capacitor-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .capacitor-item {
+            background: #edf2f7;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .score-board {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Capacitor Circuit Quiz</h1>
+            <p>Test your knowledge of series and parallel capacitor circuits!</p>
+        </div>
+        
+        <div class="score-board">
+            <div class="score-item">
+                <div class="score-number" id="score">0</div>
+                <div>Score</div>
+            </div>
+            <div class="score-item">
+                <div class="score-number" id="streak">0</div>
+                <div>Streak</div>
+            </div>
+            <div class="score-item">
+                <div class="score-number" id="total">0</div>
+                <div>Total Questions</div>
+            </div>
+        </div>
+        
+        <div class="game-area">
+            <div class="circuit-panel">
+                <h3>Circuit Diagram</h3>
+                <svg class="circuit-svg" id="circuitSvg"></svg>
+                <div class="circuit-info">
+                    <strong>Circuit Information:</strong>
+                    <div>Voltage Source: <span id="voltageDisplay">12V</span></div>
+                    <div class="capacitor-list" id="capacitorList"></div>
+                </div>
+            </div>
+            
+            <div class="question-panel">
+                <h3>Question</h3>
+                <div class="question-text" id="questionText">Loading question...</div>
+                <input type="number" class="answer-input" id="answerInput" placeholder="Enter your answer" step="0.01">
+                <div>
+                    <button class="btn btn-primary" onclick="checkAnswer()">Submit Answer</button>
+                    <button class="btn btn-secondary" onclick="generateNewQuestion()">New Question</button>
+                </div>
+                <div class="feedback" id="feedback" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCircuit = null;
+        let currentQuestion = null;
+        let score = 0;
+        let streak = 0;
+        let totalQuestions = 0;
+
+        class Circuit {
+            constructor() {
+                this.voltage = 12; // Fixed 12V source
+                this.capacitors = [];
+                this.connections = [];
+                this.generateRandomCircuit();
+            }
+
+            generateRandomCircuit() {
+                // Standard capacitor values in microfarads (µF)
+                const standardValues = [1, 2.2, 4.7, 10, 22, 47, 100, 220, 470, 1000, 2200, 4700];
+                
+                // Generate 3-4 capacitors with standard values
+                const numCapacitors = Math.floor(Math.random() * 2) + 3; // 3 or 4 capacitors
+                this.capacitors = [];
+                
+                for (let i = 0; i < numCapacitors; i++) {
+                    const randomValue = standardValues[Math.floor(Math.random() * standardValues.length)];
+                    this.capacitors.push({
+                        id: `C${i + 1}`,
+                        value: randomValue,
+                        x: 0,
+                        y: 0
+                    });
+                }
+
+                // Generate random circuit topology
+                this.generateTopology();
+            }
+
+            generateTopology() {
+                const topologies = [
+                    'series',
+                    'parallel',
+                    'mixed_series_parallel',
+                    'mixed_parallel_series'
+                ];
+                
+                const topology = topologies[Math.floor(Math.random() * topologies.length)];
+                this.topology = topology;
+                
+                switch (topology) {
+                    case 'series':
+                        this.connections = ['series'];
+                        break;
+                    case 'parallel':
+                        this.connections = ['parallel'];
+                        break;
+                    case 'mixed_series_parallel':
+                        // C1 and C2 in series, then parallel with C3
+                        this.connections = ['series_12_parallel_3'];
+                        break;
+                    case 'mixed_parallel_series':
+                        // C1 and C2 in parallel, then series with C3
+                        this.connections = ['parallel_12_series_3'];
+                        break;
+                }
+            }
+
+            calculateEquivalentCapacitance() {
+                switch (this.topology) {
+                    case 'series':
+                        // For capacitors in series: 1/Ctotal = 1/C1 + 1/C2 + ...
+                        const reciprocalSum = this.capacitors.reduce((sum, c) => sum + (1 / c.value), 0);
+                        return 1 / reciprocalSum;
+                    
+                    case 'parallel':
+                        // For capacitors in parallel: Ctotal = C1 + C2 + ...
+                        return this.capacitors.reduce((sum, c) => sum + c.value, 0);
+                    
+                    case 'mixed_series_parallel':
+                        // C1 and C2 in series, then parallel with C3
+                        const seriesC12 = 1 / (1/this.capacitors[0].value + 1/this.capacitors[1].value);
+                        return seriesC12 + this.capacitors[2].value;
+                    
+                    case 'mixed_parallel_series':
+                        // C1 and C2 in parallel, then series with C3
+                        const parallelC12 = this.capacitors[0].value + this.capacitors[1].value;
+                        return 1 / (1/parallelC12 + 1/this.capacitors[2].value);
+                    
+                    default:
+                        return 0;
+                }
+            }
+
+            getTotalCharge() {
+                // Q = CV
+                return this.calculateEquivalentCapacitance() * this.voltage;
+            }
+
+            getTotalEnergy() {
+                // E = 0.5 * C * V²
+                return 0.5 * this.calculateEquivalentCapacitance() * Math.pow(this.voltage, 2);
+            }
+
+            getVoltageAcrossCapacitor(capacitorId) {
+                switch (this.topology) {
+                    case 'series':
+                        // In series, voltage divides inversely proportional to capacitance
+                        const totalCapacitance = this.calculateEquivalentCapacitance();
+                        const capacitor = this.capacitors.find(c => c.id === capacitorId);
+                        return this.voltage * (totalCapacitance / capacitor.value);
+                    
+                    case 'parallel':
+                        // In parallel, all capacitors have same voltage as source
+                        return this.voltage;
+                    
+                    case 'mixed_series_parallel':
+                        if (capacitorId === 'C1' || capacitorId === 'C2') {
+                            // Voltage across series combination
+                            const seriesC12 = 1 / (1/this.capacitors[0].value + 1/this.capacitors[1].value);
+                            const capacitor = this.capacitors.find(c => c.id === capacitorId);
+                            return this.voltage * (seriesC12 / capacitor.value);
+                        } else {
+                            // C3 is in parallel, so same voltage as source
+                            return this.voltage;
+                        }
+                    
+                    case 'mixed_parallel_series':
+                        if (capacitorId === 'C1' || capacitorId === 'C2') {
+                            // Voltage across parallel section
+                            const parallelC12 = this.capacitors[0].value + this.capacitors[1].value;
+                            const totalC = this.calculateEquivalentCapacitance();
+                            return this.voltage * (totalC / parallelC12);
+                        } else {
+                            // Voltage across C3 (series part)
+                            const parallelC12 = this.capacitors[0].value + this.capacitors[1].value;
+                            const totalC = this.calculateEquivalentCapacitance();
+                            return this.voltage * (totalC / this.capacitors[2].value);
+                        }
+                    
+                    default:
+                        return 0;
+                }
+            }
+
+            getChargeOnCapacitor(capacitorId) {
+                const voltage = this.getVoltageAcrossCapacitor(capacitorId);
+                const capacitor = this.capacitors.find(c => c.id === capacitorId);
+                return capacitor.value * voltage;
+            }
+        }
+
+        class Question {
+            constructor(circuit) {
+                this.circuit = circuit;
+                this.generateQuestion();
+            }
+
+            generateQuestion() {
+                const questionTypes = [
+                    'equivalent_capacitance',
+                    'total_charge',
+                    'total_energy',
+                    'capacitor_voltage',
+                    'capacitor_charge'
+                ];
+                
+                this.type = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+                
+                switch (this.type) {
+                    case 'equivalent_capacitance':
+                        this.text = "What is the equivalent capacitance of the entire circuit?";
+                        this.answer = this.circuit.calculateEquivalentCapacitance();
+                        this.unit = "µF";
+                        break;
+                    
+                    case 'total_charge':
+                        this.text = "What is the total charge stored in the circuit?";
+                        this.answer = this.circuit.getTotalCharge();
+                        this.unit = "µC";
+                        break;
+                    
+                    case 'total_energy':
+                        this.text = "What is the total energy stored in the circuit?";
+                        this.answer = this.circuit.getTotalEnergy();
+                        this.unit = "µJ";
+                        break;
+                    
+                    case 'capacitor_voltage':
+                        const randomCapacitor = this.circuit.capacitors[Math.floor(Math.random() * this.circuit.capacitors.length)];
+                        this.text = `What is the voltage across ${randomCapacitor.id}?`;
+                        this.answer = this.circuit.getVoltageAcrossCapacitor(randomCapacitor.id);
+                        this.unit = "V";
+                        this.targetCapacitor = randomCapacitor.id;
+                        break;
+                    
+                    case 'capacitor_charge':
+                        const randomCap = this.circuit.capacitors[Math.floor(Math.random() * this.circuit.capacitors.length)];
+                        this.text = `What is the charge stored on ${randomCap.id}?`;
+                        this.answer = this.circuit.getChargeOnCapacitor(randomCap.id);
+                        this.unit = "µC";
+                        this.targetCapacitor = randomCap.id;
+                        break;
+                }
+            }
+
+            checkAnswer(userAnswer) {
+                const tolerance = Math.abs(this.answer * 0.05); // 5% tolerance
+                return Math.abs(userAnswer - this.answer) <= tolerance;
+            }
+        }
+
+        function drawCircuit(circuit) {
+            const svg = document.getElementById('circuitSvg');
+            svg.innerHTML = '';
+            
+            const width = svg.clientWidth || 500;
+            const height = svg.clientHeight || 300;
+            
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+            
+            // Draw based on topology
+            switch (circuit.topology) {
+                case 'series':
+                    drawSeriesCircuit(svg, circuit, width, height);
+                    break;
+                case 'parallel':
+                    drawParallelCircuit(svg, circuit, width, height);
+                    break;
+                case 'mixed_series_parallel':
+                    drawMixedSeriesParallelCircuit(svg, circuit, width, height);
+                    break;
+                case 'mixed_parallel_series':
+                    drawMixedParallelSeriesCircuit(svg, circuit, width, height);
+                    break;
+            }
+        }
+
+        function drawSeriesCircuit(svg, circuit, width, height) {
+            const centerY = height / 2;
+            const startX = 50;
+            const spacing = (width - 100) / (circuit.capacitors.length + 1);
+            
+            // Draw voltage source
+            drawVoltageSource(svg, startX, centerY, circuit.voltage);
+            
+            // Draw connecting wires and capacitors
+            let currentX = startX + 60;
+            
+            for (let i = 0; i < circuit.capacitors.length; i++) {
+                // Draw wire to capacitor
+                drawWire(svg, currentX, centerY, currentX + spacing - 60, centerY);
+                
+                // Draw capacitor
+                drawCapacitor(svg, currentX + spacing - 30, centerY, circuit.capacitors[i]);
+                
+                currentX += spacing;
+            }
+            
+            // Close the circuit
+            drawWire(svg, currentX - 30, centerY, width - 50, centerY);
+            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
+            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
+            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
+            drawWire(svg, startX, centerY + 40, startX, centerY);
+        }
+
+        function drawParallelCircuit(svg, circuit, width, height) {
+            const centerY = height / 2;
+            const startX = 50;
+            
+            // Draw voltage source
+            drawVoltageSource(svg, startX, centerY, circuit.voltage);
+            
+            // Calculate branch positions
+            const branchStartX = startX + 120;
+            const branchEndX = width - 120;
+            const branchSpacing = Math.min(40, 120 / circuit.capacitors.length);
+            const totalBranchHeight = (circuit.capacitors.length - 1) * branchSpacing;
+            
+            // Draw left vertical connection line
+            const leftTopY = centerY - totalBranchHeight / 2;
+            const leftBottomY = centerY + totalBranchHeight / 2;
+            drawWire(svg, branchStartX, leftTopY, branchStartX, leftBottomY);
+            
+            // Draw right vertical connection line  
+            drawWire(svg, branchEndX, leftTopY, branchEndX, leftBottomY);
+            
+            // Connect voltage source to left junction
+            drawWire(svg, startX + 60, centerY, branchStartX, centerY);
+            
+            // Draw parallel branches
+            for (let i = 0; i < circuit.capacitors.length; i++) {
+                const branchY = centerY - totalBranchHeight / 2 + i * branchSpacing;
+                
+                // Horizontal branch with capacitor
+                const capacitorX = (branchStartX + branchEndX) / 2;
+                drawWire(svg, branchStartX, branchY, capacitorX - 30, branchY);
+                drawCapacitor(svg, capacitorX, branchY, circuit.capacitors[i]);
+                drawWire(svg, capacitorX + 30, branchY, branchEndX, branchY);
+            }
+            
+            // Connect right junction to complete circuit
+            drawWire(svg, branchEndX, centerY, width - 50, centerY);
+            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
+            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
+            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
+            drawWire(svg, startX, centerY + 40, startX, centerY);
+        }
+
+        function drawMixedSeriesParallelCircuit(svg, circuit, width, height) {
+            const centerY = height / 2;
+            const startX = 50;
+            
+            // Draw voltage source
+            drawVoltageSource(svg, startX, centerY, circuit.voltage);
+            
+            // Draw C1 and C2 in series (top branch)
+            drawWire(svg, startX + 60, centerY, startX + 120, centerY);
+            drawCapacitor(svg, startX + 150, centerY, circuit.capacitors[0]);
+            drawWire(svg, startX + 180, centerY, startX + 240, centerY);
+            drawCapacitor(svg, startX + 270, centerY, circuit.capacitors[1]);
+            drawWire(svg, startX + 300, centerY, startX + 360, centerY);
+            
+            // Draw C3 in parallel (bottom branch)
+            drawWire(svg, startX + 120, centerY, startX + 120, centerY + 60);
+            drawWire(svg, startX + 120, centerY + 60, startX + 240, centerY + 60);
+            drawCapacitor(svg, startX + 270, centerY + 60, circuit.capacitors[2]);
+            drawWire(svg, startX + 300, centerY + 60, startX + 360, centerY + 60);
+            drawWire(svg, startX + 360, centerY + 60, startX + 360, centerY);
+            
+            // Close circuit
+            drawWire(svg, startX + 360, centerY, width - 50, centerY);
+            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
+            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
+            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
+            drawWire(svg, startX, centerY + 40, startX, centerY);
+        }
+
+        function drawMixedParallelSeriesCircuit(svg, circuit, width, height) {
+            const centerY = height / 2;
+            const startX = 50;
+            
+            // Draw voltage source
+            drawVoltageSource(svg, startX, centerY, circuit.voltage);
+            
+            // Draw parallel section (C1 and C2)
+            drawWire(svg, startX + 60, centerY, startX + 120, centerY);
+            
+            // C1 branch
+            drawWire(svg, startX + 120, centerY, startX + 120, centerY - 30);
+            drawWire(svg, startX + 120, centerY - 30, startX + 180, centerY - 30);
+            drawCapacitor(svg, startX + 210, centerY - 30, circuit.capacitors[0]);
+            drawWire(svg, startX + 240, centerY - 30, startX + 300, centerY - 30);
+            drawWire(svg, startX + 300, centerY - 30, startX + 300, centerY);
+            
+            // C2 branch
+            drawWire(svg, startX + 120, centerY, startX + 120, centerY + 30);
+            drawWire(svg, startX + 120, centerY + 30, startX + 180, centerY + 30);
+            drawCapacitor(svg, startX + 210, centerY + 30, circuit.capacitors[1]);
+            drawWire(svg, startX + 240, centerY + 30, startX + 300, centerY + 30);
+            drawWire(svg, startX + 300, centerY + 30, startX + 300, centerY);
+            
+            // C3 in series
+            drawWire(svg, startX + 300, centerY, startX + 360, centerY);
+            drawCapacitor(svg, startX + 390, centerY, circuit.capacitors[2]);
+            drawWire(svg, startX + 420, centerY, width - 50, centerY);
+            
+            // Close circuit
+            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
+            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
+            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
+            drawWire(svg, startX, centerY + 40, startX, centerY);
+        }
+
+        function drawVoltageSource(svg, x, y, voltage) {
+            // Draw battery symbol with proper connections
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            
+            // Connection wire from left
+            const leftWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            leftWire.setAttribute('x1', x);
+            leftWire.setAttribute('y1', y);
+            leftWire.setAttribute('x2', x + 20);
+            leftWire.setAttribute('y2', y);
+            leftWire.setAttribute('stroke', '#333');
+            leftWire.setAttribute('stroke-width', '2');
+            g.appendChild(leftWire);
+            
+            // Positive terminal (longer line)
+            const posLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            posLine.setAttribute('x1', x + 20);
+            posLine.setAttribute('y1', y - 20);
+            posLine.setAttribute('x2', x + 20);
+            posLine.setAttribute('y2', y + 20);
+            posLine.setAttribute('stroke', '#333');
+            posLine.setAttribute('stroke-width', '3');
+            g.appendChild(posLine);
+            
+            // Negative terminal (shorter line)
+            const negLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            negLine.setAttribute('x1', x + 40);
+            negLine.setAttribute('y1', y - 15);
+            negLine.setAttribute('x2', x + 40);
+            negLine.setAttribute('y2', y + 15);
+            negLine.setAttribute('stroke', '#333');
+            negLine.setAttribute('stroke-width', '3');
+            g.appendChild(negLine);
+            
+            // Connection wire to right
+            const rightWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            rightWire.setAttribute('x1', x + 40);
+            rightWire.setAttribute('y1', y);
+            rightWire.setAttribute('x2', x + 60);
+            rightWire.setAttribute('y2', y);
+            rightWire.setAttribute('stroke', '#333');
+            rightWire.setAttribute('stroke-width', '2');
+            g.appendChild(rightWire);
+            
+            // Voltage label
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', x + 30);
+            text.setAttribute('y', y - 25);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('font-size', '12');
+            text.setAttribute('font-weight', 'bold');
+            text.setAttribute('fill', '#333');
+            text.textContent = `${voltage}V`;
+            g.appendChild(text);
+            
+            // Polarity labels
+            const plusText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            plusText.setAttribute('x', x + 15);
+            plusText.setAttribute('y', y + 5);
+            plusText.setAttribute('text-anchor', 'middle');
+            plusText.setAttribute('font-size', '10');
+            plusText.setAttribute('font-weight', 'bold');
+            plusText.setAttribute('fill', '#333');
+            plusText.textContent = '+';
+            g.appendChild(plusText);
+            
+            const minusText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            minusText.setAttribute('x', x + 45);
+            minusText.setAttribute('y', y + 5);
+            minusText.setAttribute('text-anchor', 'middle');
+            minusText.setAttribute('font-size', '10');
+            minusText.setAttribute('font-weight', 'bold');
+            minusText.setAttribute('fill', '#333');
+            minusText.textContent = '−';
+            g.appendChild(minusText);
+            
+            svg.appendChild(g);
+        }
+
+        function drawCapacitor(svg, x, y, capacitor) {
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            
+            // Capacitor symbol (two parallel plates)
+            const leftPlate = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            leftPlate.setAttribute('x1', x - 5);
+            leftPlate.setAttribute('y1', y - 15);
+            leftPlate.setAttribute('x2', x - 5);
+            leftPlate.setAttribute('y2', y + 15);
+            leftPlate.setAttribute('stroke', '#333');
+            leftPlate.setAttribute('stroke-width', '3');
+            g.appendChild(leftPlate);
+            
+            const rightPlate = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            rightPlate.setAttribute('x1', x + 5);
+            rightPlate.setAttribute('y1', y - 15);
+            rightPlate.setAttribute('x2', x + 5);
+            rightPlate.setAttribute('y2', y + 15);
+            rightPlate.setAttribute('stroke', '#333');
+            rightPlate.setAttribute('stroke-width', '3');
+            g.appendChild(rightPlate);
+            
+            // Connection wires
+            const leftWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            leftWire.setAttribute('x1', x - 30);
+            leftWire.setAttribute('y1', y);
+            leftWire.setAttribute('x2', x - 5);
+            leftWire.setAttribute('y2', y);
+            leftWire.setAttribute('stroke', '#333');
+            leftWire.setAttribute('stroke-width', '2');
+            g.appendChild(leftWire);
+            
+            const rightWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            rightWire.setAttribute('x1', x + 5);
+            rightWire.setAttribute('y1', y);
+            rightWire.setAttribute('x2', x + 30);
+            rightWire.setAttribute('y2', y);
+            rightWire.setAttribute('stroke', '#333');
+            rightWire.setAttribute('stroke-width', '2');
+            g.appendChild(rightWire);
+            
+            // Capacitor label
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', x);
+            text.setAttribute('y', y - 25);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('font-size', '11');
+            text.setAttribute('font-weight', 'bold');
+            text.setAttribute('fill', '#333');
+            text.textContent = `${capacitor.id}`;
+            g.appendChild(text);
+            
+            // Capacitance value
+            const valueText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            valueText.setAttribute('x', x);
+            valueText.setAttribute('y', y + 35);
+            valueText.setAttribute('text-anchor', 'middle');
+            valueText.setAttribute('font-size', '9');
+            valueText.setAttribute('font-weight', 'bold');
+            valueText.setAttribute('fill', '#333');
+            valueText.textContent = `${capacitor.value}µF`;
+            g.appendChild(valueText);
+            
+            svg.appendChild(g);
+        }
+
+        function drawWire(svg, x1, y1, x2, y2) {
+            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            line.setAttribute('x1', x1);
+            line.setAttribute('y1', y1);
+            line.setAttribute('x2', x2);
+            line.setAttribute('y2', y2);
+            line.setAttribute('stroke', '#333');
+            line.setAttribute('stroke-width', '2');
+            svg.appendChild(line);
+        }
+
+        function updateCapacitorList(circuit) {
+            const capacitorList = document.getElementById('capacitorList');
+            capacitorList.innerHTML = '';
+            
+            circuit.capacitors.forEach(capacitor => {
+                const div = document.createElement('div');
+                div.className = 'capacitor-item';
+                div.textContent = `${capacitor.id}: ${capacitor.value}µF`;
+                capacitorList.appendChild(div);
+            });
+        }
+
+        function generateNewQuestion() {
+            currentCircuit = new Circuit();
+            currentQuestion = new Question(currentCircuit);
+            
+            drawCircuit(currentCircuit);
+            updateCapacitorList(currentCircuit);
+            
+            document.getElementById('questionText').textContent = currentQuestion.text;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('voltageDisplay').textContent = `${currentCircuit.voltage}V`;
+            
+            // Focus on input
+            document.getElementById('answerInput').focus();
+        }
+
+        function checkAnswer() {
+            const userAnswer = parseFloat(document.getElementById('answerInput').value);
+            const feedback = document.getElementById('feedback');
+            
+            if (isNaN(userAnswer)) {
+                feedback.textContent = 'Please enter a valid number.';
+                feedback.className = 'feedback incorrect';
+                feedback.style.display = 'block';
+                return;
+            }
+            
+            totalQuestions++;
+            
+            if (currentQuestion.checkAnswer(userAnswer)) {
+                score++;
+                streak++;
+                feedback.textContent = `Correct! The answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}`;
+                feedback.className = 'feedback correct';
+            } else {
+                streak = 0;
+                feedback.textContent = `Incorrect. The correct answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}`;
+                feedback.className = 'feedback incorrect';
+            }
+            
+            feedback.style.display = 'block';
+            updateScoreBoard();
+        }
+
+        function updateScoreBoard() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('streak').textContent = streak;
+            document.getElementById('total').textContent = totalQuestions;
+        }
+
+        // Event listeners
+        document.getElementById('answerInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Initialize the game
+        generateNewQuestion();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9873a458b2a8b343',t:'MTc1OTIzNDQ4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
