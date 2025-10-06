@@ -136,9 +136,10 @@ This site is your one-stop destination for accessing class slides, assignments, 
 
 ## Credits
 
-- **Site by:** [James Absolom](https://wiprobotics.github.io/Portfolio/)
+- **Site by:** 
+  - <a href="https://wiprobotics.github.io/Portfolio/" target="_blank">James Absolom</a>
 - **Content by:** 
-  - [James Absolom](https://wiprobotics.github.io/Portfolio/)
+  - <a href="https://wiprobotics.github.io/Portfolio/" target="_blank">James Absolom</a>
   - Graeme Woodhall
   - Matt Milner
 
