@@ -13,9 +13,9 @@ A Bill of Materials (BoM) is a comprehensive list of materials, components, and 
 The equation for calculating the cost used for your BoM is:
 
 
-\[
-\mathrm{Cost\ Used} = \frac{\mathrm{Unit\ Cost}}{\mathrm{Unit\ Size}\,(w\times h)} \times \mathrm{Part\ Size}\,(w\times h)
-\]
+$$
+\mathrm{Cost\ Used}=\frac{\mathrm{Unit\ Cost}}{\mathrm{Unit\ Size}\,(w\times h)}\times \mathrm{Part\ Size}\,(w\times h)
+$$
 
 
 ## Presentation:
