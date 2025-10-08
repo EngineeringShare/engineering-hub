@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Gear Simulator</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #4338ca;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .workspace {
+            flex: 1;
+            position: relative;
+            background: rgba(255, 255, 255, 0.1);
+            margin: 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            min-height: 500px;
+        }
+
+        .gear {
+            position: absolute;
+            cursor: move;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .gear-circle {
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            border: 3px solid #333;
+        }
+
+        .gear-circle.rotating {
+            animation: rotate 2s linear infinite;
+        }
+
+        .gear-circle.rotating-reverse {
+            animation: rotate-reverse 2s linear infinite;
+        }
+
+        .gear-teeth.rotating {
+            animation: rotate 2s linear infinite;
+        }
+
+        .gear-teeth.rotating-reverse {
+            animation: rotate-reverse 2s linear infinite;
+        }
+
+        .rotation-arrow {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .rotation-arrow.rotating {
+            animation: rotate 2s linear infinite;
+        }
+
+        .rotation-arrow.rotating-reverse {
+            animation: rotate-reverse 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes rotate-reverse {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(-360deg); }
+        }
+
+        .gear-teeth {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .gear-label {
+            position: relative;
+            z-index: 10;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+        }
+
+        .gear-info {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0.5rem;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.8rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            min-width: 120px;
+            position: fixed;
+            cursor: move;
+            border: 2px solid #4f46e5;
+            z-index: 100;
+        }
+
+        .info-pointer {
+            position: absolute;
+            height: 2px;
+            background: #4f46e5;
+            transform-origin: left center;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .gear-controls {
+            display: flex;
+            gap: 0.25rem;
+            margin-top: 0.25rem;
+            justify-content: center;
+        }
+
+        .size-btn {
+            padding: 0.25rem 0.5rem;
+            border: none;
+            border-radius: 4px;
+            background: #6366f1;
+            color: white;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+
+        .size-btn:hover {
+            background: #4f46e5;
+        }
+
+        .size-btn:active {
+            transform: scale(0.95);
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+            transform-origin: left center;
+            z-index: 1;
+            border-radius: 2px;
+        }
+
+        .info-panel {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem;
+            margin: 1rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-card {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #4f46e5;
+        }
+
+        .info-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .motor-gear {
+            border-color: #ef4444 !important;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e) !important;
+        }
+
+        .pinned-gear {
+            border-color: #8b5cf6 !important;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.5), 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .ring-gear {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        .ring-gear .gear-circle {
+            background: transparent !important;
+            border: none !important;
+        }
+
+        .ring-gear .gear-label {
+            background: rgba(6, 95, 70, 0.95);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .snap-indicator {
+            position: absolute;
+            border: 3px dashed #10b981;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .controls {
+                justify-content: center;
+            }
+
+            .workspace {
+                margin: 0.5rem;
+                min-height: 400px;
+            }
+
+            .info-panel {
+                margin: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">⚙️ Interactive Gear Simulator</h1>
+        <div class="controls">
+            <button class="btn btn-primary" onclick="addGear()">Add Gear</button>
+            <button class="btn btn-primary" onclick="addRingGear()">Add Ring Gear</button>
+            <button class="btn btn-danger" onclick="clearWorkspace()">Clear All</button>
+            <button class="btn btn-primary" onclick="toggleAnimation()">Start/Stop</button>
+            <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;">
+                <label style="font-weight: 600; color: #333;">Motor RPM:</label>
+                <input type="range" id="rpmSlider" min="1" max="300" value="120" style="width: 120px;" oninput="updateMotorRPM(this.value)">
+                <span id="rpmValue" style="font-weight: bold; color: #4f46e5; min-width: 40px;">120</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="workspace" id="workspace"></div>
+
+    <div class="info-panel">
+        <div class="info-title">Gear Physics Concepts</div>
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-title">Motor Gear</div>
+                <div>Red gear provides power to the system<br>Click any gear's M button to make it the motor</div>
+            </div>
+            <div class="info-card">
+                <div class="info-title">Ring Gears</div>
+                <div>Green hollow gears with internal teeth<br>Automatically snap to proper meshing position</div>
+            </div>
+            <div class="info-card">
+                <div class="info-title">Pinned Gears</div>
+                <div>Purple gears are fixed in place<br>Create planetary systems by pinning gears</div>
+            </div>
+
+            <div class="info-card">
+                <div class="info-title">Gear Ratios</div>
+                <div>Speed = Motor RPM × (Motor Teeth ÷ Gear Teeth)<br>Larger gears spin slower but with more torque</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let gears = [];
+        let gearCounter = 0;
+        let isAnimating = false;
+        let draggedGear = null;
+        let draggedInfo = null;
+        let dragOffset = { x: 0, y: 0 };
+
+        class Gear {
+            constructor(x, y, size = 80, isRingGear = false) {
+                this.id = ++gearCounter;
+                this.x = x;
+                this.y = y;
+                this.size = size;
+                this.isRingGear = isRingGear;
+                this.teeth = this.calculateTeeth();
+                this.rpm = 0;
+                this.torque = 100;
+                this.isMotor = this.id === 1 && !isRingGear; // First regular gear is motor
+                this.isPinned = false;
+                this.connectedGears = [];
+                this.infoX = x + size + 20;
+                this.infoY = y;
+                this.rotationDirection = 'normal';
+                this.element = this.createElement();
+                this.updateDisplay();
+            }
+
+            calculateTeeth() {
+                if (this.isRingGear) {
+                    // Ring gears have more teeth due to larger circumference
+                    return Math.floor(this.size / 1.8) + 20;
+                } else {
+                    // Regular gears
+                    return Math.floor(this.size / 2.4) + 8;
+                }
+            }
+
+            getRadius() {
+                return this.size / 2;
+            }
+
+            getInnerRadius() {
+                if (this.isRingGear) {
+                    return this.getRadius() - 35; // Large center gap for ring gears
+                } else {
+                    return this.getRadius();
+                }
+            }
+
+            getCenterX() {
+                return this.x + this.getRadius();
+            }
+
+            getCenterY() {
+                return this.y + this.getRadius();
+            }
+
+            createElement() {
+                const gearDiv = document.createElement('div');
+                gearDiv.className = 'gear';
+                gearDiv.style.left = this.x + 'px';
+                gearDiv.style.top = this.y + 'px';
+
+                const circle = document.createElement('div');
+                circle.className = `gear-circle ${this.isMotor ? 'motor-gear' : ''} ${this.isPinned ? 'pinned-gear' : ''} ${this.isRingGear ? 'ring-gear' : ''}`;
+                circle.style.width = this.size + 'px';
+                circle.style.height = this.size + 'px';
+                
+                // Create gear teeth using SVG
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('class', 'gear-teeth');
+                svg.setAttribute('viewBox', `0 0 ${this.size} ${this.size}`);
+                svg.style.position = 'absolute';
+                svg.style.width = '100%';
+                svg.style.height = '100%';
+                svg.style.top = '0';
+                svg.style.left = '0';
+                
+                this.createGearTeeth(svg);
+                circle.appendChild(svg);
+                
+                // Create rotation arrow container
+                const arrowSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                arrowSvg.setAttribute('class', 'rotation-arrow');
+                arrowSvg.setAttribute('viewBox', `0 0 ${this.size} ${this.size}`);
+                arrowSvg.style.position = 'absolute';
+                arrowSvg.style.width = '100%';
+                arrowSvg.style.height = '100%';
+                arrowSvg.style.top = '0';
+                arrowSvg.style.left = '0';
+                
+                circle.appendChild(arrowSvg);
+
+                const info = document.createElement('div');
+                info.className = 'gear-info';
+                info.style.left = this.infoX + 'px';
+                info.style.top = this.infoY + 'px';
+                
+                // Create pointer line
+                const pointer = document.createElement('div');
+                pointer.className = 'info-pointer';
+                
+                gearDiv.appendChild(circle);
+                gearDiv.appendChild(info);
+                gearDiv.appendChild(pointer);
+
+                // Add drag functionality
+                circle.addEventListener('mousedown', (e) => this.startDrag(e));
+                circle.addEventListener('touchstart', (e) => this.startDrag(e));
+                info.addEventListener('mousedown', (e) => this.startInfoDrag(e));
+                info.addEventListener('touchstart', (e) => this.startInfoDrag(e));
+
+                return gearDiv;
+            }
+
+            createGearTeeth(svg) {
+                const centerX = this.size / 2;
+                const centerY = this.size / 2;
+                
+                if (this.isRingGear) {
+                    // Create the main ring body first
+                    const outerRadius = this.getRadius() - 3;
+                    const innerRadius = this.getInnerRadius();
+                    
+                    // Main ring body
+                    const ringPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    const pathData = `M ${centerX - outerRadius} ${centerY} 
+                                     A ${outerRadius} ${outerRadius} 0 1 1 ${centerX + outerRadius} ${centerY}
+                                     A ${outerRadius} ${outerRadius} 0 1 1 ${centerX - outerRadius} ${centerY}
+                                     M ${centerX - innerRadius} ${centerY}
+                                     A ${innerRadius} ${innerRadius} 0 1 0 ${centerX + innerRadius} ${centerY}
+                                     A ${innerRadius} ${innerRadius} 0 1 0 ${centerX - innerRadius} ${centerY}`;
+                    ringPath.setAttribute('d', pathData);
+                    ringPath.setAttribute('fill', '#10b981');
+                    ringPath.setAttribute('fill-rule', 'evenodd');
+                    ringPath.setAttribute('stroke', '#065f46');
+                    ringPath.setAttribute('stroke-width', '2');
+                    svg.appendChild(ringPath);
+                    
+                    // Create internal teeth
+                    const teethRadius = innerRadius + 12;
+                    const actualTeeth = Math.max(16, Math.floor(this.teeth * 0.8));
+                    
+                    for (let i = 0; i < actualTeeth; i++) {
+                        const angle = (i / actualTeeth) * 2 * Math.PI;
+                        const toothWidth = (2 * Math.PI) / actualTeeth * 0.5;
+                        
+                        // Create rectangular teeth pointing inward
+                        const angle1 = angle - toothWidth / 2;
+                        const angle2 = angle + toothWidth / 2;
+                        
+                        const x1 = centerX + innerRadius * Math.cos(angle1);
+                        const y1 = centerY + innerRadius * Math.sin(angle1);
+                        const x2 = centerX + innerRadius * Math.cos(angle2);
+                        const y2 = centerY + innerRadius * Math.sin(angle2);
+                        const x3 = centerX + teethRadius * Math.cos(angle2);
+                        const y3 = centerY + teethRadius * Math.sin(angle2);
+                        const x4 = centerX + teethRadius * Math.cos(angle1);
+                        const y4 = centerY + teethRadius * Math.sin(angle1);
+                        
+                        const tooth = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                        tooth.setAttribute('points', `${x1},${y1} ${x2},${y2} ${x3},${y3} ${x4},${y4}`);
+                        tooth.setAttribute('fill', '#065f46');
+                        tooth.setAttribute('stroke', '#047857');
+                        tooth.setAttribute('stroke-width', '0.5');
+                        svg.appendChild(tooth);
+                    }
+                    
+                    // Add inner decorative circle
+                    const innerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    innerCircle.setAttribute('cx', centerX);
+                    innerCircle.setAttribute('cy', centerY);
+                    innerCircle.setAttribute('r', innerRadius - 2);
+                    innerCircle.setAttribute('fill', 'none');
+                    innerCircle.setAttribute('stroke', '#10b981');
+                    innerCircle.setAttribute('stroke-width', '1');
+                    innerCircle.setAttribute('stroke-dasharray', '5,3');
+                    innerCircle.setAttribute('opacity', '0.7');
+                    svg.appendChild(innerCircle);
+                    
+                } else {
+                    // Regular gear has external teeth - keep existing design
+                    const innerRadius = this.getRadius() - 8;
+                    const outerRadius = this.getRadius() - 2;
+                    
+                    let pathData = '';
+                    const actualTeeth = Math.max(8, this.teeth);
+                    
+                    for (let i = 0; i < actualTeeth; i++) {
+                        const angle1 = (i / actualTeeth) * 2 * Math.PI;
+                        const angle2 = ((i + 0.3) / actualTeeth) * 2 * Math.PI;
+                        const angle3 = ((i + 0.7) / actualTeeth) * 2 * Math.PI;
+                        const angle4 = ((i + 1) / actualTeeth) * 2 * Math.PI;
+                        
+                        const x1 = centerX + innerRadius * Math.cos(angle1);
+                        const y1 = centerY + innerRadius * Math.sin(angle1);
+                        const x2 = centerX + outerRadius * Math.cos(angle2);
+                        const y2 = centerY + outerRadius * Math.sin(angle2);
+                        const x3 = centerX + outerRadius * Math.cos(angle3);
+                        const y3 = centerY + outerRadius * Math.sin(angle3);
+                        const x4 = centerX + innerRadius * Math.cos(angle4);
+                        const y4 = centerY + innerRadius * Math.sin(angle4);
+                        
+                        if (i === 0) {
+                            pathData += `M ${x1} ${y1}`;
+                        }
+                        pathData += ` L ${x2} ${y2} L ${x3} ${y3} L ${x4} ${y4}`;
+                    }
+                    pathData += ' Z';
+                    
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', pathData);
+                    path.setAttribute('fill', '#333');
+                    path.setAttribute('stroke', '#222');
+                    path.setAttribute('stroke-width', '1');
+                    
+                    svg.appendChild(path);
+                }
+            }
+
+            createRotationArrow(svg) {
+                if (this.rpm === 0) return;
+                
+                const centerX = this.size / 2;
+                const centerY = this.size / 2;
+                const radius = this.isRingGear ? this.getInnerRadius() + 10 : (this.size / 2) - 20;
+                
+                let startAngle, endAngle, sweepFlag;
+                
+                if (this.rotationDirection === 'reverse') {
+                    startAngle = Math.PI / 3;
+                    endAngle = -Math.PI / 3;
+                    sweepFlag = 0;
+                } else {
+                    startAngle = -Math.PI / 3;
+                    endAngle = Math.PI / 3;
+                    sweepFlag = 1;
+                }
+                
+                const startX = centerX + radius * Math.cos(startAngle);
+                const startY = centerY + radius * Math.sin(startAngle);
+                const endX = centerX + radius * Math.cos(endAngle);
+                const endY = centerY + radius * Math.sin(endAngle);
+                
+                const pathData = `M ${startX} ${startY} A ${radius} ${radius} 0 0 ${sweepFlag} ${endX} ${endY}`;
+                
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', pathData);
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke', this.isRingGear ? '#ffffff' : '#ff4444');
+                path.setAttribute('stroke-width', '3');
+                path.setAttribute('stroke-linecap', 'round');
+                path.setAttribute('marker-end', 'url(#arrowhead-' + this.id + ')');
+                
+                const arrowScale = this.teeth / 108;
+                const arrowWidth = Math.max(4, Math.min(12, 6 * arrowScale));
+                const arrowHeight = Math.max(2.5, Math.min(8, 4 * arrowScale));
+                
+                const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+                const marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+                marker.setAttribute('id', 'arrowhead-' + this.id);
+                marker.setAttribute('markerWidth', arrowWidth.toString());
+                marker.setAttribute('markerHeight', arrowHeight.toString());
+                marker.setAttribute('refX', (arrowWidth - 1).toString());
+                marker.setAttribute('refY', (arrowHeight / 2).toString());
+                marker.setAttribute('orient', 'auto');
+                
+                const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                polygon.setAttribute('points', `0 0, ${arrowWidth} ${arrowHeight/2}, 0 ${arrowHeight}`);
+                polygon.setAttribute('fill', this.isRingGear ? '#ffffff' : '#ff4444');
+                
+                marker.appendChild(polygon);
+                defs.appendChild(marker);
+                svg.appendChild(defs);
+                svg.appendChild(path);
+            }
+
+            startDrag(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                draggedGear = this;
+                const rect = this.element.getBoundingClientRect();
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                dragOffset.x = clientX - rect.left;
+                dragOffset.y = clientY - rect.top;
+            }
+
+            startInfoDrag(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                draggedInfo = this;
+                const rect = this.element.querySelector('.gear-info').getBoundingClientRect();
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                dragOffset.x = clientX - rect.left;
+                dragOffset.y = clientY - rect.top;
+            }
+
+            updatePosition(x, y) {
+                this.x = x;
+                this.y = y;
+                this.element.style.left = this.x + 'px';
+                this.element.style.top = this.y + 'px';
+                this.findConnections();
+                calculateGearPhysics();
+                drawConnections();
+            }
+
+            changeSize(delta) {
+                const newSize = Math.max(60, Math.min(720, this.size + delta));
+                if (newSize !== this.size) {
+                    this.size = newSize;
+                    this.teeth = this.calculateTeeth();
+                    
+                    this.findConnections();
+                    calculateGearPhysics();
+                    
+                    const parent = this.element.parentNode;
+                    const oldElement = this.element;
+                    this.element = this.createElement();
+                    parent.replaceChild(this.element, oldElement);
+                    
+                    this.updateDisplay();
+                    drawConnections();
+                }
+            }
+
+            findConnections() {
+                this.connectedGears = [];
+                
+                gears.forEach(otherGear => {
+                    if (otherGear !== this && this.canMeshWith(otherGear)) {
+                        this.connectedGears.push(otherGear);
+                    }
+                });
+                
+                // Update other gears' connections to this gear
+                gears.forEach(gear => {
+                    if (gear !== this) {
+                        gear.connectedGears = gear.connectedGears.filter(g => g !== this);
+                        if (gear.canMeshWith(this)) {
+                            gear.connectedGears.push(this);
+                        }
+                    }
+                });
+            }
+
+            canMeshWith(otherGear) {
+                const distance = this.getDistanceTo(otherGear);
+                const { meshDistance, tolerance } = this.getMeshParameters(otherGear);
+                
+                return Math.abs(distance - meshDistance) <= tolerance;
+            }
+
+            getDistanceTo(otherGear) {
+                return Math.sqrt(
+                    Math.pow(this.getCenterX() - otherGear.getCenterX(), 2) +
+                    Math.pow(this.getCenterY() - otherGear.getCenterY(), 2)
+                );
+            }
+
+            getMeshParameters(otherGear) {
+                let meshDistance, tolerance;
+                
+                if (this.isRingGear && !otherGear.isRingGear) {
+                    // Ring gear with regular gear - internal meshing
+                    meshDistance = this.getInnerRadius() - otherGear.getRadius();
+                    tolerance = 15;
+                } else if (!this.isRingGear && otherGear.isRingGear) {
+                    // Regular gear with ring gear - internal meshing
+                    meshDistance = otherGear.getInnerRadius() - this.getRadius();
+                    tolerance = 15;
+                } else if (!this.isRingGear && !otherGear.isRingGear) {
+                    // Both regular gears - external meshing
+                    meshDistance = this.getRadius() + otherGear.getRadius();
+                    tolerance = 15;
+                } else {
+                    // Both ring gears - no connection possible
+                    return { meshDistance: Infinity, tolerance: 0 };
+                }
+                
+                return { meshDistance, tolerance };
+            }
+
+            updateDisplay() {
+                const info = this.element.querySelector('.gear-info');
+                const motorText = this.isMotor ? '<div style="color: #ef4444; font-weight: bold;">MOTOR</div>' : '';
+                const pinnedText = this.isPinned ? '<div style="color: #8b5cf6; font-weight: bold;">PINNED</div>' : '';
+                const ringText = this.isRingGear ? '<div style="color: #10b981; font-weight: bold;">RING GEAR</div>' : '';
+                const orbitText = this.orbitalRPM > 0 ? `<div style="color: #10b981; font-weight: bold;">ORBITING: ${Math.round(this.orbitalRPM)} RPM</div>` : '';
+                
+                info.innerHTML = `
+                    ${motorText}
+                    ${pinnedText}
+                    ${ringText}
+                    ${orbitText}
+                    <div><strong>Teeth:</strong> ${this.teeth}</div>
+                    <div><strong>Speed:</strong> ${Math.round(this.rpm)} RPM</div>
+                    <div><strong>Torque:</strong> ${Math.round(this.torque)} Nm</div>
+                    <div class="gear-controls">
+                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).changeSize(-10)">-</button>
+                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).changeSize(10)">+</button>
+                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).toggleMotor()" style="background: ${this.isMotor ? '#ef4444' : '#6366f1'};">M</button>
+                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).togglePin()" style="background: ${this.isPinned ? '#8b5cf6' : '#6366f1'};">📌</button>
+                        <button class="size-btn" style="background: #ef4444;" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).remove()">×</button>
+                    </div>
+                `;
+                
+                this.updatePointer();
+                this.updateArrow();
+            }
+
+            updateArrow() {
+                const arrowSvg = this.element.querySelector('.rotation-arrow');
+                arrowSvg.innerHTML = '';
+                this.createRotationArrow(arrowSvg);
+            }
+
+            updatePointer() {
+                const pointer = this.element.querySelector('.info-pointer');
+                
+                // Use current animated position if available, otherwise use original position
+                let gearCenterX, gearCenterY;
+                if (this.currentAnimatedX !== undefined && this.currentAnimatedY !== undefined) {
+                    gearCenterX = this.currentAnimatedX + this.size / 2;
+                    gearCenterY = this.currentAnimatedY + this.size / 2;
+                } else {
+                    gearCenterX = this.getCenterX();
+                    gearCenterY = this.getCenterY();
+                }
+                
+                const infoCenterX = this.infoX + 60;
+                const infoCenterY = this.infoY + 25;
+                
+                const length = Math.sqrt(Math.pow(infoCenterX - gearCenterX, 2) + Math.pow(infoCenterY - gearCenterY, 2));
+                const pointerAngle = Math.atan2(infoCenterY - gearCenterY, infoCenterX - gearCenterX) * 180 / Math.PI;
+                
+                pointer.style.left = (this.size / 2) + 'px';
+                pointer.style.top = (this.size / 2) + 'px';
+                pointer.style.width = length + 'px';
+                pointer.style.transform = `rotate(${pointerAngle}deg)`;
+            }
+
+            toggleMotor() {
+                if (this.isRingGear) return; // Ring gears cannot be motors
+                
+                // Remove motor status from all gears
+                gears.forEach(gear => {
+                    gear.isMotor = false;
+                    gear.element.querySelector('.gear-circle').classList.remove('motor-gear');
+                });
+                
+                // Make this gear the motor
+                this.isMotor = true;
+                this.element.querySelector('.gear-circle').classList.add('motor-gear');
+                
+                calculateGearPhysics();
+                gears.forEach(gear => gear.updateDisplay());
+            }
+
+            togglePin() {
+                this.isPinned = !this.isPinned;
+                
+                const circle = this.element.querySelector('.gear-circle');
+                if (this.isPinned) {
+                    circle.classList.add('pinned-gear');
+                } else {
+                    circle.classList.remove('pinned-gear');
+                }
+                
+                calculateGearPhysics();
+                this.updateDisplay();
+            }
+
+            remove() {
+                gears = gears.filter(g => g !== this);
+                this.element.remove();
+                
+                // If we removed the motor, make the first remaining regular gear the motor
+                if (this.isMotor && gears.length > 0) {
+                    const firstRegularGear = gears.find(g => !g.isRingGear);
+                    if (firstRegularGear) {
+                        firstRegularGear.isMotor = true;
+                        firstRegularGear.element.querySelector('.gear-circle').classList.add('motor-gear');
+                        firstRegularGear.updateDisplay();
+                    }
+                }
+                
+                calculateGearPhysics();
+                drawConnections();
+            }
+        }
+
+        function addGear() {
+            const workspace = document.getElementById('workspace');
+            const rect = workspace.getBoundingClientRect();
+            const x = Math.random() * (rect.width - 150) + 75;
+            const y = Math.random() * (rect.height - 150) + 75;
+            
+            const gear = new Gear(x, y);
+            gears.push(gear);
+            workspace.appendChild(gear.element);
+            
+            gear.findConnections();
+            calculateGearPhysics();
+            drawConnections();
+        }
+
+        function addRingGear() {
+            const workspace = document.getElementById('workspace');
+            const rect = workspace.getBoundingClientRect();
+            const ringSize = 200;
+            const x = Math.random() * (rect.width - ringSize) + 50;
+            const y = Math.random() * (rect.height - ringSize) + 50;
+            
+            const gear = new Gear(x, y, ringSize, true);
+            gears.push(gear);
+            workspace.appendChild(gear.element);
+            
+            gear.findConnections();
+            calculateGearPhysics();
+            drawConnections();
+        }
+
+        function clearWorkspace() {
+            gears.forEach(gear => gear.element.remove());
+            gears = [];
+            gearCounter = 0;
+            clearConnections();
+        }
+
+        let motorRPM = 120;
+
+        function updateMotorRPM(value) {
+            motorRPM = parseInt(value);
+            document.getElementById('rpmValue').textContent = motorRPM;
+            calculateGearPhysics();
+        }
+
+        function calculateGearPhysics() {
+            // Reset all gear states
+            gears.forEach(gear => {
+                gear.rpm = 0;
+                gear.torque = 100;
+                gear.rotationDirection = 'normal';
+                gear.orbitalRPM = 0;
+                gear.orbitCenter = null;
+                gear.orbitalRadius = 0;
+                gear.orbitalStartAngle = 0;
+            });
+
+            const motorGear = gears.find(gear => gear.isMotor);
+            if (!motorGear) return;
+
+            // Check for epicyclic (planetary) configuration
+            const pinnedGears = gears.filter(gear => gear.isPinned);
+            
+            if (pinnedGears.length > 0) {
+                // Epicyclic system - find the configuration
+                handleEpicyclicSystem(motorGear, pinnedGears);
+            } else {
+                // Normal gear train - motor rotates and drives the system
+                motorGear.rpm = motorRPM;
+                motorGear.rotationDirection = 'normal';
+                propagateMotion(motorGear, new Set([motorGear]));
+            }
+
+            gears.forEach(gear => gear.updateDisplay());
+        }
+
+        function handleEpicyclicSystem(motorGear, pinnedGears) {
+            if (motorGear.isPinned) {
+                // Motor is pinned (sun gear) - planet gears orbit around it
+                motorGear.rpm = 0;
+                
+                motorGear.connectedGears.forEach(planetGear => {
+                    if (!planetGear.isPinned) {
+                        setupPlanetaryMotion(motorGear, planetGear);
+                        // Propagate motion to other connected gears
+                        propagateMotion(planetGear, new Set([motorGear, planetGear]));
+                    }
+                });
+            } else {
+                // Motor is not pinned - it drives the system
+                motorGear.rpm = motorRPM;
+                motorGear.rotationDirection = 'normal';
+                
+                // Check if motor is connected to any pinned gears
+                const connectedPinnedGear = motorGear.connectedGears.find(gear => gear.isPinned);
+                
+                if (connectedPinnedGear) {
+                    // Motor is a planet gear orbiting around a pinned sun gear
+                    setupPlanetaryMotion(connectedPinnedGear, motorGear);
+                }
+                
+                // Propagate to all connected gears
+                propagateMotion(motorGear, new Set([motorGear]));
+            }
+        }
+
+        function setupPlanetaryMotion(sunGear, planetGear) {
+            // Calculate orbital parameters based on actual gear positions
+            const sunCenterX = sunGear.getCenterX();
+            const sunCenterY = sunGear.getCenterY();
+            const planetCenterX = planetGear.getCenterX();
+            const planetCenterY = planetGear.getCenterY();
+            
+            // Use the actual distance between gears as orbital radius
+            const actualDistance = Math.sqrt(
+                Math.pow(planetCenterX - sunCenterX, 2) + 
+                Math.pow(planetCenterY - sunCenterY, 2)
+            );
+            
+            // Calculate current angle of planet relative to sun
+            const currentAngle = Math.atan2(planetCenterY - sunCenterY, planetCenterX - sunCenterX);
+            
+            // Set up orbital motion
+            planetGear.orbitCenter = { x: sunCenterX, y: sunCenterY };
+            planetGear.orbitalRadius = actualDistance;
+            planetGear.orbitalStartAngle = currentAngle;
+            
+            // Calculate orbital speed based on gear ratio
+            const baseOrbitalRPM = motorRPM / 8; // Slower orbital motion
+            planetGear.orbitalRPM = baseOrbitalRPM;
+            planetGear.orbitalDirection = 'normal';
+            
+            // Calculate planet gear's own rotation
+            const gearRatio = sunGear.teeth / planetGear.teeth;
+            planetGear.rpm = baseOrbitalRPM * (actualDistance / (planetGear.getRadius()));
+            planetGear.rotationDirection = 'reverse'; // Opposite to orbital direction
+        }
+
+        function propagateMotion(sourceGear, visited) {
+            sourceGear.connectedGears.forEach(connectedGear => {
+                if (!visited.has(connectedGear)) {
+                    visited.add(connectedGear);
+                    
+                    if (connectedGear.isPinned) {
+                        // Connected gear is pinned - it doesn't move
+                        connectedGear.rpm = 0;
+                        connectedGear.rotationDirection = 'normal';
+                        return;
+                    }
+                    
+                    // Calculate gear ratio and motion
+                    const gearRatio = sourceGear.teeth / connectedGear.teeth;
+                    connectedGear.rpm = Math.abs(sourceGear.rpm) * gearRatio;
+                    connectedGear.torque = sourceGear.torque / gearRatio;
+                    
+                    // Determine rotation direction based on gear type
+                    if ((sourceGear.isRingGear && !connectedGear.isRingGear) || (!sourceGear.isRingGear && connectedGear.isRingGear)) {
+                        // Internal meshing - same direction
+                        connectedGear.rotationDirection = sourceGear.rotationDirection;
+                    } else {
+                        // External meshing - opposite direction
+                        connectedGear.rotationDirection = sourceGear.rotationDirection === 'normal' ? 'reverse' : 'normal';
+                    }
+                    
+                    // If source gear is orbiting, connected gear orbits too
+                    if (sourceGear.orbitCenter) {
+                        connectedGear.orbitCenter = sourceGear.orbitCenter;
+                        connectedGear.orbitalRPM = sourceGear.orbitalRPM;
+                        connectedGear.orbitalDirection = sourceGear.orbitalDirection;
+                    }
+                    
+                    propagateMotion(connectedGear, visited);
+                }
+            });
+        }
+
+        function drawConnections() {
+            clearConnections();
+            const workspace = document.getElementById('workspace');
+
+            gears.forEach(gear => {
+                gear.connectedGears.forEach(connectedGear => {
+                    if (gear.id < connectedGear.id) {
+                        const line = document.createElement('div');
+                        line.className = 'connection-line';
+                        
+                        const x1 = gear.getCenterX();
+                        const y1 = gear.getCenterY();
+                        const x2 = connectedGear.getCenterX();
+                        const y2 = connectedGear.getCenterY();
+                        
+                        const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                        const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                        
+                        line.style.left = x1 + 'px';
+                        line.style.top = y1 + 'px';
+                        line.style.width = length + 'px';
+                        line.style.transform = `rotate(${angle}deg)`;
+                        
+                        workspace.appendChild(line);
+                    }
+                });
+            });
+        }
+
+        function clearConnections() {
+            const lines = document.querySelectorAll('.connection-line');
+            lines.forEach(line => line.remove());
+        }
+
+        let animationFrame;
+
+        function toggleAnimation() {
+            isAnimating = !isAnimating;
+            
+            if (isAnimating) {
+                startAnimation();
+            } else {
+                stopAnimation();
+            }
+        }
+
+        function startAnimation() {
+            const startTime = Date.now();
+            
+            function animate() {
+                if (!isAnimating) return;
+                
+                const currentTime = Date.now();
+                const elapsed = (currentTime - startTime) / 1000; // seconds
+                
+                gears.forEach((gear) => {
+                    const circle = gear.element.querySelector('.gear-circle');
+                    const teeth = gear.element.querySelector('.gear-teeth');
+                    const arrow = gear.element.querySelector('.rotation-arrow');
+                    
+                    if (gear.rpm > 0) {
+                        // Handle gear rotation
+                        const rotationClass = gear.rotationDirection === 'reverse' ? 'rotating-reverse' : 'rotating';
+                        circle.classList.add(rotationClass);
+                        teeth.classList.add(rotationClass);
+                        arrow.classList.add(rotationClass);
+                        
+                        const duration = 60 / Math.abs(gear.rpm); // seconds per revolution
+                        circle.style.animationDuration = duration + 's';
+                        teeth.style.animationDuration = duration + 's';
+                        arrow.style.animationDuration = duration + 's';
+                        
+                        // Handle orbital motion with DOM manipulation (only for non-ring gears)
+                        if (gear.orbitCenter && gear.orbitalRPM > 0 && !gear.isRingGear) {
+                            const orbitalPeriod = 60 / Math.abs(gear.orbitalRPM); // seconds per revolution
+                            const angle = (elapsed / orbitalPeriod) * 2 * Math.PI;
+                            const adjustedAngle = gear.orbitalDirection === 'reverse' ? -angle : angle;
+                            
+                            // Calculate new position
+                            const newX = gear.orbitCenter.x + gear.orbitalRadius * Math.cos(gear.orbitalStartAngle + adjustedAngle) - gear.size / 2;
+                            const newY = gear.orbitCenter.y + gear.orbitalRadius * Math.sin(gear.orbitalStartAngle + adjustedAngle) - gear.size / 2;
+                            
+                            // Update gear position
+                            gear.element.style.left = newX + 'px';
+                            gear.element.style.top = newY + 'px';
+                            
+                            // Store current animated position for connection lines
+                            gear.currentAnimatedX = newX;
+                            gear.currentAnimatedY = newY;
+                            
+                            // Update pointer
+                            gear.updatePointer();
+                        } else {
+                            // Store original position for non-orbiting gears and ring gears
+                            gear.currentAnimatedX = gear.x;
+                            gear.currentAnimatedY = gear.y;
+                        }
+                    } else {
+                        circle.classList.remove('rotating', 'rotating-reverse');
+                        teeth.classList.remove('rotating', 'rotating-reverse');
+                        arrow.classList.remove('rotating', 'rotating-reverse');
+                        
+                        // Store original position for non-moving gears
+                        gear.currentAnimatedX = gear.x;
+                        gear.currentAnimatedY = gear.y;
+                    }
+                    
+                    // Always update pointer to track current position
+                    gear.updatePointer();
+                });
+                
+                // Update connection lines in real-time
+                updateConnectionLines();
+                
+                animationFrame = requestAnimationFrame(animate);
+            }
+            
+            animate();
+        }
+
+        function updateConnectionLines() {
+            // Clear existing lines
+            const existingLines = document.querySelectorAll('.connection-line');
+            existingLines.forEach(line => line.remove());
+            
+            const workspace = document.getElementById('workspace');
+            
+            gears.forEach(gear => {
+                gear.connectedGears.forEach(connectedGear => {
+                    if (gear.id < connectedGear.id) {
+                        const line = document.createElement('div');
+                        line.className = 'connection-line';
+                        
+                        // Use current animated positions if available, otherwise use original positions
+                        const x1 = (gear.currentAnimatedX !== undefined ? gear.currentAnimatedX : gear.x) + gear.size / 2;
+                        const y1 = (gear.currentAnimatedY !== undefined ? gear.currentAnimatedY : gear.y) + gear.size / 2;
+                        const x2 = (connectedGear.currentAnimatedX !== undefined ? connectedGear.currentAnimatedX : connectedGear.x) + connectedGear.size / 2;
+                        const y2 = (connectedGear.currentAnimatedY !== undefined ? connectedGear.currentAnimatedY : connectedGear.y) + connectedGear.size / 2;
+                        
+                        const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                        const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                        
+                        line.style.left = x1 + 'px';
+                        line.style.top = y1 + 'px';
+                        line.style.width = length + 'px';
+                        line.style.transform = `rotate(${angle}deg)`;
+                        
+                        workspace.appendChild(line);
+                    }
+                });
+            });
+            
+            // Update info box pointer lines for all gears
+            gears.forEach(gear => {
+                gear.updatePointer();
+            });
+        }
+
+        function stopAnimation() {
+            if (animationFrame) {
+                cancelAnimationFrame(animationFrame);
+                animationFrame = null;
+            }
+            
+            gears.forEach((gear) => {
+                const circle = gear.element.querySelector('.gear-circle');
+                const teeth = gear.element.querySelector('.gear-teeth');
+                const arrow = gear.element.querySelector('.rotation-arrow');
+                
+                circle.classList.remove('rotating', 'rotating-reverse');
+                teeth.classList.remove('rotating', 'rotating-reverse');
+                arrow.classList.remove('rotating', 'rotating-reverse');
+                
+                // Reset gear to original position
+                if (gear.orbitCenter) {
+                    gear.element.style.left = gear.x + 'px';
+                    gear.element.style.top = gear.y + 'px';
+                    gear.updatePointer();
+                }
+                
+                // Clear animated position tracking
+                gear.currentAnimatedX = undefined;
+                gear.currentAnimatedY = undefined;
+            });
+            
+            drawConnections();
+        }
+
+        document.addEventListener('mousemove', handleDrag);
+        document.addEventListener('touchmove', handleDrag);
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+
+        function handleDrag(e) {
+            if (draggedGear) {
+                e.preventDefault();
+                const workspace = document.getElementById('workspace');
+                const rect = workspace.getBoundingClientRect();
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                
+                const x = clientX - rect.left - dragOffset.x;
+                const y = clientY - rect.top - dragOffset.y;
+                
+                draggedGear.updatePosition(x, y);
+            } else if (draggedInfo) {
+                e.preventDefault();
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+                
+                const x = clientX - dragOffset.x;
+                const y = clientY - dragOffset.y;
+                
+                draggedInfo.infoX = x;
+                draggedInfo.infoY = y;
+                
+                const info = draggedInfo.element.querySelector('.gear-info');
+                info.style.left = x + 'px';
+                info.style.top = y + 'px';
+                
+                draggedInfo.updatePointer();
+            }
+        }
+
+        function stopDrag() {
+            draggedGear = null;
+            draggedInfo = null;
+        }
+
+        window.addEventListener('load', () => {
+            addGear();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b6e720f6bbb34c',t:'MTc1OTkzOTc2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

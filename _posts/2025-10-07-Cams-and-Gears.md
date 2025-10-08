@@ -20,6 +20,10 @@ Gears, on the other hand, are toothed wheels that mesh together to transmit torq
     </iframe>
 </div>
 
+## Interactive Tools:
+
+<a href="https://engineeringshare.github.io/engineering-hub/interactive/Gear%20Simulator.html">⚙️ Gear Simulator</a>
+
 ## Other Materials:
 
 ## ---
