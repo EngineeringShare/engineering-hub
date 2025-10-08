@@ -10,6 +10,12 @@ units: ["T-Level Year 2"]
 
 A Bill of Materials (BoM) is a comprehensive list of materials, components, and assemblies required to construct, manufacture, or repair a product or system. It serves as a crucial document in engineering and manufacturing processes, providing detailed information about each item, including part numbers, descriptions, quantities, and specifications. The BoM helps ensure that all necessary materials are available for production and assists in inventory management, cost estimation, and procurement planning.
 
+The equation for calculating the cost used for your BoM is:
+
+\[
+Cost\ Used = \frac{Unit\ Cost}{Unit\ Size\ (w \times h)} \times Part\ Size\ (w \times h)
+\]
+
 ## Presentation:
 
 <div style="position: relative; width: 100%; height: 0; padding-top: 75%;">
