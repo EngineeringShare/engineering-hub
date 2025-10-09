@@ -174,7 +174,7 @@
             font-size: 0.8rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
             min-width: 120px;
-            position: fixed;
+            position: absolute;
             cursor: move;
             border: 2px solid #4f46e5;
             z-index: 100;
@@ -450,8 +450,8 @@
 
                 const info = document.createElement('div');
                 info.className = 'gear-info';
-                info.style.left = this.infoX + 'px';
-                info.style.top = this.infoY + 'px';
+                info.style.left = (this.size + 20) + 'px';
+                info.style.top = '0px';
                 
                 // Create pointer line
                 const pointer = document.createElement('div');
@@ -647,11 +647,11 @@
                 e.preventDefault();
                 e.stopPropagation();
                 draggedInfo = this;
-                const rect = this.element.querySelector('.gear-info').getBoundingClientRect();
+                const info = this.element.querySelector('.gear-info');
                 const clientX = e.clientX || e.touches[0].clientX;
                 const clientY = e.clientY || e.touches[0].clientY;
-                dragOffset.x = clientX - rect.left;
-                dragOffset.y = clientY - rect.top;
+                dragOffset.x = clientX - (this.x + parseFloat(info.style.left));
+                dragOffset.y = clientY - (this.y + parseFloat(info.style.top));
             }
 
             updatePosition(x, y) {
@@ -776,25 +776,32 @@
 
             updatePointer() {
                 const pointer = this.element.querySelector('.info-pointer');
+                const info = this.element.querySelector('.gear-info');
+                const gearCircle = this.element.querySelector('.gear-circle');
                 
-                // Use current animated position if available, otherwise use original position
-                let gearCenterX, gearCenterY;
-                if (this.currentAnimatedX !== undefined && this.currentAnimatedY !== undefined) {
-                    gearCenterX = this.currentAnimatedX + this.size / 2;
-                    gearCenterY = this.currentAnimatedY + this.size / 2;
-                } else {
-                    gearCenterX = this.getCenterX();
-                    gearCenterY = this.getCenterY();
+                // Get the current transform of the gear circle to account for orbital motion
+                const transform = gearCircle.style.transform;
+                let offsetX = 0, offsetY = 0;
+                
+                if (transform && transform.includes('translate')) {
+                    const matches = transform.match(/translate\(([^,]+)px,\s*([^)]+)px\)/);
+                    if (matches) {
+                        offsetX = parseFloat(matches[1]);
+                        offsetY = parseFloat(matches[2]);
+                    }
                 }
                 
-                const infoCenterX = this.infoX + 60;
-                const infoCenterY = this.infoY + 25;
+                const gearCenterX = this.size / 2 + offsetX;
+                const gearCenterY = this.size / 2 + offsetY;
+                
+                const infoCenterX = parseFloat(info.style.left) + 60;
+                const infoCenterY = parseFloat(info.style.top) + 25;
                 
                 const length = Math.sqrt(Math.pow(infoCenterX - gearCenterX, 2) + Math.pow(infoCenterY - gearCenterY, 2));
                 const pointerAngle = Math.atan2(infoCenterY - gearCenterY, infoCenterX - gearCenterX) * 180 / Math.PI;
                 
-                pointer.style.left = (this.size / 2) + 'px';
-                pointer.style.top = (this.size / 2) + 'px';
+                pointer.style.left = gearCenterX + 'px';
+                pointer.style.top = gearCenterY + 'px';
                 pointer.style.width = length + 'px';
                 pointer.style.transform = `rotate(${pointerAngle}deg)`;
             }
@@ -1073,6 +1080,36 @@
         }
 
         function startAnimation() {
+            // Store original info positions and move them to workspace
+            const workspace = document.getElementById('workspace');
+            clearConnections();
+            
+            gears.forEach(gear => {
+                const info = gear.element.querySelector('.gear-info');
+                const pointer = gear.element.querySelector('.info-pointer');
+                
+                // Hide pointer
+                pointer.style.display = 'none';
+                
+                // Store original position relative to gear
+                gear.originalInfoLeft = parseFloat(info.style.left);
+                gear.originalInfoTop = parseFloat(info.style.top);
+                
+                // Calculate absolute position in workspace
+                const absoluteX = gear.x + gear.originalInfoLeft;
+                const absoluteY = gear.y + gear.originalInfoTop;
+                
+                // Move info box to workspace with absolute positioning
+                info.style.position = 'fixed';
+                const workspaceRect = workspace.getBoundingClientRect();
+                info.style.left = (workspaceRect.left + absoluteX) + 'px';
+                info.style.top = (workspaceRect.top + absoluteY) + 'px';
+                info.style.zIndex = '1000';
+                
+                // Remove from gear and add to workspace
+                workspace.appendChild(info);
+            });
+            
             const startTime = Date.now();
             
             function animate() {
@@ -1098,47 +1135,27 @@
                         teeth.style.animationDuration = duration + 's';
                         arrow.style.animationDuration = duration + 's';
                         
-                        // Handle orbital motion with DOM manipulation (only for non-ring gears)
-                        if (gear.orbitCenter && gear.orbitalRPM > 0 && !gear.isRingGear) {
+                        // Handle orbital motion - move the entire gear element
+                        if (gear.orbitCenter && gear.orbitalRPM > 0) {
                             const orbitalPeriod = 60 / Math.abs(gear.orbitalRPM); // seconds per revolution
                             const angle = (elapsed / orbitalPeriod) * 2 * Math.PI;
                             const adjustedAngle = gear.orbitalDirection === 'reverse' ? -angle : angle;
                             
-                            // Calculate new position
-                            const newX = gear.orbitCenter.x + gear.orbitalRadius * Math.cos(gear.orbitalStartAngle + adjustedAngle) - gear.size / 2;
-                            const newY = gear.orbitCenter.y + gear.orbitalRadius * Math.sin(gear.orbitalStartAngle + adjustedAngle) - gear.size / 2;
+                            // Calculate new orbital position
+                            const newX = gear.orbitCenter.x + gear.orbitalRadius * Math.cos(gear.orbitalStartAngle + adjustedAngle);
+                            const newY = gear.orbitCenter.y + gear.orbitalRadius * Math.sin(gear.orbitalStartAngle + adjustedAngle);
                             
-                            // Update gear position
-                            gear.element.style.left = newX + 'px';
-                            gear.element.style.top = newY + 'px';
-                            
-                            // Store current animated position for connection lines
-                            gear.currentAnimatedX = newX;
-                            gear.currentAnimatedY = newY;
-                            
-                            // Update pointer
-                            gear.updatePointer();
-                        } else {
-                            // Store original position for non-orbiting gears and ring gears
-                            gear.currentAnimatedX = gear.x;
-                            gear.currentAnimatedY = gear.y;
+                            // Move the entire gear element to the new position
+                            const gearElement = gear.element;
+                            gearElement.style.left = (newX - gear.size / 2) + 'px';
+                            gearElement.style.top = (newY - gear.size / 2) + 'px';
                         }
                     } else {
                         circle.classList.remove('rotating', 'rotating-reverse');
                         teeth.classList.remove('rotating', 'rotating-reverse');
                         arrow.classList.remove('rotating', 'rotating-reverse');
-                        
-                        // Store original position for non-moving gears
-                        gear.currentAnimatedX = gear.x;
-                        gear.currentAnimatedY = gear.y;
                     }
-                    
-                    // Always update pointer to track current position
-                    gear.updatePointer();
                 });
-                
-                // Update connection lines in real-time
-                updateConnectionLines();
                 
                 animationFrame = requestAnimationFrame(animate);
             }
@@ -1146,43 +1163,7 @@
             animate();
         }
 
-        function updateConnectionLines() {
-            // Clear existing lines
-            const existingLines = document.querySelectorAll('.connection-line');
-            existingLines.forEach(line => line.remove());
-            
-            const workspace = document.getElementById('workspace');
-            
-            gears.forEach(gear => {
-                gear.connectedGears.forEach(connectedGear => {
-                    if (gear.id < connectedGear.id) {
-                        const line = document.createElement('div');
-                        line.className = 'connection-line';
-                        
-                        // Use current animated positions if available, otherwise use original positions
-                        const x1 = (gear.currentAnimatedX !== undefined ? gear.currentAnimatedX : gear.x) + gear.size / 2;
-                        const y1 = (gear.currentAnimatedY !== undefined ? gear.currentAnimatedY : gear.y) + gear.size / 2;
-                        const x2 = (connectedGear.currentAnimatedX !== undefined ? connectedGear.currentAnimatedX : connectedGear.x) + connectedGear.size / 2;
-                        const y2 = (connectedGear.currentAnimatedY !== undefined ? connectedGear.currentAnimatedY : connectedGear.y) + connectedGear.size / 2;
-                        
-                        const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-                        const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
-                        
-                        line.style.left = x1 + 'px';
-                        line.style.top = y1 + 'px';
-                        line.style.width = length + 'px';
-                        line.style.transform = `rotate(${angle}deg)`;
-                        
-                        workspace.appendChild(line);
-                    }
-                });
-            });
-            
-            // Update info box pointer lines for all gears
-            gears.forEach(gear => {
-                gear.updatePointer();
-            });
-        }
+
 
         function stopAnimation() {
             if (animationFrame) {
@@ -1199,18 +1180,46 @@
                 teeth.classList.remove('rotating', 'rotating-reverse');
                 arrow.classList.remove('rotating', 'rotating-reverse');
                 
-                // Reset gear to original position
-                if (gear.orbitCenter) {
-                    gear.element.style.left = gear.x + 'px';
-                    gear.element.style.top = gear.y + 'px';
-                    gear.updatePointer();
-                }
+                // Reset gear positions to original
+                gear.element.style.left = gear.x + 'px';
+                gear.element.style.top = gear.y + 'px';
                 
-                // Clear animated position tracking
-                gear.currentAnimatedX = undefined;
-                gear.currentAnimatedY = undefined;
+                // Find and reconnect info boxes
+                const workspace = document.getElementById('workspace');
+                const detachedInfos = workspace.querySelectorAll('.gear-info');
+                
+                detachedInfos.forEach(info => {
+                    // Find which gear this info belongs to by checking the button onclick attributes
+                    const buttons = info.querySelectorAll('.size-btn');
+                    if (buttons.length > 0) {
+                        const onclickText = buttons[0].getAttribute('onclick');
+                        const gearIdMatch = onclickText.match(/g\.id === (\d+)/);
+                        if (gearIdMatch) {
+                            const gearId = parseInt(gearIdMatch[1]);
+                            const gear = gears.find(g => g.id === gearId);
+                            if (gear) {
+                                // Reset info box positioning
+                                info.style.position = 'absolute';
+                                info.style.left = gear.originalInfoLeft + 'px';
+                                info.style.top = gear.originalInfoTop + 'px';
+                                info.style.zIndex = '100';
+                                
+                                // Move back to gear element
+                                gear.element.appendChild(info);
+                                
+                                // Show pointer again
+                                const pointer = gear.element.querySelector('.info-pointer');
+                                pointer.style.display = 'block';
+                                
+                                // Update pointer position
+                                gear.updatePointer();
+                            }
+                        }
+                    }
+                });
             });
             
+            // Restore connections
             drawConnections();
         }
 
@@ -1236,15 +1245,12 @@
                 const clientX = e.clientX || e.touches[0].clientX;
                 const clientY = e.clientY || e.touches[0].clientY;
                 
-                const x = clientX - dragOffset.x;
-                const y = clientY - dragOffset.y;
-                
-                draggedInfo.infoX = x;
-                draggedInfo.infoY = y;
+                const relativeX = clientX - draggedInfo.x - dragOffset.x;
+                const relativeY = clientY - draggedInfo.y - dragOffset.y;
                 
                 const info = draggedInfo.element.querySelector('.gear-info');
-                info.style.left = x + 'px';
-                info.style.top = y + 'px';
+                info.style.left = relativeX + 'px';
+                info.style.top = relativeY + 'px';
                 
                 draggedInfo.updatePointer();
             }
@@ -1259,5 +1265,5 @@
             addGear();
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98b6e720f6bbb34c',t:'MTc1OTkzOTc2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98be4a7c92f0d834',t:'MTc2MDAxNzIzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
