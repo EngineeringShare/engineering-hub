@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC RAM Memory Simulation</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100%;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .memory-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .memory-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .input-section {
+            border-color: #28a745;
+        }
+
+        .output-section {
+            border-color: #dc3545;
+        }
+
+        .memory-section-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .input-section .memory-section-title {
+            background: #28a745;
+        }
+
+        .output-section .memory-section-title {
+            background: #dc3545;
+        }
+
+        .memory-section:nth-child(3) .memory-section-title {
+            background: #6f42c1;
+        }
+
+        .memory-section:nth-child(3) {
+            border-color: #6f42c1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        th, td {
+            border: 1px solid #dee2e6;
+            padding: 4px 6px;
+            text-align: center;
+            font-size: 0.85em;
+        }
+
+        th {
+            background: #f1f3f4;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .bit-cell {
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+
+        .bit-cell:hover {
+            background: #e3f2fd;
+        }
+
+        .bit-1 {
+            background: #4caf50;
+            color: white;
+        }
+
+        .bit-0 {
+            background: #f44336;
+            color: white;
+        }
+
+        .highlight {
+            animation: pulse 1s ease-in-out;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.8);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .control-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .control-button:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .explanation {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .word-display {
+            background: #e8f4fd;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .word-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #1976d2;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .memory-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 PLC RAM Memory Simulation</h1>
+        <p class="subtitle">Interactive demonstration of bit and word addressing in PLC memory</p>
+
+        <div class="memory-sections">
+            <!-- Input Memory Section -->
+            <div class="memory-section input-section">
+                <div class="memory-section-title">Input Memory (I)</div>
+                <table id="inputTable">
+                    <thead>
+                        <tr>
+                            <th>Bit Address</th>
+                            <th>Value</th>
+                            <th>Byte Address</th>
+                            <th>Word Address</th>
+                            <th>Real Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inputTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Output Memory Section -->
+            <div class="memory-section output-section">
+                <div class="memory-section-title">Output Memory (Q)</div>
+                <table id="outputTable">
+                    <thead>
+                        <tr>
+                            <th>Bit Address</th>
+                            <th>Value</th>
+                            <th>Byte Address</th>
+                            <th>Word Address</th>
+                            <th>Real Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="outputTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Memory Section -->
+            <div class="memory-section">
+                <div class="memory-section-title">Memory (M)</div>
+                <table id="memoryTable">
+                    <thead>
+                        <tr>
+                            <th>Bit Address</th>
+                            <th>Value</th>
+                            <th>Byte Address</th>
+                            <th>Word Address</th>
+                            <th>Real Address</th>
+                        </tr>
+                    </thead>
+                    <tbody id="memoryTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="word-display" style="background: #f0f8e8; border-color: #4caf50;">
+            <div><strong>Byte Values (8-bit unsigned integers):</strong></div>
+            <div class="word-value" style="color: #2e7d32;">
+                IB0 = <span id="ib0Value">0</span> | IB1 = <span id="ib1Value">0</span> | IB2 = <span id="ib2Value">0</span> | IB3 = <span id="ib3Value">0</span>
+            </div>
+            <div class="word-value" style="color: #2e7d32;">
+                QB0 = <span id="qb0Value">0</span> | QB1 = <span id="qb1Value">0</span> | QB2 = <span id="qb2Value">0</span> | QB3 = <span id="qb3Value">0</span>
+            </div>
+            <div class="word-value" style="color: #2e7d32;">
+                MB0 = <span id="mb0Value">0</span> | MB1 = <span id="mb1Value">0</span> | MB2 = <span id="mb2Value">0</span> | MB3 = <span id="mb3Value">0</span>
+            </div>
+        </div>
+
+        <div class="word-display">
+            <div><strong>Word Values (16-bit signed integers):</strong></div>
+            <div class="word-value">IW0 = <span id="iw0Value">0</span> | QW0 = <span id="qw0Value">0</span> | MW0 = <span id="mw0Value">0</span></div>
+            <div class="word-value">IW1 = <span id="iw1Value">0</span> | QW1 = <span id="qw1Value">0</span> | MW1 = <span id="mw1Value">0</span></div>
+        </div>
+
+        <div class="word-display" style="background: #fff3e0; border-color: #ff9800;">
+            <div><strong>Real Values (32-bit floating point):</strong></div>
+            <div class="word-value" style="color: #e65100;">
+                ID0 = <span id="id0Value">0.0</span> | QD0 = <span id="qd0Value">0.0</span> | MD0 = <span id="md0Value">0.0</span>
+            </div>
+            <div style="font-size: 0.9em; color: #666; margin-top: 10px;">
+                Click any bit to toggle its value and see how it affects all data types
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="control-button" onclick="randomizeBits()">🎲 Randomize All</button>
+            <button class="control-button" onclick="clearAll()">🗑️ Clear All</button>
+            <button class="control-button" onclick="demonstrateI00()">💡 Highlight I0.0 & IW0</button>
+        </div>
+
+        <div class="explanation">
+            <h3>🎯 How PLC Memory Addressing Works:</h3>
+            <p><strong>Bit Addressing:</strong> I0.0-I0.7, I1.0-I1.7... addresses individual bits in memory (8 bits per byte)</p>
+            <p><strong>Byte Addressing:</strong> IB0, IB1... addresses 8 consecutive bits as a single byte</p>
+            <p><strong>Word Addressing:</strong> IW0 addresses bits I0.0-I1.7 (16 bits), IW1 addresses bits I2.0-I3.7 (next 16 bits)</p>
+            <p><strong>Real Addressing:</strong> ID0 addresses 32 consecutive bits (I0.0-I3.7) as a single 32-bit real number</p>
+            <p><strong>Key Insight:</strong> I0.0 is the least significant bit (LSB) of word IW0. When you change I0.0, you're changing bit 0 of IW0!</p>
+            <p><strong>Memory Layout:</strong> Input (I), Output (Q), and Memory (M) are separate areas in PLC RAM, each with their own bit and word addressing.</p>
+        </div>
+
+        <div class="explanation">
+            <h3>📊 PLC Data Types & What They Store:</h3>
+            <ul style="list-style-type: none; padding-left: 0;">
+                <li><strong>🔘 Bit (X0.0):</strong> Boolean values - TRUE/FALSE, ON/OFF, 1/0</li>
+                <li><strong>📦 Byte (XB0):</strong> 8-bit unsigned integer - Range: 0 to 255</li>
+                <li><strong>🔢 Word (XW0):</strong> 16-bit signed integer - Range: -32,768 to 32,767</li>
+                <li><strong>🌊 Real/DWORD (XD0):</strong> 32-bit floating point number - Range: ±1.18×10⁻³⁸ to ±3.40×10³⁸</li>
+            </ul>
+            <p style="margin-top: 15px; font-style: italic; color: #666;">
+                Examples: Bit = Sensor status, Byte = Small counter, Word = Temperature value, Real = Precise measurements
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Memory arrays to store bit values (32 bits to show IW0 and IW1)
+        let inputMemory = new Array(32).fill(0);
+        let outputMemory = new Array(32).fill(0);
+        let memoryArea = new Array(32).fill(0);
+
+        function initializeTables() {
+            createTable('inputTableBody', 'I', inputMemory);
+            createTable('outputTableBody', 'Q', outputMemory);
+            createTable('memoryTableBody', 'M', memoryArea);
+            updateWordValues();
+        }
+
+        function createTable(tableBodyId, prefix, memoryArray) {
+            const tbody = document.getElementById(tableBodyId);
+            tbody.innerHTML = '';
+
+            for (let i = 0; i < 32; i++) {
+                const row = document.createElement('tr');
+                
+                // Calculate byte and bit for proper PLC addressing
+                const byteNum = Math.floor(i / 8);
+                const bitNum = i % 8;
+                
+                // Bit address
+                const bitAddressCell = document.createElement('td');
+                bitAddressCell.textContent = `${prefix}${byteNum}.${bitNum}`;
+                bitAddressCell.style.fontWeight = 'bold';
+                
+                // Value cell (clickable)
+                const valueCell = document.createElement('td');
+                valueCell.textContent = memoryArray[i];
+                valueCell.className = `bit-cell bit-${memoryArray[i]}`;
+                valueCell.onclick = () => toggleBit(prefix, i);
+                
+                // Add cells in correct order
+                row.appendChild(bitAddressCell);
+                row.appendChild(valueCell);
+                
+                // Byte address - only show on first bit of each byte (every 8 bits)
+                if (bitNum === 0) {
+                    const byteAddressCell = document.createElement('td');
+                    byteAddressCell.textContent = `${prefix}B${byteNum}`;
+                    byteAddressCell.style.fontSize = '0.8em';
+                    byteAddressCell.style.color = '#666';
+                    byteAddressCell.style.backgroundColor = '#f8f9fa';
+                    byteAddressCell.rowSpan = 8;
+                    row.appendChild(byteAddressCell);
+                }
+                
+                // Word address - only show on first bit of each word (every 16 bits)
+                if (i % 16 === 0) {
+                    const wordNum = Math.floor(i / 16);
+                    const wordAddressCell = document.createElement('td');
+                    wordAddressCell.textContent = `${prefix}W${wordNum}`;
+                    wordAddressCell.style.fontSize = '0.8em';
+                    wordAddressCell.style.color = '#666';
+                    wordAddressCell.style.backgroundColor = '#e3f2fd';
+                    wordAddressCell.rowSpan = 16;
+                    row.appendChild(wordAddressCell);
+                }
+                
+                // Real address - only show on first bit of each real (every 32 bits)
+                if (i % 32 === 0) {
+                    const realNum = Math.floor(i / 32);
+                    const realAddressCell = document.createElement('td');
+                    realAddressCell.textContent = `${prefix}D${realNum}`;
+                    realAddressCell.style.fontSize = '0.8em';
+                    realAddressCell.style.color = '#666';
+                    realAddressCell.style.backgroundColor = '#fff3e0';
+                    realAddressCell.rowSpan = 32;
+                    row.appendChild(realAddressCell);
+                }
+                tbody.appendChild(row);
+            }
+        }
+
+        function toggleBit(prefix, bitIndex) {
+            let memoryArray;
+            
+            switch(prefix) {
+                case 'I':
+                    memoryArray = inputMemory;
+                    break;
+                case 'Q':
+                    memoryArray = outputMemory;
+                    break;
+                case 'M':
+                    memoryArray = memoryArea;
+                    break;
+            }
+            
+            // Toggle the bit
+            memoryArray[bitIndex] = memoryArray[bitIndex] === 0 ? 1 : 0;
+            
+            // Update the display
+            updateTable(prefix, memoryArray);
+            updateWordValues();
+            
+            // Highlight the changed bit
+            highlightBit(prefix, bitIndex);
+        }
+
+        function updateTable(prefix, memoryArray) {
+            let tableBodyId;
+            switch(prefix) {
+                case 'I':
+                    tableBodyId = 'inputTableBody';
+                    break;
+                case 'Q':
+                    tableBodyId = 'outputTableBody';
+                    break;
+                case 'M':
+                    tableBodyId = 'memoryTableBody';
+                    break;
+            }
+            
+            const tbody = document.getElementById(tableBodyId);
+            const rows = tbody.getElementsByTagName('tr');
+            
+            for (let i = 0; i < rows.length; i++) {
+                const valueCell = rows[i].cells[1];
+                valueCell.textContent = memoryArray[i];
+                valueCell.className = `bit-cell bit-${memoryArray[i]}`;
+            }
+        }
+
+        function calculateWordValue(memoryArray, wordIndex = 0) {
+            let wordValue = 0;
+            const startBit = wordIndex * 16;
+            for (let i = 0; i < 16; i++) {
+                if (memoryArray[startBit + i] === 1) {
+                    wordValue += Math.pow(2, i);
+                }
+            }
+            // Convert to signed 16-bit integer (two's complement)
+            if (wordValue >= 32768) {
+                wordValue = wordValue - 65536;
+            }
+            return wordValue;
+        }
+
+        function calculateByteValue(memoryArray, byteIndex = 0) {
+            let byteValue = 0;
+            const startBit = byteIndex * 8;
+            for (let i = 0; i < 8; i++) {
+                if (memoryArray[startBit + i] === 1) {
+                    byteValue += Math.pow(2, i);
+                }
+            }
+            return byteValue;
+        }
+
+        function calculateRealValue(memoryArray) {
+            // Convert 32 bits to IEEE 754 floating point
+            let intValue = 0;
+            for (let i = 0; i < 32; i++) {
+                if (memoryArray[i] === 1) {
+                    intValue += Math.pow(2, i);
+                }
+            }
+            
+            // Convert to IEEE 754 float
+            const buffer = new ArrayBuffer(4);
+            const intView = new Uint32Array(buffer);
+            const floatView = new Float32Array(buffer);
+            intView[0] = intValue;
+            return floatView[0];
+        }
+
+        function updateWordValues() {
+            // Update word values
+            document.getElementById('iw0Value').textContent = calculateWordValue(inputMemory, 0);
+            document.getElementById('qw0Value').textContent = calculateWordValue(outputMemory, 0);
+            document.getElementById('mw0Value').textContent = calculateWordValue(memoryArea, 0);
+            document.getElementById('iw1Value').textContent = calculateWordValue(inputMemory, 1);
+            document.getElementById('qw1Value').textContent = calculateWordValue(outputMemory, 1);
+            document.getElementById('mw1Value').textContent = calculateWordValue(memoryArea, 1);
+            
+            // Update byte values
+            document.getElementById('ib0Value').textContent = calculateByteValue(inputMemory, 0);
+            document.getElementById('ib1Value').textContent = calculateByteValue(inputMemory, 1);
+            document.getElementById('ib2Value').textContent = calculateByteValue(inputMemory, 2);
+            document.getElementById('ib3Value').textContent = calculateByteValue(inputMemory, 3);
+            
+            document.getElementById('qb0Value').textContent = calculateByteValue(outputMemory, 0);
+            document.getElementById('qb1Value').textContent = calculateByteValue(outputMemory, 1);
+            document.getElementById('qb2Value').textContent = calculateByteValue(outputMemory, 2);
+            document.getElementById('qb3Value').textContent = calculateByteValue(outputMemory, 3);
+            
+            document.getElementById('mb0Value').textContent = calculateByteValue(memoryArea, 0);
+            document.getElementById('mb1Value').textContent = calculateByteValue(memoryArea, 1);
+            document.getElementById('mb2Value').textContent = calculateByteValue(memoryArea, 2);
+            document.getElementById('mb3Value').textContent = calculateByteValue(memoryArea, 3);
+            
+            // Update real values
+            const inputReal = calculateRealValue(inputMemory);
+            const outputReal = calculateRealValue(outputMemory);
+            const memoryReal = calculateRealValue(memoryArea);
+            
+            document.getElementById('id0Value').textContent = isNaN(inputReal) ? '0.0' : inputReal.toFixed(6);
+            document.getElementById('qd0Value').textContent = isNaN(outputReal) ? '0.0' : outputReal.toFixed(6);
+            document.getElementById('md0Value').textContent = isNaN(memoryReal) ? '0.0' : memoryReal.toFixed(6);
+        }
+
+        function highlightBit(prefix, bitIndex) {
+            let tableBodyId;
+            switch(prefix) {
+                case 'I':
+                    tableBodyId = 'inputTableBody';
+                    break;
+                case 'Q':
+                    tableBodyId = 'outputTableBody';
+                    break;
+                case 'M':
+                    tableBodyId = 'memoryTableBody';
+                    break;
+            }
+            
+            const tbody = document.getElementById(tableBodyId);
+            const row = tbody.getElementsByTagName('tr')[bitIndex];
+            row.classList.add('highlight');
+            
+            setTimeout(() => {
+                row.classList.remove('highlight');
+            }, 1000);
+        }
+
+        function randomizeBits() {
+            for (let i = 0; i < 32; i++) {
+                inputMemory[i] = Math.random() > 0.5 ? 1 : 0;
+                outputMemory[i] = Math.random() > 0.5 ? 1 : 0;
+                memoryArea[i] = Math.random() > 0.5 ? 1 : 0;
+            }
+            
+            updateTable('I', inputMemory);
+            updateTable('Q', outputMemory);
+            updateTable('M', memoryArea);
+            updateWordValues();
+        }
+
+        function clearAll() {
+            inputMemory.fill(0);
+            outputMemory.fill(0);
+            memoryArea.fill(0);
+            
+            updateTable('I', inputMemory);
+            updateTable('Q', outputMemory);
+            updateTable('M', memoryArea);
+            updateWordValues();
+        }
+
+        function demonstrateI00() {
+            // Set I0.0 to 1 to demonstrate
+            inputMemory[0] = 1;
+            updateTable('I', inputMemory);
+            updateWordValues();
+            
+            // Highlight I0.0
+            highlightBit('I', 0);
+            
+            // Show explanation
+            setTimeout(() => {
+                alert('Notice how I0.0 (bit 0) affects IW0 (word 0)!\n\nI0.0 = 1 means the least significant bit of IW0 is set, making IW0 = 1.\n\nTry toggling other bits to see how they affect the word value!');
+            }, 500);
+        }
+
+        // Initialize the simulation
+        initializeTables();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98c58f02971c220a',t:'MTc2MDA5MzQ0NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
