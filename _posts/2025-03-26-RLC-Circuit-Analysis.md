@@ -30,14 +30,14 @@ units: ["HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 08"]
 
 <script>
     function openFullscreen() {
-    const elem = document.getElementById("pdf-frame");
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) { // Safari
-        elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { // IE11
-        elem.msRequestFullscreen();
-    }
+        const elem = document.getElementById("pdf-frame");
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) { // Safari
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { // IE11
+            elem.msRequestFullscreen();
+        }
     }
 </script>
 
