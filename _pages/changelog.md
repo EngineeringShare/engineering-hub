@@ -59,3 +59,9 @@ Welcome to the Engineering Hub ChangeLog!
 This ChangeLog will detail the changes I make to the Engineering Hub site over time. It will include new features, updates, and improvements to enhance your experience. Note it will not include content additions like new presentations or audio files, just changes to the site itself.
 
 - 12/10/2025: Added fullscreen button to PDF presentations for better viewing experience. (Requested by users)
+- 11/09/2025: Added license to homepage
+- 09/09/2025: Added design skills page and link/search method
+- 08/09/2025: Added technical skills page and link/search method
+- 27/08/2025: Added interactive hub page and link method
+- 23/07/2025: Updated homepage to look better with boxes instead of just a list
+- 03/04/2025: Added fun fact script
