@@ -145,18 +145,6 @@ This site is your one-stop destination for accessing class slides, assignments, 
 
 ---
 
-## 📝 Changelog
-
-<div class="projects">
-  <a class="card-link" href="{{ '/changelog/' | relative_url }}">
-    <div class="card">
-      <h3>View Changelog</h3>
-    </div>
-  </a>
-</div>
-
---- 
-
 ## 📬 Contact Me
 
 If anything looks off or you're missing materials, contact me directly:
@@ -169,3 +157,12 @@ If anything looks off or you're missing materials, contact me directly:
 ## License
 
 This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International License. See the [LICENSE](https://engineeringshare.github.io/engineering-hub/LICENSE) file for details.
+
+---
+
+## 📝 Changelog
+
+View the Changelog here:
+
+- <a href="{{ '/changelog/' | relative_url }}">ChangeLog</a>
+
