@@ -17,7 +17,27 @@ units: ["HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 08"]
         webkitallowfullscreen
         mozallowfullscreen>
     </iframe>
+
+    <!-- Fullscreen button -->
+    <button 
+        onclick="openFullscreen()" 
+        style="position:absolute; top:10px; right:10px; z-index:10; padding:6px 12px; border:none; background:#243040; color:white; border-radius:6px; cursor:pointer;">
+        ⛶ Fullscreen
+    </button>
 </div>
+
+<script>
+    function openFullscreen() {
+    const elem = document.getElementById("pdf-frame");
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { // Safari
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE11
+        elem.msRequestFullscreen();
+    }
+    }
+</script>
 
 ## Other Materials:
 * [Youtube: AC Analysis: Series/Parallel RLC Circuit](https://youtu.be/s3Daf4GC_u4?si=kmnGRi-z6lBIl9oi)
