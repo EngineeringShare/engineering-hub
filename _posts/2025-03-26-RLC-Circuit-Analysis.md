@@ -12,7 +12,10 @@ units: ["HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 08"]
 
 <div style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe src="https://EngineeringShare.github.io/engineering-hub/presentations/RLC Circuit Analysis.pdf" 
-        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;">
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
+        allowfullscreen
+        webkitallowfullscreen
+        mozallowfullscreen>
     </iframe>
 </div>
 
