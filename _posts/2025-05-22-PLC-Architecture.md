@@ -1,7 +1,7 @@
 ---
 title: "PLC Theory - PLC Architecture"
 date: 2025-05-22
-tags: ["PLC", "Scan Cycle", "CPU"]
+tags: ["PLC", "Scan Cycle", "CPU", "Memory", "I/O", "Power Supply"]
 subject: "PLCs"
 units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
 ---
@@ -22,7 +22,7 @@ A Programmable Logic Controller (PLC) is a rugged industrial computer designed t
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/PLC Theory - PLC Architecture.pdf"
+        src="https://EngineeringShare.github.io/engineering-hub/presentations/PLC Theory – PLC Architecture.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

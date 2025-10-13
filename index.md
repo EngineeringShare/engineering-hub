@@ -162,7 +162,5 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-NoDer
 
 ## 📝 Changelog
 
-View the Changelog here:
-
-- <a href="{{ '/changelog/' | relative_url }}">ChangeLog</a>
+<a href="{{ '/changelog/' | relative_url }}">View the Changelog Here</a>
 
