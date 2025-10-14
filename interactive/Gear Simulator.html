@@ -79,6 +79,64 @@
             border-radius: 12px;
             overflow: hidden;
             min-height: 500px;
+            cursor: grab;
+        }
+
+        .workspace.panning {
+            cursor: grabbing;
+        }
+
+        .workspace-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            transform-origin: 0 0;
+            transition: transform 0.1s ease-out;
+        }
+
+        .zoom-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 1000;
+        }
+
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .zoom-btn:hover {
+            background: white;
+            transform: scale(1.1);
+        }
+
+        .zoom-level {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            min-width: 60px;
         }
 
         .gear {
@@ -180,6 +238,11 @@
             z-index: 100;
         }
 
+        .compound-gear {
+            border-color: #f59e0b !important;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.4), 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+        }
+
         .info-pointer {
             position: absolute;
             height: 2px;
@@ -243,6 +306,59 @@
             padding: 1rem;
             border-radius: 8px;
             border-left: 4px solid #4f46e5;
+        }
+
+        .warning-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            text-align: center;
+            border: 3px solid #ef4444;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .warning-popup h3 {
+            color: #ef4444;
+            margin: 0 0 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .warning-popup p {
+            margin: 0 0 1.5rem 0;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .warning-popup button {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .warning-popup button:hover {
+            background: #dc2626;
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
         }
 
         .info-title {
@@ -329,7 +445,15 @@
         </div>
     </div>
 
-    <div class="workspace" id="workspace"></div>
+    <div class="workspace" id="workspace">
+        <div class="workspace-content" id="workspaceContent"></div>
+        <div class="zoom-controls">
+            <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">+</button>
+            <div class="zoom-level" id="zoomLevel">100%</div>
+            <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">−</button>
+            <button class="zoom-btn" onclick="resetView()" title="Reset View">🏠</button>
+        </div>
+    </div>
 
     <div class="info-panel">
         <div class="info-title">Gear Physics Concepts</div>
@@ -346,11 +470,32 @@
                 <div class="info-title">Pinned Gears</div>
                 <div>Purple gears are fixed in place<br>Create planetary systems by pinning gears</div>
             </div>
+            <div class="info-card">
+                <div class="info-title">Compound Gears</div>
+                <div>Orange gears have two sizes on one shaft<br>Click 'C' button to add inner gear</div>
+            </div>
 
             <div class="info-card">
                 <div class="info-title">Gear Ratios</div>
                 <div>Speed = Motor RPM × (Motor Teeth ÷ Gear Teeth)<br>Larger gears spin slower but with more torque</div>
             </div>
+        </div>
+    </div>
+
+    <div class="info-panel" style="margin-top: 1rem;">
+        <div class="info-title">🔍 Debug Panel</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="info-card">
+                <div class="info-title">Gears in Array</div>
+                <div id="debugGears" style="font-family: monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto;"></div>
+            </div>
+            <div class="info-card">
+                <div class="info-title">Info Boxes Status</div>
+                <div id="debugInfos" style="font-family: monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto;"></div>
+            </div>
+        </div>
+        <div style="margin-top: 1rem; text-align: center;">
+            <button class="btn btn-primary" onclick="updateDebugInfo()">Refresh Debug Info</button>
         </div>
     </div>
 
@@ -362,8 +507,16 @@
         let draggedInfo = null;
         let dragOffset = { x: 0, y: 0 };
 
+        // Camera system
+        let cameraX = 0;
+        let cameraY = 0;
+        let cameraZoom = 1;
+        let isPanning = false;
+        let panStart = { x: 0, y: 0 };
+        let panOffset = { x: 0, y: 0 };
+
         class Gear {
-            constructor(x, y, size = 80, isRingGear = false) {
+            constructor(x, y, size = 80, isRingGear = false, parentGear = null) {
                 this.id = ++gearCounter;
                 this.x = x;
                 this.y = y;
@@ -378,6 +531,8 @@
                 this.infoX = x + size + 20;
                 this.infoY = y;
                 this.rotationDirection = 'normal';
+                this.parentGear = parentGear;
+                this.compoundGear = null;
                 this.element = this.createElement();
                 this.updateDisplay();
             }
@@ -419,7 +574,7 @@
                 gearDiv.style.top = this.y + 'px';
 
                 const circle = document.createElement('div');
-                circle.className = `gear-circle ${this.isMotor ? 'motor-gear' : ''} ${this.isPinned ? 'pinned-gear' : ''} ${this.isRingGear ? 'ring-gear' : ''}`;
+                circle.className = `gear-circle ${this.isMotor ? 'motor-gear' : ''} ${this.isPinned ? 'pinned-gear' : ''} ${this.isRingGear ? 'ring-gear' : ''} ${this.compoundGear || this.parentGear ? 'compound-gear' : ''}`;
                 circle.style.width = this.size + 'px';
                 circle.style.height = this.size + 'px';
                 
@@ -448,24 +603,35 @@
                 
                 circle.appendChild(arrowSvg);
 
-                const info = document.createElement('div');
-                info.className = 'gear-info';
-                info.style.left = (this.size + 20) + 'px';
-                info.style.top = '0px';
-                
-                // Create pointer line
-                const pointer = document.createElement('div');
-                pointer.className = 'info-pointer';
-                
                 gearDiv.appendChild(circle);
-                gearDiv.appendChild(info);
-                gearDiv.appendChild(pointer);
 
-                // Add drag functionality
+                // Only create info box for outer gears (not inner compound gears)
+                if (!this.parentGear) {
+                    const info = document.createElement('div');
+                    info.className = 'gear-info';
+                    info.style.left = (this.size + 20) + 'px';
+                    info.style.top = '0px';
+                    // Add data attribute to track which gear this info belongs to
+                    info.setAttribute('data-gear-id', this.id);
+                    if (this.compoundGear) {
+                        info.setAttribute('data-compound-id', this.compoundGear.id);
+                    }
+                    
+                    // Create pointer line
+                    const pointer = document.createElement('div');
+                    pointer.className = 'info-pointer';
+                    
+                    gearDiv.appendChild(info);
+                    gearDiv.appendChild(pointer);
+
+                    // Add drag functionality for info
+                    info.addEventListener('mousedown', (e) => this.startInfoDrag(e));
+                    info.addEventListener('touchstart', (e) => this.startInfoDrag(e));
+                }
+
+                // Add drag functionality for gear
                 circle.addEventListener('mousedown', (e) => this.startDrag(e));
                 circle.addEventListener('touchstart', (e) => this.startDrag(e));
-                info.addEventListener('mousedown', (e) => this.startInfoDrag(e));
-                info.addEventListener('touchstart', (e) => this.startInfoDrag(e));
 
                 return gearDiv;
             }
@@ -636,11 +802,17 @@
                 e.preventDefault();
                 e.stopPropagation();
                 draggedGear = this;
-                const rect = this.element.getBoundingClientRect();
+                const workspace = document.getElementById('workspace');
+                const workspaceRect = workspace.getBoundingClientRect();
                 const clientX = e.clientX || e.touches[0].clientX;
                 const clientY = e.clientY || e.touches[0].clientY;
-                dragOffset.x = clientX - rect.left;
-                dragOffset.y = clientY - rect.top;
+                
+                // Convert to workspace coordinates
+                const workspaceX = (clientX - workspaceRect.left - cameraX) / cameraZoom;
+                const workspaceY = (clientY - workspaceRect.top - cameraY) / cameraZoom;
+                
+                dragOffset.x = workspaceX - this.x;
+                dragOffset.y = workspaceY - this.y;
             }
 
             startInfoDrag(e) {
@@ -659,16 +831,124 @@
                 this.y = y;
                 this.element.style.left = this.x + 'px';
                 this.element.style.top = this.y + 'px';
+                
+                // Bring this gear to the front
+                this.bringToFront();
+                
+                // Update compound gear position if it exists
+                if (this.compoundGear) {
+                    const centerOffsetX = (this.size - this.compoundGear.size) / 2;
+                    const centerOffsetY = (this.size - this.compoundGear.size) / 2;
+                    this.compoundGear.x = x + centerOffsetX;
+                    this.compoundGear.y = y + centerOffsetY;
+                    this.compoundGear.element.style.left = this.compoundGear.x + 'px';
+                    this.compoundGear.element.style.top = this.compoundGear.y + 'px';
+                    this.compoundGear.bringToFront();
+                }
+                
+                // Update parent gear position if this is a compound gear
+                if (this.parentGear) {
+                    const centerOffsetX = (this.parentGear.size - this.size) / 2;
+                    const centerOffsetY = (this.parentGear.size - this.size) / 2;
+                    this.parentGear.x = x - centerOffsetX;
+                    this.parentGear.y = y - centerOffsetY;
+                    this.parentGear.element.style.left = this.parentGear.x + 'px';
+                    this.parentGear.element.style.top = this.parentGear.y + 'px';
+                    this.parentGear.bringToFront();
+                }
+                
                 this.findConnections();
                 calculateGearPhysics();
                 drawConnections();
             }
 
+            updateCompoundLayering() {
+                if (this.compoundGear) {
+                    // Outer gear always goes behind, inner gear always goes in front
+                    this.element.style.zIndex = '10';
+                    this.compoundGear.element.style.zIndex = '20';
+                }
+                if (this.parentGear) {
+                    // Outer gear always goes behind, inner gear always goes in front
+                    this.parentGear.element.style.zIndex = '10';
+                    this.element.style.zIndex = '20';
+                }
+            }
+
+            bringToFront() {
+                // Get the highest z-index currently in use
+                let maxZ = 0;
+                gears.forEach(gear => {
+                    const currentZ = parseInt(gear.element.style.zIndex) || 0;
+                    if (currentZ > maxZ) maxZ = currentZ;
+                });
+                
+                // Set this gear's z-index higher than all others
+                this.element.style.zIndex = (maxZ + 1).toString();
+                
+                // For compound gears, maintain proper layering while bringing to front
+                if (this.compoundGear) {
+                    this.element.style.zIndex = (maxZ + 1).toString();
+                    this.compoundGear.element.style.zIndex = (maxZ + 2).toString();
+                }
+                if (this.parentGear) {
+                    this.parentGear.element.style.zIndex = (maxZ + 1).toString();
+                    this.element.style.zIndex = (maxZ + 2).toString();
+                }
+            }
+
             changeSize(delta) {
-                const newSize = Math.max(60, Math.min(720, this.size + delta));
+                let maxSize = 720;
+                let minSize = 60;
+                
+                // If this is an inner gear (compound gear), limit size to parent gear
+                if (this.parentGear) {
+                    maxSize = Math.min(maxSize, this.parentGear.size - 20);
+                }
+                
+                // If this has a compound gear, ensure it stays larger than the inner gear
+                if (this.compoundGear) {
+                    minSize = Math.max(minSize, this.compoundGear.size + 20);
+                }
+                
+                const newSize = Math.max(minSize, Math.min(maxSize, this.size + delta));
                 if (newSize !== this.size) {
+                    // Store current info box position before changing size
+                    // For inner gears, store the parent's info box position
+                    const infoGear = this.parentGear || this;
+                    const info = infoGear.element.querySelector('.gear-info');
+                    let storedInfoLeft = null;
+                    let storedInfoTop = null;
+                    if (info) {
+                        storedInfoLeft = parseFloat(info.style.left);
+                        storedInfoTop = parseFloat(info.style.top);
+                    }
+                    
                     this.size = newSize;
                     this.teeth = this.calculateTeeth();
+                    
+                    // Update compound gear position to stay centered
+                    if (this.compoundGear) {
+                        const centerOffsetX = (this.size - this.compoundGear.size) / 2;
+                        const centerOffsetY = (this.size - this.compoundGear.size) / 2;
+                        this.compoundGear.x = this.x + centerOffsetX;
+                        this.compoundGear.y = this.y + centerOffsetY;
+                        this.compoundGear.element.style.left = this.compoundGear.x + 'px';
+                        this.compoundGear.element.style.top = this.compoundGear.y + 'px';
+                    }
+                    
+                    // Update parent gear position if this is a compound gear
+                    if (this.parentGear) {
+                        const centerOffsetX = (this.parentGear.size - this.size) / 2;
+                        const centerOffsetY = (this.parentGear.size - this.size) / 2;
+                        this.parentGear.x = this.x - centerOffsetX;
+                        this.parentGear.y = this.y - centerOffsetY;
+                        this.parentGear.element.style.left = this.parentGear.x + 'px';
+                        this.parentGear.element.style.top = this.parentGear.y + 'px';
+                    }
+                    
+                    // Set proper z-index layering
+                    this.updateCompoundLayering();
                     
                     this.findConnections();
                     calculateGearPhysics();
@@ -677,6 +957,17 @@
                     const oldElement = this.element;
                     this.element = this.createElement();
                     parent.replaceChild(this.element, oldElement);
+                    
+                    // Restore info box position after recreating element
+                    // For inner gears, restore to the parent's info box
+                    if (storedInfoLeft !== null && storedInfoTop !== null) {
+                        const newInfoGear = this.parentGear || this;
+                        const newInfo = newInfoGear.element.querySelector('.gear-info');
+                        if (newInfo) {
+                            newInfo.style.left = storedInfoLeft + 'px';
+                            newInfo.style.top = storedInfoTop + 'px';
+                        }
+                    }
                     
                     this.updateDisplay();
                     drawConnections();
@@ -741,27 +1032,71 @@
             }
 
             updateDisplay() {
+                // Inner compound gears (those with parentGear) should not have their own info boxes
+                if (this.parentGear) {
+                    // This is an inner compound gear - update the parent's info instead
+                    this.parentGear.updateDisplay();
+                    return;
+                }
+                
                 const info = this.element.querySelector('.gear-info');
+                if (!info) return; // Safety check - gear may have been removed
+                
+                // Update data attributes to track ownership
+                info.setAttribute('data-gear-id', this.id);
+                if (this.compoundGear) {
+                    info.setAttribute('data-compound-id', this.compoundGear.id);
+                } else {
+                    info.removeAttribute('data-compound-id');
+                }
+                
                 const motorText = this.isMotor ? '<div style="color: #ef4444; font-weight: bold;">MOTOR</div>' : '';
                 const pinnedText = this.isPinned ? '<div style="color: #8b5cf6; font-weight: bold;">PINNED</div>' : '';
                 const ringText = this.isRingGear ? '<div style="color: #10b981; font-weight: bold;">RING GEAR</div>' : '';
                 const orbitText = this.orbitalRPM > 0 ? `<div style="color: #10b981; font-weight: bold;">ORBITING: ${Math.round(this.orbitalRPM)} RPM</div>` : '';
+                const compoundText = this.compoundGear ? '<div style="color: #f59e0b; font-weight: bold;">COMPOUND</div>' : '';
+                
+                let compoundControls = '';
+                if (this.compoundGear) {
+                    compoundControls = `
+                        <div style="border-top: 1px solid #ccc; margin-top: 0.5rem; padding-top: 0.5rem;">
+                            <div style="font-size: 0.7rem; color: #666; margin-bottom: 0.25rem;">Inner Gear (${this.compoundGear.teeth} teeth)</div>
+                            <div style="font-size: 0.7rem; margin-bottom: 0.25rem;">
+                                <strong>Speed:</strong> ${Math.round(this.compoundGear.rpm)} RPM<br>
+                                <strong>Torque:</strong> ${Math.round(this.compoundGear.torque)} Nm
+                            </div>
+                            <div class="gear-controls">
+                                <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.compoundGear.id}).changeSize(-10)">-</button>
+                                <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.compoundGear.id}).changeSize(10)">+</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // Hide controls for compound gear parts (inner gears)
+                const showControls = !this.parentGear;
+                const controlsHtml = showControls ? `
+                    <div class="gear-controls">
+                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).changeSize(-10)">-</button>
+                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).changeSize(10)">+</button>
+                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).toggleMotor()" style="background: ${this.isMotor ? '#ef4444' : '#6366f1'};">M</button>
+                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).togglePin()" style="background: ${this.isPinned ? '#8b5cf6' : '#6366f1'};">📌</button>
+                        ${!this.compoundGear && !this.parentGear && !this.isRingGear ? '<button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ' + this.id + ').addCompoundGear()" style="background: #f59e0b;">C</button>' : ''}
+                        <button class="size-btn" style="background: ${isAnimating ? '#999' : '#ef4444'}; cursor: ${isAnimating ? 'not-allowed' : 'pointer'};" onclick="event.stopPropagation(); if (isAnimating) { showWarningPopup(); } else { gears.find(g => g.id === ${this.id}).remove(); }">×</button>
+                    </div>
+                ` : '';
                 
                 info.innerHTML = `
                     ${motorText}
                     ${pinnedText}
                     ${ringText}
                     ${orbitText}
+                    ${compoundText}
                     <div><strong>Teeth:</strong> ${this.teeth}</div>
                     <div><strong>Speed:</strong> ${Math.round(this.rpm)} RPM</div>
                     <div><strong>Torque:</strong> ${Math.round(this.torque)} Nm</div>
-                    <div class="gear-controls">
-                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).changeSize(-10)">-</button>
-                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).changeSize(10)">+</button>
-                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).toggleMotor()" style="background: ${this.isMotor ? '#ef4444' : '#6366f1'};">M</button>
-                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).togglePin()" style="background: ${this.isPinned ? '#8b5cf6' : '#6366f1'};">📌</button>
-                        <button class="size-btn" style="background: #ef4444;" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).remove()">×</button>
-                    </div>
+                    ${controlsHtml}
+                    ${compoundControls}
                 `;
                 
                 this.updatePointer();
@@ -770,6 +1105,7 @@
 
             updateArrow() {
                 const arrowSvg = this.element.querySelector('.rotation-arrow');
+                if (!arrowSvg) return; // Safety check - gear may have been removed
                 arrowSvg.innerHTML = '';
                 this.createRotationArrow(arrowSvg);
             }
@@ -778,6 +1114,8 @@
                 const pointer = this.element.querySelector('.info-pointer');
                 const info = this.element.querySelector('.gear-info');
                 const gearCircle = this.element.querySelector('.gear-circle');
+                
+                if (!pointer || !info || !gearCircle) return; // Safety check - gear may have been removed
                 
                 // Get the current transform of the gear circle to account for orbital motion
                 const transform = gearCircle.style.transform;
@@ -837,13 +1175,50 @@
                 this.updateDisplay();
             }
 
+            addCompoundGear() {
+                if (this.compoundGear || this.parentGear || this.isRingGear) return;
+                
+                const innerSize = Math.max(40, this.size - 40);
+                const centerOffsetX = (this.size - innerSize) / 2;
+                const centerOffsetY = (this.size - innerSize) / 2;
+                const centerX = this.x + centerOffsetX;
+                const centerY = this.y + centerOffsetY;
+                
+                const compoundGear = new Gear(centerX, centerY, innerSize, false, this);
+                this.compoundGear = compoundGear;
+                
+                // Set proper layering - outer gear always behind, inner gear always in front
+                this.updateCompoundLayering();
+                
+                gears.push(compoundGear);
+                document.getElementById('workspaceContent').appendChild(compoundGear.element);
+                
+                compoundGear.findConnections();
+                this.findConnections();
+                calculateGearPhysics();
+                drawConnections();
+                this.updateDisplay();
+            }
+
             remove() {
+                // Remove compound gear if it exists
+                if (this.compoundGear) {
+                    gears = gears.filter(g => g !== this.compoundGear);
+                    this.compoundGear.element.remove();
+                }
+                
+                // Remove this gear from parent if it's a compound gear
+                if (this.parentGear) {
+                    this.parentGear.compoundGear = null;
+                    this.parentGear.updateDisplay();
+                }
+                
                 gears = gears.filter(g => g !== this);
                 this.element.remove();
                 
                 // If we removed the motor, make the first remaining regular gear the motor
                 if (this.isMotor && gears.length > 0) {
-                    const firstRegularGear = gears.find(g => !g.isRingGear);
+                    const firstRegularGear = gears.find(g => !g.isRingGear && !g.parentGear);
                     if (firstRegularGear) {
                         firstRegularGear.isMotor = true;
                         firstRegularGear.element.querySelector('.gear-circle').classList.add('motor-gear');
@@ -856,15 +1231,40 @@
             }
         }
 
+        function updateCamera() {
+            const workspaceContent = document.getElementById('workspaceContent');
+            workspaceContent.style.transform = `translate(${cameraX}px, ${cameraY}px) scale(${cameraZoom})`;
+            
+            const zoomLevel = document.getElementById('zoomLevel');
+            zoomLevel.textContent = Math.round(cameraZoom * 100) + '%';
+        }
+
+        function zoomIn() {
+            cameraZoom = Math.min(cameraZoom * 1.2, 3);
+            updateCamera();
+        }
+
+        function zoomOut() {
+            cameraZoom = Math.max(cameraZoom / 1.2, 0.1);
+            updateCamera();
+        }
+
+        function resetView() {
+            cameraX = 0;
+            cameraY = 0;
+            cameraZoom = 1;
+            updateCamera();
+        }
+
         function addGear() {
-            const workspace = document.getElementById('workspace');
-            const rect = workspace.getBoundingClientRect();
+            const workspaceContent = document.getElementById('workspaceContent');
+            const rect = document.getElementById('workspace').getBoundingClientRect();
             const x = Math.random() * (rect.width - 150) + 75;
             const y = Math.random() * (rect.height - 150) + 75;
             
             const gear = new Gear(x, y);
             gears.push(gear);
-            workspace.appendChild(gear.element);
+            workspaceContent.appendChild(gear.element);
             
             gear.findConnections();
             calculateGearPhysics();
@@ -872,15 +1272,15 @@
         }
 
         function addRingGear() {
-            const workspace = document.getElementById('workspace');
-            const rect = workspace.getBoundingClientRect();
+            const workspaceContent = document.getElementById('workspaceContent');
+            const rect = document.getElementById('workspace').getBoundingClientRect();
             const ringSize = 200;
             const x = Math.random() * (rect.width - ringSize) + 50;
             const y = Math.random() * (rect.height - ringSize) + 50;
             
             const gear = new Gear(x, y, ringSize, true);
             gears.push(gear);
-            workspace.appendChild(gear.element);
+            workspaceContent.appendChild(gear.element);
             
             gear.findConnections();
             calculateGearPhysics();
@@ -1029,14 +1429,45 @@
                         connectedGear.orbitalDirection = sourceGear.orbitalDirection;
                     }
                     
+                    // Handle compound gear motion - both gears rotate together
+                    if (connectedGear.compoundGear) {
+                        connectedGear.compoundGear.rpm = connectedGear.rpm;
+                        connectedGear.compoundGear.rotationDirection = connectedGear.rotationDirection;
+                        connectedGear.compoundGear.torque = connectedGear.torque;
+                        if (connectedGear.orbitCenter) {
+                            connectedGear.compoundGear.orbitCenter = connectedGear.orbitCenter;
+                            connectedGear.compoundGear.orbitalRPM = connectedGear.orbitalRPM;
+                            connectedGear.compoundGear.orbitalDirection = connectedGear.orbitalDirection;
+                        }
+                    }
+                    
+                    if (connectedGear.parentGear) {
+                        connectedGear.parentGear.rpm = connectedGear.rpm;
+                        connectedGear.parentGear.rotationDirection = connectedGear.rotationDirection;
+                        connectedGear.parentGear.torque = connectedGear.torque;
+                        if (connectedGear.orbitCenter) {
+                            connectedGear.parentGear.orbitCenter = connectedGear.orbitCenter;
+                            connectedGear.parentGear.orbitalRPM = connectedGear.orbitalRPM;
+                            connectedGear.parentGear.orbitalDirection = connectedGear.orbitalDirection;
+                        }
+                    }
+                    
                     propagateMotion(connectedGear, visited);
+                    
+                    // Also propagate motion from compound parts
+                    if (connectedGear.compoundGear) {
+                        propagateMotion(connectedGear.compoundGear, visited);
+                    }
+                    if (connectedGear.parentGear) {
+                        propagateMotion(connectedGear.parentGear, visited);
+                    }
                 }
             });
         }
 
         function drawConnections() {
             clearConnections();
-            const workspace = document.getElementById('workspace');
+            const workspace = document.getElementById('workspaceContent');
 
             gears.forEach(gear => {
                 gear.connectedGears.forEach(connectedGear => {
@@ -1078,16 +1509,21 @@
             } else {
                 stopAnimation();
             }
+            
+            // Update all gear displays to reflect animation state
+            gears.forEach(gear => gear.updateDisplay());
         }
 
         function startAnimation() {
             // Store original info positions and move them to workspace
-            const workspace = document.getElementById('workspace');
+            const workspace = document.getElementById('workspaceContent');
             clearConnections();
             
             gears.forEach(gear => {
-                const info = gear.element.querySelector('.gear-info');
-                const pointer = gear.element.querySelector('.info-pointer');
+                const info = gear.element?.querySelector('.gear-info');
+                const pointer = gear.element?.querySelector('.info-pointer');
+                
+                if (!info || !pointer) return; // Skip if elements don't exist
                 
                 // Hide pointer
                 pointer.style.display = 'none';
@@ -1100,11 +1536,10 @@
                 const absoluteX = gear.x + gear.originalInfoLeft;
                 const absoluteY = gear.y + gear.originalInfoTop;
                 
-                // Move info box to workspace with absolute positioning
-                info.style.position = 'fixed';
-                const workspaceRect = workspace.getBoundingClientRect();
-                info.style.left = (workspaceRect.left + absoluteX) + 'px';
-                info.style.top = (workspaceRect.top + absoluteY) + 'px';
+                // Move info box to workspace with absolute positioning (relative to workspace, not viewport)
+                info.style.position = 'absolute';
+                info.style.left = absoluteX + 'px';
+                info.style.top = absoluteY + 'px';
                 info.style.zIndex = '1000';
                 
                 // Remove from gear and add to workspace
@@ -1120,9 +1555,13 @@
                 const elapsed = (currentTime - startTime) / 1000; // seconds
                 
                 gears.forEach((gear) => {
+                    if (!gear.element) return; // Skip if gear element doesn't exist
+                    
                     const circle = gear.element.querySelector('.gear-circle');
                     const teeth = gear.element.querySelector('.gear-teeth');
                     const arrow = gear.element.querySelector('.rotation-arrow');
+                    
+                    if (!circle || !teeth || !arrow) return; // Skip if elements don't exist
                     
                     if (gear.rpm > 0) {
                         // Handle gear rotation
@@ -1148,8 +1587,10 @@
                             
                             // Move the entire gear element to the new position
                             const gearElement = gear.element;
-                            gearElement.style.left = (newX - gear.size / 2) + 'px';
-                            gearElement.style.top = (newY - gear.size / 2) + 'px';
+                            if (gearElement && gearElement.style) {
+                                gearElement.style.left = (newX - gear.size / 2) + 'px';
+                                gearElement.style.top = (newY - gear.size / 2) + 'px';
+                            }
                         }
                     } else {
                         circle.classList.remove('rotating', 'rotating-reverse');
@@ -1173,55 +1614,146 @@
             }
             
             gears.forEach((gear) => {
+                if (!gear.element) return; // Skip if gear element doesn't exist
+                
                 const circle = gear.element.querySelector('.gear-circle');
                 const teeth = gear.element.querySelector('.gear-teeth');
                 const arrow = gear.element.querySelector('.rotation-arrow');
                 
-                circle.classList.remove('rotating', 'rotating-reverse');
-                teeth.classList.remove('rotating', 'rotating-reverse');
-                arrow.classList.remove('rotating', 'rotating-reverse');
+                if (circle) circle.classList.remove('rotating', 'rotating-reverse');
+                if (teeth) teeth.classList.remove('rotating', 'rotating-reverse');
+                if (arrow) arrow.classList.remove('rotating', 'rotating-reverse');
                 
                 // Reset gear positions to original
-                gear.element.style.left = gear.x + 'px';
-                gear.element.style.top = gear.y + 'px';
-                
-                // Find and reconnect info boxes
-                const workspace = document.getElementById('workspace');
-                const detachedInfos = workspace.querySelectorAll('.gear-info');
-                
-                detachedInfos.forEach(info => {
-                    // Find which gear this info belongs to by checking the button onclick attributes
-                    const buttons = info.querySelectorAll('.size-btn');
-                    if (buttons.length > 0) {
-                        const onclickText = buttons[0].getAttribute('onclick');
-                        const gearIdMatch = onclickText.match(/g\.id === (\d+)/);
-                        if (gearIdMatch) {
-                            const gearId = parseInt(gearIdMatch[1]);
-                            const gear = gears.find(g => g.id === gearId);
-                            if (gear) {
-                                // Reset info box positioning
-                                info.style.position = 'absolute';
-                                info.style.left = gear.originalInfoLeft + 'px';
-                                info.style.top = gear.originalInfoTop + 'px';
-                                info.style.zIndex = '100';
-                                
-                                // Move back to gear element
-                                gear.element.appendChild(info);
-                                
-                                // Show pointer again
-                                const pointer = gear.element.querySelector('.info-pointer');
-                                pointer.style.display = 'block';
-                                
-                                // Update pointer position
-                                gear.updatePointer();
-                            }
-                        }
-                    }
-                });
+                if (gear.element && gear.element.style) {
+                    gear.element.style.left = gear.x + 'px';
+                    gear.element.style.top = gear.y + 'px';
+                }
             });
+            
+            // Reconnect all info boxes back to their gears
+            const workspace = document.getElementById('workspace');
+            
+            // Process ALL gears that should have info boxes
+            // This includes: outer compound gears, regular gears, and inner compound gears
+            gears.forEach(gear => {
+                // Skip inner compound gears - their info is handled by the parent
+                if (!gear.parentGear) {
+                    reconnectInfoBox(gear, workspace);
+                }
+            });
+            
+            // Clean up any orphaned info boxes
+            cleanupOrphanedInfoBoxes(workspace);
             
             // Restore connections
             drawConnections();
+        }
+
+        function reconnectInfoBox(gear, workspace) {
+            if (!gear.element) return;
+            
+            console.log(`Reconnecting info for gear ${gear.id}, compound: ${gear.compoundGear ? gear.compoundGear.id : 'none'}`);
+            
+            // First check if gear already has an info box attached
+            const existingInfo = gear.element.querySelector('.gear-info');
+            if (existingInfo) {
+                console.log(`Gear ${gear.id} already has info box attached, skipping reconnection`);
+                // Just make sure pointer is visible and positioned correctly
+                const pointer = gear.element.querySelector('.info-pointer');
+                if (pointer) {
+                    pointer.style.display = 'block';
+                    gear.updatePointer();
+                }
+                return;
+            }
+            
+            // Look for detached info box in workspace using data attributes
+            const detachedInfos = workspace.querySelectorAll('.gear-info');
+            let matchingInfo = null;
+            
+            console.log(`Found ${detachedInfos.length} detached info boxes in workspace`);
+            
+            for (let info of detachedInfos) {
+                const infoGearId = parseInt(info.getAttribute('data-gear-id'));
+                const infoCompoundId = info.getAttribute('data-compound-id');
+                
+                console.log(`Checking info: gear-id=${infoGearId}, compound-id=${infoCompoundId}`);
+                
+                // Match based on the main gear ID
+                if (infoGearId === gear.id) {
+                    // For compound gears, also check compound ID matches
+                    if (gear.compoundGear) {
+                        if (infoCompoundId && parseInt(infoCompoundId) === gear.compoundGear.id) {
+                            matchingInfo = info;
+                            console.log(`Found compound gear match for gear ${gear.id}`);
+                            break;
+                        }
+                    } else {
+                        // For regular gears, accept if no compound ID or if compound ID doesn't matter
+                        matchingInfo = info;
+                        console.log(`Found regular gear match for gear ${gear.id}`);
+                        break;
+                    }
+                }
+            }
+            
+            if (matchingInfo) {
+                console.log(`Reconnecting info box for gear ${gear.id}`);
+                
+                // Reset info box positioning and move back to gear
+                matchingInfo.style.position = 'absolute';
+                matchingInfo.style.left = (gear.originalInfoLeft || (gear.size + 20)) + 'px';
+                matchingInfo.style.top = (gear.originalInfoTop || 0) + 'px';
+                matchingInfo.style.zIndex = '100';
+                
+                // Move back to gear element
+                gear.element.appendChild(matchingInfo);
+                
+                // Ensure pointer is visible and properly positioned
+                const pointer = gear.element.querySelector('.info-pointer');
+                if (pointer) {
+                    pointer.style.display = 'block';
+                    gear.updatePointer();
+                }
+            } else {
+                console.log(`No matching info found for gear ${gear.id}, recreating`);
+                // If no matching info found, recreate it
+                gear.updateDisplay();
+            }
+        }
+
+        function cleanupOrphanedInfoBoxes(workspace) {
+            const orphanedInfos = workspace.querySelectorAll('.gear-info');
+            console.log(`Cleanup: Found ${orphanedInfos.length} info boxes still in workspace`);
+            
+            orphanedInfos.forEach((info, index) => {
+                const infoGearId = info.getAttribute('data-gear-id');
+                const infoCompoundId = info.getAttribute('data-compound-id');
+                console.log(`Cleanup [${index}]: gear-id=${infoGearId}, compound-id=${infoCompoundId}`);
+                
+                // Check if this info belongs to any existing gear using data attributes
+                const belongsToGear = gears.some(gear => {
+                    if (parseInt(infoGearId) === gear.id) {
+                        // If it's a compound gear, check compound ID too
+                        if (gear.compoundGear && infoCompoundId) {
+                            return parseInt(infoCompoundId) === gear.compoundGear.id;
+                        }
+                        // For regular gears, just matching the main ID is enough
+                        return true;
+                    }
+                    return false;
+                });
+                
+                console.log(`Cleanup [${index}]: belongsToGear=${belongsToGear}`);
+                
+                if (!belongsToGear) {
+                    console.log(`Cleanup [${index}]: Removing orphaned info box`);
+                    info.remove();
+                } else {
+                    console.log(`Cleanup [${index}]: Keeping info box (belongs to existing gear)`);
+                }
+            });
         }
 
         document.addEventListener('mousemove', handleDrag);
@@ -1237,8 +1769,12 @@
                 const clientX = e.clientX || e.touches[0].clientX;
                 const clientY = e.clientY || e.touches[0].clientY;
                 
-                const x = clientX - rect.left - dragOffset.x;
-                const y = clientY - rect.top - dragOffset.y;
+                // Convert screen coordinates to workspace coordinates accounting for zoom and pan
+                const workspaceX = (clientX - rect.left - cameraX) / cameraZoom;
+                const workspaceY = (clientY - rect.top - cameraY) / cameraZoom;
+                
+                const x = workspaceX - dragOffset.x;
+                const y = workspaceY - dragOffset.y;
                 
                 draggedGear.updatePosition(x, y);
             } else if (draggedInfo) {
@@ -1249,22 +1785,163 @@
                 const relativeX = clientX - draggedInfo.x - dragOffset.x;
                 const relativeY = clientY - draggedInfo.y - dragOffset.y;
                 
-                const info = draggedInfo.element.querySelector('.gear-info');
-                info.style.left = relativeX + 'px';
-                info.style.top = relativeY + 'px';
+                const info = draggedInfo.element?.querySelector('.gear-info');
+                if (info && info.style) {
+                    info.style.left = relativeX + 'px';
+                    info.style.top = relativeY + 'px';
+                    
+                    draggedInfo.updatePointer();
+                }
+            } else if (isPanning) {
+                e.preventDefault();
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
                 
-                draggedInfo.updatePointer();
+                cameraX = panOffset.x + (clientX - panStart.x);
+                cameraY = panOffset.y + (clientY - panStart.y);
+                updateCamera();
             }
         }
 
         function stopDrag() {
             draggedGear = null;
             draggedInfo = null;
+            isPanning = false;
+            document.getElementById('workspace').classList.remove('panning');
         }
+
+        function showWarningPopup() {
+            // Create overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'popup-overlay';
+            
+            // Create popup
+            const popup = document.createElement('div');
+            popup.className = 'warning-popup';
+            popup.innerHTML = `
+                <h3>⚠️ Cannot Delete During Animation</h3>
+                <p>Please stop the animation first before deleting gears. This prevents the system from crashing while gears are in motion.</p>
+                <button onclick="closeWarningPopup()">Got It!</button>
+            `;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            
+            // Close on overlay click
+            overlay.addEventListener('click', closeWarningPopup);
+        }
+
+        function closeWarningPopup() {
+            const overlay = document.querySelector('.popup-overlay');
+            const popup = document.querySelector('.warning-popup');
+            
+            if (overlay) overlay.remove();
+            if (popup) popup.remove();
+        }
+
+        function updateDebugInfo() {
+            const debugGears = document.getElementById('debugGears');
+            const debugInfos = document.getElementById('debugInfos');
+            
+            // Debug gears array
+            let gearsInfo = `Total gears: ${gears.length}<br><br>`;
+            gears.forEach((gear, index) => {
+                gearsInfo += `[${index}] ID:${gear.id} ${gear.isRingGear ? 'RING' : 'REG'} `;
+                gearsInfo += `${gear.parentGear ? 'INNER' : ''}${gear.compoundGear ? 'OUTER' : ''}<br>`;
+                gearsInfo += `    Element: ${gear.element ? 'EXISTS' : 'MISSING'}<br>`;
+                if (gear.element) {
+                    gearsInfo += `    In DOM: ${document.contains(gear.element) ? 'YES' : 'NO'}<br>`;
+                    const info = gear.element.querySelector('.gear-info');
+                    gearsInfo += `    Has Info: ${info ? 'YES' : 'NO'}<br>`;
+                    if (info) {
+                        gearsInfo += `    Info Parent: ${info.parentElement === gear.element ? 'GEAR' : 'OTHER'}<br>`;
+                    }
+                }
+                gearsInfo += `<br>`;
+            });
+            debugGears.innerHTML = gearsInfo;
+            
+            // Debug info boxes
+            const workspace = document.getElementById('workspace');
+            const allInfos = document.querySelectorAll('.gear-info');
+            const workspaceInfos = workspace.querySelectorAll('.gear-info');
+            
+            let infosInfo = `Total .gear-info elements: ${allInfos.length}<br>`;
+            infosInfo += `In workspace: ${workspaceInfos.length}<br>`;
+            infosInfo += `In gear elements: ${allInfos.length - workspaceInfos.length}<br><br>`;
+            
+            allInfos.forEach((info, index) => {
+                infosInfo += `[${index}] Parent: ${info.parentElement.id || info.parentElement.className}<br>`;
+                
+                // Use data attributes to identify gear ownership
+                const dataGearId = info.getAttribute('data-gear-id');
+                const dataCompoundId = info.getAttribute('data-compound-id');
+                
+                infosInfo += `    Data Gear ID: ${dataGearId || 'NONE'}<br>`;
+                if (dataCompoundId) {
+                    infosInfo += `    Data Compound ID: ${dataCompoundId}<br>`;
+                }
+                
+                // Check if the gear exists
+                const gear = gears.find(g => g.id == dataGearId);
+                infosInfo += `    Gear exists: ${gear ? 'YES' : 'NO'}<br>`;
+                
+                if (gear && dataCompoundId) {
+                    const compoundGear = gears.find(g => g.id == dataCompoundId);
+                    infosInfo += `    Compound gear exists: ${compoundGear ? 'YES' : 'NO'}<br>`;
+                }
+                
+                infosInfo += `<br>`;
+            });
+            
+            debugInfos.innerHTML = infosInfo;
+        }
+
+        // Auto-update debug info periodically
+        setInterval(updateDebugInfo, 2000);
+
+        // Add workspace event listeners
+        document.getElementById('workspace').addEventListener('mousedown', (e) => {
+            // Only start panning if clicking on empty space (not on gears or controls)
+            if (e.target.id === 'workspace' || e.target.id === 'workspaceContent') {
+                isPanning = true;
+                panStart.x = e.clientX;
+                panStart.y = e.clientY;
+                panOffset.x = cameraX;
+                panOffset.y = cameraY;
+                document.getElementById('workspace').classList.add('panning');
+                e.preventDefault();
+            }
+        });
+
+        // Mouse wheel zoom
+        document.getElementById('workspace').addEventListener('wheel', (e) => {
+            e.preventDefault();
+            
+            const rect = document.getElementById('workspace').getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            // Calculate zoom point in workspace coordinates
+            const zoomPointX = (mouseX - cameraX) / cameraZoom;
+            const zoomPointY = (mouseY - cameraY) / cameraZoom;
+            
+            const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+            const newZoom = Math.max(0.1, Math.min(3, cameraZoom * zoomFactor));
+            
+            // Adjust camera position to zoom towards mouse cursor
+            cameraX = mouseX - zoomPointX * newZoom;
+            cameraY = mouseY - zoomPointY * newZoom;
+            cameraZoom = newZoom;
+            
+            updateCamera();
+        });
 
         window.addEventListener('load', () => {
             addGear();
+            updateDebugInfo();
+            updateCamera(); // Initialize camera
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98be7bffb788220a',t:'MTc2MDAxOTI2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98e7e483108335ef',t:'MTc2MDQ1MzQ2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

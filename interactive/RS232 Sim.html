@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RS232 Serial Communication Simulator</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            min-height: 100%;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        .device {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .device h2 {
+            margin: 0 0 20px 0;
+            color: #4fc3f7;
+            text-align: center;
+            font-size: 1.5em;
+        }
+        
+        .input-section {
+            margin-bottom: 25px;
+        }
+        
+        .input-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #e1f5fe;
+        }
+        
+        .input-section input, .input-section select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .signal-display {
+            background: #000;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 200px;
+            position: relative;
+            border: 2px solid #4fc3f7;
+        }
+        
+        .signal-canvas {
+            width: 100%;
+            height: 150px;
+            background: #001122;
+            border-radius: 5px;
+        }
+        
+        .bit-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #4fc3f7;
+        }
+        
+        .send-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px 0;
+        }
+        
+        .send-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+        
+        .send-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .screen {
+            background: #000;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #00ff00;
+            position: relative;
+        }
+        
+        .screen::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(transparent 50%, rgba(0, 255, 0, 0.03) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+        
+        .info-panel {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .transmission-status {
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .status-idle {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+        }
+        
+        .status-transmitting {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+        
+        .status-complete {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="device">
+            <h2>📡 Transmitter (DTE)</h2>
+            
+            <div class="input-section">
+                <label for="charInput">Character to Send:</label>
+                <input type="text" id="charInput" maxlength="1" placeholder="Enter a letter" value="A">
+            </div>
+            
+            <div class="input-section">
+                <label for="paritySelect">Parity:</label>
+                <select id="paritySelect">
+                    <option value="even">Even Parity</option>
+                    <option value="odd">Odd Parity</option>
+                    <option value="none">No Parity</option>
+                </select>
+            </div>
+            
+            <div class="info-panel">
+                <div><strong>Settings:</strong> 8-N-1 (8 data bits, no parity, 1 stop bit)</div>
+                <div><strong>Baud Rate:</strong> 9600 bps</div>
+                <div id="charInfo"><strong>ASCII:</strong> 65 (0x41) - 'A'</div>
+                <div id="binaryInfo"><strong>Binary:</strong> 01000001</div>
+            </div>
+            
+            <div class="signal-display">
+                <canvas id="signalCanvas" class="signal-canvas"></canvas>
+                <div class="bit-labels" id="bitLabels"></div>
+            </div>
+            
+            <button class="send-button" id="sendButton">Send Signal</button>
+            
+            <div class="transmission-status status-idle" id="transmissionStatus">
+                Ready to transmit
+            </div>
+        </div>
+        
+        <div class="device">
+            <h2>📺 Receiver (DCE)</h2>
+            
+            <div class="info-panel">
+                <div><strong>Status:</strong> <span id="receiverStatus">Waiting for data...</span></div>
+                <div><strong>Last Received:</strong> <span id="lastReceived">None</span></div>
+                <div><strong>Parity Check:</strong> <span id="parityCheck">-</span></div>
+            </div>
+            
+            <div class="screen" id="receiverScreen">
+                Waiting for transmission...
+            </div>
+            
+            <div class="info-panel">
+                <div><strong>Received Data Analysis:</strong></div>
+                <div id="receivedBinary">Binary: -</div>
+                <div id="receivedAscii">ASCII: -</div>
+                <div id="receivedChar">Character: -</div>
+            </div>
+            
+            <div class="transmission-status status-idle" id="receptionStatus">
+                Listening...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class RS232Simulator {
+            constructor() {
+                this.canvas = document.getElementById('signalCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.charInput = document.getElementById('charInput');
+                this.paritySelect = document.getElementById('paritySelect');
+                this.sendButton = document.getElementById('sendButton');
+                
+                this.setupCanvas();
+                this.setupEventListeners();
+                this.updateSignalDisplay();
+            }
+            
+            setupCanvas() {
+                const rect = this.canvas.getBoundingClientRect();
+                this.canvas.width = rect.width * 2;
+                this.canvas.height = rect.height * 2;
+                this.ctx.scale(2, 2);
+                this.canvasWidth = rect.width;
+                this.canvasHeight = rect.height;
+            }
+            
+            setupEventListeners() {
+                this.charInput.addEventListener('input', () => {
+                    this.updateCharInfo();
+                    this.updateSignalDisplay();
+                });
+                
+                this.paritySelect.addEventListener('change', () => {
+                    this.updateSignalDisplay();
+                });
+                
+                this.sendButton.addEventListener('click', () => {
+                    this.transmitSignal();
+                });
+                
+                // Initialize with 'A'
+                this.updateCharInfo();
+            }
+            
+            updateCharInfo() {
+                const char = this.charInput.value.toUpperCase() || 'A';
+                this.charInput.value = char;
+                
+                const ascii = char.charCodeAt(0);
+                const binary = ascii.toString(2).padStart(8, '0');
+                
+                document.getElementById('charInfo').innerHTML = `<strong>ASCII:</strong> ${ascii} (0x${ascii.toString(16).toUpperCase()}) - '${char}'`;
+                document.getElementById('binaryInfo').innerHTML = `<strong>Binary:</strong> ${binary}`;
+            }
+            
+            calculateParity(dataBits) {
+                const parity = this.paritySelect.value;
+                if (parity === 'none') return null;
+                
+                const ones = dataBits.split('').filter(bit => bit === '1').length;
+                
+                if (parity === 'even') {
+                    return ones % 2 === 0 ? '0' : '1';
+                } else { // odd
+                    return ones % 2 === 0 ? '1' : '0';
+                }
+            }
+            
+            updateSignalDisplay() {
+                const char = this.charInput.value.toUpperCase() || 'A';
+                const ascii = char.charCodeAt(0);
+                const dataBits = ascii.toString(2).padStart(8, '0');
+                const parityBit = this.calculateParity(dataBits);
+                
+                // RS232 frame: START(0) + DATA(8) + PARITY(0/1) + STOP(1)
+                let frame = '0' + dataBits;
+                if (parityBit !== null) {
+                    frame += parityBit;
+                }
+                frame += '1';
+                
+                this.drawSignal(frame);
+                this.updateBitLabels(frame);
+            }
+            
+            drawSignal(frame) {
+                this.ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+                
+                const bitWidth = this.canvasWidth / frame.length;
+                const highLevel = 20;
+                const lowLevel = this.canvasHeight - 20;
+                const midLevel = this.canvasHeight / 2;
+                
+                // Draw grid
+                this.ctx.strokeStyle = '#003366';
+                this.ctx.lineWidth = 0.5;
+                for (let i = 0; i <= frame.length; i++) {
+                    const x = i * bitWidth;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(x, 0);
+                    this.ctx.lineTo(x, this.canvasHeight);
+                    this.ctx.stroke();
+                }
+                
+                // Draw signal
+                this.ctx.strokeStyle = '#00ff88';
+                this.ctx.lineWidth = 3;
+                this.ctx.beginPath();
+                
+                let currentLevel = highLevel; // RS232 idle state is high
+                this.ctx.moveTo(0, currentLevel);
+                
+                for (let i = 0; i < frame.length; i++) {
+                    const bit = frame[i];
+                    const x = i * bitWidth;
+                    const nextX = (i + 1) * bitWidth;
+                    
+                    // RS232: '0' = low voltage, '1' = high voltage
+                    const targetLevel = bit === '0' ? lowLevel : highLevel;
+                    
+                    // Draw vertical transition if level changes
+                    if (currentLevel !== targetLevel) {
+                        this.ctx.lineTo(x, currentLevel);
+                        this.ctx.lineTo(x, targetLevel);
+                        currentLevel = targetLevel;
+                    }
+                    
+                    // Draw horizontal line for this bit
+                    this.ctx.lineTo(nextX, currentLevel);
+                }
+                
+                this.ctx.stroke();
+                
+                // Draw voltage level labels
+                this.ctx.fillStyle = '#4fc3f7';
+                this.ctx.font = '12px Courier New';
+                this.ctx.fillText('+12V', 5, highLevel - 5);
+                this.ctx.fillText('-12V', 5, lowLevel + 15);
+            }
+            
+            updateBitLabels(frame) {
+                const labels = [];
+                const parityEnabled = this.paritySelect.value !== 'none';
+                
+                labels.push('START');
+                for (let i = 0; i < 8; i++) {
+                    labels.push(`D${i}`);
+                }
+                if (parityEnabled) {
+                    labels.push('PAR');
+                }
+                labels.push('STOP');
+                
+                const bitLabelsDiv = document.getElementById('bitLabels');
+                bitLabelsDiv.innerHTML = labels.map(label => `<span>${label}</span>`).join('');
+            }
+            
+            async transmitSignal() {
+                const char = this.charInput.value.toUpperCase() || 'A';
+                const ascii = char.charCodeAt(0);
+                const dataBits = ascii.toString(2).padStart(8, '0');
+                const parityBit = this.calculateParity(dataBits);
+                
+                // Update status
+                document.getElementById('transmissionStatus').className = 'transmission-status status-transmitting';
+                document.getElementById('transmissionStatus').textContent = 'Transmitting...';
+                document.getElementById('receptionStatus').className = 'transmission-status status-transmitting';
+                document.getElementById('receptionStatus').textContent = 'Receiving data...';
+                
+                this.sendButton.disabled = true;
+                
+                // Simulate transmission delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Simulate parity check
+                const parityOk = Math.random() > 0.1; // 90% success rate
+                
+                // Update receiver
+                document.getElementById('receiverScreen').textContent = char;
+                document.getElementById('receiverStatus').textContent = 'Data received successfully';
+                document.getElementById('lastReceived').textContent = `'${char}' at ${new Date().toLocaleTimeString()}`;
+                document.getElementById('parityCheck').textContent = parityOk ? 'OK' : 'ERROR';
+                document.getElementById('parityCheck').style.color = parityOk ? '#4caf50' : '#f44336';
+                
+                document.getElementById('receivedBinary').textContent = `Binary: ${dataBits}`;
+                document.getElementById('receivedAscii').textContent = `ASCII: ${ascii} (0x${ascii.toString(16).toUpperCase()})`;
+                document.getElementById('receivedChar').textContent = `Character: '${char}'`;
+                
+                // Update final status
+                document.getElementById('transmissionStatus').className = 'transmission-status status-complete';
+                document.getElementById('transmissionStatus').textContent = 'Transmission complete';
+                document.getElementById('receptionStatus').className = 'transmission-status status-complete';
+                document.getElementById('receptionStatus').textContent = parityOk ? 'Reception successful' : 'Parity error detected';
+                
+                this.sendButton.disabled = false;
+                
+                // Reset status after delay
+                setTimeout(() => {
+                    document.getElementById('transmissionStatus').className = 'transmission-status status-idle';
+                    document.getElementById('transmissionStatus').textContent = 'Ready to transmit';
+                    document.getElementById('receptionStatus').className = 'transmission-status status-idle';
+                    document.getElementById('receptionStatus').textContent = 'Listening...';
+                }, 3000);
+            }
+        }
+        
+        // Initialize the simulator when page loads
+        window.addEventListener('load', () => {
+            new RS232Simulator();
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            const simulator = new RS232Simulator();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98e74905541c0752',t:'MTc2MDQ0NzA5NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
