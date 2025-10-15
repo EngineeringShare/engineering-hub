@@ -435,7 +435,7 @@
  <body>
   <div class="header">
    <h1 class="title">⚙️ Interactive Gear Simulator</h1>
-   <div class="controls"><button class="btn btn-primary" id="addGearBtn" onclick="addGear()">Add Gear</button> <button class="btn btn-primary" id="addRingGearBtn" onclick="addRingGear()">Add Ring Gear</button> <button class="btn btn-primary" id="addLayerBtn" onclick="addLayer()">New Layer</button> <button class="btn btn-danger" id="removeLayerBtn" onclick="removeCurrentLayer()">Remove Layer</button> <button class="btn btn-danger" id="clearBtn" onclick="clearWorkspace()">Clear All</button> <button class="btn btn-primary" onclick="toggleAnimation()">Start/Stop</button>
+   <div class="controls"><button class="btn btn-primary" id="addGearBtn" onclick="addGear()">Add Gear</button> <button class="btn btn-primary" id="addRingGearBtn" onclick="addRingGear()">Add Ring Gear</button> <button class="btn btn-primary" id="addLayerBtn" onclick="addLayer()">New Layer</button> <button class="btn btn-danger" id="removeLayerBtn" onclick="removeCurrentLayer()">Remove Layer</button> <button class="btn btn-primary" onclick="saveGearSetup()">💾 Save Setup</button> <button class="btn btn-primary" onclick="loadGearSetup()">📁 Load Setup</button> <button class="btn btn-danger" id="clearBtn" onclick="clearWorkspace()">Clear All</button> <button class="btn btn-primary" onclick="toggleAnimation()">Start/Stop</button>
     <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;"><label style="font-weight: 600; color: #333;">Motor RPM:</label> <input type="range" id="rpmSlider" min="1" max="300" value="120" style="width: 120px;" oninput="updateMotorRPM(this.value)"> <span id="rpmValue" style="font-weight: bold; color: #4f46e5; min-width: 40px;">120</span>
     </div>
     <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;"><label style="font-weight: 600; color: #333;">Layer:</label> <select id="layerSelect" onchange="switchLayer(this.value)" style="padding: 0.25rem; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;"> <option value="0">Layer 0</option> </select>
@@ -2220,11 +2220,290 @@
             updateCamera();
         });
 
+        function saveGearSetup() {
+            if (isAnimating) {
+                showWarningPopup("Please stop the animation before saving your gear setup.");
+                return;
+            }
+            
+            const setupData = {
+                version: "1.0",
+                timestamp: new Date().toISOString(),
+                motorRPM: motorRPM,
+                currentLayer: currentLayer,
+                layers: [...layers],
+                maxLayer: maxLayer,
+                camera: {
+                    x: cameraX,
+                    y: cameraY,
+                    zoom: cameraZoom
+                },
+                gears: gears.map(gear => ({
+                    id: gear.id,
+                    x: gear.x,
+                    y: gear.y,
+                    size: gear.size,
+                    isRingGear: gear.isRingGear,
+                    isMotor: gear.isMotor,
+                    isPinned: gear.isPinned,
+                    layer: gear.layer,
+                    parentGearId: gear.parentGear ? gear.parentGear.id : null,
+                    compoundGearId: gear.compoundGear ? gear.compoundGear.id : null,
+                    // Store info box position
+                    infoX: gear.element?.querySelector('.gear-info') ? parseFloat(gear.element.querySelector('.gear-info').style.left) : (gear.size + 20),
+                    infoY: gear.element?.querySelector('.gear-info') ? parseFloat(gear.element.querySelector('.gear-info').style.top) : 0
+                }))
+            };
+            
+            const jsonString = JSON.stringify(setupData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `gear-setup-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showSuccessMessage("Gear setup saved successfully! 💾");
+        }
+        
+        function loadGearSetup() {
+            if (isAnimating) {
+                showWarningPopup("Please stop the animation before loading a gear setup.");
+                return;
+            }
+            
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const setupData = JSON.parse(e.target.result);
+                        
+                        // Validate the data structure
+                        if (!setupData.version || !setupData.gears || !Array.isArray(setupData.gears)) {
+                            throw new Error("Invalid gear setup file format");
+                        }
+                        
+                        // Clear current setup
+                        clearWorkspace();
+                        
+                        // Restore global settings
+                        if (setupData.motorRPM) {
+                            motorRPM = setupData.motorRPM;
+                            document.getElementById('rpmSlider').value = motorRPM;
+                            document.getElementById('rpmValue').textContent = motorRPM;
+                        }
+                        
+                        if (setupData.layers) {
+                            layers = [...setupData.layers];
+                            maxLayer = setupData.maxLayer || Math.max(...layers);
+                            updateLayerSelect();
+                        }
+                        
+                        if (setupData.camera) {
+                            cameraX = setupData.camera.x || 0;
+                            cameraY = setupData.camera.y || 0;
+                            cameraZoom = setupData.camera.zoom || 1;
+                            updateCamera();
+                        }
+                        
+                        // Restore gears in two passes to handle compound gear relationships
+                        const gearMap = new Map();
+                        const workspaceContent = document.getElementById('workspaceContent');
+                        
+                        // First pass: Create all regular gears and outer compound gears
+                        setupData.gears.forEach(gearData => {
+                            if (!gearData.parentGearId) { // Skip inner compound gears for now
+                                const gear = new Gear(
+                                    gearData.x,
+                                    gearData.y,
+                                    gearData.size,
+                                    gearData.isRingGear,
+                                    null, // No parent yet
+                                    gearData.layer
+                                );
+                                
+                                // Restore properties
+                                gear.id = gearData.id;
+                                gear.isMotor = gearData.isMotor || false;
+                                gear.isPinned = gearData.isPinned || false;
+                                
+                                // Update gear counter to avoid ID conflicts
+                                gearCounter = Math.max(gearCounter, gear.id);
+                                
+                                gearMap.set(gear.id, gear);
+                                gears.push(gear);
+                                workspaceContent.appendChild(gear.element);
+                                
+                                // Restore info box position
+                                const info = gear.element.querySelector('.gear-info');
+                                if (info && gearData.infoX !== undefined && gearData.infoY !== undefined) {
+                                    info.style.left = gearData.infoX + 'px';
+                                    info.style.top = gearData.infoY + 'px';
+                                }
+                            }
+                        });
+                        
+                        // Second pass: Create inner compound gears and establish relationships
+                        setupData.gears.forEach(gearData => {
+                            if (gearData.parentGearId) {
+                                const parentGear = gearMap.get(gearData.parentGearId);
+                                if (parentGear) {
+                                    const gear = new Gear(
+                                        gearData.x,
+                                        gearData.y,
+                                        gearData.size,
+                                        gearData.isRingGear,
+                                        parentGear,
+                                        gearData.layer
+                                    );
+                                    
+                                    gear.id = gearData.id;
+                                    gear.isMotor = gearData.isMotor || false;
+                                    gear.isPinned = gearData.isPinned || false;
+                                    
+                                    gearCounter = Math.max(gearCounter, gear.id);
+                                    
+                                    parentGear.compoundGear = gear;
+                                    gearMap.set(gear.id, gear);
+                                    gears.push(gear);
+                                    workspaceContent.appendChild(gear.element);
+                                }
+                            }
+                        });
+                        
+                        // Update all gear displays and styling
+                        gears.forEach(gear => {
+                            // Apply motor styling
+                            if (gear.isMotor) {
+                                gear.element.querySelector('.gear-circle').classList.add('motor-gear');
+                            }
+                            
+                            // Apply pinned styling
+                            if (gear.isPinned) {
+                                gear.element.querySelector('.gear-circle').classList.add('pinned-gear');
+                            }
+                            
+                            // Apply compound styling
+                            if (gear.compoundGear || gear.parentGear) {
+                                gear.element.querySelector('.gear-circle').classList.add('compound-gear');
+                            }
+                            
+                            // Update compound layering
+                            gear.updateCompoundLayering();
+                            
+                            // Update layer visibility
+                            gear.updateLayerVisibility();
+                            
+                            // Update display
+                            gear.updateDisplay();
+                        });
+                        
+                        // Restore current layer
+                        if (setupData.currentLayer !== undefined) {
+                            currentLayer = setupData.currentLayer;
+                            document.getElementById('layerSelect').value = currentLayer;
+                            switchLayer(currentLayer);
+                        }
+                        
+                        // Recalculate connections and physics
+                        gears.forEach(gear => gear.findConnections());
+                        calculateGearPhysics();
+                        drawConnections();
+                        
+                        showSuccessMessage("Gear setup loaded successfully! 📁");
+                        
+                    } catch (error) {
+                        console.error('Error loading gear setup:', error);
+                        showErrorMessage("Failed to load gear setup. Please check that the file is a valid gear setup file.");
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+        
+        function showSuccessMessage(message) {
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                z-index: 10000;
+                font-weight: 600;
+                animation: slideIn 0.3s ease-out;
+            `;
+            popup.textContent = message;
+            
+            // Add animation keyframes
+            if (!document.getElementById('toastStyles')) {
+                const style = document.createElement('style');
+                style.id = 'toastStyles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                    @keyframes slideOut {
+                        from { transform: translateX(0); opacity: 1; }
+                        to { transform: translateX(100%); opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(popup);
+            
+            setTimeout(() => {
+                popup.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => popup.remove(), 300);
+            }, 3000);
+        }
+        
+        function showErrorMessage(message) {
+            const popup = document.createElement('div');
+            popup.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #ef4444;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+                z-index: 10000;
+                font-weight: 600;
+                animation: slideIn 0.3s ease-out;
+            `;
+            popup.textContent = message;
+            
+            document.body.appendChild(popup);
+            
+            setTimeout(() => {
+                popup.style.animation = 'slideOut 0.3s ease-in';
+                setTimeout(() => popup.remove(), 300);
+            }, 4000);
+        }
+
         window.addEventListener('load', () => {
             addGear();
             updateDebugInfo();
             updateCamera(); // Initialize camera
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ef9933b52adb38',t:'MTc2MDUzNDI2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98efa49bc512074f',t:'MTc2MDUzNDczMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
