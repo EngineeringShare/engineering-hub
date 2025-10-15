@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Gear Simulator</title>
-    <style>
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Gear Simulator</title>
+  <style>
         body {
             box-sizing: border-box;
             margin: 0;
@@ -428,84 +428,122 @@
             }
         }
     </style>
-</head>
-<body>
-    <div class="header">
-        <h1 class="title">⚙️ Interactive Gear Simulator</h1>
-        <div class="controls">
-            <button class="btn btn-primary" onclick="addGear()">Add Gear</button>
-            <button class="btn btn-primary" onclick="addRingGear()">Add Ring Gear</button>
-            <button class="btn btn-danger" onclick="clearWorkspace()">Clear All</button>
-            <button class="btn btn-primary" onclick="toggleAnimation()">Start/Stop</button>
-            <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;">
-                <label style="font-weight: 600; color: #333;">Motor RPM:</label>
-                <input type="range" id="rpmSlider" min="1" max="300" value="120" style="width: 120px;" oninput="updateMotorRPM(this.value)">
-                <span id="rpmValue" style="font-weight: bold; color: #4f46e5; min-width: 40px;">120</span>
-            </div>
-        </div>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="header">
+   <h1 class="title">⚙️ Interactive Gear Simulator</h1>
+   <div class="controls"><button class="btn btn-primary" id="addGearBtn" onclick="addGear()">Add Gear</button> <button class="btn btn-primary" id="addRingGearBtn" onclick="addRingGear()">Add Ring Gear</button> <button class="btn btn-primary" id="addLayerBtn" onclick="addLayer()">New Layer</button> <button class="btn btn-danger" id="removeLayerBtn" onclick="removeCurrentLayer()">Remove Layer</button> <button class="btn btn-danger" id="clearBtn" onclick="clearWorkspace()">Clear All</button> <button class="btn btn-primary" onclick="toggleAnimation()">Start/Stop</button>
+    <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;"><label style="font-weight: 600; color: #333;">Motor RPM:</label> <input type="range" id="rpmSlider" min="1" max="300" value="120" style="width: 120px;" oninput="updateMotorRPM(this.value)"> <span id="rpmValue" style="font-weight: bold; color: #4f46e5; min-width: 40px;">120</span>
     </div>
-
-    <div class="workspace" id="workspace">
-        <div class="workspace-content" id="workspaceContent"></div>
-        <div class="zoom-controls">
-            <button class="zoom-btn" onclick="zoomIn()" title="Zoom In">+</button>
-            <div class="zoom-level" id="zoomLevel">100%</div>
-            <button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">−</button>
-            <button class="zoom-btn" onclick="resetView()" title="Reset View">🏠</button>
-        </div>
+    <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;"><label style="font-weight: 600; color: #333;">Layer:</label> <select id="layerSelect" onchange="switchLayer(this.value)" style="padding: 0.25rem; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;"> <option value="0">Layer 0</option> </select>
+    </div><button class="btn btn-primary" onclick="toggleDebugPanel()">🔍 Debug</button>
+   </div>
+  </div>
+  <div class="workspace" id="workspace">
+   <div class="workspace-content" id="workspaceContent"></div>
+   <div class="zoom-controls"><button class="zoom-btn" onclick="zoomIn()" title="Zoom In">+</button>
+    <div class="zoom-level" id="zoomLevel">
+     100%
+    </div><button class="zoom-btn" onclick="zoomOut()" title="Zoom Out">−</button> <button class="zoom-btn" onclick="resetView()" title="Reset View">🏠</button>
+   </div>
+  </div>
+  <div class="info-panel">
+   <div class="info-title">
+    Gear Physics Concepts
+   </div>
+   <div class="info-grid">
+    <div class="info-card">
+     <div class="info-title">
+      Motor Gear
+     </div>
+     <div>
+      Red gear provides power to the system<br>
+      Click any gear's M button to make it the motor
+     </div>
     </div>
-
-    <div class="info-panel">
-        <div class="info-title">Gear Physics Concepts</div>
-        <div class="info-grid">
-            <div class="info-card">
-                <div class="info-title">Motor Gear</div>
-                <div>Red gear provides power to the system<br>Click any gear's M button to make it the motor</div>
-            </div>
-            <div class="info-card">
-                <div class="info-title">Ring Gears</div>
-                <div>Green hollow gears with internal teeth<br>Automatically snap to proper meshing position</div>
-            </div>
-            <div class="info-card">
-                <div class="info-title">Pinned Gears</div>
-                <div>Purple gears are fixed in place<br>Create planetary systems by pinning gears</div>
-            </div>
-            <div class="info-card">
-                <div class="info-title">Compound Gears</div>
-                <div>Orange gears have two sizes on one shaft<br>Click 'C' button to add inner gear</div>
-            </div>
-
-            <div class="info-card">
-                <div class="info-title">Gear Ratios</div>
-                <div>Speed = Motor RPM × (Motor Teeth ÷ Gear Teeth)<br>Larger gears spin slower but with more torque</div>
-            </div>
-        </div>
+    <div class="info-card">
+     <div class="info-title">
+      Ring Gears
+     </div>
+     <div>
+      Green hollow gears with internal teeth<br>
+      Automatically snap to proper meshing position
+     </div>
     </div>
-
-    <div class="info-panel" style="margin-top: 1rem;">
-        <div class="info-title">🔍 Debug Panel</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-            <div class="info-card">
-                <div class="info-title">Gears in Array</div>
-                <div id="debugGears" style="font-family: monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto;"></div>
-            </div>
-            <div class="info-card">
-                <div class="info-title">Info Boxes Status</div>
-                <div id="debugInfos" style="font-family: monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto;"></div>
-            </div>
-        </div>
-        <div style="margin-top: 1rem; text-align: center;">
-            <button class="btn btn-primary" onclick="updateDebugInfo()">Refresh Debug Info</button>
-        </div>
+    <div class="info-card">
+     <div class="info-title">
+      Pinned Gears
+     </div>
+     <div>
+      Purple gears are fixed in place<br>
+      Create planetary systems by pinning gears
+     </div>
     </div>
-
-    <script>
+    <div class="info-card">
+     <div class="info-title">
+      Compound Gears
+     </div>
+     <div>
+      Orange gears have two sizes on one shaft<br>
+      Click 'C' button to add inner gear
+     </div>
+    </div>
+    <div class="info-card">
+     <div class="info-title">
+      Layer System
+     </div>
+     <div>
+      Switch layers to organize gears in 3D space<br>
+      Gears on other layers appear translucent
+     </div>
+    </div>
+    <div class="info-card">
+     <div class="info-title">
+      Gear Ratios
+     </div>
+     <div>
+      Speed = Motor RPM × (Motor Teeth ÷ Gear Teeth)<br>
+      Larger gears spin slower but with more torque
+     </div>
+    </div>
+   </div>
+  </div>
+  <div id="debugPanel" class="info-panel" style="margin-top: 1rem; display: none;">
+   <div class="info-title">
+    🔍 Debug Panel
+   </div>
+   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    <div class="info-card">
+     <div class="info-title">
+      Gears in Array
+     </div>
+     <div id="debugGears" style="font-family: monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto;"></div>
+    </div>
+    <div class="info-card">
+     <div class="info-title">
+      Info Boxes Status
+     </div>
+     <div id="debugInfos" style="font-family: monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto;"></div>
+    </div>
+   </div>
+   <div style="margin-top: 1rem; text-align: center;"><button class="btn btn-primary" onclick="updateDebugInfo()">Refresh Debug Info</button>
+   </div>
+  </div>
+  <script>
         let gears = [];
         let gearCounter = 0;
         let isAnimating = false;
         let draggedGear = null;
         let draggedInfo = null;
         let dragOffset = { x: 0, y: 0 };
+        
+        // Layer system
+        let currentLayer = 0;
+        let layers = [0]; // Available layers
+        let maxLayer = 0;
 
         // Camera system
         let cameraX = 0;
@@ -516,7 +554,7 @@
         let panOffset = { x: 0, y: 0 };
 
         class Gear {
-            constructor(x, y, size = 80, isRingGear = false, parentGear = null) {
+            constructor(x, y, size = 80, isRingGear = false, parentGear = null, layer = null) {
                 this.id = ++gearCounter;
                 this.x = x;
                 this.y = y;
@@ -533,8 +571,10 @@
                 this.rotationDirection = 'normal';
                 this.parentGear = parentGear;
                 this.compoundGear = null;
+                this.layer = layer !== null ? layer : (parentGear ? parentGear.layer + 1 : currentLayer);
                 this.element = this.createElement();
                 this.updateDisplay();
+                this.updateLayerVisibility();
             }
 
             calculateTeeth() {
@@ -799,6 +839,11 @@
             }
 
             startDrag(e) {
+                // Don't allow dragging gears not on current layer (unless showing all layers)
+                if (currentLayer !== 'all' && this.layer !== currentLayer) {
+                    return;
+                }
+                
                 e.preventDefault();
                 e.stopPropagation();
                 draggedGear = this;
@@ -835,7 +880,7 @@
                 // Bring this gear to the front
                 this.bringToFront();
                 
-                // Update compound gear position if it exists
+                // Update compound gear position if it exists (even if on different layer)
                 if (this.compoundGear) {
                     const centerOffsetX = (this.size - this.compoundGear.size) / 2;
                     const centerOffsetY = (this.size - this.compoundGear.size) / 2;
@@ -846,7 +891,7 @@
                     this.compoundGear.bringToFront();
                 }
                 
-                // Update parent gear position if this is a compound gear
+                // Update parent gear position if this is a compound gear (even if on different layer)
                 if (this.parentGear) {
                     const centerOffsetX = (this.parentGear.size - this.size) / 2;
                     const centerOffsetY = (this.parentGear.size - this.size) / 2;
@@ -995,6 +1040,11 @@
             }
 
             canMeshWith(otherGear) {
+                // Gears can only mesh with gears on the same layer
+                if (this.layer !== otherGear.layer) {
+                    return false;
+                }
+                
                 const distance = this.getDistanceTo(otherGear);
                 const { meshDistance, tolerance } = this.getMeshParameters(otherGear);
                 
@@ -1066,8 +1116,8 @@
                                 <strong>Torque:</strong> ${Math.round(this.compoundGear.torque)} Nm
                             </div>
                             <div class="gear-controls">
-                                <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.compoundGear.id}).changeSize(-10)">-</button>
-                                <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.compoundGear.id}).changeSize(10)">+</button>
+                                <button class="size-btn" ${isAnimating ? 'disabled style="background: #999; cursor: not-allowed;"' : ''} onclick="event.stopPropagation(); if (isAnimating) return; gears.find(g => g.id === ${this.compoundGear.id}).changeSize(-10)">-</button>
+                                <button class="size-btn" ${isAnimating ? 'disabled style="background: #999; cursor: not-allowed;"' : ''} onclick="event.stopPropagation(); if (isAnimating) return; gears.find(g => g.id === ${this.compoundGear.id}).changeSize(10)">+</button>
                             </div>
                         </div>
                     `;
@@ -1077,11 +1127,11 @@
                 const showControls = !this.parentGear;
                 const controlsHtml = showControls ? `
                     <div class="gear-controls">
-                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).changeSize(-10)">-</button>
-                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).changeSize(10)">+</button>
-                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).toggleMotor()" style="background: ${this.isMotor ? '#ef4444' : '#6366f1'};">M</button>
-                        <button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ${this.id}).togglePin()" style="background: ${this.isPinned ? '#8b5cf6' : '#6366f1'};">📌</button>
-                        ${!this.compoundGear && !this.parentGear && !this.isRingGear ? '<button class="size-btn" onclick="event.stopPropagation(); gears.find(g => g.id === ' + this.id + ').addCompoundGear()" style="background: #f59e0b;">C</button>' : ''}
+                        <button class="size-btn" ${isAnimating ? 'disabled style="background: #999; cursor: not-allowed;"' : ''} onclick="event.stopPropagation(); if (isAnimating) return; gears.find(g => g.id === ${this.id}).changeSize(-10)">-</button>
+                        <button class="size-btn" ${isAnimating ? 'disabled style="background: #999; cursor: not-allowed;"' : ''} onclick="event.stopPropagation(); if (isAnimating) return; gears.find(g => g.id === ${this.id}).changeSize(10)">+</button>
+                        <button class="size-btn" ${isAnimating ? 'disabled style="background: #999; cursor: not-allowed;"' : `style="background: ${this.isMotor ? '#ef4444' : '#6366f1'};"`} onclick="event.stopPropagation(); if (isAnimating) return; gears.find(g => g.id === ${this.id}).toggleMotor()">M</button>
+                        <button class="size-btn" ${isAnimating ? 'disabled style="background: #999; cursor: not-allowed;"' : `style="background: ${this.isPinned ? '#8b5cf6' : '#6366f1'};"`} onclick="event.stopPropagation(); if (isAnimating) return; gears.find(g => g.id === ${this.id}).togglePin()">📌</button>
+                        ${!this.compoundGear && !this.parentGear && !this.isRingGear ? `<button class="size-btn" ${isAnimating ? 'disabled style="background: #999; cursor: not-allowed;"' : 'style="background: #f59e0b;"'} onclick="event.stopPropagation(); if (isAnimating) return; gears.find(g => g.id === ${this.id}).addCompoundGear()">C</button>` : ''}
                         <button class="size-btn" style="background: ${isAnimating ? '#999' : '#ef4444'}; cursor: ${isAnimating ? 'not-allowed' : 'pointer'};" onclick="event.stopPropagation(); if (isAnimating) { showWarningPopup(); } else { gears.find(g => g.id === ${this.id}).remove(); }">×</button>
                     </div>
                 ` : '';
@@ -1144,6 +1194,30 @@
                 pointer.style.transform = `rotate(${pointerAngle}deg)`;
             }
 
+            updateLayerVisibility() {
+                if (!this.element) return;
+                
+                if (currentLayer === 'all') {
+                    // Show all layers with proper z-index stacking
+                    this.element.style.opacity = '1';
+                    this.element.style.pointerEvents = 'auto';
+                    
+                    // Stack layers with higher layer numbers on top
+                    // Base z-index of 100, add 10 per layer to ensure proper stacking
+                    this.element.style.zIndex = (100 + this.layer * 10).toString();
+                } else {
+                    const isOnCurrentLayer = this.layer === currentLayer;
+                    const opacity = isOnCurrentLayer ? '1' : '0.3';
+                    const pointerEvents = isOnCurrentLayer ? 'auto' : 'none';
+                    
+                    this.element.style.opacity = opacity;
+                    this.element.style.pointerEvents = pointerEvents;
+                    
+                    // Update z-index based on layer
+                    this.element.style.zIndex = isOnCurrentLayer ? '100' : '50';
+                }
+            }
+
             toggleMotor() {
                 if (this.isRingGear) return; // Ring gears cannot be motors
                 
@@ -1184,7 +1258,18 @@
                 const centerX = this.x + centerOffsetX;
                 const centerY = this.y + centerOffsetY;
                 
-                const compoundGear = new Gear(centerX, centerY, innerSize, false, this);
+                // Inner gear goes on the next layer up
+                const innerLayer = this.layer + 1;
+                
+                // Add the new layer if it doesn't exist
+                if (!layers.includes(innerLayer)) {
+                    layers.push(innerLayer);
+                    layers.sort((a, b) => a - b);
+                    maxLayer = Math.max(maxLayer, innerLayer);
+                    updateLayerSelect();
+                }
+                
+                const compoundGear = new Gear(centerX, centerY, innerSize, false, this, innerLayer);
                 this.compoundGear = compoundGear;
                 
                 // Set proper layering - outer gear always behind, inner gear always in front
@@ -1201,8 +1286,11 @@
             }
 
             remove() {
+                const removedLayers = new Set();
+                
                 // Remove compound gear if it exists
                 if (this.compoundGear) {
+                    removedLayers.add(this.compoundGear.layer);
                     gears = gears.filter(g => g !== this.compoundGear);
                     this.compoundGear.element.remove();
                 }
@@ -1213,8 +1301,11 @@
                     this.parentGear.updateDisplay();
                 }
                 
+                removedLayers.add(this.layer);
                 gears = gears.filter(g => g !== this);
                 this.element.remove();
+                
+                // Note: Layers are now manually removed via Remove Layer button
                 
                 // If we removed the motor, make the first remaining regular gear the motor
                 if (this.isMotor && gears.length > 0) {
@@ -1256,13 +1347,136 @@
             updateCamera();
         }
 
+        function updateLayerSelect() {
+            const layerSelect = document.getElementById('layerSelect');
+            layerSelect.innerHTML = '';
+            
+            // Add "Show All" option
+            const showAllOption = document.createElement('option');
+            showAllOption.value = 'all';
+            showAllOption.textContent = 'Show All';
+            if (currentLayer === 'all') {
+                showAllOption.selected = true;
+            }
+            layerSelect.appendChild(showAllOption);
+            
+            layers.forEach(layer => {
+                const option = document.createElement('option');
+                option.value = layer;
+                option.textContent = `Layer ${layer}`;
+                if (layer === currentLayer) {
+                    option.selected = true;
+                }
+                layerSelect.appendChild(option);
+            });
+        }
+
+        function switchLayer(newLayer) {
+            if (newLayer === 'all') {
+                currentLayer = 'all';
+            } else {
+                currentLayer = parseInt(newLayer);
+            }
+            
+            // Update visibility for all gears
+            gears.forEach(gear => {
+                gear.updateLayerVisibility();
+            });
+        }
+
+        function addLayer() {
+            if (isAnimating) return; // Prevent adding layers during animation
+            
+            const newLayer = maxLayer + 1;
+            layers.push(newLayer);
+            layers.sort((a, b) => a - b);
+            maxLayer = newLayer;
+            
+            updateLayerSelect();
+            
+            // Switch to the new layer
+            document.getElementById('layerSelect').value = newLayer;
+            switchLayer(newLayer);
+        }
+
+        function removeCurrentLayer() {
+            if (isAnimating) return; // Prevent removing layers during animation
+            
+            // Cannot remove "Show All" mode
+            if (currentLayer === 'all') {
+                showLayerWarningPopup("Cannot remove 'Show All' view. Please select a specific layer first.");
+                return;
+            }
+            
+            // Cannot remove layer 0
+            if (currentLayer === 0) {
+                showLayerWarningPopup("Cannot remove Layer 0. This is the base layer and must remain.");
+                return;
+            }
+            
+            // Check if there are any gears on this layer (including inner compound gears)
+            const gearsOnLayer = gears.filter(gear => gear.layer === currentLayer);
+            
+            if (gearsOnLayer.length > 0) {
+                showLayerWarningPopup("Remove all gears before deleting layer. This layer contains gears that must be deleted first.");
+                return;
+            }
+            
+            // Remove the layer
+            layers = layers.filter(l => l !== currentLayer);
+            
+            // Update maxLayer
+            maxLayer = Math.max(...layers);
+            
+            // Switch to layer 0
+            currentLayer = 0;
+            
+            updateLayerSelect();
+            
+            // Update visibility for all gears
+            gears.forEach(gear => {
+                gear.updateLayerVisibility();
+            });
+        }
+
+        function showLayerWarningPopup(message) {
+            // Create overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'popup-overlay';
+            
+            // Create popup
+            const popup = document.createElement('div');
+            popup.className = 'warning-popup';
+            popup.innerHTML = `
+                <h3>⚠️ Cannot Remove Layer</h3>
+                <p>${message}</p>
+                <button onclick="closeLayerWarningPopup()">Got It!</button>
+            `;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            
+            // Close on overlay click
+            overlay.addEventListener('click', closeLayerWarningPopup);
+        }
+
+        function closeLayerWarningPopup() {
+            const overlay = document.querySelector('.popup-overlay');
+            const popup = document.querySelector('.warning-popup');
+            
+            if (overlay) overlay.remove();
+            if (popup) popup.remove();
+        }
+
         function addGear() {
+            if (isAnimating) return; // Prevent adding gears during animation
+            
             const workspaceContent = document.getElementById('workspaceContent');
             const rect = document.getElementById('workspace').getBoundingClientRect();
             const x = Math.random() * (rect.width - 150) + 75;
             const y = Math.random() * (rect.height - 150) + 75;
             
-            const gear = new Gear(x, y);
+            const gear = new Gear(x, y, 80, false, null, currentLayer);
             gears.push(gear);
             workspaceContent.appendChild(gear.element);
             
@@ -1272,13 +1486,15 @@
         }
 
         function addRingGear() {
+            if (isAnimating) return; // Prevent adding ring gears during animation
+            
             const workspaceContent = document.getElementById('workspaceContent');
             const rect = document.getElementById('workspace').getBoundingClientRect();
             const ringSize = 200;
             const x = Math.random() * (rect.width - ringSize) + 50;
             const y = Math.random() * (rect.height - ringSize) + 50;
             
-            const gear = new Gear(x, y, ringSize, true);
+            const gear = new Gear(x, y, ringSize, true, null, currentLayer);
             gears.push(gear);
             workspaceContent.appendChild(gear.element);
             
@@ -1288,6 +1504,8 @@
         }
 
         function clearWorkspace() {
+            if (isAnimating) return; // Prevent clearing during animation
+            
             gears.forEach(gear => gear.element.remove());
             gears = [];
             gearCounter = 0;
@@ -1510,8 +1728,63 @@
                 stopAnimation();
             }
             
+            // Update button states
+            updateButtonStates();
+            
             // Update all gear displays to reflect animation state
             gears.forEach(gear => gear.updateDisplay());
+        }
+
+        function updateButtonStates() {
+            const addGearBtn = document.getElementById('addGearBtn');
+            const addRingGearBtn = document.getElementById('addRingGearBtn');
+            const addLayerBtn = document.getElementById('addLayerBtn');
+            const removeLayerBtn = document.getElementById('removeLayerBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            
+            if (isAnimating) {
+                // Disable buttons during animation
+                addGearBtn.disabled = true;
+                addGearBtn.style.background = '#999';
+                addGearBtn.style.cursor = 'not-allowed';
+                
+                addRingGearBtn.disabled = true;
+                addRingGearBtn.style.background = '#999';
+                addRingGearBtn.style.cursor = 'not-allowed';
+                
+                addLayerBtn.disabled = true;
+                addLayerBtn.style.background = '#999';
+                addLayerBtn.style.cursor = 'not-allowed';
+                
+                removeLayerBtn.disabled = true;
+                removeLayerBtn.style.background = '#999';
+                removeLayerBtn.style.cursor = 'not-allowed';
+                
+                clearBtn.disabled = true;
+                clearBtn.style.background = '#999';
+                clearBtn.style.cursor = 'not-allowed';
+            } else {
+                // Re-enable buttons when animation stops
+                addGearBtn.disabled = false;
+                addGearBtn.style.background = '#4f46e5';
+                addGearBtn.style.cursor = 'pointer';
+                
+                addRingGearBtn.disabled = false;
+                addRingGearBtn.style.background = '#4f46e5';
+                addRingGearBtn.style.cursor = 'pointer';
+                
+                addLayerBtn.disabled = false;
+                addLayerBtn.style.background = '#4f46e5';
+                addLayerBtn.style.cursor = 'pointer';
+                
+                removeLayerBtn.disabled = false;
+                removeLayerBtn.style.background = '#ef4444';
+                removeLayerBtn.style.cursor = 'pointer';
+                
+                clearBtn.disabled = false;
+                clearBtn.style.background = '#ef4444';
+                clearBtn.style.cursor = 'pointer';
+            }
         }
 
         function startAnimation() {
@@ -1900,6 +2173,16 @@
         // Auto-update debug info periodically
         setInterval(updateDebugInfo, 2000);
 
+        function toggleDebugPanel() {
+            const debugPanel = document.getElementById('debugPanel');
+            if (debugPanel.style.display === 'none') {
+                debugPanel.style.display = 'block';
+                updateDebugInfo(); // Refresh when showing
+            } else {
+                debugPanel.style.display = 'none';
+            }
+        }
+
         // Add workspace event listeners
         document.getElementById('workspace').addEventListener('mousedown', (e) => {
             // Only start panning if clicking on empty space (not on gears or controls)
@@ -1943,5 +2226,5 @@
             updateCamera(); // Initialize camera
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98e7e483108335ef',t:'MTc2MDQ1MzQ2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ef9933b52adb38',t:'MTc2MDUzNDI2NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
