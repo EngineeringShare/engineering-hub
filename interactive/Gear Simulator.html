@@ -287,6 +287,140 @@
             border-radius: 2px;
         }
 
+        .chain-connection {
+            position: absolute;
+            height: 12px;
+            transform-origin: left center;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .chain-segment {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0px,
+                transparent 2px,
+                #4a5568 2px,
+                #4a5568 4px,
+                #2d3748 4px,
+                #2d3748 6px,
+                #4a5568 6px,
+                #4a5568 8px,
+                transparent 8px,
+                transparent 10px
+            );
+            border-radius: 0;
+            border: none;
+            overflow: hidden;
+        }
+
+        .chain-segment::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(ellipse 4px 6px at 5px 50%, #718096 0%, #4a5568 50%, #2d3748 100%),
+                radial-gradient(ellipse 4px 6px at 15px 50%, #718096 0%, #4a5568 50%, #2d3748 100%),
+                radial-gradient(ellipse 4px 6px at 25px 50%, #718096 0%, #4a5568 50%, #2d3748 100%),
+                radial-gradient(ellipse 4px 6px at 35px 50%, #718096 0%, #4a5568 50%, #2d3748 100%);
+            background-repeat: repeat-x;
+            background-size: 20px 100%;
+            background-position: var(--before-position, 0px 0px);
+            transition: background-position 0.1s linear;
+        }
+
+        .chain-segment::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(ellipse 4px 6px at 10px 50%, #8a8a8a 0%, #5a5a5a 50%, #3a3a3a 100%),
+                radial-gradient(ellipse 4px 6px at 30px 50%, #8a8a8a 0%, #5a5a5a 50%, #3a3a3a 100%);
+            background-repeat: repeat-x;
+            background-size: 20px 100%;
+            background-position: var(--after-position, 0px 0px);
+            opacity: 0.8;
+            transition: background-position 0.1s linear;
+        }
+
+        .chain-mode {
+            background: #f59e0b !important;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.5) !important;
+        }
+
+        .chain-preview {
+            position: absolute;
+            height: 12px;
+            transform-origin: left center;
+            z-index: 10;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .chain-preview-segment {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                transparent 0px,
+                transparent 2px,
+                #d97706 2px,
+                #d97706 4px,
+                #92400e 4px,
+                #92400e 6px,
+                #d97706 6px,
+                #d97706 8px,
+                transparent 8px,
+                transparent 10px
+            );
+            border-radius: 0;
+            border: none;
+            overflow: hidden;
+        }
+
+        .chain-preview-segment::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(ellipse 4px 6px at 5px 50%, #f59e0b 0%, #d97706 50%, #92400e 100%),
+                radial-gradient(ellipse 4px 6px at 15px 50%, #f59e0b 0%, #d97706 50%, #92400e 100%),
+                radial-gradient(ellipse 4px 6px at 25px 50%, #f59e0b 0%, #d97706 50%, #92400e 100%),
+                radial-gradient(ellipse 4px 6px at 35px 50%, #f59e0b 0%, #d97706 50%, #92400e 100%);
+            background-repeat: repeat-x;
+            background-size: 20px 100%;
+            background-position: 0 0;
+        }
+
+        .chain-preview-segment::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(ellipse 4px 6px at 10px 50%, #fbbf24 0%, #f59e0b 50%, #d97706 100%),
+                radial-gradient(ellipse 4px 6px at 30px 50%, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+            background-repeat: repeat-x;
+            background-size: 20px 100%;
+            background-position: 0 0;
+            opacity: 0.9;
+        }
+
         .info-panel {
             background: rgba(255, 255, 255, 0.95);
             padding: 1rem;
@@ -428,6 +562,7 @@
             }
         }
     </style>
+  <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
   <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
   <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
@@ -435,7 +570,7 @@
  <body>
   <div class="header">
    <h1 class="title">⚙️ Interactive Gear Simulator</h1>
-   <div class="controls"><button class="btn btn-primary" id="addGearBtn" onclick="addGear()">Add Gear</button> <button class="btn btn-primary" id="addRingGearBtn" onclick="addRingGear()">Add Ring Gear</button> <button class="btn btn-primary" id="addLayerBtn" onclick="addLayer()">New Layer</button> <button class="btn btn-danger" id="removeLayerBtn" onclick="removeCurrentLayer()">Remove Layer</button> <button class="btn btn-primary" onclick="saveGearSetup()">💾 Save Setup</button> <button class="btn btn-primary" onclick="loadGearSetup()">📁 Load Setup</button> <button class="btn btn-danger" id="clearBtn" onclick="clearWorkspace()">Clear All</button> <button class="btn btn-primary" onclick="toggleAnimation()">Start/Stop</button>
+   <div class="controls"><button class="btn btn-primary" id="addGearBtn" onclick="addGear()">Add Gear</button> <button class="btn btn-primary" id="addRingGearBtn" onclick="addRingGear()">Add Ring Gear</button> <button class="btn btn-primary" id="addChainBtn" onclick="toggleChainMode()">🔗 Add Chain</button> <button class="btn btn-primary" id="addLayerBtn" onclick="addLayer()">New Layer</button> <button class="btn btn-danger" id="removeLayerBtn" onclick="removeCurrentLayer()">Remove Layer</button> <button class="btn btn-primary" onclick="saveGearSetup()">💾 Save Setup</button> <button class="btn btn-primary" onclick="loadGearSetup()">📁 Load Setup</button> <button class="btn btn-danger" id="clearBtn" onclick="clearWorkspace()">Clear All</button> <button class="btn btn-primary" onclick="toggleAnimation()">Start/Stop</button>
     <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;"><label style="font-weight: 600; color: #333;">Motor RPM:</label> <input type="range" id="rpmSlider" min="1" max="300" value="120" style="width: 120px;" oninput="updateMotorRPM(this.value)"> <span id="rpmValue" style="font-weight: bold; color: #4f46e5; min-width: 40px;">120</span>
     </div>
     <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;"><label style="font-weight: 600; color: #333;">Layer:</label> <select id="layerSelect" onchange="switchLayer(this.value)" style="padding: 0.25rem; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;"> <option value="0">Layer 0</option> </select>
@@ -502,6 +637,15 @@
     </div>
     <div class="info-card">
      <div class="info-title">
+      Chain Connections
+     </div>
+     <div>
+      Click 🔗 Add Chain, then click two gears to connect<br>
+      Chains maintain same rotation direction over distance
+     </div>
+    </div>
+    <div class="info-card">
+     <div class="info-title">
       Gear Ratios
      </div>
      <div>
@@ -515,7 +659,7 @@
    <div class="info-title">
     🔍 Debug Panel
    </div>
-   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+   <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
     <div class="info-card">
      <div class="info-title">
       Gears in Array
@@ -527,6 +671,12 @@
       Info Boxes Status
      </div>
      <div id="debugInfos" style="font-family: monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto;"></div>
+    </div>
+    <div class="info-card">
+     <div class="info-title">
+      Chain Connections
+     </div>
+     <div id="debugChains" style="font-family: monospace; font-size: 0.8rem; max-height: 200px; overflow-y: auto;"></div>
     </div>
    </div>
    <div style="margin-top: 1rem; text-align: center;"><button class="btn btn-primary" onclick="updateDebugInfo()">Refresh Debug Info</button>
@@ -540,6 +690,13 @@
         let draggedInfo = null;
         let dragOffset = { x: 0, y: 0 };
         
+        // Chain system
+        let chains = [];
+        let chainCounter = 0;
+        let isChainMode = false;
+        let chainStartGear = null;
+        let chainPreview = null;
+        
         // Layer system
         let currentLayer = 0;
         let layers = [0]; // Available layers
@@ -552,6 +709,205 @@
         let isPanning = false;
         let panStart = { x: 0, y: 0 };
         let panOffset = { x: 0, y: 0 };
+
+        class Chain {
+            constructor(gear1, gear2) {
+                this.id = ++chainCounter;
+                this.gear1 = gear1;
+                this.gear2 = gear2;
+                this.element = this.createElement();
+                this.updatePosition();
+            }
+
+            createElement() {
+                const chainDiv = document.createElement('div');
+                chainDiv.className = 'chain-connection';
+                
+                // Create the visual chain segment
+                const chainSegment = document.createElement('div');
+                chainSegment.className = 'chain-segment';
+                chainDiv.appendChild(chainSegment);
+                
+                return chainDiv;
+            }
+
+            updatePosition() {
+                if (!this.gear1.element || !this.gear2.element) return;
+                
+                // Clear existing chain segments
+                this.element.innerHTML = '';
+                
+                // Get gear centers and radii
+                const center1 = { x: this.gear1.getCenterX(), y: this.gear1.getCenterY() };
+                const center2 = { x: this.gear2.getCenterX(), y: this.gear2.getCenterY() };
+                const radius1 = this.gear1.getRadius();
+                const radius2 = this.gear2.getRadius();
+                
+                // Calculate the angle between gear centers
+                const dx = center2.x - center1.x;
+                const dy = center2.y - center1.y;
+                const centerDistance = Math.sqrt(dx * dx + dy * dy);
+                const centerAngle = Math.atan2(dy, dx);
+                
+                // Calculate external tangent points for proper chain wrapping
+                let tangentAngle1, tangentAngle2;
+                
+                if (Math.abs(radius1 - radius2) < centerDistance) {
+                    // External tangent case (most common)
+                    const radiusDiff = radius2 - radius1;
+                    const tangentOffset = Math.asin(radiusDiff / centerDistance);
+                    
+                    tangentAngle1 = centerAngle + Math.PI/2 + tangentOffset;
+                    tangentAngle2 = centerAngle - Math.PI/2 + tangentOffset; // Fixed: opposite side for gear2
+                } else {
+                    // Gears are too close or overlapping - use simple connection
+                    tangentAngle1 = centerAngle;
+                    tangentAngle2 = centerAngle + Math.PI; // Fixed: opposite side for gear2
+                }
+                
+                // Calculate tangent points on gear circumferences
+                const tangent1 = {
+                    x: center1.x + radius1 * Math.cos(tangentAngle1),
+                    y: center1.y + radius1 * Math.sin(tangentAngle1)
+                };
+                
+                const tangent2 = {
+                    x: center2.x + radius2 * Math.cos(tangentAngle2),
+                    y: center2.y + radius2 * Math.sin(tangentAngle2)
+                };
+                
+                // Create chain segments for the complete path
+                this.createChainPath(center1, center2, radius1, radius2, tangent1, tangent2, tangentAngle1, tangentAngle2);
+            }
+            
+            createChainPath(center1, center2, radius1, radius2, tangent1, tangent2, tangentAngle1, tangentAngle2) {
+                // Calculate the angle between gear centers
+                const dx = center2.x - center1.x;
+                const dy = center2.y - center1.y;
+                const centerAngle = Math.atan2(dy, dx);
+                
+                // Calculate external tangent points for proper chain connection
+                const perpAngle = centerAngle + Math.PI/2;
+                
+                // Top chain segment
+                const topPoint1 = {
+                    x: center1.x + radius1 * Math.cos(perpAngle),
+                    y: center1.y + radius1 * Math.sin(perpAngle)
+                };
+                const topPoint2 = {
+                    x: center2.x + radius2 * Math.cos(perpAngle),
+                    y: center2.y + radius2 * Math.sin(perpAngle)
+                };
+                
+                // Bottom chain segment
+                const bottomPoint1 = {
+                    x: center1.x + radius1 * Math.cos(perpAngle + Math.PI),
+                    y: center1.y + radius1 * Math.sin(perpAngle + Math.PI)
+                };
+                const bottomPoint2 = {
+                    x: center2.x + radius2 * Math.cos(perpAngle + Math.PI),
+                    y: center2.y + radius2 * Math.sin(perpAngle + Math.PI)
+                };
+                
+                // Create the two straight chain segments
+                this.createStraightSegment(topPoint1, topPoint2, 'top-straight');
+                this.createStraightSegment(bottomPoint1, bottomPoint2, 'bottom-straight');
+                
+                // Create arc segments around each gear (half circles)
+                this.createArcSegment(center1, radius1, perpAngle, perpAngle + Math.PI, 1);
+                this.createArcSegment(center2, radius2, perpAngle + Math.PI, perpAngle + 2 * Math.PI, 2);
+            }
+            
+            createStraightSegment(point1, point2, segmentType = 'straight') {
+                const segment = document.createElement('div');
+                segment.className = 'chain-segment';
+                
+                const length = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
+                const angle = Math.atan2(point2.y - point1.y, point2.x - point1.x) * 180 / Math.PI;
+                
+                segment.style.position = 'absolute';
+                segment.style.left = point1.x + 'px';
+                segment.style.top = (point1.y - 6) + 'px';
+                segment.style.width = length + 'px';
+                segment.style.height = '12px';
+                segment.style.transform = `rotate(${angle}deg)`;
+                segment.style.transformOrigin = 'left center';
+                
+                // Store segment type and direction for animation
+                segment.setAttribute('data-segment-type', segmentType);
+                segment.setAttribute('data-angle', angle);
+                
+                this.element.appendChild(segment);
+            }
+            
+            createArcSegment(center, radius, startAngle, endAngle, gearIndex) {
+                // Create arc segments around half of each gear
+                const numSegments = 16; // Fixed number for smooth half-circle
+                const angleStep = (endAngle - startAngle) / numSegments;
+                
+                for (let i = 0; i < numSegments; i++) {
+                    const angle1 = startAngle + i * angleStep;
+                    const angle2 = startAngle + (i + 1) * angleStep;
+                    
+                    const point1 = {
+                        x: center.x + radius * Math.cos(angle1),
+                        y: center.y + radius * Math.sin(angle1)
+                    };
+                    const point2 = {
+                        x: center.x + radius * Math.cos(angle2),
+                        y: center.y + radius * Math.sin(angle2)
+                    };
+                    
+                    this.createStraightSegment(point1, point2, `arc-gear${gearIndex}`);
+                }
+            }
+
+            startAnimation() {
+                // Calculate chain speed based on connected gears
+                const gear1Speed = Math.abs(this.gear1.rpm);
+                const gear2Speed = Math.abs(this.gear2.rpm);
+                const averageSpeed = (gear1Speed + gear2Speed) / 2;
+                
+                // Calculate animation duration - faster gears = faster chain
+                // Base duration of 2 seconds at 60 RPM, scale inversely with speed
+                const baseDuration = 2; // seconds
+                const baseRPM = 60;
+                const duration = averageSpeed > 0 ? (baseDuration * baseRPM / averageSpeed) : baseDuration;
+                
+                // Apply animation to all chain segments
+                const chainSegments = this.element.querySelectorAll('.chain-segment');
+                chainSegments.forEach(segment => {
+                    segment.style.setProperty('--chain-duration', `${Math.max(0.1, duration)}s`);
+                    segment.classList.add('animating');
+                });
+            }
+
+            stopAnimation() {
+                const chainSegments = this.element.querySelectorAll('.chain-segment');
+                chainSegments.forEach(segment => {
+                    segment.classList.remove('animating');
+                });
+            }
+
+            remove() {
+                if (this.element && this.element.parentNode) {
+                    this.element.remove();
+                }
+                
+                // Remove chain references from gears
+                if (this.gear1.chainConnections) {
+                    this.gear1.chainConnections = this.gear1.chainConnections.filter(c => c !== this);
+                }
+                if (this.gear2.chainConnections) {
+                    this.gear2.chainConnections = this.gear2.chainConnections.filter(c => c !== this);
+                }
+            }
+
+            isValid() {
+                // Check if both gears still exist
+                return gears.includes(this.gear1) && gears.includes(this.gear2);
+            }
+        }
 
         class Gear {
             constructor(x, y, size = 80, isRingGear = false, parentGear = null, layer = null) {
@@ -571,6 +927,7 @@
                 this.rotationDirection = 'normal';
                 this.parentGear = parentGear;
                 this.compoundGear = null;
+                this.chainConnections = [];
                 this.layer = layer !== null ? layer : (parentGear ? parentGear.layer + 1 : currentLayer);
                 this.element = this.createElement();
                 this.updateDisplay();
@@ -672,6 +1029,9 @@
                 // Add drag functionality for gear
                 circle.addEventListener('mousedown', (e) => this.startDrag(e));
                 circle.addEventListener('touchstart', (e) => this.startDrag(e));
+                
+                // Add click functionality for chain mode
+                circle.addEventListener('click', (e) => this.handleClick(e));
 
                 return gearDiv;
             }
@@ -838,9 +1198,45 @@
                 svg.appendChild(path);
             }
 
+            handleClick(e) {
+                if (isChainMode && !draggedGear) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Don't allow chain connections to gears not on current layer
+                    if (currentLayer !== 'all' && this.layer !== currentLayer) {
+                        return;
+                    }
+                    
+                    if (!chainStartGear) {
+                        // First gear selected
+                        chainStartGear = this;
+                        this.element.querySelector('.gear-circle').classList.add('chain-mode');
+                        showSuccessMessage("First gear selected! Click another gear to create chain.");
+                    } else if (chainStartGear === this) {
+                        // Clicked same gear - cancel
+                        chainStartGear.element.querySelector('.gear-circle').classList.remove('chain-mode');
+                        chainStartGear = null;
+                        clearChainPreview();
+                        showSuccessMessage("Chain selection cancelled.");
+                    } else {
+                        // Second gear selected - create chain
+                        createChain(chainStartGear, this);
+                        chainStartGear.element.querySelector('.gear-circle').classList.remove('chain-mode');
+                        chainStartGear = null;
+                        clearChainPreview();
+                    }
+                }
+            }
+
             startDrag(e) {
                 // Don't allow dragging gears not on current layer (unless showing all layers)
                 if (currentLayer !== 'all' && this.layer !== currentLayer) {
+                    return;
+                }
+                
+                // Don't start drag if in chain mode and clicking
+                if (isChainMode) {
                     return;
                 }
                 
@@ -905,6 +1301,7 @@
                 this.findConnections();
                 calculateGearPhysics();
                 drawConnections();
+                updateChainPositions();
             }
 
             updateCompoundLayering() {
@@ -1022,8 +1419,17 @@
             findConnections() {
                 this.connectedGears = [];
                 
+                // Find direct meshing connections
                 gears.forEach(otherGear => {
                     if (otherGear !== this && this.canMeshWith(otherGear)) {
+                        this.connectedGears.push(otherGear);
+                    }
+                });
+                
+                // Add chain connections
+                this.chainConnections.forEach(chain => {
+                    const otherGear = chain.gear1 === this ? chain.gear2 : chain.gear1;
+                    if (!this.connectedGears.includes(otherGear)) {
                         this.connectedGears.push(otherGear);
                     }
                 });
@@ -1035,6 +1441,14 @@
                         if (gear.canMeshWith(this)) {
                             gear.connectedGears.push(this);
                         }
+                        
+                        // Add chain connections for other gears too
+                        gear.chainConnections.forEach(chain => {
+                            const chainOtherGear = chain.gear1 === gear ? chain.gear2 : chain.gear1;
+                            if (chainOtherGear === this && !gear.connectedGears.includes(this)) {
+                                gear.connectedGears.push(this);
+                            }
+                        });
                     }
                 });
             }
@@ -1282,14 +1696,27 @@
                 this.findConnections();
                 calculateGearPhysics();
                 drawConnections();
+                updateChainPositions();
                 this.updateDisplay();
             }
 
             remove() {
                 const removedLayers = new Set();
                 
+                // Remove all chain connections involving this gear
+                const chainsToRemove = [...this.chainConnections];
+                chainsToRemove.forEach(chain => {
+                    removeChain(chain);
+                });
+                
                 // Remove compound gear if it exists
                 if (this.compoundGear) {
+                    // Remove chains from compound gear too
+                    const compoundChainsToRemove = [...this.compoundGear.chainConnections];
+                    compoundChainsToRemove.forEach(chain => {
+                        removeChain(chain);
+                    });
+                    
                     removedLayers.add(this.compoundGear.layer);
                     gears = gears.filter(g => g !== this.compoundGear);
                     this.compoundGear.element.remove();
@@ -1319,6 +1746,7 @@
                 
                 calculateGearPhysics();
                 drawConnections();
+                updateChainPositions();
             }
         }
 
@@ -1506,6 +1934,16 @@
         function clearWorkspace() {
             if (isAnimating) return; // Prevent clearing during animation
             
+            // Clear all chains
+            chains.forEach(chain => chain.remove());
+            chains = [];
+            chainCounter = 0;
+            
+            // Exit chain mode if active
+            if (isChainMode) {
+                toggleChainMode();
+            }
+            
             gears.forEach(gear => gear.element.remove());
             gears = [];
             gearCounter = 0;
@@ -1631,8 +2069,16 @@
                     connectedGear.rpm = Math.abs(sourceGear.rpm) * gearRatio;
                     connectedGear.torque = sourceGear.torque / gearRatio;
                     
-                    // Determine rotation direction based on gear type
-                    if ((sourceGear.isRingGear && !connectedGear.isRingGear) || (!sourceGear.isRingGear && connectedGear.isRingGear)) {
+                    // Determine rotation direction based on connection type
+                    const isChainConnection = sourceGear.chainConnections.some(chain => 
+                        (chain.gear1 === sourceGear && chain.gear2 === connectedGear) ||
+                        (chain.gear1 === connectedGear && chain.gear2 === sourceGear)
+                    );
+                    
+                    if (isChainConnection) {
+                        // Chain connection - same direction (chains don't reverse rotation)
+                        connectedGear.rotationDirection = sourceGear.rotationDirection;
+                    } else if ((sourceGear.isRingGear && !connectedGear.isRingGear) || (!sourceGear.isRingGear && connectedGear.isRingGear)) {
                         // Internal meshing - same direction
                         connectedGear.rotationDirection = sourceGear.rotationDirection;
                     } else {
@@ -1717,6 +2163,98 @@
             lines.forEach(line => line.remove());
         }
 
+        function toggleChainMode() {
+            if (isAnimating) {
+                showWarningPopup("Please stop the animation before adding chains.");
+                return;
+            }
+            
+            isChainMode = !isChainMode;
+            const chainBtn = document.getElementById('addChainBtn');
+            
+            if (isChainMode) {
+                chainBtn.style.background = '#f59e0b';
+                chainBtn.style.boxShadow = '0 0 10px rgba(245, 158, 11, 0.5)';
+                chainBtn.textContent = '🔗 Exit Chain Mode';
+                showSuccessMessage("Chain mode activated! Click two gears to connect them with a chain.");
+            } else {
+                chainBtn.style.background = '#4f46e5';
+                chainBtn.style.boxShadow = 'none';
+                chainBtn.textContent = '🔗 Add Chain';
+                
+                // Clean up any pending chain selection
+                if (chainStartGear) {
+                    chainStartGear.element.querySelector('.gear-circle').classList.remove('chain-mode');
+                    chainStartGear = null;
+                }
+                clearChainPreview();
+                showSuccessMessage("Chain mode deactivated.");
+            }
+        }
+
+        function createChain(gear1, gear2) {
+            // Check if chain already exists between these gears
+            const existingChain = chains.find(chain => 
+                (chain.gear1 === gear1 && chain.gear2 === gear2) ||
+                (chain.gear1 === gear2 && chain.gear2 === gear1)
+            );
+            
+            if (existingChain) {
+                showErrorMessage("Chain already exists between these gears!");
+                return;
+            }
+            
+            // Check if gears are on the same layer
+            if (gear1.layer !== gear2.layer) {
+                showErrorMessage("Chains can only connect gears on the same layer!");
+                return;
+            }
+            
+            // Create the chain
+            const chain = new Chain(gear1, gear2);
+            chains.push(chain);
+            
+            // Add chain references to gears
+            gear1.chainConnections.push(chain);
+            gear2.chainConnections.push(chain);
+            
+            // Add chain element to workspace
+            document.getElementById('workspaceContent').appendChild(chain.element);
+            
+            // Update connections and physics
+            gear1.findConnections();
+            gear2.findConnections();
+            calculateGearPhysics();
+            
+            showSuccessMessage("Chain created successfully! 🔗");
+        }
+
+        function removeChain(chain) {
+            // Remove from chains array
+            chains = chains.filter(c => c !== chain);
+            
+            // Remove chain element
+            chain.remove();
+        }
+
+        function updateChainPositions() {
+            chains.forEach(chain => {
+                if (chain.isValid()) {
+                    chain.updatePosition();
+                } else {
+                    // Remove invalid chains
+                    removeChain(chain);
+                }
+            });
+        }
+
+        function clearChainPreview() {
+            if (chainPreview) {
+                chainPreview.remove();
+                chainPreview = null;
+            }
+        }
+
         let animationFrame;
 
         function toggleAnimation() {
@@ -1738,6 +2276,7 @@
         function updateButtonStates() {
             const addGearBtn = document.getElementById('addGearBtn');
             const addRingGearBtn = document.getElementById('addRingGearBtn');
+            const addChainBtn = document.getElementById('addChainBtn');
             const addLayerBtn = document.getElementById('addLayerBtn');
             const removeLayerBtn = document.getElementById('removeLayerBtn');
             const clearBtn = document.getElementById('clearBtn');
@@ -1751,6 +2290,10 @@
                 addRingGearBtn.disabled = true;
                 addRingGearBtn.style.background = '#999';
                 addRingGearBtn.style.cursor = 'not-allowed';
+                
+                addChainBtn.disabled = true;
+                addChainBtn.style.background = '#999';
+                addChainBtn.style.cursor = 'not-allowed';
                 
                 addLayerBtn.disabled = true;
                 addLayerBtn.style.background = '#999';
@@ -1772,6 +2315,14 @@
                 addRingGearBtn.disabled = false;
                 addRingGearBtn.style.background = '#4f46e5';
                 addRingGearBtn.style.cursor = 'pointer';
+                
+                addChainBtn.disabled = false;
+                // Keep chain mode styling if active
+                if (!isChainMode) {
+                    addChainBtn.style.background = '#4f46e5';
+                    addChainBtn.style.boxShadow = 'none';
+                }
+                addChainBtn.style.cursor = 'pointer';
                 
                 addLayerBtn.disabled = false;
                 addLayerBtn.style.background = '#4f46e5';
@@ -1872,6 +2423,68 @@
                     }
                 });
                 
+                // Update chain positions during orbital motion
+                updateChainPositions();
+                
+                // Animate chains manually
+                chains.forEach(chain => {
+                    if (!chain.element) return;
+                    
+                    // Calculate chain speed based on connected gears
+                    const gear1Speed = Math.abs(chain.gear1.rpm);
+                    const gear2Speed = Math.abs(chain.gear2.rpm);
+                    const averageSpeed = (gear1Speed + gear2Speed) / 2;
+                    
+                    if (averageSpeed > 0) {
+                        // Calculate animation parameters - faster gears = faster chain movement
+                        const baseSpeed = 30; // pixels per second at 60 RPM
+                        const pixelsPerSecond = baseSpeed * (averageSpeed / 60);
+                        
+                        // Get gear rotation directions
+                        const gear1Direction = chain.gear1.rotationDirection;
+                        const gear2Direction = chain.gear2.rotationDirection;
+                        
+                        // Calculate base offset
+                        const baseOffset = (elapsed * pixelsPerSecond) % 20;
+                        
+                        // Apply animation to chain segments with proper directional flow
+                        const chainSegments = chain.element.querySelectorAll('.chain-segment');
+                        chainSegments.forEach(segment => {
+                            const segmentType = segment.getAttribute('data-segment-type');
+                            const segmentAngle = parseFloat(segment.getAttribute('data-angle')) || 0;
+                            
+                            let offset = baseOffset;
+                            
+                            // Determine flow direction based on segment type and gear rotations
+                            if (segmentType === 'top-straight') {
+                                // Top segment flows in direction of gear1's rotation
+                                if (gear1Direction === 'normal') {
+                                    offset = 20 - offset;
+                                }
+                            } else if (segmentType === 'bottom-straight') {
+                                // Bottom segment flows opposite to top segment
+                                if (gear1Direction === 'reverse') {
+                                    offset = 20 - offset;
+                                }
+                            } else if (segmentType === 'arc-gear1') {
+                                // Arc around gear1 follows gear1's rotation
+                                if (gear1Direction === 'normal') {
+                                    offset = 20 - offset;
+                                }
+                            } else if (segmentType === 'arc-gear2') {
+                                // Arc around gear2 follows gear2's rotation
+                                if (gear2Direction === 'normal') {
+                                    offset = 20 - offset;
+                                }
+                            }
+                            
+                            // Update CSS custom properties for pseudo-elements
+                            segment.style.setProperty('--before-position', `${offset}px 0px`);
+                            segment.style.setProperty('--after-position', `${offset}px 0px`);
+                        });
+                    }
+                });
+                
                 animationFrame = requestAnimationFrame(animate);
             }
             
@@ -1885,6 +2498,11 @@
                 cancelAnimationFrame(animationFrame);
                 animationFrame = null;
             }
+            
+            // Stop chain animations
+            chains.forEach(chain => {
+                chain.stopAnimation();
+            });
             
             gears.forEach((gear) => {
                 if (!gear.element) return; // Skip if gear element doesn't exist
@@ -2073,7 +2691,162 @@
                 cameraX = panOffset.x + (clientX - panStart.x);
                 cameraY = panOffset.y + (clientY - panStart.y);
                 updateCamera();
+            } else if (isChainMode && chainStartGear) {
+                // Show chain preview when in chain mode
+                updateChainPreview(e);
             }
+        }
+
+        function updateChainPreview(e) {
+            if (!chainStartGear) return;
+            
+            const workspace = document.getElementById('workspace');
+            const rect = workspace.getBoundingClientRect();
+            const clientX = e.clientX || e.touches[0].clientX;
+            const clientY = e.clientY || e.touches[0].clientY;
+            
+            // Convert to workspace coordinates
+            const workspaceX = (clientX - rect.left - cameraX) / cameraZoom;
+            const workspaceY = (clientY - rect.top - cameraY) / cameraZoom;
+            
+            // Find gear under cursor
+            const hoveredGear = gears.find(gear => {
+                if (gear === chainStartGear || gear.layer !== currentLayer) return false;
+                
+                const gearCenterX = gear.getCenterX();
+                const gearCenterY = gear.getCenterY();
+                const distance = Math.sqrt(
+                    Math.pow(workspaceX - gearCenterX, 2) + 
+                    Math.pow(workspaceY - gearCenterY, 2)
+                );
+                return distance <= gear.getRadius();
+            });
+            
+            if (hoveredGear) {
+                // Show preview to hovered gear
+                showChainPreview(chainStartGear, hoveredGear);
+            } else {
+                // Show preview to cursor position
+                showChainPreviewToCursor(chainStartGear, workspaceX, workspaceY);
+            }
+        }
+
+        function showChainPreview(gear1, gear2) {
+            clearChainPreview();
+            
+            const preview = document.createElement('div');
+            preview.className = 'chain-preview';
+            preview.style.position = 'absolute';
+            preview.style.pointerEvents = 'none';
+            preview.style.zIndex = '10';
+            
+            // Create a simplified preview showing the main chain path
+            const center1 = { x: gear1.getCenterX(), y: gear1.getCenterY() };
+            const center2 = { x: gear2.getCenterX(), y: gear2.getCenterY() };
+            const radius1 = gear1.getRadius();
+            const radius2 = gear2.getRadius();
+            
+            const dx = center2.x - center1.x;
+            const dy = center2.y - center1.y;
+            const centerDistance = Math.sqrt(dx * dx + dy * dy);
+            const centerAngle = Math.atan2(dy, dx);
+            
+            // Calculate tangent points (simplified for preview)
+            let tangentAngle1, tangentAngle2;
+            
+            if (Math.abs(radius1 - radius2) < centerDistance) {
+                const radiusDiff = radius2 - radius1;
+                const tangentOffset = Math.asin(radiusDiff / centerDistance);
+                tangentAngle1 = centerAngle + Math.PI/2 + tangentOffset;
+                tangentAngle2 = centerAngle + Math.PI/2 + tangentOffset;
+            } else {
+                tangentAngle1 = centerAngle;
+                tangentAngle2 = centerAngle;
+            }
+            
+            // Create preview segments for the main chain path
+            const tangent1 = {
+                x: center1.x + radius1 * Math.cos(tangentAngle1),
+                y: center1.y + radius1 * Math.sin(tangentAngle1)
+            };
+            
+            const tangent2 = {
+                x: center2.x + radius2 * Math.cos(tangentAngle2),
+                y: center2.y + radius2 * Math.sin(tangentAngle2)
+            };
+            
+            // Create the main straight segment for preview
+            const previewSegment = document.createElement('div');
+            previewSegment.className = 'chain-preview-segment';
+            
+            const length = Math.sqrt(Math.pow(tangent2.x - tangent1.x, 2) + Math.pow(tangent2.y - tangent1.y, 2));
+            const chainAngle = Math.atan2(tangent2.y - tangent1.y, tangent2.x - tangent1.x) * 180 / Math.PI;
+            
+            previewSegment.style.position = 'absolute';
+            previewSegment.style.left = tangent1.x + 'px';
+            previewSegment.style.top = (tangent1.y - 6) + 'px';
+            previewSegment.style.width = length + 'px';
+            previewSegment.style.height = '12px';
+            previewSegment.style.transform = `rotate(${chainAngle}deg)`;
+            previewSegment.style.transformOrigin = 'left center';
+            
+            preview.appendChild(previewSegment);
+            
+            // Add simplified arc indicators
+            const arc1 = document.createElement('div');
+            arc1.style.position = 'absolute';
+            arc1.style.left = (center1.x - radius1) + 'px';
+            arc1.style.top = (center1.y - radius1) + 'px';
+            arc1.style.width = (radius1 * 2) + 'px';
+            arc1.style.height = (radius1 * 2) + 'px';
+            arc1.style.border = '2px dashed #f59e0b';
+            arc1.style.borderRadius = '50%';
+            arc1.style.opacity = '0.5';
+            preview.appendChild(arc1);
+            
+            const arc2 = document.createElement('div');
+            arc2.style.position = 'absolute';
+            arc2.style.left = (center2.x - radius2) + 'px';
+            arc2.style.top = (center2.y - radius2) + 'px';
+            arc2.style.width = (radius2 * 2) + 'px';
+            arc2.style.height = (radius2 * 2) + 'px';
+            arc2.style.border = '2px dashed #f59e0b';
+            arc2.style.borderRadius = '50%';
+            arc2.style.opacity = '0.5';
+            preview.appendChild(arc2);
+            
+            chainPreview = preview;
+            document.getElementById('workspaceContent').appendChild(preview);
+        }
+
+        function showChainPreviewToCursor(gear, cursorX, cursorY) {
+            clearChainPreview();
+            
+            const preview = document.createElement('div');
+            preview.className = 'chain-preview';
+            
+            const previewSegment = document.createElement('div');
+            previewSegment.className = 'chain-preview-segment';
+            preview.appendChild(previewSegment);
+            
+            // Simple line from gear edge to cursor
+            const gearCenterX = gear.getCenterX();
+            const gearCenterY = gear.getCenterY();
+            const angle = Math.atan2(cursorY - gearCenterY, cursorX - gearCenterX);
+            
+            const x1 = gearCenterX + gear.getRadius() * Math.cos(angle);
+            const y1 = gearCenterY + gear.getRadius() * Math.sin(angle);
+            
+            const length = Math.sqrt(Math.pow(cursorX - x1, 2) + Math.pow(cursorY - y1, 2));
+            const chainAngle = Math.atan2(cursorY - y1, cursorX - x1) * 180 / Math.PI;
+            
+            preview.style.left = x1 + 'px';
+            preview.style.top = (y1 - 6) + 'px';
+            preview.style.width = length + 'px';
+            preview.style.transform = `rotate(${chainAngle}deg)`;
+            
+            chainPreview = preview;
+            document.getElementById('workspaceContent').appendChild(preview);
         }
 
         function stopDrag() {
@@ -2115,6 +2888,7 @@
         function updateDebugInfo() {
             const debugGears = document.getElementById('debugGears');
             const debugInfos = document.getElementById('debugInfos');
+            const debugChains = document.getElementById('debugChains');
             
             // Debug gears array
             let gearsInfo = `Total gears: ${gears.length}<br><br>`;
@@ -2130,6 +2904,7 @@
                         gearsInfo += `    Info Parent: ${info.parentElement === gear.element ? 'GEAR' : 'OTHER'}<br>`;
                     }
                 }
+                gearsInfo += `    Chain Connections: ${gear.chainConnections.length}<br>`;
                 gearsInfo += `<br>`;
             });
             debugGears.innerHTML = gearsInfo;
@@ -2168,6 +2943,34 @@
             });
             
             debugInfos.innerHTML = infosInfo;
+            
+            // Debug chains
+            let chainsInfo = `Total chains: ${chains.length}<br>`;
+            chainsInfo += `Chain counter: ${chainCounter}<br><br>`;
+            
+            chains.forEach((chain, index) => {
+                chainsInfo += `[${index}] Chain ID: ${chain.id}<br>`;
+                chainsInfo += `    Gear1: ID ${chain.gear1.id} (${chain.gear1.isRingGear ? 'RING' : 'REG'})<br>`;
+                chainsInfo += `    Gear2: ID ${chain.gear2.id} (${chain.gear2.isRingGear ? 'RING' : 'REG'})<br>`;
+                chainsInfo += `    Element: ${chain.element ? 'EXISTS' : 'MISSING'}<br>`;
+                if (chain.element) {
+                    chainsInfo += `    In DOM: ${document.contains(chain.element) ? 'YES' : 'NO'}<br>`;
+                    const segments = chain.element.querySelectorAll('.chain-segment');
+                    chainsInfo += `    Segments: ${segments.length}<br>`;
+                }
+                chainsInfo += `    Valid: ${chain.isValid() ? 'YES' : 'NO'}<br>`;
+                chainsInfo += `    Layer Match: ${chain.gear1.layer === chain.gear2.layer ? 'YES' : 'NO'}<br>`;
+                chainsInfo += `<br>`;
+            });
+            
+            // Check for orphaned chain elements
+            const allChainElements = document.querySelectorAll('.chain-connection');
+            chainsInfo += `DOM chain elements: ${allChainElements.length}<br>`;
+            if (allChainElements.length !== chains.length) {
+                chainsInfo += `<span style="color: #ef4444;">MISMATCH! Expected ${chains.length}</span><br>`;
+            }
+            
+            debugChains.innerHTML = chainsInfo;
         }
 
         // Auto-update debug info periodically
@@ -2227,7 +3030,7 @@
             }
             
             const setupData = {
-                version: "1.0",
+                version: "1.1",
                 timestamp: new Date().toISOString(),
                 motorRPM: motorRPM,
                 currentLayer: currentLayer,
@@ -2252,6 +3055,11 @@
                     // Store info box position
                     infoX: gear.element?.querySelector('.gear-info') ? parseFloat(gear.element.querySelector('.gear-info').style.left) : (gear.size + 20),
                     infoY: gear.element?.querySelector('.gear-info') ? parseFloat(gear.element.querySelector('.gear-info').style.top) : 0
+                })),
+                chains: chains.map(chain => ({
+                    id: chain.id,
+                    gear1Id: chain.gear1.id,
+                    gear2Id: chain.gear2.id
                 }))
             };
             
@@ -2415,10 +3223,36 @@
                             switchLayer(currentLayer);
                         }
                         
+                        // Restore chains
+                        if (setupData.chains && Array.isArray(setupData.chains)) {
+                            setupData.chains.forEach(chainData => {
+                                const gear1 = gearMap.get(chainData.gear1Id);
+                                const gear2 = gearMap.get(chainData.gear2Id);
+                                
+                                if (gear1 && gear2) {
+                                    const chain = new Chain(gear1, gear2);
+                                    chain.id = chainData.id;
+                                    
+                                    // Update chain counter to avoid ID conflicts
+                                    chainCounter = Math.max(chainCounter, chain.id);
+                                    
+                                    chains.push(chain);
+                                    
+                                    // Add chain references to gears
+                                    gear1.chainConnections.push(chain);
+                                    gear2.chainConnections.push(chain);
+                                    
+                                    // Add chain element to workspace
+                                    workspaceContent.appendChild(chain.element);
+                                }
+                            });
+                        }
+                        
                         // Recalculate connections and physics
                         gears.forEach(gear => gear.findConnections());
                         calculateGearPhysics();
                         drawConnections();
+                        updateChainPositions();
                         
                         showSuccessMessage("Gear setup loaded successfully! 📁");
                         
@@ -2505,5 +3339,5 @@
             updateCamera(); // Initialize camera
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98efa49bc512074f',t:'MTc2MDUzNDczMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f845fe83866ab4',t:'MTc2MDYyNTIyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
