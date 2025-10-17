@@ -557,6 +557,81 @@
             background: #d1d5db;
         }
 
+        .examples-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            max-width: 500px;
+            width: 90%;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .examples-popup h3 {
+            color: #374151;
+            margin: 0 0 1.5rem 0;
+            font-size: 1.3rem;
+            text-align: center;
+        }
+
+        .examples-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .example-item {
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+        }
+
+        .example-item:hover {
+            border-color: #4f46e5;
+            background: #f0f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+        }
+
+        .example-title {
+            font-weight: bold;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .example-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .examples-popup .close-btn {
+            background: #6b7280;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+        }
+
+        .examples-popup .close-btn:hover {
+            background: #4b5563;
+        }
+
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -642,7 +717,7 @@
  <body>
   <div class="header">
    <h1 class="title">⚙️ Interactive Gear Simulator</h1>
-   <div class="controls"><button class="btn btn-secondary" id="backToHubBtn" onclick="showBackToHubConfirmation()">← Back to Hub</button> <button class="btn btn-primary" id="addGearBtn" onclick="addGear()">Add Gear</button> <button class="btn btn-primary" id="addRingGearBtn" onclick="addRingGear()">Add Ring Gear</button> <button class="btn btn-primary" id="addChainBtn" onclick="toggleChainMode()">🔗 Add Chain</button> <button class="btn btn-primary" id="addLayerBtn" onclick="addLayer()">New Layer</button> <button class="btn btn-danger" id="removeLayerBtn" onclick="removeCurrentLayer()">Remove Layer</button> <button class="btn btn-primary" onclick="saveGearSetup()">💾 Save Setup</button> <button class="btn btn-primary" onclick="loadGearSetup()">📁 Load Setup</button> <button class="btn btn-danger" id="clearBtn" onclick="clearWorkspace()">Clear All</button> <button class="btn btn-primary" onclick="toggleAnimation()">Start/Stop</button>
+   <div class="controls"><button class="btn btn-secondary" id="backToHubBtn" onclick="showBackToHubConfirmation()">← Back to Hub</button> <button class="btn btn-primary" id="addGearBtn" onclick="addGear()">Add Gear</button> <button class="btn btn-primary" id="addRingGearBtn" onclick="addRingGear()">Add Ring Gear</button> <button class="btn btn-primary" id="addChainBtn" onclick="toggleChainMode()">🔗 Add Chain</button> <button class="btn btn-primary" id="addLayerBtn" onclick="addLayer()">New Layer</button> <button class="btn btn-danger" id="removeLayerBtn" onclick="removeCurrentLayer()">Remove Layer</button> <button class="btn btn-primary" onclick="saveGearSetup()">💾 Save Setup</button> <button class="btn btn-primary" onclick="loadGearSetup()">📁 Load Setup</button> <button class="btn btn-primary" onclick="showExamplesMenu()">📚 Load Examples</button> <button class="btn btn-danger" id="clearBtn" onclick="clearWorkspace()">Clear All</button> <button class="btn btn-primary" onclick="toggleAnimation()">Start/Stop</button>
     <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;"><label style="font-weight: 600; color: #333;">Motor RPM:</label> <input type="range" id="rpmSlider" min="1" max="300" value="120" style="width: 120px;" oninput="updateMotorRPM(this.value)"> <span id="rpmValue" style="font-weight: bold; color: #4f46e5; min-width: 40px;">120</span>
     </div>
     <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;"><label style="font-weight: 600; color: #333;">Layer:</label> <select id="layerSelect" onchange="switchLayer(this.value)" style="padding: 0.25rem; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;"> <option value="0">Layer 0</option> </select>
@@ -3442,11 +3517,575 @@
             window.open('https://engineeringshare.github.io/engineering-hub/interactive-hub/', '_self');
         }
 
+        // Example gear setups
+        const gearExamples = [
+            {
+                name: "Epicyclic Gear Example",
+                description: "A planetary gear system with a pinned sun gear (red motor) surrounded by planet gears inside a ring gear. Demonstrates orbital motion and gear ratios in epicyclic systems.",
+                data: {
+                    "version": "1.0",
+                    "timestamp": "2025-10-15T13:27:08.915Z",
+                    "motorRPM": 120,
+                    "currentLayer": 0,
+                    "layers": [0, 1],
+                    "maxLayer": 1,
+                    "camera": { "x": 0, "y": 0, "zoom": 1 },
+                    "gears": [
+                        {
+                            "id": 4,
+                            "x": 607,
+                            "y": 200,
+                            "size": 80,
+                            "isRingGear": false,
+                            "isMotor": true,
+                            "isPinned": true,
+                            "layer": 0,
+                            "parentGearId": null,
+                            "compoundGearId": null,
+                            "infoX": 382,
+                            "infoY": 100
+                        },
+                        {
+                            "id": 5,
+                            "x": 608,
+                            "y": 125,
+                            "size": 80,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 0,
+                            "parentGearId": null,
+                            "compoundGearId": null,
+                            "infoX": 301,
+                            "infoY": -54
+                        },
+                        {
+                            "id": 6,
+                            "x": 607,
+                            "y": 279,
+                            "size": 80,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 0,
+                            "parentGearId": null,
+                            "compoundGearId": null,
+                            "infoX": 166,
+                            "infoY": 84
+                        },
+                        {
+                            "id": 7,
+                            "x": 503,
+                            "y": 99,
+                            "size": 280,
+                            "isRingGear": true,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 0,
+                            "parentGearId": null,
+                            "compoundGearId": null,
+                            "infoX": -280,
+                            "infoY": -34
+                        }
+                    ],
+                    "chains": []
+                }
+            },
+            {
+                name: "Chain Transmission Example",
+                description: "Demonstrates chain transmission between gears across different layers. The motor gear drives a compound gear system via chain connection, showing how chains maintain rotation direction and transmit power over distance.",
+                data: {
+                    "version": "1.0",
+                    "timestamp": "2025-10-16T14:27:33.043Z",
+                    "motorRPM": 120,
+                    "currentLayer": "all",
+                    "layers": [0, 1],
+                    "maxLayer": 1,
+                    "camera": { "x": 258, "y": 104, "zoom": 0.8 },
+                    "gears": [
+                        {
+                            "id": 1,
+                            "x": 818.444295896682,
+                            "y": 94,
+                            "size": 80,
+                            "isRingGear": false,
+                            "isMotor": true,
+                            "isPinned": false,
+                            "layer": 0,
+                            "parentGearId": null,
+                            "compoundGearId": null,
+                            "infoX": 100,
+                            "infoY": 0
+                        },
+                        {
+                            "id": 2,
+                            "x": 344,
+                            "y": 44,
+                            "size": 240,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 0,
+                            "parentGearId": null,
+                            "compoundGearId": 3,
+                            "infoX": -335,
+                            "infoY": 33
+                        },
+                        {
+                            "id": 3,
+                            "x": 419,
+                            "y": 119,
+                            "size": 90,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 1,
+                            "parentGearId": 2,
+                            "compoundGearId": null,
+                            "infoX": 110,
+                            "infoY": 0
+                        },
+                        {
+                            "id": 5,
+                            "x": 235,
+                            "y": -11,
+                            "size": 210,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 1,
+                            "parentGearId": null,
+                            "compoundGearId": null,
+                            "infoX": -249,
+                            "infoY": -73
+                        }
+                    ],
+                    "chains": [
+                        {
+                            "id": 1,
+                            "gear1Id": 1,
+                            "gear2Id": 2
+                        }
+                    ]
+                }
+            },
+            {
+                name: "Compound Gear Chain Example",
+                description: "A complex multi-layer gear train featuring compound gears (orange) across 6 different layers. Each compound gear has two different sized gears on the same shaft, creating sophisticated gear ratios and mechanical advantage through the chain.",
+                data: {
+                    "version": "1.1",
+                    "timestamp": "2025-10-17T14:44:01.643Z",
+                    "motorRPM": 120,
+                    "currentLayer": "all",
+                    "layers": [0, 1, 2, 3, 4, 5, 6],
+                    "maxLayer": 6,
+                    "camera": { "x": 249, "y": 186, "zoom": 0.5 },
+                    "gears": [
+                        {
+                            "id": 1,
+                            "x": 742,
+                            "y": 196,
+                            "size": 80,
+                            "isRingGear": false,
+                            "isMotor": true,
+                            "isPinned": false,
+                            "layer": 6,
+                            "parentGearId": null,
+                            "compoundGearId": null,
+                            "infoX": 100,
+                            "infoY": 0
+                        },
+                        {
+                            "id": 2,
+                            "x": 580,
+                            "y": 113,
+                            "size": 240,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 5,
+                            "parentGearId": null,
+                            "compoundGearId": 3,
+                            "infoX": 284,
+                            "infoY": -195
+                        },
+                        {
+                            "id": 4,
+                            "x": 432,
+                            "y": 181,
+                            "size": 240,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 4,
+                            "parentGearId": null,
+                            "compoundGearId": 5,
+                            "infoX": 229,
+                            "infoY": -380
+                        },
+                        {
+                            "id": 6,
+                            "x": 268,
+                            "y": 205,
+                            "size": 240,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 3,
+                            "parentGearId": null,
+                            "compoundGearId": 7,
+                            "infoX": 215,
+                            "infoY": -385
+                        },
+                        {
+                            "id": 8,
+                            "x": 106,
+                            "y": 186,
+                            "size": 240,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 2,
+                            "parentGearId": null,
+                            "compoundGearId": 9,
+                            "infoX": 179,
+                            "infoY": -376
+                        },
+                        {
+                            "id": 10,
+                            "x": -34,
+                            "y": 99,
+                            "size": 240,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 1,
+                            "parentGearId": null,
+                            "compoundGearId": 11,
+                            "infoX": 137,
+                            "infoY": -293
+                        },
+                        {
+                            "id": 3,
+                            "x": 655,
+                            "y": 188,
+                            "size": 90,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 6,
+                            "parentGearId": 2,
+                            "compoundGearId": null,
+                            "infoX": 110,
+                            "infoY": 0
+                        },
+                        {
+                            "id": 5,
+                            "x": 507,
+                            "y": 256,
+                            "size": 90,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 5,
+                            "parentGearId": 4,
+                            "compoundGearId": null,
+                            "infoX": 110,
+                            "infoY": 0
+                        },
+                        {
+                            "id": 7,
+                            "x": 343,
+                            "y": 280,
+                            "size": 90,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 4,
+                            "parentGearId": 6,
+                            "compoundGearId": null,
+                            "infoX": 110,
+                            "infoY": 0
+                        },
+                        {
+                            "id": 9,
+                            "x": 181,
+                            "y": 261,
+                            "size": 90,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 3,
+                            "parentGearId": 8,
+                            "compoundGearId": null,
+                            "infoX": 110,
+                            "infoY": 0
+                        },
+                        {
+                            "id": 11,
+                            "x": 40,
+                            "y": 174,
+                            "size": 90,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 2,
+                            "parentGearId": 10,
+                            "compoundGearId": null,
+                            "infoX": 110,
+                            "infoY": 0
+                        },
+                        {
+                            "id": 21,
+                            "x": -61,
+                            "y": 66,
+                            "size": 80,
+                            "isRingGear": false,
+                            "isMotor": false,
+                            "isPinned": false,
+                            "layer": 1,
+                            "parentGearId": null,
+                            "compoundGearId": null,
+                            "infoX": -114,
+                            "infoY": -184
+                        }
+                    ],
+                    "chains": []
+                }
+            }
+        ];
+
+        function showExamplesMenu() {
+            if (isAnimating) {
+                showWarningPopup("Please stop the animation before loading examples.");
+                return;
+            }
+
+            // Create overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'popup-overlay';
+            
+            // Create popup
+            const popup = document.createElement('div');
+            popup.className = 'examples-popup';
+            
+            let examplesHTML = `
+                <h3>📚 Load Example Gear Systems</h3>
+                <div class="examples-list">
+            `;
+            
+            gearExamples.forEach((example, index) => {
+                examplesHTML += `
+                    <div class="example-item" onclick="loadExample(${index})">
+                        <div class="example-title">${example.name}</div>
+                        <div class="example-description">${example.description}</div>
+                    </div>
+                `;
+            });
+            
+            examplesHTML += `
+                </div>
+                <button class="close-btn" onclick="closeExamplesMenu()">Close</button>
+            `;
+            
+            popup.innerHTML = examplesHTML;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            
+            // Close on overlay click
+            overlay.addEventListener('click', closeExamplesMenu);
+        }
+
+        function closeExamplesMenu() {
+            const overlay = document.querySelector('.popup-overlay');
+            const popup = document.querySelector('.examples-popup');
+            
+            if (overlay) overlay.remove();
+            if (popup) popup.remove();
+        }
+
+        function loadExample(exampleIndex) {
+            if (exampleIndex < 0 || exampleIndex >= gearExamples.length) {
+                showErrorMessage("Invalid example selection.");
+                return;
+            }
+
+            const example = gearExamples[exampleIndex];
+            
+            try {
+                // Close the examples menu
+                closeExamplesMenu();
+                
+                // Clear current setup
+                clearWorkspace();
+                
+                // Load the example data using the same logic as loadGearSetup
+                const setupData = example.data;
+                
+                // Restore global settings
+                if (setupData.motorRPM) {
+                    motorRPM = setupData.motorRPM;
+                    document.getElementById('rpmSlider').value = motorRPM;
+                    document.getElementById('rpmValue').textContent = motorRPM;
+                }
+                
+                if (setupData.layers) {
+                    layers = [...setupData.layers];
+                    maxLayer = setupData.maxLayer || Math.max(...layers);
+                    updateLayerSelect();
+                }
+                
+                if (setupData.camera) {
+                    cameraX = setupData.camera.x || 0;
+                    cameraY = setupData.camera.y || 0;
+                    cameraZoom = setupData.camera.zoom || 1;
+                    updateCamera();
+                }
+                
+                // Restore gears in two passes to handle compound gear relationships
+                const gearMap = new Map();
+                const workspaceContent = document.getElementById('workspaceContent');
+                
+                // First pass: Create all regular gears and outer compound gears
+                setupData.gears.forEach(gearData => {
+                    if (!gearData.parentGearId) { // Skip inner compound gears for now
+                        const gear = new Gear(
+                            gearData.x,
+                            gearData.y,
+                            gearData.size,
+                            gearData.isRingGear,
+                            null, // No parent yet
+                            gearData.layer
+                        );
+                        
+                        // Restore properties
+                        gear.id = gearData.id;
+                        gear.isMotor = gearData.isMotor || false;
+                        gear.isPinned = gearData.isPinned || false;
+                        
+                        // Update gear counter to avoid ID conflicts
+                        gearCounter = Math.max(gearCounter, gear.id);
+                        
+                        gearMap.set(gear.id, gear);
+                        gears.push(gear);
+                        workspaceContent.appendChild(gear.element);
+                        
+                        // Restore info box position
+                        const info = gear.element.querySelector('.gear-info');
+                        if (info && gearData.infoX !== undefined && gearData.infoY !== undefined) {
+                            info.style.left = gearData.infoX + 'px';
+                            info.style.top = gearData.infoY + 'px';
+                        }
+                    }
+                });
+                
+                // Second pass: Create inner compound gears and establish relationships
+                setupData.gears.forEach(gearData => {
+                    if (gearData.parentGearId) {
+                        const parentGear = gearMap.get(gearData.parentGearId);
+                        if (parentGear) {
+                            const gear = new Gear(
+                                gearData.x,
+                                gearData.y,
+                                gearData.size,
+                                gearData.isRingGear,
+                                parentGear,
+                                gearData.layer
+                            );
+                            
+                            gear.id = gearData.id;
+                            gear.isMotor = gearData.isMotor || false;
+                            gear.isPinned = gearData.isPinned || false;
+                            
+                            gearCounter = Math.max(gearCounter, gear.id);
+                            
+                            parentGear.compoundGear = gear;
+                            gearMap.set(gear.id, gear);
+                            gears.push(gear);
+                            workspaceContent.appendChild(gear.element);
+                        }
+                    }
+                });
+                
+                // Update all gear displays and styling
+                gears.forEach(gear => {
+                    // Apply motor styling
+                    if (gear.isMotor) {
+                        gear.element.querySelector('.gear-circle').classList.add('motor-gear');
+                    }
+                    
+                    // Apply pinned styling
+                    if (gear.isPinned) {
+                        gear.element.querySelector('.gear-circle').classList.add('pinned-gear');
+                    }
+                    
+                    // Apply compound styling
+                    if (gear.compoundGear || gear.parentGear) {
+                        gear.element.querySelector('.gear-circle').classList.add('compound-gear');
+                    }
+                    
+                    // Update compound layering
+                    gear.updateCompoundLayering();
+                    
+                    // Update layer visibility
+                    gear.updateLayerVisibility();
+                    
+                    // Update display
+                    gear.updateDisplay();
+                });
+                
+                // Restore current layer
+                if (setupData.currentLayer !== undefined) {
+                    currentLayer = setupData.currentLayer;
+                    document.getElementById('layerSelect').value = currentLayer;
+                    switchLayer(currentLayer);
+                }
+                
+                // Restore chains
+                if (setupData.chains && Array.isArray(setupData.chains)) {
+                    setupData.chains.forEach(chainData => {
+                        const gear1 = gearMap.get(chainData.gear1Id);
+                        const gear2 = gearMap.get(chainData.gear2Id);
+                        
+                        if (gear1 && gear2) {
+                            const chain = new Chain(gear1, gear2);
+                            chain.id = chainData.id;
+                            
+                            // Update chain counter to avoid ID conflicts
+                            chainCounter = Math.max(chainCounter, chain.id);
+                            
+                            chains.push(chain);
+                            
+                            // Add chain references to gears
+                            gear1.chainConnections.push(chain);
+                            gear2.chainConnections.push(chain);
+                            
+                            // Add chain element to workspace
+                            workspaceContent.appendChild(chain.element);
+                        }
+                    });
+                }
+                
+                // Recalculate connections and physics
+                gears.forEach(gear => gear.findConnections());
+                calculateGearPhysics();
+                drawConnections();
+                updateChainPositions();
+                
+                showSuccessMessage(`${example.name} loaded successfully! 📚`);
+                
+            } catch (error) {
+                console.error('Error loading example:', error);
+                showErrorMessage("Failed to load example. Please try again.");
+            }
+        }
+
         window.addEventListener('load', () => {
             addGear();
             updateDebugInfo();
             updateCamera(); // Initialize camera
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ffc4898758b0e3',t:'MTc2MDcwMzgxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99009b444049b0e3',t:'MTc2MDcxMjYwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
