@@ -71,6 +71,16 @@
             transform: translateY(-2px);
         }
 
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+            transform: translateY(-2px);
+        }
+
         .workspace {
             flex: 1;
             position: relative;
@@ -485,6 +495,68 @@
             background: #dc2626;
         }
 
+        .confirmation-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            text-align: center;
+            border: 3px solid #6b7280;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .confirmation-popup h3 {
+            color: #374151;
+            margin: 0 0 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .confirmation-popup p {
+            margin: 0 0 1.5rem 0;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        .confirmation-popup .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .confirmation-popup button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .confirmation-popup .btn-confirm {
+            background: #6b7280;
+            color: white;
+        }
+
+        .confirmation-popup .btn-confirm:hover {
+            background: #4b5563;
+        }
+
+        .confirmation-popup .btn-cancel {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .confirmation-popup .btn-cancel:hover {
+            background: #d1d5db;
+        }
+
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -570,7 +642,7 @@
  <body>
   <div class="header">
    <h1 class="title">⚙️ Interactive Gear Simulator</h1>
-   <div class="controls"><button class="btn btn-primary" id="addGearBtn" onclick="addGear()">Add Gear</button> <button class="btn btn-primary" id="addRingGearBtn" onclick="addRingGear()">Add Ring Gear</button> <button class="btn btn-primary" id="addChainBtn" onclick="toggleChainMode()">🔗 Add Chain</button> <button class="btn btn-primary" id="addLayerBtn" onclick="addLayer()">New Layer</button> <button class="btn btn-danger" id="removeLayerBtn" onclick="removeCurrentLayer()">Remove Layer</button> <button class="btn btn-primary" onclick="saveGearSetup()">💾 Save Setup</button> <button class="btn btn-primary" onclick="loadGearSetup()">📁 Load Setup</button> <button class="btn btn-danger" id="clearBtn" onclick="clearWorkspace()">Clear All</button> <button class="btn btn-primary" onclick="toggleAnimation()">Start/Stop</button>
+   <div class="controls"><button class="btn btn-secondary" id="backToHubBtn" onclick="showBackToHubConfirmation()">← Back to Hub</button> <button class="btn btn-primary" id="addGearBtn" onclick="addGear()">Add Gear</button> <button class="btn btn-primary" id="addRingGearBtn" onclick="addRingGear()">Add Ring Gear</button> <button class="btn btn-primary" id="addChainBtn" onclick="toggleChainMode()">🔗 Add Chain</button> <button class="btn btn-primary" id="addLayerBtn" onclick="addLayer()">New Layer</button> <button class="btn btn-danger" id="removeLayerBtn" onclick="removeCurrentLayer()">Remove Layer</button> <button class="btn btn-primary" onclick="saveGearSetup()">💾 Save Setup</button> <button class="btn btn-primary" onclick="loadGearSetup()">📁 Load Setup</button> <button class="btn btn-danger" id="clearBtn" onclick="clearWorkspace()">Clear All</button> <button class="btn btn-primary" onclick="toggleAnimation()">Start/Stop</button>
     <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;"><label style="font-weight: 600; color: #333;">Motor RPM:</label> <input type="range" id="rpmSlider" min="1" max="300" value="120" style="width: 120px;" oninput="updateMotorRPM(this.value)"> <span id="rpmValue" style="font-weight: bold; color: #4f46e5; min-width: 40px;">120</span>
     </div>
     <div style="display: flex; align-items: center; gap: 0.5rem; background: rgba(255,255,255,0.9); padding: 0.5rem 1rem; border-radius: 8px;"><label style="font-weight: 600; color: #333;">Layer:</label> <select id="layerSelect" onchange="switchLayer(this.value)" style="padding: 0.25rem; border-radius: 4px; border: 1px solid #ccc; font-weight: bold;"> <option value="0">Layer 0</option> </select>
@@ -3333,11 +3405,48 @@
             }, 4000);
         }
 
+        function showBackToHubConfirmation() {
+            // Create overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'popup-overlay';
+            
+            // Create popup
+            const popup = document.createElement('div');
+            popup.className = 'confirmation-popup';
+            popup.innerHTML = `
+                <h3>🏠 Return to Interactive Hub?</h3>
+                <p>Are you sure you want to leave? Any unsaved gear designs will be lost.</p>
+                <div class="button-group">
+                    <button class="btn-cancel" onclick="closeBackToHubConfirmation()">Stay Here</button>
+                    <button class="btn-confirm" onclick="goBackToHub()">Yes, Go Back</button>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            
+            // Close on overlay click
+            overlay.addEventListener('click', closeBackToHubConfirmation);
+        }
+
+        function closeBackToHubConfirmation() {
+            const overlay = document.querySelector('.popup-overlay');
+            const popup = document.querySelector('.confirmation-popup');
+            
+            if (overlay) overlay.remove();
+            if (popup) popup.remove();
+        }
+
+        function goBackToHub() {
+            // Navigate to the Interactive Hub
+            window.open('https://engineeringshare.github.io/engineering-hub/interactive-hub/', '_self');
+        }
+
         window.addEventListener('load', () => {
             addGear();
             updateDebugInfo();
             updateCamera(); // Initialize camera
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98f845fe83866ab4',t:'MTc2MDYyNTIyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98ffc4898758b0e3',t:'MTc2MDcwMzgxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
