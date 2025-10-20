@@ -84,7 +84,7 @@ The below table summarizes the behavior of a Normally Open contact:
 
 <div class="ladder-rung" id="noRung">
   <div class="top">
-    <label class="switch"><input id="noInput" type="checkbox"> Input</label>
+    <label class="switch"><input id="noInput" type="checkbox"> Input (I0.0)</label>
     <div class="kv">Contact: <b id="cState">Open</b> &nbsp; | &nbsp; Output: <b id="oState">OFF</b></div>
   </div>
 
@@ -111,7 +111,7 @@ The below table summarizes the behavior of a Normally Open contact:
       <path class="wire" d="M240 100 H 260" />
       <path class="wire" d="M320 100 H 520" />
       <line class="contact-bridge" x1="260" y1="100" x2="320" y2="100" />
-      <text class="lbl" x="260" y="70">NO Contact</text>
+      <text class="lbl" x="260" y="70">NO Contact (I0.0)</text>
 
       <!-- Coil -->
       <ellipse class="coil" cx="600" cy="100" rx="26" ry="40"/>
