@@ -100,7 +100,8 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
     <div class="card">
       <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Reset_Output.png" alt="Reset Output Symbol">
       <h3>Reset Output (R)</h3>
-  </div>
+    </div>
+  </a>
 
   <a class="card-link" href="#">
     <div class="card">
