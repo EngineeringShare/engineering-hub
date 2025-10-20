@@ -1,5 +1,5 @@
 ---
-title: "PLC Programming - Basic Functions"
+title: "PLC Programming - Basic Functions (OLD)"
 date: 2025-05-22
 tags: ["PLC", "Programming", "Rungs"]
 subject: "PLCs"
