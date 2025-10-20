@@ -38,4 +38,4 @@ The below table summarizes the behavior of a Normally Open contact:
     </tr>    
 </table>
 
-<a href="https://engineeringshare.github.io/engineering-hub">🏠 Back</a>
+<a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>

@@ -90,7 +90,7 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
     </div>
   </a>
 
-  <a class="card-link" href="#">
+  <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/NC-Contact/">
     <div class="card">
       <div class="card-image">
         <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/NC_Contact.png" alt="Normally Closed Contact Symbol">
@@ -99,7 +99,7 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
     </div>
   </a>
 
-  <a class="card-link" href="#">
+  <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/Output/">
     <div class="card">
       <div class="card-image">
         <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Output.png" alt="Output Coil Symbol">
