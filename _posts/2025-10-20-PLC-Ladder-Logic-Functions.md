@@ -70,24 +70,37 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
 <div class="projects">
   <a class="card-link" href="#">
     <div class="card">
-      <img src="/images/PLC-Icons/NO Contact.png" alt="Normally Open Contact Symbol">
+      <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/NO_Contact.png" alt="Normally Open Contact Symbol">
       <h3>Normally Open Contact (NO)</h3>
     </div>
   </a>
 
   <a class="card-link" href="#">
     <div class="card">
-      <img src="/images/PLC-Icons/NC Contact.png" alt="Normally Closed Contact Symbol">
+      <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/NC_Contact.png" alt="Normally Closed Contact Symbol">
       <h3>Normally Closed Contact (NC)</h3>
     </div>
   </a>
 
   <a class="card-link" href="#">
     <div class="card">
-      <img src="/images/PLC-Icons/Output.png" alt="Output Coil Symbol">
+      <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Output_Coil.png" alt="Output Coil Symbol">
       <h3>Output Coil</h3>
     </div>
   </a>
+
+  <a class="card-link" href="#">
+    <div class="card">
+      <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Set_Output.png" alt="Set Output Symbol">
+      <h3>Set Output (S)</h3>
+    </div>
+  </a>
+
+  <a class="card-link" href="#">
+    <div class="card">
+      <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Reset_Output.png" alt="Reset Output Symbol">
+      <h3>Reset Output (R)</h3>
+  </div>
 
   <a class="card-link" href="#">
     <div class="card">
