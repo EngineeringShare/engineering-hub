@@ -46,7 +46,7 @@ The below table summarizes the behavior of a Normally Open contact:
     For example if we had a NO assigned to Q0.0 (an output coil) in one rung, we could then use a NO contact assigned to the same Q0.0 in another rung to create a holding circuit. This would allow the output to remain energized even after the initial input condition is no longer true, until another condition de-energizes it.
 </p>
 
-<!-- === NO Contact — single rung (L -> NO -> Coil -> N) === -->
+<!-- === NO Contact — single rung with coil lamp === -->
 <style>
   .ladder-rung{--rail:#0f172a;--wire:#cbd5e1;--text:#0b1324;--muted:#64748b;--active:#16a34a;--coil:#2563eb;
     max-width:760px;margin:1rem auto;border:1px solid #e5e7eb;border-radius:14px;padding:1rem;background:#fff;
@@ -61,13 +61,15 @@ The below table summarizes the behavior of a Normally Open contact:
   svg{width:100%;height:auto;display:block}
   .rail{stroke:var(--rail);stroke-width:7;stroke-linecap:round}
   .wire{stroke:var(--wire);stroke-width:5;fill:none;stroke-linecap:round}
-  .contact-post{stroke:var(--wire);stroke-width:6}        /* vertical bars */
+  .contact-post{stroke:var(--wire);stroke-width:6}
   .contact-bridge{stroke:var(--wire);stroke-width:6;stroke-linecap:round;opacity:.2;transition:opacity .12s}
   .coil{stroke:var(--coil);stroke-width:6;fill:none}
+  .lamp{fill:#fbbf24;opacity:.15;transition:opacity .18s;filter:url(#glow)}
   .flow{stroke:var(--active);stroke-width:5;fill:none;stroke-linecap:round;stroke-dasharray:10 12;opacity:0}
   .on .wire,.on .contact-post,.on .coil{stroke:var(--active)}
   .on .contact-bridge{opacity:1}
   .on .flow{opacity:1;animation:flow 1.05s linear infinite}
+  .on .lamp{opacity:.95}
   @keyframes flow{to{stroke-dashoffset:-22}}
   .lbl{fill:var(--muted);font-size:12px}
 </style>
@@ -80,35 +82,40 @@ The below table summarizes the behavior of a Normally Open contact:
 
   <div class="panel">
     <svg viewBox="0 0 820 200" role="img" aria-label="Single rung: left rail, NO contact, coil, right rail">
+      <defs>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
       <!-- Rails -->
       <line class="rail" x1="70"  y1="20" x2="70"  y2="180"/>
       <line class="rail" x1="750" y1="20" x2="750" y2="180"/>
       <text class="lbl" x="58"  y="14">L (Power)</text>
       <text class="lbl" x="742" y="14">N</text>
 
-      <!-- Single horizontal rung -->
+      <!-- Horizontal rung -->
       <path class="wire" d="M70 100 H 240" />
 
-      <!-- NO contact (two vertical posts + bridge that appears when ON) -->
-      <!-- posts -->
+      <!-- NO contact -->
       <line class="contact-post" x1="260" y1="80" x2="260" y2="120"/>
       <line class="contact-post" x1="320" y1="80" x2="320" y2="120"/>
-      <!-- tiny stubs aligning with the rung wire -->
       <path class="wire" d="M240 100 H 260" />
       <path class="wire" d="M320 100 H 520" />
-      <!-- bridge (hidden when open) -->
       <line class="contact-bridge" x1="260" y1="100" x2="320" y2="100" />
       <text class="lbl" x="260" y="70">NO Contact</text>
 
-      <!-- Coil on the same rung -->
+      <!-- Coil -->
       <ellipse class="coil" cx="600" cy="100" rx="26" ry="40"/>
       <ellipse class="coil" cx="634" cy="100" rx="26" ry="40"/>
-      <!-- small terminals from wire to coil and from coil to right rail -->
+      <!-- Glow lamp -->
+      <circle class="lamp" cx="617" cy="100" r="20" />
+      <!-- terminals -->
       <path class="wire" d="M520 100 H 574" />
       <path class="wire" d="M660 100 H 750" />
       <text class="lbl" x="592" y="160">Output Coil (Q)</text>
 
-      <!-- Animated current along the rung (only when ON) -->
+      <!-- Animated current flow -->
       <path class="flow" d="M70 100 H 750" />
     </svg>
   </div>
@@ -122,13 +129,14 @@ The below table summarizes the behavior of a Normally Open contact:
     const o=document.getElementById('oState');
     function render(){
       const on=sw.checked;
-      wrap.classList.toggle('on', on);
-      c.textContent = on ? 'Closed' : 'Open';
-      o.textContent = on ? 'ON' : 'OFF';
+      wrap.classList.toggle('on',on);
+      c.textContent=on?'Closed':'Open';
+      o.textContent=on?'ON':'OFF';
     }
-    sw.addEventListener('change', render); render();
+    sw.addEventListener('change',render);
+    render();
   })();
 </script>
-<!-- === /NO Contact — single rung === -->
+<!-- === /NO Contact — single rung with lamp === -->
 
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
