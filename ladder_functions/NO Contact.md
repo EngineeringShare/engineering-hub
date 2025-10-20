@@ -36,5 +36,6 @@ The below table summarizes the behavior of a Normally Open contact:
         <td>Closed</td>
         <td>Signal Flows</td>
     </tr>    
+</table>
 
 <a href="https://engineeringshare.github.io/engineering-hub">🏠 Back</a>
