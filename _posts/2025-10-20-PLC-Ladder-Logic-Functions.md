@@ -84,7 +84,7 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
 
   <a class="card-link" href="#">
     <div class="card">
-      <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Output_Coil.png" alt="Output Coil Symbol">
+      <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Output.png" alt="Output Coil Symbol">
       <h3>Output Coil</h3>
     </div>
   </a>
@@ -104,15 +104,14 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
 
   <a class="card-link" href="#">
     <div class="card">
-      <img src="/images/PLC-Icons/TON Timer.png" alt="Timer Symbol">
+      <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/TON_Timer.png" alt="Timer Symbol">
       <h3>Timer (TON / TOF)</h3>
     </div>
   </a>
 
   <a class="card-link" href="#">
     <div class="card">
-      <img src="/images/PLC-Icons/CTU Counter.png" alt="Counter Symbol">
-      <h3>Counter (CTU / CTD)</h3>
+      <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/CTU_Counter.png" alt="Counter Symbol">
     </div>
   </a>
 </div>
