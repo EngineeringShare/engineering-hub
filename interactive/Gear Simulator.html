@@ -42,13 +42,13 @@
         }
 
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.5rem 1rem;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
         }
 
         .btn-primary {
@@ -215,6 +215,11 @@
         @keyframes rotate-reverse {
             from { transform: rotate(0deg); }
             to { transform: rotate(-360deg); }
+        }
+
+        @keyframes jamPulseBadge {
+            0%, 100% { transform: scale(1); }
+            50%      { transform: scale(1.05); }
         }
 
         .gear-teeth {
@@ -1666,6 +1671,7 @@
                 const ringText = this.isRingGear ? '<div style="color: #10b981; font-weight: bold;">RING GEAR</div>' : '';
                 const orbitText = this.orbitalRPM > 0 ? `<div style="color: #10b981; font-weight: bold;">ORBITING: ${Math.round(this.orbitalRPM)} RPM</div>` : '';
                 const compoundText = this.compoundGear ? '<div style="color: #f59e0b; font-weight: bold;">COMPOUND</div>' : '';
+                const jamText = this.isJammed ? '<div style="display:block;width:100%;text-align:center;margin:0.5rem 0;padding:0.25rem;background:#ef4444;color:#fff;font-weight:bold;border-radius:4px;animation: jamPulseBadge 1s infinite;">⚠️ JAMMED</div>': '';
                 
                 let compoundControls = '';
                 if (this.compoundGear) {
@@ -1703,6 +1709,7 @@
                     ${ringText}
                     ${orbitText}
                     ${compoundText}
+                    ${jamText}
                     <div><strong>Teeth:</strong> ${this.teeth}</div>
                     <div><strong>Speed:</strong> ${Math.round(this.rpm)} RPM</div>
                     <div><strong>Torque:</strong> ${Math.round(this.torque)} Nm</div>
@@ -2116,10 +2123,20 @@
                 gear.orbitCenter = null;
                 gear.orbitalRadius = 0;
                 gear.orbitalStartAngle = 0;
+                gear.isJammed = false; // Reset jam state
             });
 
             const motorGear = gears.find(gear => gear.isMotor);
             if (!motorGear) return;
+
+            // Check for gear collisions/jams before calculating motion
+            const jammedGears = checkForGearJams();
+            if (jammedGears.length > 0) {
+                // System is jammed - all connected gears stop
+                handleGearJam(jammedGears);
+                gears.forEach(gear => gear.updateDisplay());
+                return;
+            }
 
             // Check for epicyclic (planetary) configuration
             const pinnedGears = gears.filter(gear => gear.isPinned);
@@ -2135,6 +2152,209 @@
             }
 
             gears.forEach(gear => gear.updateDisplay());
+        }
+
+        function checkForGearJams() {
+            const jammedGears = [];
+            
+            // Check all gear pairs that are meshing (not chain connected)
+            for (let i = 0; i < gears.length; i++) {
+                for (let j = i + 1; j < gears.length; j++) {
+                    const gear1 = gears[i];
+                    const gear2 = gears[j];
+                    
+                    // Only check gears on the same layer that can mesh
+                    if (gear1.layer === gear2.layer && gear1.canMeshWith(gear2)) {
+                        // Check if this is a chain connection (chains don't jam)
+                        const isChainConnection = gear1.chainConnections.some(chain => 
+                            (chain.gear1 === gear1 && chain.gear2 === gear2) ||
+                            (chain.gear1 === gear2 && chain.gear2 === gear1)
+                        );
+                        
+                        if (!isChainConnection) {
+                            // Calculate what the rotation directions would be
+                            const gear1Direction = calculateExpectedDirection(gear1);
+                            const gear2Direction = calculateExpectedDirection(gear2);
+                            
+                            if (gear1Direction && gear2Direction) {
+                                // For meshing gears, check if they would rotate in conflicting directions
+                                const shouldBeOpposite = shouldGearsRotateOpposite(gear1, gear2);
+                                const actuallyOpposite = gear1Direction !== gear2Direction;
+                                
+                                if (shouldBeOpposite !== actuallyOpposite) {
+                                    // Gears are trying to rotate in the same direction when they should be opposite
+                                    // or vice versa - this creates a jam
+                                    if (!jammedGears.includes(gear1)) jammedGears.push(gear1);
+                                    if (!jammedGears.includes(gear2)) jammedGears.push(gear2);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return jammedGears;
+        }
+
+        function calculateExpectedDirection(gear) {
+            // Simulate motion propagation to determine expected direction
+            const motorGear = gears.find(g => g.isMotor);
+            if (!motorGear || gear === motorGear) {
+                return gear.isMotor ? 'normal' : null;
+            }
+            
+            // Use breadth-first search to find path from motor to this gear
+            const queue = [{ gear: motorGear, direction: 'normal', visited: new Set([motorGear]) }];
+            
+            while (queue.length > 0) {
+                const { gear: currentGear, direction: currentDirection, visited } = queue.shift();
+                
+                if (currentGear === gear) {
+                    return currentDirection;
+                }
+                
+                // Check all connected gears
+                currentGear.connectedGears.forEach(connectedGear => {
+                    if (!visited.has(connectedGear)) {
+                        const newVisited = new Set(visited);
+                        newVisited.add(connectedGear);
+                        
+                        // Determine direction based on connection type
+                        let newDirection;
+                        const isChainConnection = currentGear.chainConnections.some(chain => 
+                            (chain.gear1 === currentGear && chain.gear2 === connectedGear) ||
+                            (chain.gear1 === connectedGear && chain.gear2 === currentGear)
+                        );
+                        
+                        if (isChainConnection) {
+                            // Chain connection - same direction
+                            newDirection = currentDirection;
+                        } else if (shouldGearsRotateOpposite(currentGear, connectedGear)) {
+                            // External meshing - opposite direction
+                            newDirection = currentDirection === 'normal' ? 'reverse' : 'normal';
+                        } else {
+                            // Internal meshing - same direction
+                            newDirection = currentDirection;
+                        }
+                        
+                        queue.push({ gear: connectedGear, direction: newDirection, visited: newVisited });
+                    }
+                });
+            }
+            
+            return null; // No path found
+        }
+
+        function shouldGearsRotateOpposite(gear1, gear2) {
+            // External meshing (both regular gears) - should rotate opposite
+            if (!gear1.isRingGear && !gear2.isRingGear) {
+                return true;
+            }
+            
+            // Internal meshing (one ring gear, one regular) - should rotate same direction
+            if ((gear1.isRingGear && !gear2.isRingGear) || (!gear1.isRingGear && gear2.isRingGear)) {
+                return false;
+            }
+            
+            // Both ring gears - shouldn't mesh anyway
+            return true;
+        }
+
+        function handleGearJam(jammedGears) {
+            // Mark all jammed gears
+            jammedGears.forEach(gear => {
+                gear.isJammed = true;
+                gear.rpm = 0;
+            });
+            
+            // Find all gears connected to jammed gears and stop them too
+            const allJammedGears = new Set(jammedGears);
+            const toCheck = [...jammedGears];
+            
+            while (toCheck.length > 0) {
+                const currentGear = toCheck.shift();
+                
+                currentGear.connectedGears.forEach(connectedGear => {
+                    if (!allJammedGears.has(connectedGear)) {
+                        allJammedGears.add(connectedGear);
+                        connectedGear.isJammed = true;
+                        connectedGear.rpm = 0;
+                        toCheck.push(connectedGear);
+                    }
+                });
+            }
+            
+            // Show jam warning on ALL jammed gears
+            showGearJamWarning(Array.from(allJammedGears));
+        }
+
+        function showGearJamWarning(jammedGears) {
+            // Add animation styles if not already added
+            if (!document.getElementById('jamStyles')) {
+                const style = document.createElement('style');
+                style.id = 'jamStyles';
+                style.textContent = `
+                    @keyframes jamPulse {
+                        0%, 100% { transform: translate(-50%, -50%) scale(1); }
+                        50% { transform: translate(-50%, -50%) scale(1.2); }
+                    }
+                    .jammed-gear {
+                        border-color: #ef4444 !important;
+                        box-shadow: 0 0 20px rgba(239, 68, 68, 0.8) !important;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // Create jam indicators on ALL jammed gears
+            const jamIndicators = [];
+            
+            jammedGears.forEach(gear => {
+                if (gear.element) {
+                    // Create jam indicator positioned at the exact center of the gear
+                    const jamIndicator = document.createElement('div');
+                    jamIndicator.className = 'jam-indicator';
+                    jamIndicator.innerHTML = '⚠️💥';
+                    jamIndicator.style.cssText = `
+                        position: absolute;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        font-size: 24px;
+                        z-index: 1000;
+                        animation: jamPulse 1s infinite;
+                        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+                        pointer-events: none;
+                    `;
+                    
+                    gear.element.appendChild(jamIndicator);
+                    jamIndicators.push(jamIndicator);
+                    
+                    // Add jammed styling to gear
+                    gear.element.querySelector('.gear-circle').classList.add('jammed-gear');
+                }
+            });
+            
+            // Remove jam indicators and styling after 3 seconds
+            setTimeout(() => {
+                jamIndicators.forEach(indicator => {
+                    if (indicator.parentNode) {
+                        indicator.remove();
+                    }
+                });
+                
+                jammedGears.forEach(gear => {
+                    if (gear.element) {
+                        const circle = gear.element.querySelector('.gear-circle');
+                        if (circle) {
+                            circle.classList.remove('jammed-gear');
+                        }
+                    }
+                });
+            }, 3000);
+            
+            // Show toast message
+            showErrorMessage("⚠️ Gear Jam! Gears are trying to rotate in conflicting directions. Adjust your gear arrangement to fix the jam.");
         }
 
         function handleEpicyclicSystem(motorGear, pinnedGears) {
@@ -4087,5 +4307,5 @@
             updateCamera(); // Initialize camera
         });
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99009b444049b0e3',t:'MTc2MDcxMjYwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99013321a6af220a',t:'MTc2MDcxODgyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
