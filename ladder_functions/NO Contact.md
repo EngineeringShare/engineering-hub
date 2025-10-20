@@ -17,6 +17,14 @@ permalink: /PLC-Ladder-Logic/NO-Contact/
     It can be most simply understood as a switch that is "off" by default and only turns "on" when activated (when the input condition is true).
 </p>
 
+<p>
+    A NO contact can be used to read physical input devices, such as push buttons or sensors. For this we can use an address assigned to that input within the PLC (e.g., I0.0 for the first digital input). When the physical device is activated, the NO contact in the ladder logic will close, allowing current to flow and enabling subsequent logic operations.
+</p>
+
+<p>
+    Each input block is 8 bits wide, meaning it can read the state of 8 individual digital inputs. Each bit within the byte corresponds to a specific input channel on the PLC. For example, bit 0 (I0.0) represents the first input, bit 1 (I0.1) represents the second input, and so on up to bit 7 (I0.7) for the eighth input. This allows for efficient reading and processing of multiple digital inputs using a single input address in the ladder logic program. After (I0.7), the next input address would be (I1.0), representing the ninth input channel on the PLC.
+</p>
+
 <h3>Behavior Table</h3>
 The below table summarizes the behavior of a Normally Open contact:
 
