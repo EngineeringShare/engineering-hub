@@ -13,7 +13,7 @@ units: ["HTQ Unit 4019"]
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/Kirchoff's Laws.pdf"
+        src="https://EngineeringShare.github.io/engineering-hub/presentations/Kirchoffs Laws.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
