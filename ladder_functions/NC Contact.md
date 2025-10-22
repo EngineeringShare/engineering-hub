@@ -10,32 +10,54 @@ permalink: /PLC-Ladder-Logic/NC-Contact/
 
 <h2>Normally Closed Contact (NC)</h2>
 <p>
-  A Normally Closed (NC) contact conducts in its default state (contact closed). When the associated input condition is
-  <em>true</em> (e.g., a button is pressed or a sensor is active), the contact <strong>opens</strong> and interrupts the
-  rung. NC contacts are commonly used for E-Stops, guard switches, and fail-safe inputs where a broken wire or power loss
-  should de-energize the output.
+  A Normally Closed (NC) contact is a key part of PLC Ladder Logic programming. It represents a switch or relay contact
+  that is closed (conducting) in its default state. When the associated input condition becomes true (for example, when a
+  button is pressed or a sensor is activated), the contact opens, breaking the circuit and stopping the signal from
+  flowing. NC contacts are often used for emergency stop circuits, guard interlocks, and safety-related inputs where a
+  loss of power or broken wire should turn the system off.
 </p>
 
 <p>
-  Practically: NC behaves like a switch that is <em>on by default</em> and turns <em>off</em> when activated.
-  You can use NC to read physical inputs (e.g., <code>I0.0</code>) or internal bits. With a physical NC device wired to
-  <code>I0.0</code>, the PLC bit is typically <code>1</code> when healthy/at rest, and goes <code>0</code> when pressed,
-  tripped, or the circuit is broken.
+  In simple terms, a Normally Closed contact is “on” by default and turns “off” when activated (when the input condition
+  is true). You can use NC contacts to read inputs such as normally closed push buttons or limit switches, which are held
+  closed until an action causes them to open.
+</p>
+
+<p>
+  Like NO contacts, NC contacts are linked to specific input addresses within the PLC, such as <code>I0.0</code> for the
+  first digital input. Each input byte can read eight individual bits (from <code>I0.0</code> to <code>I0.7</code>), each
+  representing one input channel. After <code>I0.7</code>, the next byte begins at <code>I1.0</code> for the next group
+  of eight inputs.
 </p>
 
 <h3>Behavior Table</h3>
+The table below shows how a Normally Closed contact behaves:
+
 <table>
-  <tr><th>Input Condition</th><th>Contact State</th><th>Output State</th></tr>
-  <tr><td>False (Not Activated)</td><td>Closed</td><td>Signal Flows</td></tr>
-  <tr><td>True (Activated)</td><td>Open</td><td>No Signal Flows</td></tr>
+  <tr>
+    <th>Input Condition</th>
+    <th>Contact State</th>
+    <th>Output State</th>
+  </tr>
+  <tr>
+    <td>False (Not Activated)</td>
+    <td>Closed</td>
+    <td>Signal Flows</td>
+  </tr>
+  <tr>
+    <td>True (Activated)</td>
+    <td>Open</td>
+    <td>No Signal Flows</td>
+  </tr>
 </table>
 
 <p>
-  NC is useful for fail-safe design: if a wire breaks or a device loses power, the PLC sees the input as false-to-true
-  change (depending on wiring) that <em>opens the contact</em> and de-energizes the output, placing the system in a safe state.
+  Normally Closed contacts are useful in fail-safe designs, because if the input device or wiring fails, the contact will
+  open in the ladder logic — de-energising the output and putting the system into a safe state. This is why NC devices are
+  commonly used for emergency stops and guard circuits.
 </p>
 
-<!-- === NC Contact — single rung with coil lamp (energized when input is FALSE) === -->
+<!-- === NC Contact — single rung with slash symbol === -->
 <style>
   .nc-sim{--rail:#0f172a;--wire:#cbd5e1;--text:#0b1324;--muted:#64748b;--active:#16a34a;--coil:#2563eb;
     max-width:760px;margin:1rem auto;border:1px solid #e5e7eb;border-radius:14px;padding:1rem;background:#fff;
@@ -52,16 +74,17 @@ permalink: /PLC-Ladder-Logic/NC-Contact/
   .wire{stroke:var(--wire);stroke-width:5;fill:none;stroke-linecap:round}
   .contact-post{stroke:var(--wire);stroke-width:6}
   .contact-bridge{stroke:var(--wire);stroke-width:6;stroke-linecap:round;opacity:.2;transition:opacity .12s}
+  .contact-slash{stroke:var(--wire);stroke-width:4;stroke-linecap:round;opacity:.4}
   .coil{stroke:var(--coil);stroke-width:6;fill:none}
   .lamp{fill:#fbbf24;opacity:.15;transition:opacity .18s;filter:url(#glow)}
   .flow{stroke:var(--active);stroke-width:5;fill:none;stroke-linecap:round;stroke-dasharray:10 12;opacity:0}
   .lbl{fill:var(--muted);font-size:12px}
 
-  /* ENERGIZED state for NC is when input is FALSE -> container does NOT have .on */
+  /* Energised when input is FALSE (NC closed) */
   .nc-sim:not(.on) .wire,
   .nc-sim:not(.on) .contact-post,
   .nc-sim:not(.on) .coil { stroke: var(--active); }
-  .nc-sim:not(.on) .contact-bridge { opacity: 1; }       /* bridge present when closed */
+  .nc-sim:not(.on) .contact-bridge { opacity: 1; }
   .nc-sim:not(.on) .flow { opacity: 1; animation: flow 1.05s linear infinite; }
   .nc-sim:not(.on) .lamp { opacity: .95; }
 
@@ -92,9 +115,10 @@ permalink: /PLC-Ladder-Logic/NC-Contact/
       <!-- Horizontal rung -->
       <path class="wire" d="M70 100 H 240" />
 
-      <!-- NC contact: two posts; bridge is present by default and disappears when input TRUE -->
+      <!-- NC contact -->
       <line class="contact-post" x1="260" y1="80" x2="260" y2="120"/>
       <line class="contact-post" x1="320" y1="80" x2="320" y2="120"/>
+      <line class="contact-slash" x1="255" y1="80" x2="325" y2="120"/> <!-- diagonal slash -->
       <path class="wire" d="M240 100 H 260" />
       <path class="wire" d="M320 100 H 520" />
       <line class="contact-bridge" x1="260" y1="100" x2="320" y2="100" />
@@ -108,7 +132,7 @@ permalink: /PLC-Ladder-Logic/NC-Contact/
       <path class="wire" d="M660 100 H 750" />
       <text class="lbl" x="592" y="160">Output Coil (Q)</text>
 
-      <!-- Animated current flow (visible only when input is FALSE) -->
+      <!-- Animated current flow -->
       <path class="flow" d="M70 100 H 750" />
     </svg>
   </div>
@@ -122,15 +146,15 @@ permalink: /PLC-Ladder-Logic/NC-Contact/
     const oTxt = document.getElementById('ncOutput');
 
     function render(){
-      const inputTrue = sw.checked;     // input TRUE opens NC
+      const inputTrue = sw.checked;
       wrap.classList.toggle('on', inputTrue);
       cTxt.textContent = inputTrue ? 'Open' : 'Closed';
       oTxt.textContent = inputTrue ? 'OFF' : 'ON';
     }
     sw.addEventListener('change', render);
-    render(); // default: input FALSE -> NC closed -> output ON
+    render();
   })();
 </script>
-<!-- === /NC Contact — single rung with lamp === -->
+<!-- === /NC Contact — single rung with slash symbol === -->
 
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
