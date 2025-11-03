@@ -3,7 +3,7 @@ title: "Mesh Analysis"
 date: 2025-10-22
 tags: ["Kirchoff's Laws", "Circuits", "KVL", "KCL", "Mesh Analysis", "Simultaneous Equations"]
 subject: "electronics"
-units: ["HTQ Unit 4019"]
+units: ["HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 08"]
 ---
 
 ## Intro:
