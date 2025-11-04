@@ -79,6 +79,8 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
 
 ---
 
+## Ladder Logic Symbols:
+
 <div class="projects">
 
   <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/NO-Contact/">
@@ -145,6 +147,10 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
   </a>
 
 </div>
+
+---
+
+## Ladder Logic Functions:
 
 ---
 
