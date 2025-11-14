@@ -10,7 +10,7 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
   <style>
     .projects {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.5rem;
       margin-top: 2rem;
     }
@@ -114,8 +114,6 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
     <div class="card">
       <div class="card-image">
         <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Set_Output.png" alt="Set Output Symbol">
-      </div>
-      <div class="card-image">
         <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Reset_Output.png" alt="Reset Output Symbol">
       </div>
       <h3>Set & Reset Output (S)/(R)</h3>
