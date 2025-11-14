@@ -142,6 +142,7 @@ This site is your one-stop destination for accessing class slides, assignments, 
       <h3>Teaching Tools Hub</h3>
     </div>
   </a>
+</div>
 
 ## Credits
 
