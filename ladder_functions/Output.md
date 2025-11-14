@@ -165,7 +165,7 @@ The below table summarizes the behavior of an Output Coil:
         <rect class="cyl-body" x="0" y="-12" width="72" height="30" rx="6" ry="6" />
         <!-- Moving rod extending to the right -->
         <g class="rod">
-          <line x1="72" y1="3" x2="122" y2="3" />
+          <line x1="36" y1="3" x2="122" y2="3" />
           <circle cx="122" cy="3" r="5" />
         </g>
         <text class="lbl" x="-8" y="40">Cylinder</text>
