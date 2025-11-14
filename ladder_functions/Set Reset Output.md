@@ -163,7 +163,7 @@ The below table summarizes the behavior of Set & Reset outputs:
       <path class="wire" d="M240 100 H 260" />
       <path class="wire" d="M320 100 H 520" />
       <line class="contact-bridge" x1="260" y1="100" x2="320" y2="100" />
-      <text class="lbl" x="230" y="70">Latched Contact (Q0.0)</text>
+      <text class="lbl" x="230" y="70">Pulse Input (I0.0)</text>
 
       <!-- Coil -->
       <ellipse class="coil" cx="580" cy="100" rx="26" ry="40"/>
