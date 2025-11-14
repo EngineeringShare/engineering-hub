@@ -101,7 +101,7 @@ The below table summarizes the behavior of an Output Coil:
     </tr>
 </table>
 
-<!-- === NO Contact — coil driving cylinder actuator === -->
+<!-- === NO Contact — coil driving cylinder actuator (coil above, cylinder below) === -->
 <div class="ladder-rung" id="pistonRung">
   <div class="top">
     <label class="switch" aria-label="Toggle input">
@@ -115,26 +115,22 @@ The below table summarizes the behavior of an Output Coil:
   </div>
 
   <div class="panel">
-    <svg viewBox="0 0 820 200" role="img"
-         aria-label="Single rung: left rail, NO contact, coil, pneumatic cylinder actuator, right rail">
+    <svg viewBox="0 0 820 260">
 
       <defs>
         <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="6" result="b"/>
-          <feMerge>
-            <feMergeNode in="b"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
         </filter>
       </defs>
 
       <!-- Rails -->
-      <line class="rail" x1="70"  y1="20" x2="70"  y2="180"/>
-      <line class="rail" x1="750" y1="20" x2="750" y2="180"/>
+      <line class="rail" x1="70"  y1="20" x2="70"  y2="230"/>
+      <line class="rail" x1="750" y1="20" x2="750" y2="230"/>
       <text class="lbl" x="58"  y="14">L (Power)</text>
       <text class="lbl" x="742" y="14">N</text>
 
-      <!-- Horizontal rung -->
+      <!-- MAIN RUNG -->
       <path class="wire" d="M70 100 H 240" />
 
       <!-- NO contact -->
@@ -145,56 +141,56 @@ The below table summarizes the behavior of an Output Coil:
       <line class="contact-bridge" x1="260" y1="100" x2="320" y2="100" />
       <text class="lbl" x="245" y="70">NO Contact (I0.0)</text>
 
-      <!-- Coil + lamp -->
+      <!-- COIL -->
       <ellipse class="coil" cx="580" cy="100" rx="26" ry="40"/>
       <ellipse class="coil" cx="614" cy="100" rx="26" ry="40"/>
       <circle class="lamp" cx="597" cy="100" r="18" />
       <path class="wire" d="M520 100 H 554" />
       <path class="wire" d="M640 100 H 700" />
-      <text class="lbl" x="562" y="160">Output Coil (Q0.0)</text>
+      <text class="lbl" x="558" y="160">Output Coil (Q0.0)</text>
 
-      <!-- Cylinder actuator, driven by Q0.0 -->
-      <g class="actuator" transform="translate(640,60)">
-        <!-- Cylinder body -->
-        <rect class="cyl-body" x="0" y="18" width="60" height="34" rx="8" ry="8" />
-        <!-- Moving rod -->
+      <!-- WIRES DOWN TO CYLINDER -->
+      <path class="wire" d="M597 140 V 190" />      <!-- left drop wire -->
+      <path class="wire" d="M597 190 H 700" />      <!-- horizontal to cylinder -->
+      <path class="wire" d="M700 190 V 100" />      <!-- return to main rung -->
+
+      <!-- CYLINDER (BELOW) -->
+      <g class="actuator" transform="translate(640,165)">
+        <rect class="cyl-body" x="-40" y="0" width="70" height="30" rx="6" ry="6"/>
         <g class="rod">
-          <line x1="60" y1="35" x2="110" y2="35" />
-          <circle cx="110" cy="35" r="6" />
+          <line x1="30" y1="15" x2="80" y2="15" />
+          <circle cx="80" cy="15" r="5" />
         </g>
-        <text class="lbl" x="-6" y="70">Cylinder</text>
+        <text class="lbl" x="-48" y="52">Cylinder</text>
       </g>
 
-      <!-- Wire out to right rail -->
-      <path class="wire" d="M700 100 H 750" />
-
-      <!-- Current flow animation -->
+      <!-- flow animation -->
       <path class="flow" d="M70 100 H 750" />
+
     </svg>
   </div>
 </div>
 
 <script>
-  (function(){
-    const wrap   = document.getElementById('pistonRung');
-    const sw     = document.getElementById('pistonInput');
-    const cState = document.getElementById('pistonCState');
-    const oState = document.getElementById('pistonOState');
-    const aState = document.getElementById('pistonAState');
+(function(){
+  const wrap   = document.getElementById('pistonRung');
+  const sw     = document.getElementById('pistonInput');
+  const cState = document.getElementById('pistonCState');
+  const oState = document.getElementById('pistonOState');
+  const aState = document.getElementById('pistonAState');
 
-    function render(){
-      const on = sw.checked;           // NO -> closed when input TRUE
-      wrap.classList.toggle('on', on); // hooks into your existing .on styles
+  function render(){
+    const on = sw.checked;
+    wrap.classList.toggle('on', on);
+    cState.textContent = on ? 'Closed'   : 'Open';
+    oState.textContent = on ? 'ON'       : 'OFF';
+    aState.textContent = on ? 'Extended' : 'Retracted';
+  }
 
-      cState.textContent = on ? 'Closed'   : 'Open';
-      oState.textContent = on ? 'ON'       : 'OFF';
-      aState.textContent = on ? 'Extended' : 'Retracted';
-    }
-
-    sw.addEventListener('change', render);
-    render();
-  })();
+  sw.addEventListener('change', render);
+  render();
+})();
 </script>
-<!-- === /NO Contact — coil driving cylinder actuator === -->
+<!-- === /NO Contact — coil driving cylinder actuator (coil above, cylinder below) === -->
 
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
