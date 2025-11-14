@@ -101,7 +101,7 @@ The below table summarizes the behavior of an Output Coil:
     </tr>
 </table>
 
-<!-- === NO Contact — coil driving cylinder actuator (coil above, cylinder below) === -->
+<!-- === NO Contact — coil with cylinder branch directly underneath === -->
 <div class="ladder-rung" id="pistonRung">
   <div class="top">
     <label class="switch" aria-label="Toggle input">
@@ -115,12 +115,17 @@ The below table summarizes the behavior of an Output Coil:
   </div>
 
   <div class="panel">
-    <svg viewBox="0 0 820 260">
+    <svg viewBox="0 0 820 260"
+         role="img"
+         aria-label="Single rung: left rail, NO contact, coil with cylinder actuator branch underneath">
 
       <defs>
         <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="6" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          <feMerge>
+            <feMergeNode in="b"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
         </filter>
       </defs>
 
@@ -130,7 +135,7 @@ The below table summarizes the behavior of an Output Coil:
       <text class="lbl" x="58"  y="14">L (Power)</text>
       <text class="lbl" x="742" y="14">N</text>
 
-      <!-- MAIN RUNG -->
+      <!-- Main rung -->
       <path class="wire" d="M70 100 H 240" />
 
       <!-- NO contact -->
@@ -141,32 +146,34 @@ The below table summarizes the behavior of an Output Coil:
       <line class="contact-bridge" x1="260" y1="100" x2="320" y2="100" />
       <text class="lbl" x="245" y="70">NO Contact (I0.0)</text>
 
-      <!-- COIL -->
+      <!-- Coil -->
       <ellipse class="coil" cx="580" cy="100" rx="26" ry="40"/>
       <ellipse class="coil" cx="614" cy="100" rx="26" ry="40"/>
       <circle class="lamp" cx="597" cy="100" r="18" />
       <path class="wire" d="M520 100 H 554" />
-      <path class="wire" d="M640 100 H 700" />
+      <path class="wire" d="M640 100 H 750" />
       <text class="lbl" x="558" y="160">Output Coil (Q0.0)</text>
 
-      <!-- WIRES DOWN TO CYLINDER -->
-      <path class="wire" d="M597 140 V 190" />      <!-- left drop wire -->
-      <path class="wire" d="M597 190 H 700" />      <!-- horizontal to cylinder -->
-      <path class="wire" d="M700 190 V 100" />      <!-- return to main rung -->
+      <!-- Branch legs under coil: || -->
+      <!-- Left leg from main rung down -->
+      <path class="wire" d="M574 120 V 175" />
+      <!-- Right leg from main rung down -->
+      <path class="wire" d="M646 120 V 175" />
 
-      <!-- CYLINDER (BELOW) -->
-      <g class="actuator" transform="translate(640,165)">
-        <rect class="cyl-body" x="-40" y="0" width="70" height="30" rx="6" ry="6"/>
+      <!-- Cylinder between the two legs -->
+      <g class="actuator" transform="translate(574,175)">
+        <!-- Cylinder body spans between the two legs -->
+        <rect class="cyl-body" x="0" y="-12" width="72" height="30" rx="6" ry="6" />
+        <!-- Moving rod extending to the right -->
         <g class="rod">
-          <line x1="30" y1="15" x2="80" y2="15" />
-          <circle cx="80" cy="15" r="5" />
+          <line x1="72" y1="3" x2="122" y2="3" />
+          <circle cx="122" cy="3" r="5" />
         </g>
-        <text class="lbl" x="-48" y="52">Cylinder</text>
+        <text class="lbl" x="-8" y="40">Cylinder</text>
       </g>
 
-      <!-- flow animation -->
+      <!-- Current flow animation (main rung only) -->
       <path class="flow" d="M70 100 H 750" />
-
     </svg>
   </div>
 </div>
@@ -181,7 +188,7 @@ The below table summarizes the behavior of an Output Coil:
 
   function render(){
     const on = sw.checked;
-    wrap.classList.toggle('on', on);
+    wrap.classList.toggle('on', on);       // hooks into your existing .on styles
     cState.textContent = on ? 'Closed'   : 'Open';
     oState.textContent = on ? 'ON'       : 'OFF';
     aState.textContent = on ? 'Extended' : 'Retracted';
@@ -191,6 +198,6 @@ The below table summarizes the behavior of an Output Coil:
   render();
 })();
 </script>
-<!-- === /NO Contact — coil driving cylinder actuator (coil above, cylinder below) === -->
+<!-- === /NO Contact — coil with cylinder branch directly underneath === -->
 
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
