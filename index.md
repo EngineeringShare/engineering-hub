@@ -115,12 +115,18 @@ This site is your one-stop destination for accessing class slides, assignments, 
   </a>
 </div>
 
-## 🎮 Interactive
+## 🎮 Interactive Games and Tools
 
 <div class="projects">
   <a class="card-link" href="{{ '/interactive-hub/' | relative_url }}">
     <div class="card">
       <h3>Interactive Learning Hub</h3>
+    </div>
+  </a>
+
+  <a class="card-link" href="{{ '/teaching-tools-hub/' | relative_url }}">
+    <div class="card">
+      <h3>Teaching Tools Hub</h3>
     </div>
   </a>
 </div>
@@ -133,16 +139,6 @@ This site is your one-stop destination for accessing class slides, assignments, 
 <script src="https://engineeringshare.github.io/engineering-hub/fun-fact.js" defer></script>
 
 ---
-
-## Teaching Tools Hub
-
-<div class="projects">
-  <a class="card-link" href="{{ '/teaching-tools-hub/' | relative_url }}">
-    <div class="card">
-      <h3>Teaching Tools Hub</h3>
-    </div>
-  </a>
-</div>
 
 ## Credits
 
