@@ -62,6 +62,7 @@ permalink: /PLC-Ladder-Logic/Set-Reset-Output/
   .actuator .rod circle{fill:var(--wire);stroke:var(--wire);stroke-width:2;}
   .actuator .rod{transform:translateX(0);transform-box:fill-box;transform-origin:center;transition:transform .18s ease-out;}
   .ladder-rung.on .actuator .rod{transform:translateX(32px);}
+  .switch-row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;}
 </style>
 
 <div style="text-align: center;">
@@ -113,5 +114,124 @@ The below table summarizes the behavior of Set & Reset outputs:
         <td>False (Not Activated)</td>
         <td>Maintains Previous State</td>
     </tr>
+</table>
+
+<!-- === Set / Reset latch with cylinder === -->
+<div class="ladder-rung" id="pistonRung">
+  <div class="top">
+    <div class="switch-row">
+      <label class="switch" aria-label="Set push button">
+        <input id="setPB" type="checkbox"> Set PB (I0.0)
+      </label>
+      <label class="switch" aria-label="Reset push button">
+        <input id="resetPB" type="checkbox"> Reset PB (I0.1)
+      </label>
+    </div>
+    <div class="kv">
+      Output (Q0.0): <b id="pistonOState">OFF</b> &nbsp; | &nbsp;
+      Cylinder: <b id="pistonAState">Retracted</b>
+    </div>
+  </div>
+
+  <div class="panel">
+    <svg viewBox="0 0 820 260"
+         role="img"
+         aria-label="Set/reset latch: two push buttons controlling a latched output coil and cylinder">
+
+      <defs>
+        <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="6" result="b"/>
+          <feMerge>
+            <feMergeNode in="b"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- Rails -->
+      <line class="rail" x1="70"  y1="20" x2="70"  y2="230"/>
+      <line class="rail" x1="750" y1="20" x2="750" y2="230"/>
+      <text class="lbl" x="58"  y="14">L (Power)</text>
+      <text class="lbl" x="742" y="14">N</text>
+
+      <!-- Main rung -->
+      <path class="wire" d="M70 100 H 240" />
+
+      <!-- “Latched” contact (represents Q0.0 sealing contact) -->
+      <line class="contact-post" x1="260" y1="80" x2="260" y2="120"/>
+      <line class="contact-post" x1="320" y1="80" x2="320" y2="120"/>
+      <path class="wire" d="M240 100 H 260" />
+      <path class="wire" d="M320 100 H 520" />
+      <line class="contact-bridge" x1="260" y1="100" x2="320" y2="100" />
+      <text class="lbl" x="230" y="70">Latched Contact (Q0.0)</text>
+
+      <!-- Coil -->
+      <ellipse class="coil" cx="580" cy="100" rx="26" ry="40"/>
+      <ellipse class="coil" cx="614" cy="100" rx="26" ry="40"/>
+      <circle class="lamp" cx="597" cy="100" r="18" />
+      <path class="wire" d="M520 100 H 554" />
+      <path class="wire" d="M640 100 H 750" />
+      <text class="lbl" x="558" y="160">Output Coil (Q0.0)</text>
+
+      <!-- Branch legs under coil: || -->
+      <path class="wire" d="M585 170 V 220" />
+      <path class="wire" d="M600 170 V 220" />
+
+      <!-- Cylinder between the two legs -->
+      <g class="actuator" transform="translate(560,230)">
+        <rect class="cyl-body" x="0" y="-12" width="72" height="30" rx="6" ry="6" />
+        <g class="rod">
+          <line x1="36" y1="3" x2="122" y2="3" />
+          <circle cx="122" cy="3" r="5" />
+        </g>
+        <text class="lbl" x="-8" y="40">Cylinder</text>
+      </g>
+
+      <!-- Current flow animation (main rung only) -->
+      <path class="flow" d="M70 100 H 750" />
+    </svg>
+  </div>
+</div>
+
+<script>
+(function(){
+  const wrap   = document.getElementById('pistonRung');
+  const setPB  = document.getElementById('setPB');
+  const resetPB= document.getElementById('resetPB');
+  const oState = document.getElementById('pistonOState');
+  const aState = document.getElementById('pistonAState');
+
+  // Latched output state (Q0.0)
+  let latched = false;
+
+  function render(){
+    wrap.classList.toggle('on', latched);
+    oState.textContent = latched ? 'ON'       : 'OFF';
+    aState.textContent = latched ? 'Extended' : 'Retracted';
+  }
+
+  function pulse(btn, action){
+    if (!btn.checked) return;
+    action();
+    render();
+    // make the checkbox behave like a momentary push button
+    setTimeout(() => {
+      btn.checked = false;
+    }, 150);
+  }
+
+  setPB.addEventListener('change', () => {
+    pulse(setPB, () => { latched = true;  });   // SET
+  });
+
+  resetPB.addEventListener('change', () => {
+    pulse(resetPB, () => { latched = false; }); // RESET
+  });
+
+  render();
+})();
+</script>
+<!-- === /Set / Reset latch with cylinder === -->
+
 
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>

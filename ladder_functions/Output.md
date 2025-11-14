@@ -62,7 +62,6 @@ permalink: /PLC-Ladder-Logic/Output/
   .actuator .rod circle{fill:var(--wire);stroke:var(--wire);stroke-width:2;}
   .actuator .rod{transform:translateX(0);transform-box:fill-box;transform-origin:center;transition:transform .18s ease-out;}
   .ladder-rung.on .actuator .rod{transform:translateX(32px);}
-  .switch-row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;}
 </style>
 
 <div style="text-align: center;">
@@ -87,7 +86,7 @@ permalink: /PLC-Ladder-Logic/Output/
 
 <p>
     Note that the output coil will only remain energized as long as the conditions on the left side of the rung are true. If those conditions change and the rung becomes false, the output coil will de-energize, turning off the connected device.
-</p>
+    
 
 <h3>Behavior Table</h3>
 The below table summarizes the behavior of an Output Coil:
@@ -110,19 +109,14 @@ The below table summarizes the behavior of an Output Coil:
     </tr>
 </table>
 
-<!-- === Set / Reset latch with cylinder === -->
+<!-- === NO Contact — coil with cylinder branch directly underneath === -->
 <div class="ladder-rung" id="pistonRung">
   <div class="top">
-    <div class="switch-row">
-      <label class="switch" aria-label="Set push button">
-        <input id="setPB" type="checkbox"> Set PB (I0.0)
-      </label>
-      <label class="switch" aria-label="Reset push button">
-        <input id="resetPB" type="checkbox"> Reset PB (I0.1)
-      </label>
-    </div>
+    <label class="switch" aria-label="Toggle input">
+      <input id="pistonInput" type="checkbox"> Input (I0.0)
+    </label>
     <div class="kv">
-      Output (Q0.0): <b id="pistonOState">OFF</b> &nbsp; | &nbsp;
+      Output: <b id="pistonOState">OFF</b> &nbsp; | &nbsp;
       Cylinder: <b id="pistonAState">Retracted</b>
     </div>
   </div>
@@ -130,7 +124,7 @@ The below table summarizes the behavior of an Output Coil:
   <div class="panel">
     <svg viewBox="0 0 820 260"
          role="img"
-         aria-label="Set/reset latch: two push buttons controlling a latched output coil and cylinder">
+         aria-label="Single rung: left rail, NO contact, coil with cylinder actuator branch underneath">
 
       <defs>
         <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
@@ -151,13 +145,13 @@ The below table summarizes the behavior of an Output Coil:
       <!-- Main rung -->
       <path class="wire" d="M70 100 H 240" />
 
-      <!-- “Latched” contact (represents Q0.0 sealing contact) -->
+      <!-- NO contact -->
       <line class="contact-post" x1="260" y1="80" x2="260" y2="120"/>
       <line class="contact-post" x1="320" y1="80" x2="320" y2="120"/>
       <path class="wire" d="M240 100 H 260" />
       <path class="wire" d="M320 100 H 520" />
       <line class="contact-bridge" x1="260" y1="100" x2="320" y2="100" />
-      <text class="lbl" x="230" y="70">Latched Contact (Q0.0)</text>
+      <text class="lbl" x="245" y="70">NO Contact (I0.0)</text>
 
       <!-- Coil -->
       <ellipse class="coil" cx="580" cy="100" rx="26" ry="40"/>
@@ -168,12 +162,16 @@ The below table summarizes the behavior of an Output Coil:
       <text class="lbl" x="558" y="160">Output Coil (Q0.0)</text>
 
       <!-- Branch legs under coil: || -->
+      <!-- Left leg from main rung down -->
       <path class="wire" d="M585 170 V 220" />
+      <!-- Right leg from main rung down -->
       <path class="wire" d="M600 170 V 220" />
 
       <!-- Cylinder between the two legs -->
       <g class="actuator" transform="translate(560,230)">
+        <!-- Cylinder body spans between the two legs -->
         <rect class="cyl-body" x="0" y="-12" width="72" height="30" rx="6" ry="6" />
+        <!-- Moving rod extending to the right -->
         <g class="rod">
           <line x1="36" y1="3" x2="122" y2="3" />
           <circle cx="122" cy="3" r="5" />
@@ -190,41 +188,23 @@ The below table summarizes the behavior of an Output Coil:
 <script>
 (function(){
   const wrap   = document.getElementById('pistonRung');
-  const setPB  = document.getElementById('setPB');
-  const resetPB= document.getElementById('resetPB');
+  const sw     = document.getElementById('pistonInput');
+  //const cState = document.getElementById('pistonCState');
   const oState = document.getElementById('pistonOState');
   const aState = document.getElementById('pistonAState');
 
-  // Latched output state (Q0.0)
-  let latched = false;
-
   function render(){
-    wrap.classList.toggle('on', latched);
-    oState.textContent = latched ? 'ON'       : 'OFF';
-    aState.textContent = latched ? 'Extended' : 'Retracted';
+    const on = sw.checked;
+    wrap.classList.toggle('on', on);       // hooks into your existing .on styles
+    //cState.textContent = on ? 'Closed'   : 'Open';
+    oState.textContent = on ? 'ON'       : 'OFF';
+    aState.textContent = on ? 'Extended' : 'Retracted';
   }
 
-  function pulse(btn, action){
-    if (!btn.checked) return;
-    action();
-    render();
-    // make the checkbox behave like a momentary push button
-    setTimeout(() => {
-      btn.checked = false;
-    }, 150);
-  }
-
-  setPB.addEventListener('change', () => {
-    pulse(setPB, () => { latched = true;  });   // SET
-  });
-
-  resetPB.addEventListener('change', () => {
-    pulse(resetPB, () => { latched = false; }); // RESET
-  });
-
+  sw.addEventListener('change', render);
   render();
 })();
 </script>
-<!-- === /Set / Reset latch with cylinder === -->
+<!-- === /NO Contact — coil with cylinder branch directly underneath === -->
 
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
