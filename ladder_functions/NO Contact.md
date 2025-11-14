@@ -76,6 +76,8 @@ permalink: /PLC-Ladder-Logic/NO-Contact/
     It can be most simply understood as a switch that is "off" by default and only turns "on" when activated (when the input condition is true).
   </p>
 
+  <h3>Using a NO Contact</h3>
+
   <p>
     A NO contact can be used to read physical input devices, such as push buttons or sensors. For this we can use an address assigned to that input within the PLC (e.g., I0.0 for the first digital input). When the physical device is activated, the NO contact in the ladder logic will close, allowing current to flow and enabling subsequent logic operations.
   </p>

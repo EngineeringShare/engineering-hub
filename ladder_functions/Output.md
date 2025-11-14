@@ -80,6 +80,16 @@ permalink: /PLC-Ladder-Logic/Output/
     Note that an output coil only outputs when its recieving a signal from the left side of the rung. If that signal stops for any reason, the output coil will de-energize and turn off the connected device.
 </p>
 
+<h3>Using an Output Coil</h3>
+
+<p>
+    Output coils are used to control physical output devices connected to the PLC. Each output coil is assigned a specific address within the PLC's output memory (e.g., Q0.0 for the first digital output). When the conditions in the ladder logic leading to the output coil are met (i.e., the rung is true), the coil energizes, activating the corresponding output device.
+</p>
+
+<p>
+    Note that the output coil will only remain energized as long as the conditions on the left side of the rung are true. If those conditions change and the rung becomes false, the output coil will de-energize, turning off the connected device.
+</p>
+
 <h3>Behavior Table</h3>
 The below table summarizes the behavior of an Output Coil:
 

@@ -19,9 +19,10 @@ permalink: /PLC-Ladder-Logic/NC-Contact/
 
 <p>
   In simple terms, a Normally Closed contact is “on” by default and turns “off” when activated (when the input condition
-  is true). You can use NC contacts to read inputs such as normally closed push buttons or limit switches, which are held
-  closed until an action causes them to open.
+  is true). You can use NC contacts to read inputs such as normally closed push buttons or limit switches, which are held closed until an action causes them to open.
 </p>
+
+<h3>Using a NC Contact</h3>
 
 <p>
   Like NO contacts, NC contacts are linked to specific input addresses within the PLC, such as <code>I0.0</code> for the
