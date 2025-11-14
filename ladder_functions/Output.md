@@ -108,7 +108,6 @@ The below table summarizes the behavior of an Output Coil:
       <input id="pistonInput" type="checkbox"> Input (I0.0)
     </label>
     <div class="kv">
-      Contact: <b id="pistonCState">Open</b> &nbsp; | &nbsp;
       Output: <b id="pistonOState">OFF</b> &nbsp; | &nbsp;
       Cylinder: <b id="pistonAState">Retracted</b>
     </div>
@@ -156,12 +155,12 @@ The below table summarizes the behavior of an Output Coil:
 
       <!-- Branch legs under coil: || -->
       <!-- Left leg from main rung down -->
-      <path class="wire" d="M574 120 V 175" />
+      <path class="wire" d="M585 170 V 220" />
       <!-- Right leg from main rung down -->
-      <path class="wire" d="M646 120 V 175" />
+      <path class="wire" d="M600 170 V 220" />
 
       <!-- Cylinder between the two legs -->
-      <g class="actuator" transform="translate(574,175)">
+      <g class="actuator" transform="translate(560,230)">
         <!-- Cylinder body spans between the two legs -->
         <rect class="cyl-body" x="0" y="-12" width="72" height="30" rx="6" ry="6" />
         <!-- Moving rod extending to the right -->
@@ -182,14 +181,14 @@ The below table summarizes the behavior of an Output Coil:
 (function(){
   const wrap   = document.getElementById('pistonRung');
   const sw     = document.getElementById('pistonInput');
-  const cState = document.getElementById('pistonCState');
+  //const cState = document.getElementById('pistonCState');
   const oState = document.getElementById('pistonOState');
   const aState = document.getElementById('pistonAState');
 
   function render(){
     const on = sw.checked;
     wrap.classList.toggle('on', on);       // hooks into your existing .on styles
-    cState.textContent = on ? 'Closed'   : 'Open';
+    //cState.textContent = on ? 'Closed'   : 'Open';
     oState.textContent = on ? 'ON'       : 'OFF';
     aState.textContent = on ? 'Extended' : 'Retracted';
   }
