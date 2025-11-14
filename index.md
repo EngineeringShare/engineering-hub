@@ -134,6 +134,15 @@ This site is your one-stop destination for accessing class slides, assignments, 
 
 ---
 
+## Teaching Tools Hub
+
+<div class="projects">
+  <a class="card-link" href="{{ '/teaching-tools-hub/' | relative_url }}">
+    <div class="card">
+      <h3>Teaching Tools Hub</h3>
+    </div>
+  </a>
+
 ## Credits
 
 - **Site by:** 
