@@ -110,21 +110,13 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
     </div>
   </a>
 
-  <a class="card-link" href="#">
+  <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/Set-Reset-Output/">
     <div class="card">
       <div class="card-image">
         <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Set_Output.png" alt="Set Output Symbol">
-      </div>
-      <h3>Set Output (S)</h3>
-    </div>
-  </a>
-
-  <a class="card-link" href="#">
-    <div class="card">
-      <div class="card-image">
         <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Reset_Output.png" alt="Reset Output Symbol">
       </div>
-      <h3>Reset Output (R)</h3>
+      <h3>Set & Reset Output (S)/(R)</h3>
     </div>
   </a>
 
