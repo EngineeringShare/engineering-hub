@@ -8,7 +8,7 @@ date: 2025-07-23
   <style>
     .projects {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
       gap: 1.5rem;
       margin-top: 2rem;
     }
