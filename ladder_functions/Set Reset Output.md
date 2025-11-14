@@ -1,5 +1,5 @@
 ---
-title: "Output Coil"
+title: "Set & Reset Output (S)/(R)"
 permalink: /PLC-Ladder-Logic/Set-Reset-Output/
 ---
 
