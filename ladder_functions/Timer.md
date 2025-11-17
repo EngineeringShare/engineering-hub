@@ -96,7 +96,7 @@ permalink: /PLC-Ladder-Logic/Timer/
     This can be seen in the below graphs:
 </p>
 
-<img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/TON_&_TOF_GRAPH.png" alt="TON & TOF Graphs" style="max-width: 500px; height: auto;">
+<img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/TON_&_TOF_GRAPH.png" alt="TON & TOF Graphs" style="max-width: 700px; height: auto;">
 
 <h3>Using an Output Coil</h3>
 
