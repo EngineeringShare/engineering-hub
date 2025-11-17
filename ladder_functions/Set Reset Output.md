@@ -63,6 +63,8 @@ permalink: /PLC-Ladder-Logic/Set-Reset-Output/
   .actuator .rod{transform:translateX(0);transform-box:fill-box;transform-origin:center;transition:transform .18s ease-out;}
   .ladder-rung.on .actuator .rod{transform:translateX(32px);}
   .switch-row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;}
+  .coil-mark{fill: var(--coil);font-size: 18px;font-weight: 700;text-anchor: middle;dominant-baseline: middle;}
+
 
 </style>
 
@@ -167,12 +169,12 @@ The below table summarizes the behavior of Set & Reset outputs:
       <line class="contact-bridge" x1="260" y1="80" x2="320" y2="80" />
       <text class="lbl" x="245" y="50">NO (I0.0)</text>
 
-      <!-- SET coil for Q0.0 -->
-      <ellipse class="coil" cx="580" cy="80" rx="26" ry="40"/>
-      <ellipse class="coil" cx="614" cy="80" rx="26" ry="40"/>
-      <circle class="lamp" cx="597" cy="80" r="18" />
-      <path class="wire" d="M520 80 H 554" />
-      <path class="wire" d="M640 80 H 750" />
+      <!-- SET coil for Q0.0: -----(S)----- -->
+      <ellipse class="coil" cx="597" cy="80" rx="30" ry="22"/>
+      <circle class="lamp" cx="597" cy="80" r="0" /> <!-- effectively hidden -->
+      <path class="wire" d="M520 80 H 567" />
+      <path class="wire" d="M627 80 H 750" />
+      <text class="coil-mark" x="597" y="80">S</text>
       <text class="lbl" x="548" y="140">SET Q0.0</text>
 
       <!-- Flow for rung 1 -->
@@ -190,12 +192,12 @@ The below table summarizes the behavior of Set & Reset outputs:
       <line class="contact-bridge" x1="260" y1="200" x2="320" y2="200" />
       <text class="lbl" x="245" y="170">NO (I0.1)</text>
 
-      <!-- RESET coil for Q0.0 -->
-      <ellipse class="coil" cx="580" cy="200" rx="26" ry="40"/>
-      <ellipse class="coil" cx="614" cy="200" rx="26" ry="40"/>
-      <circle class="lamp" cx="597" cy="200" r="18" />
-      <path class="wire" d="M520 200 H 554" />
-      <path class="wire" d="M640 200 H 750" />
+      <!-- RESET coil for Q0.0: -----(R)----- -->
+      <ellipse class="coil" cx="597" cy="200" rx="30" ry="22"/>
+      <circle class="lamp" cx="597" cy="200" r="0" /> <!-- effectively hidden -->
+      <path class="wire" d="M520 200 H 567" />
+      <path class="wire" d="M627 200 H 750" />
+      <text class="coil-mark" x="597" y="200">R</text>
       <text class="lbl" x="540" y="260">RESET Q0.0</text>
 
       <!-- Flow for rung 2 -->
