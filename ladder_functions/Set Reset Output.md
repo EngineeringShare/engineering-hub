@@ -169,13 +169,13 @@ The below table summarizes the behavior of Set & Reset outputs:
       <line class="contact-bridge" x1="260" y1="80" x2="320" y2="80" />
       <text class="lbl" x="245" y="50">NO (I0.0)</text>
 
-      <!-- SET coil for Q0.0: -----(S)----- -->
-      <ellipse class="coil" cx="597" cy="80" rx="30" ry="22"/>
-      <circle class="lamp" cx="597" cy="80" r="0" /> <!-- effectively hidden -->
+      <!-- SET coil (TIA style ----(S)---- ) -->
+      <path class="coil" d="M567 80 A30 22 0 0 1 627 80" />  <!-- top arc -->
+      <path class="coil" d="M627 80 A30 22 0 0 1 567 80" />  <!-- bottom arc -->
+      <text class="coil-mark" x="597" y="80">S</text>  
+      <!-- wires -->
       <path class="wire" d="M520 80 H 567" />
-      <path class="wire" d="M627 80 H 750" />
-      <text class="coil-mark" x="597" y="80">S</text>
-      <text class="lbl" x="548" y="140">SET Q0.0</text>
+      <path class="wire" d="M627 80 H 750" />  
 
       <!-- Flow for rung 1 -->
       <path class="flow flow-set" d="M70 80 H 750" />
@@ -192,13 +192,14 @@ The below table summarizes the behavior of Set & Reset outputs:
       <line class="contact-bridge" x1="260" y1="200" x2="320" y2="200" />
       <text class="lbl" x="245" y="170">NO (I0.1)</text>
 
-      <!-- RESET coil for Q0.0: -----(R)----- -->
-      <ellipse class="coil" cx="597" cy="200" rx="30" ry="22"/>
-      <circle class="lamp" cx="597" cy="200" r="0" /> <!-- effectively hidden -->
+      <!-- RESET coil (TIA style ----(R)---- ) -->
+      <path class="coil" d="M567 200 A30 22 0 0 1 627 200" />  <!-- top arc -->
+      <path class="coil" d="M627 200 A30 22 0 0 1 567 200" />  <!-- bottom arc -->
+      <text class="coil-mark" x="597" y="200">R</text>
+  
+      <!-- wires -->
       <path class="wire" d="M520 200 H 567" />
       <path class="wire" d="M627 200 H 750" />
-      <text class="coil-mark" x="597" y="200">R</text>
-      <text class="lbl" x="540" y="260">RESET Q0.0</text>
 
       <!-- Flow for rung 2 -->
       <path class="flow flow-reset" d="M70 200 H 750" />
