@@ -65,6 +65,8 @@ permalink: /PLC-Ladder-Logic/Counter/
   .actuator .rod{transform:translateX(0);transform-box:fill-box;transform-origin:center;transition:transform .18s ease-out;}
   .ladder-rung.on .actuator .rod{transform:translateX(32px);}
   .switch-row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;}
+  .timer-box{stroke: var(--wire);stroke-width: 4;fill: #f8fafc;   /* or #ffffff, but not default/black */}
+  .timer-text{fill:var(--muted);font-size:12px;}
 
   /* CTU-specific “on” styling (only right side / coil) */
   #ctuRung.ctu-on .coil{stroke:var(--active);}
