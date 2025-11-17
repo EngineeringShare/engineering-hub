@@ -153,12 +153,21 @@ The below table summarizes the behavior of an Output Coil:
       <line class="contact-bridge" x1="260" y1="100" x2="320" y2="100" />
       <text class="lbl" x="245" y="70">NO Contact (I0.0)</text>
 
-      <!-- Coil -->
-      <ellipse class="coil" cx="580" cy="100" rx="26" ry="40"/>
-      <ellipse class="coil" cx="614" cy="100" rx="26" ry="40"/>
+      <!-- Coil (TIA-style ----( )---- ) -->
+  
+      <!-- Left bracket arc -->
+      <path class="coil" d="M597 78 A30 22 0 0 0 597 122" />
+  
+      <!-- Right bracket arc -->
+      <path class="coil" d="M597 122 A30 22 0 0 0 597 78" />
+  
+      <!-- Lamp (kept as-is) -->
       <circle class="lamp" cx="597" cy="100" r="18" />
-      <path class="wire" d="M520 100 H 554" />
-      <path class="wire" d="M640 100 H 750" />
+  
+      <!-- Wires -->
+      <path class="wire" d="M520 100 H 567" />
+      <path class="wire" d="M627 100 H 750" />
+  
       <text class="lbl" x="558" y="160">Output Coil (Q0.0)</text>
 
       <!-- Branch legs under coil: || -->

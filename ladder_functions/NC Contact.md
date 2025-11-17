@@ -125,13 +125,37 @@ The table below shows how a Normally Closed contact behaves:
       <line class="contact-bridge" x1="260" y1="100" x2="320" y2="100" />
       <text class="lbl" x="262" y="70">NC Contact (I0.0)</text>
 
-      <!-- Coil -->
-      <ellipse class="coil" cx="600" cy="100" rx="26" ry="40"/>
-      <ellipse class="coil" cx="634" cy="100" rx="26" ry="40"/>
-      <circle class="lamp" cx="617" cy="100" r="20" />
-      <path class="wire" d="M520 100 H 574" />
-      <path class="wire" d="M660 100 H 750" />
-      <text class="lbl" x="592" y="160">Output Coil (Q)</text>
+      <!-- Coil (TIA-style ----( )---- ) -->
+  
+      <!-- Left bracket arc -->
+      <path class="coil" d="M597 78 A30 22 0 0 0 597 122" />
+  
+      <!-- Right bracket arc -->
+      <path class="coil" d="M597 122 A30 22 0 0 0 597 78" />
+  
+      <!-- Lamp (kept as-is) -->
+      <circle class="lamp" cx="597" cy="100" r="18" />
+  
+      <!-- Wires -->
+      <path class="wire" d="M520 100 H 567" />
+      <path class="wire" d="M627 100 H 750" />
+  
+      <text class="lbl" x="558" y="160">Output Coil (Q0.0)</text>      <!-- Coil (TIA-style ----( )---- ) -->
+  
+      <!-- Left bracket arc -->
+      <path class="coil" d="M597 78 A30 22 0 0 0 597 122" />
+  
+      <!-- Right bracket arc -->
+      <path class="coil" d="M597 122 A30 22 0 0 0 597 78" />
+  
+      <!-- Lamp (kept as-is) -->
+      <circle class="lamp" cx="597" cy="100" r="18" />
+  
+      <!-- Wires -->
+      <path class="wire" d="M520 100 H 567" />
+      <path class="wire" d="M627 100 H 750" />
+  
+      <text class="lbl" x="558" y="160">Output Coil (Q0.0)</text>
 
       <!-- Animated current flow -->
       <path class="flow" d="M70 100 H 750" />
