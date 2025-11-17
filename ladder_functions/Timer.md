@@ -256,4 +256,160 @@ The below table summarizes the behavior of an Output Coil:
 </script>
 <!-- === /SINGLE-RUNG TON Example === -->
 
+<!-- === SINGLE-RUNG TOF Example === -->
+<div class="ladder-rung" id="tofRung">
+  <div class="top">
+    <label class="switch">
+      <input id="tofInput" type="checkbox"> Input (I0.0)
+    </label>
+
+    <div class="kv">
+      ET: <b id="tofET">0.0</b> / <span id="tofPT">5.0</span> s &nbsp;|&nbsp;
+      T2.Q: <b id="tofQState">OFF</b> &nbsp;|&nbsp;
+      Q0.1: <b id="tofOState">OFF</b>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="timer-bar">
+      <div class="timer-fill" id="tofFill"></div>
+    </div>
+
+    <svg viewBox="0 0 820 160">
+
+      <!-- Rails -->
+      <line class="rail" x1="70"  y1="20" x2="70"  y2="140"/>
+      <line class="rail" x1="750" y1="20" x2="750" y2="140"/>
+      <text class="lbl" x="58"  y="14">L</text>
+      <text class="lbl" x="742" y="14">N</text>
+
+      <!-- Main rung -->
+      <path class="wire" d="M70 80 H 240" />
+
+      <!-- NO Contact I0.0 -->
+      <line class="contact-post" x1="260" y1="60" x2="260" y2="100"/>
+      <line class="contact-post" x1="320" y1="60" x2="320" y2="100"/>
+      <path class="wire" d="M240 80 H 260" />
+      <path class="wire" d="M320 80 H 420" />
+      <line class="contact-bridge" x1="260" y1="80" x2="320" y2="80" />
+      <text class="lbl" x="245" y="50">NO (I0.0)</text>
+
+      <!-- TOF timer T2 -->
+      <rect class="timer-box" x="420" y="50" width="120" height="60" rx="8" ry="8"/>
+      <text class="timer-text" x="480" y="68" text-anchor="middle">TOF</text>
+      <text class="timer-text" x="480" y="88" text-anchor="middle">T2 (5s)</text>
+      <path class="wire" d="M540 80 H 560" />
+
+      <!-- Output Coil Q0.1, bracket style ----( )---- -->
+      <!-- Left bracket arc -->
+      <path class="coil" d="M597 58 A30 22 0 0 0 597 102" />
+      <!-- Right bracket arc -->
+      <path class="coil" d="M597 102 A30 22 0 0 0 597 58" />
+
+      <circle class="lamp" cx="597" cy="80" r="18" />
+
+      <!-- Wires to coil -->
+      <path class="wire" d="M560 80 H 567" />
+      <path class="wire" d="M627 80 H 750" />
+
+      <text class="lbl" x="540" y="130">Output Coil (Q0.1)</text>
+
+      <!-- Flow BEFORE timer (into TOF) -->
+      <path class="flow" id="tofFlowIn"  d="M70 80 H 420" />
+      <!-- Flow AFTER timer (out to coil) -->
+      <path class="flow" id="tofFlowOut" d="M540 80 H 750" />
+    </svg>
+  </div>
+</div>
+
+<script>
+(function(){
+  const wrap  = document.getElementById("tofRung");
+  const input = document.getElementById("tofInput");
+
+  const etSpan = document.getElementById("tofET");
+  const ptSpan = document.getElementById("tofPT");
+  const qSpan  = document.getElementById("tofQState");
+  const oSpan  = document.getElementById("tofOState");
+  const fill   = document.getElementById("tofFill");
+
+  const flowIn  = document.getElementById("tofFlowIn");
+  const flowOut = document.getElementById("tofFlowOut");
+
+  const PT = 5.0;
+  ptSpan.textContent = PT.toFixed(1);
+
+  let et = 0;           // elapsed time during OFF delay
+  let done = false;     // T2.Q / Q0.1 state
+  let last = null;
+  let prevInput = false;
+  let timing = false;
+
+  function render(){
+    etSpan.textContent = et.toFixed(1);
+    const frac = Math.max(0, Math.min(1, et / PT));
+    fill.style.width = (frac * 100).toFixed(1) + "%";
+
+    qSpan.textContent = done ? "ON" : "OFF";
+    oSpan.textContent = done ? "ON" : "OFF";
+
+    // Flow behaviour:
+    // - Input ON: both in + out lit (power straight through)
+    // - Input OFF, but still timing & Q on: only out lit (timer holding output)
+    // - Otherwise: no flow
+    if (input.checked){
+      flowIn.style.opacity  = 1;
+      flowOut.style.opacity = 1;
+    } else if (timing && done){
+      flowIn.style.opacity  = 0;
+      flowOut.style.opacity = 1;
+    } else {
+      flowIn.style.opacity  = 0;
+      flowOut.style.opacity = 0;
+    }
+
+    // Coil / lamp driven by done
+    wrap.classList.toggle("on", done);
+  }
+
+  function tick(t){
+    if (last === null) last = t;
+    const dt = (t - last) / 1000;
+    last = t;
+
+    const nowInput = input.checked;
+
+    if (nowInput){
+      // Input ON: TOF output is immediately ON, timer idle
+      done   = true;
+      timing = false;
+      et     = 0;
+    } else {
+      // Input is OFF
+      if (prevInput && !nowInput){
+        // Just transitioned from ON -> OFF: start timing
+        timing = true;
+        et     = 0;
+      }
+
+      if (timing){
+        et = Math.min(PT, et + dt);
+        if (et >= PT){
+          done   = false;   // output turns off after PT
+          timing = false;
+        }
+      }
+    }
+
+    prevInput = nowInput;
+    render();
+    requestAnimationFrame(tick);
+  }
+
+  render();
+  requestAnimationFrame(tick);
+})();
+</script>
+<!-- === /SINGLE-RUNG TOF Example === -->
+
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
