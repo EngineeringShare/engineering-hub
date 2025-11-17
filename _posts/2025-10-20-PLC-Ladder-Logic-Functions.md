@@ -138,6 +138,24 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
     </div>
   </a>
 
+  <a class="card-link" href="#">
+    <div class="card">
+      <div class="card-image">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/CMP_Equals.png" alt="Comparison Symbol">
+      </div>
+      <h3>Comparison Functions</h3>
+    </div>
+  </a>
+
+  <a class="card-link" href="#">
+    <div class="card">
+      <div class="card-image">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Move_Function.png" alt="Move Function Symbol">
+      </div>
+      <h3>Data Movement Function</h3>
+    </div>
+  </a>
+
 </div>
 
 ---
