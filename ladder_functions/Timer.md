@@ -130,141 +130,119 @@ The below table summarizes the behavior of an Output Coil:
     </tr>
 </table>
 
-<!-- === TON Timer Example (I0.0 -> T37 -> Q0.0) === -->
-<div class="ladder-rung" id="timerRung">
+<!-- === SINGLE-RUNG TON Example === -->
+<div class="ladder-rung" id="tonRung">
   <div class="top">
-    <label class="switch" aria-label="Timer enable I0.0">
-      <input id="timerInput" type="checkbox"> Enable (I0.0)
+    <label class="switch">
+      <input id="tonInput" type="checkbox"> Input (I0.0)
     </label>
+
     <div class="kv">
-      ET: <b id="timerET">0.0</b> / <span id="timerPT">5.0</span> s &nbsp; | &nbsp;
-      T37.Q: <b id="timerQState">OFF</b> &nbsp; | &nbsp;
-      Q0.0: <b id="timerOState">OFF</b>
+      ET: <b id="tonET">0.0</b> / <span id="tonPT">5.0</span> s &nbsp;|&nbsp;
+      T1.Q: <b id="tonQState">OFF</b> &nbsp;|&nbsp;
+      Q0.0: <b id="tonOState">OFF</b>
     </div>
   </div>
 
   <div class="panel">
-    <div class="timer-info">
-      On-delay timer: when <code>I0.0</code> is true, <code>T37</code> starts timing.
-      After the preset time (PT) has elapsed, <code>T37.Q</code> turns ON and energises <code>Q0.0</code>.
-      <div class="timer-bar">
-        <div class="timer-fill" id="timerBarFill"></div>
-      </div>
+    <div class="timer-bar">
+      <div class="timer-fill" id="tonFill"></div>
     </div>
 
-    <svg viewBox="0 0 820 260"
-         role="img"
-         aria-label="Two-rung TON example: I0.0 to T37, then T37.Q to Q0.0">
+    <svg viewBox="0 0 820 160">
 
       <!-- Rails -->
-      <line class="rail" x1="70"  y1="20" x2="70"  y2="240"/>
-      <line class="rail" x1="750" y1="20" x2="750" y2="240"/>
-      <text class="lbl" x="58"  y="14">L (Power)</text>
+      <line class="rail" x1="70"  y1="20" x2="70"  y2="140"/>
+      <line class="rail" x1="750" y1="20" x2="750" y2="140"/>
+      <text class="lbl" x="58"  y="14">L</text>
       <text class="lbl" x="742" y="14">N</text>
 
-      <!-- === RUNG 1: I0.0 -> TON T37 === -->
-      <!-- Main wire -->
+      <!-- Main rung -->
       <path class="wire" d="M70 80 H 240" />
 
-      <!-- NO contact I0.0 -->
+      <!-- NO Contact -->
       <line class="contact-post" x1="260" y1="60" x2="260" y2="100"/>
       <line class="contact-post" x1="320" y1="60" x2="320" y2="100"/>
       <path class="wire" d="M240 80 H 260" />
-      <path class="wire" d="M320 80 H 520" />
+      <path class="wire" d="M320 80 H 420" />
       <line class="contact-bridge" x1="260" y1="80" x2="320" y2="80" />
       <text class="lbl" x="245" y="50">NO (I0.0)</text>
 
-      <!-- TON box -->
-      <rect class="timer-box" x="520" y="50" width="140" height="60" rx="8" ry="8" />
-      <text class="timer-text" x="590" y="66" text-anchor="middle">TON</text>
-      <text class="timer-text" x="590" y="86" text-anchor="middle">T37</text>
-      <text class="timer-text" x="665" y="66">PT 5s</text>
-      <text class="timer-text" x="665" y="86">Q</text>
-      <!-- Wire from timer to right rail -->
-      <path class="wire" d="M660 80 H 750" />
+      <!-- TON timer -->
+      <rect class="timer-box" x="420" y="50" width="120" height="60" rx="8" ry="8"/>
+      <text class="timer-text" x="480" y="68" text-anchor="middle">TON</text>
+      <text class="timer-text" x="480" y="88" text-anchor="middle">T1 (5s)</text>
+      <path class="wire" d="M540 80 H 560" />
 
-      <!-- === RUNG 2: T37.Q -> Q0.0 === -->
-      <!-- Main wire -->
-      <path class="wire" d="M70 180 H 240" />
-
-      <!-- NO contact T37.Q -->
-      <line class="contact-post" x1="260" y1="160" x2="260" y2="200"/>
-      <line class="contact-post" x1="320" y1="160" x2="320" y2="200"/>
-      <path class="wire" d="M240 180 H 260" />
-      <path class="wire" d="M320 180 H 520" />
-      <line class="contact-bridge" x1="260" y1="180" x2="320" y2="180" />
-      <text class="lbl" x="240" y="150">NO (T37.Q)</text>
-
-      <!-- Output coil Q0.0, bracket style ----( )---- -->
+      <!-- Output Coil ----( )---- -->
       <!-- Left bracket arc -->
-      <path class="coil" d="M597 158 A30 22 0 0 0 597 202" />
+      <path class="coil" d="M597 58 A30 22 0 0 0 597 102" />
       <!-- Right bracket arc -->
-      <path class="coil" d="M597 202 A30 22 0 0 0 597 158" />
+      <path class="coil" d="M597 102 A30 22 0 0 0 597 58" />
 
-      <!-- Lamp for Q0.0 -->
-      <circle class="lamp" cx="597" cy="180" r="18" />
+      <circle class="lamp" cx="597" cy="80" r="18" />
 
       <!-- Wires to coil -->
-      <path class="wire" d="M520 180 H 567" />
-      <path class="wire" d="M627 180 H 750" />
+      <path class="wire" d="M560 80 H 567" />
+      <path class="wire" d="M627 80 H 750" />
 
-      <text class="lbl" x="548" y="232">Output Coil (Q0.0)</text>
+      <text class="lbl" x="540" y="130">Output Coil (Q0.0)</text>
+
+      <!-- Flow -->
+      <path class="flow" d="M70 80 H 750" />
     </svg>
   </div>
 </div>
 
 <script>
 (function(){
-  const wrap   = document.getElementById('timerRung');
-  const input  = document.getElementById('timerInput');
-  const etSpan = document.getElementById('timerET');
-  const ptSpan = document.getElementById('timerPT');
-  const qSpan  = document.getElementById('timerQState');
-  const oSpan  = document.getElementById('timerOState');
-  const bar    = document.getElementById('timerBarFill');
+  const wrap  = document.getElementById("tonRung");
+  const input = document.getElementById("tonInput");
 
-  const PT = 5.0;       // preset time in seconds
+  const etSpan = document.getElementById("tonET");
+  const ptSpan = document.getElementById("tonPT");
+  const qSpan  = document.getElementById("tonQState");
+  const oSpan  = document.getElementById("tonOState");
+  const fill   = document.getElementById("tonFill");
+
+  const PT = 5.0;
   ptSpan.textContent = PT.toFixed(1);
 
-  let et = 0;           // elapsed time
+  let et = 0;
   let done = false;
-  let lastTime = null;
+  let last = null;
 
   function render(){
     etSpan.textContent = et.toFixed(1);
-    const frac = Math.max(0, Math.min(1, et / PT));
-    bar.style.width = (frac * 100).toFixed(1) + '%';
+    fill.style.width = ((et / PT) * 100).toFixed(1) + "%";
 
-    qSpan.textContent = done ? 'ON' : 'OFF';
-    oSpan.textContent = done ? 'ON' : 'OFF';
+    qSpan.textContent = done ? "ON" : "OFF";
+    oSpan.textContent = done ? "ON" : "OFF";
 
-    // Use .on to drive coil / lamp colour
-    wrap.classList.toggle('on', done);
+    wrap.classList.toggle("on", done);
   }
 
-  function step(timestamp){
-    if (lastTime === null) lastTime = timestamp;
-    const dt = (timestamp - lastTime) / 1000;
-    lastTime = timestamp;
+  function tick(t){
+    if (last === null) last = t;
+    const dt = (t - last) / 1000;
+    last = t;
 
     if (input.checked){
-      // TON behaviour: accumulate up to PT
       et = Math.min(PT, et + dt);
       if (et >= PT) done = true;
     } else {
-      // input false: reset
       et = 0;
       done = false;
     }
 
     render();
-    window.requestAnimationFrame(step);
+    requestAnimationFrame(tick);
   }
 
   render();
-  window.requestAnimationFrame(step);
+  requestAnimationFrame(tick);
 })();
 </script>
-<!-- === /TON Timer Example === -->
+<!-- === /SINGLE-RUNG TON Example === -->
 
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
