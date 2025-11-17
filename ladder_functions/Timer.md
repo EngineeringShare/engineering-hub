@@ -188,8 +188,10 @@ The below table summarizes the behavior of an Output Coil:
 
       <text class="lbl" x="540" y="130">Output Coil (Q0.0)</text>
 
-      <!-- Flow -->
-      <path class="flow" d="M70 80 H 750" />
+      <!-- Flow BEFORE timer (I0.0 true) -->
+      <path class="flow" id="tonFlowIn"  d="M70 80 H 420" />
+      <!-- Flow AFTER timer (Q true) -->
+      <path class="flow" id="tonFlowOut" d="M540 80 H 750" />
     </svg>
   </div>
 </div>
@@ -205,6 +207,9 @@ The below table summarizes the behavior of an Output Coil:
   const oSpan  = document.getElementById("tonOState");
   const fill   = document.getElementById("tonFill");
 
+  const flowIn  = document.getElementById("tonFlowIn");
+  const flowOut = document.getElementById("tonFlowOut");
+
   const PT = 5.0;
   ptSpan.textContent = PT.toFixed(1);
 
@@ -219,6 +224,12 @@ The below table summarizes the behavior of an Output Coil:
     qSpan.textContent = done ? "ON" : "OFF";
     oSpan.textContent = done ? "ON" : "OFF";
 
+    // Green flow INTO the timer whenever I0.0 is true
+    flowIn.style.opacity  = input.checked ? 1 : 0;
+    // Green flow OUT of the timer only when TON is done
+    flowOut.style.opacity = done ? 1 : 0;
+
+    // Use .on to colour the coil/lamp when the timer is done
     wrap.classList.toggle("on", done);
   }
 
