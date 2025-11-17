@@ -140,21 +140,6 @@ The table below shows how a Normally Closed contact behaves:
       <path class="wire" d="M520 100 H 567" />
       <path class="wire" d="M627 100 H 750" />
   
-      <text class="lbl" x="558" y="160">Output Coil (Q0.0)</text>      <!-- Coil (TIA-style ----( )---- ) -->
-  
-      <!-- Left bracket arc -->
-      <path class="coil" d="M597 78 A30 22 0 0 0 597 122" />
-  
-      <!-- Right bracket arc -->
-      <path class="coil" d="M597 122 A30 22 0 0 0 597 78" />
-  
-      <!-- Lamp (kept as-is) -->
-      <circle class="lamp" cx="597" cy="100" r="18" />
-  
-      <!-- Wires -->
-      <path class="wire" d="M520 100 H 567" />
-      <path class="wire" d="M627 100 H 750" />
-  
       <text class="lbl" x="558" y="160">Output Coil (Q0.0)</text>
 
       <!-- Animated current flow -->
