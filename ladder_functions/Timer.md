@@ -67,6 +67,10 @@ permalink: /PLC-Ladder-Logic/Timer/
   .timer-fill{height:100%;width:0%;background:var(--active);transition:width .1s linear;}
   .timer-box{stroke:var(--wire);stroke-width:4;fill:none;}
   .timer-text{fill:var(--muted);font-size:12px;}
+    /* TOF-specific: only colour the right side when Q is on */
+  #tofRung.tof-on .coil {stroke: var(--active);}
+  #tofRung.tof-on .lamp {opacity: .95;}
+  #tofRung.tof-on .flow-out {opacity: 1;animation: flow 1.05s linear infinite;}
 </style>
 
 <div style="text-align: center;">
@@ -257,6 +261,7 @@ The below table summarizes the behavior of an Output Coil:
 <!-- === /SINGLE-RUNG TON Example === -->
 
 <!-- === SINGLE-RUNG TOF Example === -->
+<!-- === SINGLE-RUNG TOF Example (updated) === -->
 <div class="ladder-rung" id="tofRung">
   <div class="top">
     <label class="switch">
@@ -276,7 +281,6 @@ The below table summarizes the behavior of an Output Coil:
     </div>
 
     <svg viewBox="0 0 820 160">
-
       <!-- Rails -->
       <line class="rail" x1="70"  y1="20" x2="70"  y2="140"/>
       <line class="rail" x1="750" y1="20" x2="750" y2="140"/>
@@ -315,9 +319,9 @@ The below table summarizes the behavior of an Output Coil:
       <text class="lbl" x="540" y="130">Output Coil (Q0.1)</text>
 
       <!-- Flow BEFORE timer (into TOF) -->
-      <path class="flow" id="tofFlowIn"  d="M70 80 H 420" />
+      <path class="flow flow-in"  id="tofFlowIn"  d="M70 80 H 420" />
       <!-- Flow AFTER timer (out to coil) -->
-      <path class="flow" id="tofFlowOut" d="M540 80 H 750" />
+      <path class="flow flow-out" id="tofFlowOut" d="M540 80 H 750" />
     </svg>
   </div>
 </div>
@@ -340,7 +344,7 @@ The below table summarizes the behavior of an Output Coil:
   ptSpan.textContent = PT.toFixed(1);
 
   let et = 0;           // elapsed time during OFF delay
-  let done = false;     // T2.Q / Q0.1 output state
+  let done = false;     // T2.Q / Q0.1 state
   let last = null;
   let prevInput = false;
   let timing = false;
@@ -353,14 +357,14 @@ The below table summarizes the behavior of an Output Coil:
     qSpan.textContent = done ? "ON" : "OFF";
     oSpan.textContent = done ? "ON" : "OFF";
 
-    // ✨ Flow logic:
-    // - Left side (into TOF): only when input is ON
-    // - Right side (out of TOF): whenever output Q is ON
-    flowIn.style.opacity  = input.checked ? 1 : 0;
+    // LEFT side: only green when input is ON
+    flowIn.style.opacity = input.checked ? 1 : 0;
+
+    // RIGHT side: green whenever Q is ON (input ON or off-delay active)
     flowOut.style.opacity = done ? 1 : 0;
 
-    // Coil / lamp driven by done
-    wrap.classList.toggle("on", done);
+    // Colour coil + lamp using TOF-specific class, not global .on
+    wrap.classList.toggle("tof-on", done);
   }
 
   function tick(t){
@@ -378,7 +382,7 @@ The below table summarizes the behavior of an Output Coil:
     } else {
       // Input OFF
       if (prevInput && !nowInput){
-        // Just went from ON -> OFF: start timing
+        // Just transitioned ON -> OFF: start off-delay
         timing = true;
         et     = 0;
       }
