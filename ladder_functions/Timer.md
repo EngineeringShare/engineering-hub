@@ -340,7 +340,7 @@ The below table summarizes the behavior of an Output Coil:
   ptSpan.textContent = PT.toFixed(1);
 
   let et = 0;           // elapsed time during OFF delay
-  let done = false;     // T2.Q / Q0.1 state
+  let done = false;     // T2.Q / Q0.1 output state
   let last = null;
   let prevInput = false;
   let timing = false;
@@ -353,20 +353,11 @@ The below table summarizes the behavior of an Output Coil:
     qSpan.textContent = done ? "ON" : "OFF";
     oSpan.textContent = done ? "ON" : "OFF";
 
-    // Flow behaviour:
-    // - Input ON: both in + out lit (power straight through)
-    // - Input OFF, but still timing & Q on: only out lit (timer holding output)
-    // - Otherwise: no flow
-    if (input.checked){
-      flowIn.style.opacity  = 1;
-      flowOut.style.opacity = 1;
-    } else if (timing && done){
-      flowIn.style.opacity  = 0;
-      flowOut.style.opacity = 1;
-    } else {
-      flowIn.style.opacity  = 0;
-      flowOut.style.opacity = 0;
-    }
+    // ✨ Flow logic:
+    // - Left side (into TOF): only when input is ON
+    // - Right side (out of TOF): whenever output Q is ON
+    flowIn.style.opacity  = input.checked ? 1 : 0;
+    flowOut.style.opacity = done ? 1 : 0;
 
     // Coil / lamp driven by done
     wrap.classList.toggle("on", done);
@@ -385,9 +376,9 @@ The below table summarizes the behavior of an Output Coil:
       timing = false;
       et     = 0;
     } else {
-      // Input is OFF
+      // Input OFF
       if (prevInput && !nowInput){
-        // Just transitioned from ON -> OFF: start timing
+        // Just went from ON -> OFF: start timing
         timing = true;
         et     = 0;
       }
