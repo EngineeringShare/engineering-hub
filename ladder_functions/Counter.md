@@ -182,37 +182,32 @@ The below table summarizes the behavior of an Output Coil:
       <line class="contact-post" x1="260" y1="60" x2="260" y2="100"/>
       <line class="contact-post" x1="320" y1="60" x2="320" y2="100"/>
       <path class="wire" d="M240 80 H 260" />
-      <path class="wire" d="M320 80 H 420" />
+      <path class="wire" d="M320 80 H 480" />
       <line class="contact-bridge" x1="260" y1="80" x2="320" y2="80" />
-      <text class="lbl" x="235" y="50">NO (I0.0)</text>
+      <text class="lbl" x="266" y="58">NO (I0.0)</text>
 
       <!-- CTU block -->
-      <rect class="timer-box" x="420" y="40" width="150" height="80" rx="8" ry="8" />
+      <rect class="timer-box" x="440" y="40" width="150" height="150" rx="8" ry="8" />
       <text class="timer-text" x="495" y="56" text-anchor="middle">CTU</text>
-      <text class="timer-text" x="495" y="74" text-anchor="middle">C1</text>
+      <text class="timer-text" x="530" y="56" text-anchor="middle">C1</text>
 
       <!-- CTU left labels (inputs) -->
-      <text class="timer-text" x="430" y="66">CU</text>
-      <text class="timer-text" x="430" y="90">R</text>
-      <text class="timer-text" x="430" y="112">PV</text>
+      <text class="timer-text" x="445" y="80">CU</text>
+      <text class="timer-text" x="445" y="130">R</text>
 
       <!-- CTU right labels (outputs) -->
-      <text class="timer-text" x="560" y="66">Q</text>
-      <text class="timer-text" x="560" y="90">CV</text>
+      <text class="timer-text" x="560" y="82">Q</text>
 
       <!-- Wires into CTU: CU from main rung -->
       <path class="wire" d="M420 80 H 435" />   <!-- main rung into CU -->
       <!-- Small vertical tick to indicate CU pin -->
       <path class="wire" d="M435 80 H 440" />
 
-      <!-- Q output wire towards coil -->
-      <path class="wire" d="M570 80 H 600" />
-
       <!-- Text for PV on side -->
-      <text class="timer-text" x="455" y="132">PV = 5</text>
+      <text class="timer-text" x="455" y="180">PV = 5</text>
 
       <!-- CV text on right side as annotation -->
-      <text class="timer-text" x="560" y="132" id="ctuCVLabel">CV = 0</text>
+      <text class="timer-text" x="520" y="180" id="ctuCVLabel">CV = 0</text>
 
       <!-- === Reset branch feeding R input === -->
       <!-- Reset contact NO (I0.1) below -->
@@ -221,12 +216,11 @@ The below table summarizes the behavior of an Output Coil:
       <line class="contact-post" x1="320" y1="110" x2="320" y2="150"/>
       <path class="wire" d="M240 130 H 260" />
       <path class="wire" d="M320 130 H 400" />
-      <line class="contact-bridge" x1="260" y1="130" x2="320" y2="130" />
-      <text class="lbl" x="235" y="100">NO (I0.1)</text>
+      <line class="contact-bridge" x1="260" y1="130" x2="260" y2="130" />
+      <text class="lbl" x="266" y="110">NO (I0.1)</text>
 
       <!-- Wire up into CTU R input -->
-      <path class="wire" d="M400 130 H 420" />
-      <path class="wire" d="M420 130 V 90" />   <!-- into R pin line -->
+      <path class="wire" d="M400 130 H 438" />
 
       <!-- Output Coil Q0.2, bracket style ----( )---- -->
       <!-- Left bracket arc -->
@@ -237,17 +231,17 @@ The below table summarizes the behavior of an Output Coil:
       <circle class="lamp" cx="660" cy="80" r="18" />
 
       <!-- Wires to coil -->
-      <path class="wire" d="M600 80 H 630" />
+      <path class="wire" d="M590 80 H 630" />
       <path class="wire" d="M690 80 H 750" />
 
       <text class="lbl" x="620" y="150">Output Coil (Q0.2)</text>
 
       <!-- Flow MAIN (Count pulse path into CTU) -->
-      <path class="flow flow-in"  id="ctuFlowMain" d="M70 80 H 420" />
+      <path class="flow flow-in"  id="ctuFlowMain" d="M70 80 H 444" />
       <!-- Flow OUT (Q to coil) -->
-      <path class="flow flow-out" id="ctuFlowOut"  d="M570 80 H 750" />
+      <path class="flow flow-out" id="ctuFlowOut"  d="M590 80 H 750" />
       <!-- Optional flow on reset branch (brief flash) -->
-      <path class="flow" id="ctuFlowReset" d="M70 130 H 420" />
+      <path class="flow" id="ctuFlowReset" d="M70 130 H 444" />
     </svg>
   </div>
 </div>
