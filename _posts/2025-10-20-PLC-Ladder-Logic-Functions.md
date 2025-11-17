@@ -124,6 +124,7 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
     <div class="card">
       <div class="card-image">
         <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/TON_Timer.png" alt="Timer Symbol">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/TOF_Timer.png" alt="Timer Symbol">
       </div>
       <h3>Timer (TON / TOF)</h3>
     </div>

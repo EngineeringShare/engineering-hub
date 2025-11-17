@@ -74,8 +74,8 @@ permalink: /PLC-Ladder-Logic/Timer/
 </style>
 
 <div style="text-align: center;">
-    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Output.png" alt="Output Coil Symbol" style="max-width: 200px; height: auto;">
-
+    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/TON_Timer.png" alt="TON Timer Symbol" style="max-width: 200px; height: auto;">
+    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/TOF_Timer.png" alt="TOF Timer Symbol" style="max-width: 200px; height: auto;">
 </div>
 
 <h2>Timer</h2>

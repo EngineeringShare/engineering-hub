@@ -69,8 +69,8 @@ permalink: /PLC-Ladder-Logic/Set-Reset-Output/
 </style>
 
 <div style="text-align: center;">
-    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Output.png" alt="Output Coil Symbol" style="max-width: 200px; height: auto;">
-
+    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Set_Output.png" alt="Set Output Coil Symbol" style="max-width: 200px; height: auto;">
+    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Reset_Output.png" alt="Reset Output Coil Symbol" style="max-width: 200px; height: auto;">
 </div>
 
 <h2> Set & Reset Output (S)/(R)</h2>
