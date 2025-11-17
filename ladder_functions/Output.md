@@ -88,7 +88,7 @@ permalink: /PLC-Ladder-Logic/Output/
 
 <p>
     Note that the output coil will only remain energized as long as the conditions on the left side of the rung are true. If those conditions change and the rung becomes false, the output coil will de-energize, turning off the connected device.
-    
+</p>    
 
 <h3>Behavior Table</h3>
 The below table summarizes the behavior of an Output Coil:
