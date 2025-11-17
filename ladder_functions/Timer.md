@@ -96,7 +96,7 @@ permalink: /PLC-Ladder-Logic/Timer/
     This can be seen in the below graphs:
 </p>
 
-<img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/TON_&_TOF_GRAPH.png" alt="Output Coil Symbol" style="max-width: 200px; height: auto;">
+<img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/TON_&_TOF_GRAPH.png" alt="TON & TOF Graphs" style="max-width: 500px; height: auto;">
 
 <h3>Using an Output Coil</h3>
 
@@ -260,7 +260,6 @@ The below table summarizes the behavior of an Output Coil:
 </script>
 <!-- === /SINGLE-RUNG TON Example === -->
 
-<!-- === SINGLE-RUNG TOF Example === -->
 <!-- === SINGLE-RUNG TOF Example (updated) === -->
 <div class="ladder-rung" id="tofRung">
   <div class="top">
