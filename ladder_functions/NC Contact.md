@@ -3,6 +3,8 @@ title: "NC Contact"
 permalink: /PLC-Ladder-Logic/NC-Contact/
 ---
 
+<a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
+
 <div style="text-align:center;">
   <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/NC_Contact.png"
        alt="Normally Closed Contact Symbol" style="max-width:200px;height:auto;">

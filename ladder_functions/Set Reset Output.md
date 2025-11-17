@@ -3,6 +3,8 @@ title: "Set & Reset Output (S)/(R)"
 permalink: /PLC-Ladder-Logic/Set-Reset-Output/
 ---
 
+<a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
+
 <style>
   .content-wrap{
     max-width: 900px;

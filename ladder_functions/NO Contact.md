@@ -3,6 +3,8 @@ title: "NO Contact"
 permalink: /PLC-Ladder-Logic/NO-Contact/
 ---
 
+<a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
+
 <!-- Page layout + typography (matches NC page aesthetics) -->
 <style>
   .content-wrap{

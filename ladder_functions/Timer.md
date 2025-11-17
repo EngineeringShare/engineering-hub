@@ -3,6 +3,8 @@ title: "Timer"
 permalink: /PLC-Ladder-Logic/Timer/
 ---
 
+<a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
+
 <style>
   .content-wrap{
     max-width: 900px;
