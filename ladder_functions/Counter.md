@@ -67,11 +67,13 @@ permalink: /PLC-Ladder-Logic/Counter/
   .switch-row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;}
   .timer-box{stroke: var(--wire);stroke-width: 4;fill: #f8fafc;   /* or #ffffff, but not default/black */}
   .timer-text{fill:var(--muted);font-size:12px;}
-
   /* CTU-specific “on” styling (only right side / coil) */
   #ctuRung.ctu-on .coil{stroke:var(--active);}
   #ctuRung.ctu-on .lamp{opacity:.95;}
   #ctuRung.ctu-on .flow-out{opacity:1;animation:flow 1.05s linear infinite;}
+  #ctdRung.ctd-on .coil{stroke: var(--active);}
+  #ctdRung.ctd-on .lamp{opacity: .95;}
+  #ctdRung.ctd-on .flow-out{opacity: 1;animation: flow 1.05s linear infinite;}
 </style>
 
 <div style="text-align: center;">
@@ -141,7 +143,6 @@ The below table summarizes the behavior of an Output Coil:
     </tr>
 </table>
 
-<!-- === NO Contact — coil with cylinder branch directly underneath === -->
 <!-- === CTU Counter Example (Count + Reset) === -->
 <div class="ladder-rung" id="ctuRung">
   <div class="top">
@@ -325,5 +326,190 @@ The below table summarizes the behavior of an Output Coil:
 })();
 </script>
 <!-- === /CTU Counter Example === -->
+
+<!-- === CTD Counter Example (Count Down + Load) === -->
+<div class="ladder-rung" id="ctdRung">
+  <div class="top">
+    <div class="switch-row">
+      <label class="switch" aria-label="Count down pulse I0.2">
+        <input id="ctdCountPB" type="checkbox"> Count Down (I0.2)
+      </label>
+      <label class="switch" aria-label="Load / Reset I0.3">
+        <input id="ctdResetPB" type="checkbox"> Load / Reset (I0.3)
+      </label>
+    </div>
+    <div class="kv">
+      CV: <b id="ctdCV">5</b> / <span id="ctdPV">5</span> &nbsp;|&nbsp;
+      Q: <b id="ctdQState">OFF</b>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="timer-bar">
+      <div class="timer-fill" id="ctdFill"></div>
+    </div>
+
+    <svg viewBox="0 0 820 200"
+         role="img"
+         aria-label="CTD counter with count-down and load inputs and Q output coil">
+
+      <!-- Rails -->
+      <line class="rail" x1="70"  y1="20" x2="70"  y2="180"/>
+      <line class="rail" x1="750" y1="20" x2="750" y2="180"/>
+      <text class="lbl" x="58"  y="14">L (Power)</text>
+      <text class="lbl" x="742" y="14">N</text>
+
+      <!-- === Main rung: Count down pulse -> CTD -> Q coil === -->
+      <!-- Main wire -->
+      <path class="wire" d="M70 80 H 240" />
+
+      <!-- NO contact for Count Down (CD) -->
+      <line class="contact-post" x1="260" y1="60" x2="260" y2="100"/>
+      <line class="contact-post" x1="320" y1="60" x2="320" y2="100"/>
+      <path class="wire" d="M240 80 H 260" />
+      <path class="wire" d="M320 80 H 480" />
+      <line class="contact-bridge" x1="260" y1="80" x2="320" y2="80" />
+      <text class="lbl" x="266" y="58">NO (I0.2)</text>
+
+      <!-- CTD block -->
+      <rect class="timer-box" x="440" y="40" width="150" height="150" rx="8" ry="8" />
+      <text class="timer-text" x="495" y="56" text-anchor="middle">CTD</text>
+      <text class="timer-text" x="530" y="56" text-anchor="middle">C2</text>
+
+      <!-- CTD left labels (inputs) -->
+      <text class="timer-text" x="445" y="80">CD</text>
+      <text class="timer-text" x="445" y="130">LD</text>
+
+      <!-- CTD right labels (outputs) -->
+      <text class="timer-text" x="560" y="82">Q</text>
+
+      <!-- Wire into CTD: CD from main rung -->
+      <path class="wire" d="M420 80 H 435" />
+      <path class="wire" d="M435 80 H 440" />
+
+      <!-- Text for PV on side -->
+      <text class="timer-text" x="455" y="180">PV = 5</text>
+
+      <!-- CV text on right side as annotation -->
+      <text class="timer-text" x="520" y="180" id="ctdCVLabel">CV = 5</text>
+
+      <!-- === Load / Reset branch feeding LD input === -->
+      <!-- Load contact NO (I0.3) below -->
+      <path class="wire" d="M70 130 H 240" />
+      <line class="contact-post" x1="260" y1="110" x2="260" y2="150"/>
+      <line class="contact-post" x1="320" y1="110" x2="320" y2="150"/>
+      <path class="wire" d="M240 130 H 260" />
+      <path class="wire" d="M320 130 H 400" />
+      <line class="contact-bridge" x1="260" y1="130" x2="320" y2="130" />
+      <text class="lbl" x="266" y="110">NO (I0.3)</text>
+
+      <!-- Wire up into CTD LD input -->
+      <path class="wire" d="M400 130 H 438" />
+
+      <!-- Output Coil Q0.3, bracket style ----( )---- -->
+      <!-- Left bracket arc -->
+      <path class="coil" d="M660 58 A30 22 0 0 0 660 102" />
+      <!-- Right bracket arc -->
+      <path class="coil" d="M660 102 A30 22 0 0 0 660 58" />
+
+      <circle class="lamp" cx="660" cy="80" r="18" />
+
+      <!-- Wires to coil -->
+      <path class="wire" d="M590 80 H 630" />
+      <path class="wire" d="M690 80 H 750" />
+
+      <text class="lbl" x="620" y="150">Output Coil (Q0.3)</text>
+
+      <!-- Flow MAIN (count-down path into CTD) -->
+      <path class="flow flow-in"  id="ctdFlowMain"  d="M70 80 H 444" />
+      <!-- Flow OUT (Q to coil) -->
+      <path class="flow flow-out" id="ctdFlowOut"   d="M590 80 H 750" />
+      <!-- Flow on load/reset branch (brief flash) -->
+      <path class="flow" id="ctdFlowReset" d="M70 130 H 444" />
+    </svg>
+  </div>
+</div>
+
+<script>
+(function(){
+  const wrap      = document.getElementById("ctdRung");
+  const countPB   = document.getElementById("ctdCountPB");
+  const resetPB   = document.getElementById("ctdResetPB");
+
+  const cvSpan    = document.getElementById("ctdCV");
+  const pvSpan    = document.getElementById("ctdPV");
+  const qSpan     = document.getElementById("ctdQState");
+  const fill      = document.getElementById("ctdFill");
+  const cvLabel   = document.getElementById("ctdCVLabel");
+
+  const flowMain  = document.getElementById("ctdFlowMain");
+  const flowOut   = document.getElementById("ctdFlowOut");
+  const flowReset = document.getElementById("ctdFlowReset");
+
+  const PV = 5;
+  pvSpan.textContent = PV.toString();
+
+  // CTD typically starts loaded with PV
+  let CV = PV;
+  let Q  = false;
+
+  function updateQ(){
+    // For CTD, Q is ON when CV <= 0 (done counting down)
+    Q = CV <= 0;
+  }
+
+  function render(){
+    cvSpan.textContent = CV.toString();
+    cvLabel.textContent = "CV = " + CV.toString();
+
+    // Fill bar proportional to remaining count (CV / PV)
+    const frac = Math.max(0, Math.min(1, CV / PV));
+    fill.style.width = (frac * 100).toFixed(1) + "%";
+
+    qSpan.textContent = Q ? "ON" : "OFF";
+
+    // Outgoing flow & coil colour follow Q
+    flowOut.style.opacity = Q ? 1 : 0;
+    wrap.classList.toggle("ctd-on", Q);
+  }
+
+  function pulseFlow(pathEl){
+    if (!pathEl) return;
+    pathEl.style.opacity = 1;
+    setTimeout(() => {
+      if (pathEl !== flowOut) {  // don't kill Q flow here
+        pathEl.style.opacity = 0;
+      }
+    }, 200);
+  }
+
+  function pulseButton(btn, action, flowEl){
+    if (!btn.checked) return;
+    action();
+    updateQ();
+    render();
+    pulseFlow(flowEl);
+    setTimeout(() => { btn.checked = false; }, 150);
+  }
+
+  // Count down on each pulse
+  countPB.addEventListener("change", () => {
+    pulseButton(countPB, () => {
+      if (CV > 0) CV -= 1;   // floor at 0
+    }, flowMain);
+  });
+
+  // Load / reset back to PV
+  resetPB.addEventListener("change", () => {
+    pulseButton(resetPB, () => {
+      CV = PV;
+    }, flowReset);
+  });
+
+  updateQ();
+  render();
+})();
+</script>
+<!-- === /CTD Counter Example === -->
 
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
