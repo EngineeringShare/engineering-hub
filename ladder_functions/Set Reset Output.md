@@ -169,13 +169,18 @@ The below table summarizes the behavior of Set & Reset outputs:
       <line class="contact-bridge" x1="260" y1="80" x2="320" y2="80" />
       <text class="lbl" x="245" y="50">NO (I0.0)</text>
 
-      <!-- SET coil (TIA style ----(S)---- ) -->
-      <path class="coil" d="M567 80 A30 22 0 0 1 627 80" />  <!-- top arc -->
-      <path class="coil" d="M627 80 A30 22 0 0 1 567 80" />  <!-- bottom arc -->
-      <text class="coil-mark" x="597" y="80">S</text>  
-      <!-- wires -->
+      <!-- SET coil (TIA-style brackets ----(S)---- ) -->
+      <!-- Left bracket arc -->
+      <path class="coil" d="M597 58 A30 22 0 0 0 597 102" />
+      <!-- Right bracket arc -->
+      <path class="coil" d="M597 102 A30 22 0 0 0 597 58" />
+  
+      <!-- S text -->
+      <text class="coil-mark" x="597" y="80">S</text>
+  
+      <!-- Wires to coil -->
       <path class="wire" d="M520 80 H 567" />
-      <path class="wire" d="M627 80 H 750" />  
+      <path class="wire" d="M627 80 H 750" />
 
       <!-- Flow for rung 1 -->
       <path class="flow flow-set" d="M70 80 H 750" />
@@ -192,14 +197,19 @@ The below table summarizes the behavior of Set & Reset outputs:
       <line class="contact-bridge" x1="260" y1="200" x2="320" y2="200" />
       <text class="lbl" x="245" y="170">NO (I0.1)</text>
 
-      <!-- RESET coil (TIA style ----(R)---- ) -->
-      <path class="coil" d="M567 200 A30 22 0 0 1 627 200" />  <!-- top arc -->
-      <path class="coil" d="M627 200 A30 22 0 0 1 567 200" />  <!-- bottom arc -->
+      <!-- RESET coil (TIA-style brackets ----(R)---- ) -->
+      <!-- Left bracket arc -->
+      <path class="coil" d="M597 178 A30 22 0 0 0 597 222" />
+      <!-- Right bracket arc -->
+      <path class="coil" d="M597 222 A30 22 0 0 0 597 178" />
+  
+      <!-- R text -->
       <text class="coil-mark" x="597" y="200">R</text>
   
-      <!-- wires -->
+      <!-- Wires to coil -->
       <path class="wire" d="M520 200 H 567" />
       <path class="wire" d="M627 200 H 750" />
+
 
       <!-- Flow for rung 2 -->
       <path class="flow flow-reset" d="M70 200 H 750" />
