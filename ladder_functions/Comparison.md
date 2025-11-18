@@ -147,25 +147,26 @@ The below table summarizes the behavior of an Output Coil:
         <td>6</td>
         <td>True (Signal Flows)</td>
     </tr>
+</table>
 
-<!-- === Comparator Example (A ? B -> Q) === -->
+<!-- === Comparator Example (A ? B -> Q0.4) === -->
 <div class="ladder-rung" id="cmpRung">
   <div class="top">
     <div class="switch-row">
       <label>
         A:
-        <input id="cmpA" type="number" value="5" style="width:4rem;">
+        <input id="cmpA" type="number" value="10" style="width:4rem;">
       </label>
       <label>
         B:
-        <input id="cmpB" type="number" value="3" style="width:4rem;">
+        <input id="cmpB" type="number" value="10" style="width:4rem;">
       </label>
       <label>
         Operator:
         <select id="cmpOp">
           <option value=">">&gt;</option>
           <option value="<">&lt;</option>
-          <option value=">=" selected>&ge;</option>
+          <option value=">=">&ge;</option>
           <option value="<=">&le;</option>
           <option value="==">==</option>
           <option value="!=">!=</option>
@@ -173,7 +174,7 @@ The below table summarizes the behavior of an Output Coil:
       </label>
     </div>
     <div class="kv">
-      Condition: <b id="cmpExpr">A &gt;= B</b> &nbsp;|&nbsp;
+      Condition: <b id="cmpExpr">10 == 10</b> &nbsp;|&nbsp;
       Result Q: <b id="cmpQState">ON</b>
     </div>
   </div>
@@ -194,22 +195,12 @@ The below table summarizes the behavior of an Output Coil:
 
       <!-- Comparator block -->
       <rect class="timer-box" x="260" y="40" width="200" height="80" rx="8" ry="8" />
-      <text class="timer-text" x="360" y="56" text-anchor="middle">CMP</text>
+      <!-- Internal Siemens-style layout -->
+      <text class="timer-text" id="cmpALabel"  x="360" y="58" text-anchor="middle">A=10</text>
+      <text class="timer-text" id="cmpOpLabel" x="360" y="78" text-anchor="middle">==</text>
+      <text class="timer-text" id="cmpBLabel"  x="360" y="98" text-anchor="middle">B=10</text>
 
-      <!-- Comparator labels -->
-      <text class="timer-text" x="270" y="70">IN1</text>
-      <text class="timer-text" x="270" y="100">IN2</text>
-      <text class="timer-text" x="450" y="70">Q</text>
-
-      <!-- Operator text inside block -->
-      <text class="timer-text" id="cmpOpLabel" x="360" y="86" text-anchor="middle">&gt;=</text>
-
-      <!-- Wires inside block (stylised inputs/outputs) -->
-      <!-- IN1 -->
-      <path class="wire" d="M260 70 H 290" />
-      <!-- IN2 -->
-      <path class="wire" d="M260 100 H 290" />
-      <!-- Q out -->
+      <!-- Output wire from CMP Q -->
       <path class="wire" d="M460 80 H 520" />
 
       <!-- Output Coil Q0.4, bracket style ----( )---- -->
@@ -226,23 +217,29 @@ The below table summarizes the behavior of an Output Coil:
 
       <text class="lbl" x="560" y="130">Output Coil (Q0.4)</text>
 
-      <!-- Flow from rail through CMP to coil (only when comparison true) -->
-      <path class="flow" id="cmpFlow" d="M70 80 H 750" />
+      <!-- Flow up to the comparator (always powered) -->
+      <path class="flow" id="cmpFlowIn"  d="M70 80 H 260" />
+      <!-- Flow through CMP to coil (only when true) -->
+      <path class="flow" id="cmpFlowOut" d="M460 80 H 750" />
     </svg>
   </div>
 </div>
 
 <script>
 (function(){
-  const wrap   = document.getElementById('cmpRung');
-  const aInput = document.getElementById('cmpA');
-  const bInput = document.getElementById('cmpB');
-  const opSel  = document.getElementById('cmpOp');
+  const wrap    = document.getElementById('cmpRung');
+  const aInput  = document.getElementById('cmpA');
+  const bInput  = document.getElementById('cmpB');
+  const opSel   = document.getElementById('cmpOp');
 
-  const exprEl = document.getElementById('cmpExpr');
-  const qEl    = document.getElementById('cmpQState');
-  const opLabel= document.getElementById('cmpOpLabel');
-  const flow   = document.getElementById('cmpFlow');
+  const exprEl  = document.getElementById('cmpExpr');
+  const qEl     = document.getElementById('cmpQState');
+  const opLabel = document.getElementById('cmpOpLabel');
+  const aLabel  = document.getElementById('cmpALabel');
+  const bLabel  = document.getElementById('cmpBLabel');
+
+  const flowIn  = document.getElementById('cmpFlowIn');
+  const flowOut = document.getElementById('cmpFlowOut');
 
   function evalOp(a, b, op){
     switch(op){
@@ -263,13 +260,20 @@ The below table summarizes the behavior of an Output Coil:
 
     const result = evalOp(a, b, op);
 
-    // Update text
-    exprEl.textContent = `${a} ${op} ${b}`;
-    qEl.textContent    = result ? 'ON' : 'OFF';
+    // Texts
+    exprEl.textContent  = `${a} ${op} ${b}`;
+    qEl.textContent     = result ? 'ON' : 'OFF';
     opLabel.textContent = op;
+    aLabel.textContent  = `A=${a}`;
+    bLabel.textContent  = `B=${b}`;
 
-    // Green flow + coil highlight if true
-    flow.style.opacity = result ? 1 : 0;
+    // Flows:
+    //  - up to CMP always green
+    //  - out of CMP only when true
+    flowIn.style.opacity  = 1;
+    flowOut.style.opacity = result ? 1 : 0;
+
+    // Coil highlighting driven by result
     wrap.classList.toggle('on', result);
   }
 
@@ -277,6 +281,8 @@ The below table summarizes the behavior of an Output Coil:
   bInput.addEventListener('input', render);
   opSel.addEventListener('change', render);
 
+  // Initialise (default A=10, B=10, ==)
+  opSel.value = '==';
   render();
 })();
 </script>
