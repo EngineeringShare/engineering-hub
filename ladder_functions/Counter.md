@@ -79,7 +79,6 @@ permalink: /PLC-Ladder-Logic/Counter/
 <div style="text-align: center;">
     <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/CTU_Counter.png" alt="Counter Function Symbol" style="max-width: 200px; height: auto;">
     <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/CTD_Counter.png" alt="Counter Function Symbol" style="max-width: 200px; height: auto;">
-
 </div>
 
 <h2>Counter</h2>

@@ -138,7 +138,7 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
     </div>
   </a>
 
-  <a class="card-link" href="#">
+  <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/Comparison/">
     <div class="card">
       <div class="card-image">
         <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/CMP_Equals.png" alt="Comparison Symbol">
