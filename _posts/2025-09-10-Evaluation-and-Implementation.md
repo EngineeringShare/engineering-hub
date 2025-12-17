@@ -8,7 +8,7 @@ units: ["T-Level Year 2"]
 
 ## Intro:
 
-The evaluation and implementation report is a crucial document that assesses the effectiveness of a project or solution after its deployment. This report typically includes an analysis of the project's outcomes, the challenges faced during implementation, and recommendations for future improvements. It serves as a reflective tool to understand what worked well and what could be enhanced in subsequent projects.
+The evaluation and implementation report is a crucial document that assesses the effectiveness of a project or solution after its deployment. This report typically includes an analysis of the project's outcomes, the challenges faced during implementation, and recommendations for future improvements. It serves as a reflective tool to understand what worked well and what could be enhanced in subsequent projects.  
 
 ## Audio:
 
