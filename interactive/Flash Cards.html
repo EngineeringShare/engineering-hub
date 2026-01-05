@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flashcard Study Tool</title>
-  <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
@@ -64,6 +63,7 @@
   </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
  </head>
  <body class="h-full">
   <div id="app" class="h-full w-full overflow-auto"></div>
@@ -116,6 +116,8 @@
       font_size: 16
     };
 
+    let config = defaultConfig;
+
     let appState = {
       screen: 'menu',
       selectedSets: [],
@@ -125,105 +127,7 @@
       results: []
     };
 
-    async function init() {
-      await window.elementSdk.init({
-        defaultConfig,
-        onConfigChange: async (config) => {
-          const baseFontSize = config.font_size || defaultConfig.font_size;
-          const customFont = config.font_family || defaultConfig.font_family;
-          const baseFontStack = 'system-ui, -apple-system, sans-serif';
-          
-          document.documentElement.style.setProperty('--bg-color', config.background_color || defaultConfig.background_color);
-          document.documentElement.style.setProperty('--surface-color', config.surface_color || defaultConfig.surface_color);
-          document.documentElement.style.setProperty('--text-color', config.text_color || defaultConfig.text_color);
-          document.documentElement.style.setProperty('--primary-color', config.primary_action_color || defaultConfig.primary_action_color);
-          document.documentElement.style.setProperty('--secondary-color', config.secondary_action_color || defaultConfig.secondary_action_color);
-          
-          document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
-          document.body.style.fontSize = `${baseFontSize}px`;
-          
-          const titles = document.querySelectorAll('[data-element="title"]');
-          titles.forEach(el => {
-            el.textContent = config.app_title || defaultConfig.app_title;
-            el.style.fontSize = `${baseFontSize * 2}px`;
-          });
-          
-          const instructions = document.querySelectorAll('[data-element="instructions"]');
-          instructions.forEach(el => {
-            el.textContent = config.instructions_text || defaultConfig.instructions_text;
-            el.style.fontSize = `${baseFontSize}px`;
-          });
-          
-          const headings = document.querySelectorAll('h2, h3');
-          headings.forEach(el => {
-            el.style.fontSize = `${baseFontSize * 1.5}px`;
-          });
-          
-          const labels = document.querySelectorAll('label, .text-sm');
-          labels.forEach(el => {
-            el.style.fontSize = `${baseFontSize * 0.875}px`;
-          });
-        },
-        mapToCapabilities: (config) => ({
-          recolorables: [
-            {
-              get: () => config.background_color || defaultConfig.background_color,
-              set: (value) => {
-                config.background_color = value;
-                window.elementSdk.setConfig({ background_color: value });
-              }
-            },
-            {
-              get: () => config.surface_color || defaultConfig.surface_color,
-              set: (value) => {
-                config.surface_color = value;
-                window.elementSdk.setConfig({ surface_color: value });
-              }
-            },
-            {
-              get: () => config.text_color || defaultConfig.text_color,
-              set: (value) => {
-                config.text_color = value;
-                window.elementSdk.setConfig({ text_color: value });
-              }
-            },
-            {
-              get: () => config.primary_action_color || defaultConfig.primary_action_color,
-              set: (value) => {
-                config.primary_action_color = value;
-                window.elementSdk.setConfig({ primary_action_color: value });
-              }
-            },
-            {
-              get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
-              set: (value) => {
-                config.secondary_action_color = value;
-                window.elementSdk.setConfig({ secondary_action_color: value });
-              }
-            }
-          ],
-          borderables: [],
-          fontEditable: {
-            get: () => config.font_family || defaultConfig.font_family,
-            set: (value) => {
-              config.font_family = value;
-              window.elementSdk.setConfig({ font_family: value });
-            }
-          },
-          fontSizeable: {
-            get: () => config.font_size || defaultConfig.font_size,
-            set: (value) => {
-              config.font_size = value;
-              window.elementSdk.setConfig({ font_size: value });
-            }
-          }
-        }),
-        mapToEditPanelValues: (config) => new Map([
-          ['app_title', config.app_title || defaultConfig.app_title],
-          ['instructions_text', config.instructions_text || defaultConfig.instructions_text]
-        ])
-      });
-
+    function init() {
       render();
     }
 
@@ -323,20 +227,19 @@
 
     function render() {
       const app = document.getElementById('app');
-      const config = window.elementSdk?.config || defaultConfig;
       
-      const bgColor = config.background_color || defaultConfig.background_color;
-      const surfaceColor = config.surface_color || defaultConfig.surface_color;
-      const textColor = config.text_color || defaultConfig.text_color;
-      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
-      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+      const bgColor = config.background_color;
+      const surfaceColor = config.surface_color;
+      const textColor = config.text_color;
+      const primaryColor = config.primary_action_color;
+      const secondaryColor = config.secondary_action_color;
       
       if (appState.screen === 'menu') {
         app.innerHTML = `
           <div class="min-h-full w-full p-8" style="background-color: ${bgColor}; color: ${textColor};">
             <div class="max-w-4xl mx-auto">
-              <h1 class="font-bold mb-2 text-center" data-element="title">${config.app_title || defaultConfig.app_title}</h1>
-              <p class="text-center mb-8 opacity-75" data-element="instructions">${config.instructions_text || defaultConfig.instructions_text}</p>
+              <h1 class="text-4xl font-bold mb-2 text-center">${config.app_title}</h1>
+              <p class="text-center mb-8 opacity-75">${config.instructions_text}</p>
               
               <div class="space-y-4 mb-8">
                 ${CARD_SETS.map(set => `
@@ -467,5 +370,5 @@
 
     init();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b947bcc7272941b',t:'MTc2NzYzMTkyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b9481bb82839a7c',t:'MTc2NzYzMjE2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
