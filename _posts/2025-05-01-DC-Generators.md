@@ -43,6 +43,7 @@ units: ["BTEC Unit 56", "BTEC Unit 31", "T-Level Unit 08"]
 
 ## Other Materials:
 * [YouTube: Working Principle of DC Generator - Electric Machine #1](https://youtu.be/mq2zjmS8UMI?si=VnWoXIEE92T4mmk2)
+* [Safiquememon: Characteristics of DC Generators](https://safiquememon.wordpress.com/2019/02/15/characteristics-of-dc-generators/)
 
 ## ---
 
