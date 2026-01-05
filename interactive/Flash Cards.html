@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcard Study Tool</title>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    
+    .card-container {
+      perspective: 1000px;
+    }
+    
+    .flashcard {
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-style: preserve-3d;
+    }
+    
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+    
+    .card-front, .card-back {
+      backface-visibility: hidden;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      border-radius: 1rem;
+    }
+    
+    .card-back {
+      transform: rotateY(180deg);
+    }
+    
+    .swipe-left {
+      animation: swipeLeft 0.4s ease-out forwards;
+    }
+    
+    .swipe-right {
+      animation: swipeRight 0.4s ease-out forwards;
+    }
+    
+    @keyframes swipeLeft {
+      to {
+        transform: translateX(-150%) rotate(-20deg);
+        opacity: 0;
+      }
+    }
+    
+    @keyframes swipeRight {
+      to {
+        transform: translateX(150%) rotate(20deg);
+        opacity: 0;
+      }
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full">
+  <div id="app" class="h-full w-full overflow-auto"></div>
+  <script>
+    const CARD_SETS = [
+      {
+        id: 'math-basics',
+        name: 'Math Basics',
+        cards: [
+          { id: 'm1', question: 'What is 7 × 8?', answer: '56', tags: ['multiplication', 'times-tables'] },
+          { id: 'm2', question: 'What is the square root of 144?', answer: '12', tags: ['square-roots', 'algebra'] },
+          { id: 'm3', question: 'What is 15% of 200?', answer: '30', tags: ['percentages', 'arithmetic'] },
+          { id: 'm4', question: 'Solve: 3x + 5 = 20', answer: 'x = 5', tags: ['algebra', 'equations'] },
+          { id: 'm5', question: 'What is the area of a circle with radius 5?', answer: '25π or ~78.5', tags: ['geometry', 'formulas'] }
+        ]
+      },
+      {
+        id: 'science-biology',
+        name: 'Biology Essentials',
+        cards: [
+          { id: 'b1', question: 'What is the powerhouse of the cell?', answer: 'Mitochondria', tags: ['cell-biology', 'organelles'] },
+          { id: 'b2', question: 'What is the process of plants making food called?', answer: 'Photosynthesis', tags: ['plant-biology', 'processes'] },
+          { id: 'b3', question: 'What carries genetic information?', answer: 'DNA', tags: ['genetics', 'molecules'] },
+          { id: 'b4', question: 'What is the basic unit of life?', answer: 'Cell', tags: ['cell-biology', 'fundamentals'] },
+          { id: 'b5', question: 'What organ pumps blood through the body?', answer: 'Heart', tags: ['anatomy', 'circulatory-system'] }
+        ]
+      },
+      {
+        id: 'history-world',
+        name: 'World History',
+        cards: [
+          { id: 'h1', question: 'In what year did World War II end?', answer: '1945', tags: ['20th-century', 'world-wars'] },
+          { id: 'h2', question: 'Who was the first President of the United States?', answer: 'George Washington', tags: ['american-history', 'presidents'] },
+          { id: 'h3', question: 'What ancient civilization built the pyramids?', answer: 'Ancient Egypt', tags: ['ancient-history', 'civilizations'] },
+          { id: 'h4', question: 'When did the Roman Empire fall?', answer: '476 AD', tags: ['ancient-history', 'empires'] },
+          { id: 'h5', question: 'Who invented the printing press?', answer: 'Johannes Gutenberg', tags: ['renaissance', 'inventions'] }
+        ]
+      }
+    ];
+
+    const defaultConfig = {
+      app_title: 'Flashcard Study Tool',
+      instructions_text: 'Select your study sets and start practicing',
+      background_color: '#f0f4f8',
+      surface_color: '#ffffff',
+      text_color: '#1a202c',
+      primary_action_color: '#3b82f6',
+      secondary_action_color: '#64748b',
+      font_family: 'system-ui',
+      font_size: 16
+    };
+
+    let appState = {
+      screen: 'menu',
+      selectedSets: [],
+      currentDeck: [],
+      currentIndex: 0,
+      isFlipped: false,
+      results: []
+    };
+
+    async function init() {
+      await window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (config) => {
+          const baseFontSize = config.font_size || defaultConfig.font_size;
+          const customFont = config.font_family || defaultConfig.font_family;
+          const baseFontStack = 'system-ui, -apple-system, sans-serif';
+          
+          document.documentElement.style.setProperty('--bg-color', config.background_color || defaultConfig.background_color);
+          document.documentElement.style.setProperty('--surface-color', config.surface_color || defaultConfig.surface_color);
+          document.documentElement.style.setProperty('--text-color', config.text_color || defaultConfig.text_color);
+          document.documentElement.style.setProperty('--primary-color', config.primary_action_color || defaultConfig.primary_action_color);
+          document.documentElement.style.setProperty('--secondary-color', config.secondary_action_color || defaultConfig.secondary_action_color);
+          
+          document.body.style.fontFamily = `${customFont}, ${baseFontStack}`;
+          document.body.style.fontSize = `${baseFontSize}px`;
+          
+          const titles = document.querySelectorAll('[data-element="title"]');
+          titles.forEach(el => {
+            el.textContent = config.app_title || defaultConfig.app_title;
+            el.style.fontSize = `${baseFontSize * 2}px`;
+          });
+          
+          const instructions = document.querySelectorAll('[data-element="instructions"]');
+          instructions.forEach(el => {
+            el.textContent = config.instructions_text || defaultConfig.instructions_text;
+            el.style.fontSize = `${baseFontSize}px`;
+          });
+          
+          const headings = document.querySelectorAll('h2, h3');
+          headings.forEach(el => {
+            el.style.fontSize = `${baseFontSize * 1.5}px`;
+          });
+          
+          const labels = document.querySelectorAll('label, .text-sm');
+          labels.forEach(el => {
+            el.style.fontSize = `${baseFontSize * 0.875}px`;
+          });
+        },
+        mapToCapabilities: (config) => ({
+          recolorables: [
+            {
+              get: () => config.background_color || defaultConfig.background_color,
+              set: (value) => {
+                config.background_color = value;
+                window.elementSdk.setConfig({ background_color: value });
+              }
+            },
+            {
+              get: () => config.surface_color || defaultConfig.surface_color,
+              set: (value) => {
+                config.surface_color = value;
+                window.elementSdk.setConfig({ surface_color: value });
+              }
+            },
+            {
+              get: () => config.text_color || defaultConfig.text_color,
+              set: (value) => {
+                config.text_color = value;
+                window.elementSdk.setConfig({ text_color: value });
+              }
+            },
+            {
+              get: () => config.primary_action_color || defaultConfig.primary_action_color,
+              set: (value) => {
+                config.primary_action_color = value;
+                window.elementSdk.setConfig({ primary_action_color: value });
+              }
+            },
+            {
+              get: () => config.secondary_action_color || defaultConfig.secondary_action_color,
+              set: (value) => {
+                config.secondary_action_color = value;
+                window.elementSdk.setConfig({ secondary_action_color: value });
+              }
+            }
+          ],
+          borderables: [],
+          fontEditable: {
+            get: () => config.font_family || defaultConfig.font_family,
+            set: (value) => {
+              config.font_family = value;
+              window.elementSdk.setConfig({ font_family: value });
+            }
+          },
+          fontSizeable: {
+            get: () => config.font_size || defaultConfig.font_size,
+            set: (value) => {
+              config.font_size = value;
+              window.elementSdk.setConfig({ font_size: value });
+            }
+          }
+        }),
+        mapToEditPanelValues: (config) => new Map([
+          ['app_title', config.app_title || defaultConfig.app_title],
+          ['instructions_text', config.instructions_text || defaultConfig.instructions_text]
+        ])
+      });
+
+      render();
+    }
+
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    function toggleSetSelection(setId) {
+      const index = appState.selectedSets.indexOf(setId);
+      if (index > -1) {
+        appState.selectedSets.splice(index, 1);
+      } else {
+        appState.selectedSets.push(setId);
+      }
+      render();
+    }
+
+    function startStudying() {
+      if (appState.selectedSets.length === 0) return;
+      
+      const allCards = [];
+      CARD_SETS.forEach(set => {
+        if (appState.selectedSets.includes(set.id)) {
+          allCards.push(...set.cards);
+        }
+      });
+      
+      appState.currentDeck = shuffleArray(allCards);
+      appState.currentIndex = 0;
+      appState.isFlipped = false;
+      appState.results = [];
+      appState.screen = 'study';
+      render();
+    }
+
+    function flipCard() {
+      appState.isFlipped = !appState.isFlipped;
+      render();
+    }
+
+    async function handleAnswer(correct) {
+      const card = appState.currentDeck[appState.currentIndex];
+      appState.results.push({ cardId: card.id, correct, tags: card.tags });
+      
+      const cardElement = document.querySelector('.flashcard');
+      if (cardElement) {
+        cardElement.classList.add(correct ? 'swipe-right' : 'swipe-left');
+        
+        await new Promise(resolve => setTimeout(resolve, 400));
+      }
+      
+      if (appState.currentIndex < appState.currentDeck.length - 1) {
+        appState.currentIndex++;
+        appState.isFlipped = false;
+        render();
+      } else {
+        appState.screen = 'results';
+        render();
+      }
+    }
+
+    function calculateTagStats() {
+      const tagStats = {};
+      
+      appState.results.forEach(result => {
+        result.tags.forEach(tag => {
+          if (!tagStats[tag]) {
+            tagStats[tag] = { correct: 0, total: 0 };
+          }
+          tagStats[tag].total++;
+          if (result.correct) {
+            tagStats[tag].correct++;
+          }
+        });
+      });
+      
+      return Object.entries(tagStats)
+        .map(([tag, stats]) => ({
+          tag,
+          percentage: Math.round((stats.correct / stats.total) * 100),
+          correct: stats.correct,
+          total: stats.total
+        }))
+        .sort((a, b) => a.percentage - b.percentage);
+    }
+
+    function returnToMenu() {
+      appState.screen = 'menu';
+      appState.selectedSets = [];
+      render();
+    }
+
+    function render() {
+      const app = document.getElementById('app');
+      const config = window.elementSdk?.config || defaultConfig;
+      
+      const bgColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_action_color || defaultConfig.primary_action_color;
+      const secondaryColor = config.secondary_action_color || defaultConfig.secondary_action_color;
+      
+      if (appState.screen === 'menu') {
+        app.innerHTML = `
+          <div class="min-h-full w-full p-8" style="background-color: ${bgColor}; color: ${textColor};">
+            <div class="max-w-4xl mx-auto">
+              <h1 class="font-bold mb-2 text-center" data-element="title">${config.app_title || defaultConfig.app_title}</h1>
+              <p class="text-center mb-8 opacity-75" data-element="instructions">${config.instructions_text || defaultConfig.instructions_text}</p>
+              
+              <div class="space-y-4 mb-8">
+                ${CARD_SETS.map(set => `
+                  <label class="flex items-center p-4 rounded-lg cursor-pointer transition-all hover:shadow-md" style="background-color: ${surfaceColor}; border: 2px solid ${appState.selectedSets.includes(set.id) ? primaryColor : 'transparent'};">
+                    <input type="checkbox" class="w-5 h-5 mr-4" ${appState.selectedSets.includes(set.id) ? 'checked' : ''} onchange="toggleSetSelection('${set.id}')" style="accent-color: ${primaryColor};">
+                    <div class="flex-1">
+                      <h3 class="font-semibold mb-1">${set.name}</h3>
+                      <p class="text-sm opacity-75">${set.cards.length} cards</p>
+                    </div>
+                  </label>
+                `).join('')}
+              </div>
+              
+              <button 
+                onclick="startStudying()" 
+                ${appState.selectedSets.length === 0 ? 'disabled' : ''}
+                class="w-full py-4 px-6 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                style="background-color: ${primaryColor}; color: white;">
+                Start Studying (${appState.selectedSets.reduce((total, setId) => {
+                  const set = CARD_SETS.find(s => s.id === setId);
+                  return total + (set ? set.cards.length : 0);
+                }, 0)} cards)
+              </button>
+            </div>
+          </div>
+        `;
+      } else if (appState.screen === 'study') {
+        const card = appState.currentDeck[appState.currentIndex];
+        
+        app.innerHTML = `
+          <div class="h-full w-full flex flex-col" style="background-color: ${bgColor}; color: ${textColor};">
+            <div class="p-4" style="background-color: ${surfaceColor}; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+              <div class="max-w-4xl mx-auto flex justify-between items-center">
+                <span class="font-semibold">Card ${appState.currentIndex + 1} of ${appState.currentDeck.length}</span>
+                <button onclick="returnToMenu()" class="px-4 py-2 rounded-lg transition-all" style="background-color: ${secondaryColor}; color: white;">Exit</button>
+              </div>
+            </div>
+            
+            <div class="flex-1 flex items-center justify-center p-8">
+              <div class="card-container w-full max-w-2xl" style="height: 400px;">
+                <div class="flashcard relative w-full h-full ${appState.isFlipped ? 'flipped' : ''}" onclick="flipCard()">
+                  <div class="card-front" style="background: linear-gradient(135deg, ${primaryColor}, ${primaryColor}dd); color: white; cursor: pointer;">
+                    <div class="text-center">
+                      <p class="text-sm opacity-75 mb-4">QUESTION</p>
+                      <h2 class="font-bold">${card.question}</h2>
+                      <p class="text-sm opacity-75 mt-6">Click to reveal answer</p>
+                    </div>
+                  </div>
+                  <div class="card-back" style="background-color: ${surfaceColor}; border: 3px solid ${primaryColor}; cursor: pointer;">
+                    <div class="text-center">
+                      <p class="text-sm opacity-75 mb-4">ANSWER</p>
+                      <h2 class="font-bold" style="color: ${primaryColor};">${card.answer}</h2>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="p-8" style="background-color: ${surfaceColor};">
+              <div class="max-w-2xl mx-auto">
+                <div class="flex gap-4 mb-4">
+                  <button 
+                    onclick="handleAnswer(false)" 
+                    ${!appState.isFlipped ? 'disabled' : ''}
+                    class="flex-1 py-4 px-6 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    style="background-color: #ef4444; color: white;">
+                    ✗ Wrong
+                  </button>
+                  <button 
+                    onclick="handleAnswer(true)" 
+                    ${!appState.isFlipped ? 'disabled' : ''}
+                    class="flex-1 py-4 px-6 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    style="background-color: #10b981; color: white;">
+                    ✓ Correct
+                  </button>
+                </div>
+                <div class="flex flex-wrap gap-2 justify-center">
+                  ${card.tags.map(tag => `
+                    <span class="px-3 py-1 rounded-full text-sm" style="background-color: ${bgColor}; color: ${textColor};">${tag}</span>
+                  `).join('')}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (appState.screen === 'results') {
+        const tagStats = calculateTagStats();
+        const correctCount = appState.results.filter(r => r.correct).length;
+        const totalCount = appState.results.length;
+        const percentage = Math.round((correctCount / totalCount) * 100);
+        
+        app.innerHTML = `
+          <div class="min-h-full w-full p-8" style="background-color: ${bgColor}; color: ${textColor};">
+            <div class="max-w-4xl mx-auto">
+              <h1 class="font-bold mb-8 text-center">Study Session Complete!</h1>
+              
+              <div class="p-8 rounded-xl mb-8 text-center" style="background-color: ${surfaceColor};">
+                <div class="text-6xl font-bold mb-2" style="color: ${primaryColor};">${percentage}%</div>
+                <p class="text-xl opacity-75">${correctCount} out of ${totalCount} correct</p>
+              </div>
+              
+              <div class="p-6 rounded-xl mb-8" style="background-color: ${surfaceColor};">
+                <h2 class="font-semibold mb-4">Focus Areas</h2>
+                <p class="text-sm opacity-75 mb-4">Topics where you need more practice:</p>
+                <div class="space-y-3">
+                  ${tagStats.slice(0, 5).map(stat => `
+                    <div>
+                      <div class="flex justify-between mb-1">
+                        <span class="font-medium">${stat.tag}</span>
+                        <span class="opacity-75">${stat.correct}/${stat.total} (${stat.percentage}%)</span>
+                      </div>
+                      <div class="w-full rounded-full h-2" style="background-color: ${bgColor};">
+                        <div class="h-2 rounded-full transition-all" style="width: ${stat.percentage}%; background-color: ${stat.percentage >= 70 ? '#10b981' : stat.percentage >= 40 ? '#f59e0b' : '#ef4444'};"></div>
+                      </div>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              
+              <button onclick="returnToMenu()" class="w-full py-4 px-6 rounded-lg font-semibold transition-all" style="background-color: ${primaryColor}; color: white;">
+                Study Again
+              </button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    init();
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b947bcc7272941b',t:'MTc2NzYzMTkyMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
