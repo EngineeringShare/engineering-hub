@@ -42,7 +42,7 @@ units: ["BTEC Unit 56", "BTEC Unit 31", "T-Level Unit 08"]
 </script>
 
 ## Other Materials:
-* [YouTube: Working Principle of DC Generator | [Electric Machine #1]](https://youtu.be/mq2zjmS8UMI?si=VnWoXIEE92T4mmk2)
+* [YouTube: Working Principle of DC Generator - Electric Machine #1](https://youtu.be/mq2zjmS8UMI?si=VnWoXIEE92T4mmk2)
 
 ## ---
 
