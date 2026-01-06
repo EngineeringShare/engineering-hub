@@ -22,6 +22,34 @@
       "answer": "Inductor",
       "questionImage": "https://ecstudiosystems.com/discover/textbooks/basic-electronics/inductors/images/inductor.jpg",
       "tags": ["circuit-diagrams", "components"]
+    },
+    {
+      "id": "circuits-4",
+      "question": "What does this symbol represent in a circuit diagram?",
+      "answer": "Diode",
+      "questionImage": "https://thevalleyofcode.com/posts_images/electronics-components-diodes/Screen_Shot_2020-12-06_at_11.54.39.png",
+      "tags": ["circuit-diagrams", "components"]
+    },
+    {
+      "id": "circuits-5",
+      "question": "What does this symbol represent in a circuit diagram?",
+      "answer": "Battery",
+      "questionImage": "https://ichef.bbci.co.uk/images/ic/480xn/p0dzbbj0.png",
+      "tags": ["circuit-diagrams", "components"]
+    },
+    {
+      "id": "circuits-6",
+      "question": "What is the configuration of this circuit?",
+      "answer": "Series Circuit",
+      "questionImage": "https://anitocircuits.com/wp-content/uploads/2024/02/cap-series-1024x618.png",
+      "tags": ["circuit-diagrams", "components"]
+    },
+    {
+      "id": "circuits-7",
+      "question": "What is the configuration of this circuit?",
+      "answer": "Parallel Circuit",
+      "questionImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Resistors_in_parallel.svg/1920px-Resistors_in_parallel.svg.png",
+      "tags": ["circuit-diagrams", "components"]
     }
   ]
 }

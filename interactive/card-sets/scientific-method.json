@@ -1,0 +1,42 @@
+{
+  "id": "scientific-method",
+  "name": "Scientific Method",
+  "cards": [
+    {
+      "id": "scientific-method-1",
+      "question": "What are the main steps of the scientific method?",
+      "answer": "1. Ask a Question\n2. Do Background Research\n3. Construct a Hypothesis\n4. Test Your Hypothesis by Doing an Experiment\n5. Analyze Your Data and Draw a Conclusion\n6. Communicate Your Results",
+      "tags": ["experimental-process", "research"]
+    },
+    {
+      "id": "scientific-method-2",
+      "question": "What is a hypothesis?",
+      "answer": "A hypothesis is a proposed explanation for a phenomenon, based on limited evidence as a starting point for further investigation.",
+      "tags": ["hypothesis", "research"]
+    },
+    {
+      "id": "scientific-method-3",
+      "question": "What is a predicition in the context of the scientific method?",
+      "answer": "A prediction is a specific statement about what you expect to happen in your experiment if your hypothesis is correct.",
+      "tags": ["prediction", "hypothesis"]
+    },
+    {
+        "id": "scientific-method-4",
+        "question": "Why is it important to communicate your results?",
+        "answer": "Communicating results allows others to evaluate, replicate, and build upon your work, which is essential for scientific progress.",
+        "tags": ["communication", "research"]
+    },
+    {
+        "id": "scientific-method-5",
+        "question": "What is the purpose of conducting background research?",
+        "answer": "Background research helps you understand what is already known about your topic, refine your question, and design a better experiment.",
+        "tags": ["research", "preparation"]
+    },
+    {
+        "id": "scientific-method-6",
+        "question": "What is the difference between qualitative and quantitative data?",
+        "answer": "Qualitative data describes qualities or characteristics (e.g., color, texture), while quantitative data involves numerical measurements (e.g., height, weight).",
+        "tags": ["data", "analysis"]
+    }
+  ]
+}

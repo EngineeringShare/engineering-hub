@@ -62,7 +62,7 @@ This hub covers everything from Ohm’s Law and phasor diagrams to semiconductor
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
     {% if post.units contains "HTQ Unit 4019" %}
-      <a class="card-link" href="{{ '/engineering-hub' | append: post.url }}">
+      <a class="card-link" href="{{post.url}}">
         <div class="card">
           <h3>{{ post.title }}</h3>
         </div>

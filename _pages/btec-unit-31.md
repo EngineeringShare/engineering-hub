@@ -62,7 +62,7 @@ Welcome to the Unit 31 class hub. Here you’ll find everything from motor theor
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
     {% if post.units contains "BTEC Unit 31" %}
-      <a class="card-link" href="{{ '/engineering-hub' | append: post.url }}">
+      <a class="card-link" href="{{post.url}}">
         <div class="card">
           <h3>{{ post.title }}</h3>
         </div>

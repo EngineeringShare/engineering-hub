@@ -62,7 +62,7 @@ Welcome to the Unit 40 class hub. Here you’ll find everything from robot types
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
     {% if post.units contains "BTEC Unit 40" %}
-      <a class="card-link" href="{{ '/engineering-hub' | append: post.url }}">
+      <a class="card-link" href="{{post.url}}">
         <div class="card">
           <h3>{{ post.title }}</h3>
         </div>

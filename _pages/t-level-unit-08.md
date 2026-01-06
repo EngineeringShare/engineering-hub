@@ -62,7 +62,7 @@ This is the hub for T-Level Unit 8: Electrical and Electronic Principles — cov
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
     {% if post.units contains "T-Level Unit 08" %}
-      <a class="card-link" href="{{ '/engineering-hub' | append: post.url }}">
+      <a class="card-link" href="{{post.url}}">
         <div class="card">
           <h3>{{ post.title }}</h3>
         </div>

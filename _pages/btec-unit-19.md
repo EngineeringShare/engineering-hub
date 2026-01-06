@@ -62,7 +62,7 @@ Welcome to the Unit 19 class hub. Below are all resources, lessons, and posts re
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
     {% if post.units contains "BTEC Unit 19" %}
-      <a class="card-link" href="{{ '/engineering-hub' | append: post.url }}">
+      <a class="card-link" href="{{post.url}}">
         <div class="card">
           <h3>{{ post.title }}</h3>
         </div>
