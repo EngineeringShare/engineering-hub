@@ -83,65 +83,65 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
 
 <div class="projects">
 
-  <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/NO-Contact/">
+  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/NO-Contact/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/NO_Contact.png" alt="Normally Open Contact Symbol">
+        <img src="https://engineeringshare.co.uk/images/PLC-Icons/NO_Contact.png" alt="Normally Open Contact Symbol">
       </div>
       <h3>Normally Open Contact (NO)</h3>
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/NC-Contact/">
+  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/NC-Contact/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/NC_Contact.png" alt="Normally Closed Contact Symbol">
+        <img src="https://engineeringshare.co.uk/images/PLC-Icons/NC_Contact.png" alt="Normally Closed Contact Symbol">
       </div>
       <h3>Normally Closed Contact (NC)</h3>
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/Output/">
+  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/Output/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Output.png" alt="Output Coil Symbol">
+        <img src="https://engineeringshare.co.uk/images/PLC-Icons/Output.png" alt="Output Coil Symbol">
       </div>
       <h3>Output Coil</h3>
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/Set-Reset-Output/">
+  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/Set-Reset-Output/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Set_Output.png" alt="Set Output Symbol">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Reset_Output.png" alt="Reset Output Symbol">
+        <img src="https://engineeringshare.co.uk/images/PLC-Icons/Set_Output.png" alt="Set Output Symbol">
+        <img src="https://engineeringshare.co.uk/images/PLC-Icons/Reset_Output.png" alt="Reset Output Symbol">
       </div>
       <h3>Set & Reset Output (S)/(R)</h3>
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/Timer/">
+  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/Timer/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/TON_Timer.png" alt="Timer Symbol">
+        <img src="https://engineeringshare.co.uk/images/PLC-Icons/TON_Timer.png" alt="Timer Symbol">
       </div>
       <h3>Timer (TON / TOF)</h3>
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/Counter/">
+  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/Counter/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/CTU_Counter.png" alt="Counter Symbol">
+        <img src="https://engineeringshare.co.uk/images/PLC-Icons/CTU_Counter.png" alt="Counter Symbol">
       </div>
       <h3>Counter (CTU / CTD)</h3>
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.github.io/engineering-hub/PLC-Ladder-Logic/Comparison/">
+  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/Comparison/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/CMP_Equals.png" alt="Comparison Symbol">
+        <img src="https://engineeringshare.co.uk/images/PLC-Icons/CMP_Equals.png" alt="Comparison Symbol">
       </div>
       <h3>Comparison Functions</h3>
     </div>
@@ -150,7 +150,7 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
   <a class="card-link" href="#">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Move_Function.png" alt="Move Function Symbol">
+        <img src="https://engineeringshare.co.uk/images/PLC-Icons/Move_Function.png" alt="Move Function Symbol">
       </div>
       <h3>Data Movement Function</h3>
     </div>

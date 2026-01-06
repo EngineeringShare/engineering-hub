@@ -13,7 +13,7 @@ Ladder Logic is a graphical programming language used to program Programmable Lo
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/Ladder Logic Functions.pdf"
+        src="https://engineeringshare.co.uk/presentations/Ladder Logic Functions.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
@@ -43,7 +43,7 @@ Ladder Logic is a graphical programming language used to program Programmable Lo
 
 ## Interactive Tools:
 
-<a href="https://engineeringshare.github.io/engineering-hub/interactive/Ladder%20Logic%20Engineer.html">👷‍♂️ Ladder Logic Game</a>
+<a href="https://engineeringshare.co.uk/interactive/Ladder%20Logic%20Engineer.html">👷‍♂️ Ladder Logic Game</a>
 
 ## Other Materials:
 * [YouTube: Programable Logic Controller Basics Explained - automation engineering](https://youtu.be/uOtdWHMKhnw)

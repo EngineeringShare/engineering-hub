@@ -13,7 +13,7 @@ The evaluation and implementation report is a crucial document that assesses the
 ## Audio:
 
 <audio controls>
-    <source src="https://EngineeringShare.github.io/engineering-hub/audio/Evaluation and Implementation Report.mp3" type="audio/mpeg">
+    <source src="https://engineeringshare.co.uk/audio/Evaluation and Implementation Report.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
@@ -22,7 +22,7 @@ The evaluation and implementation report is a crucial document that assesses the
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/Evaluation and Implementation Report.pdf"
+        src="https://engineeringshare.co.uk/presentations/Evaluation and Implementation Report.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
@@ -55,7 +55,7 @@ The evaluation and implementation report is a crucial document that assesses the
 <div id="example-pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="example-pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/RLC Circuit Analysis.pdf" 
+        src="https://engineeringshare.co.uk/presentations/RLC Circuit Analysis.pdf" 
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

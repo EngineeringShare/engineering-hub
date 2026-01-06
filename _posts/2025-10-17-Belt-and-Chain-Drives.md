@@ -15,7 +15,7 @@ Belt and chain drives are essential components in mechanical power transmission 
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/Chain and Belt Drives.pdf"
+        src="https://engineeringshare.co.uk/presentations/Chain and Belt Drives.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
@@ -45,7 +45,7 @@ Belt and chain drives are essential components in mechanical power transmission 
 
 ## Interactive Tools:
 
-<a href="https://engineeringshare.github.io/engineering-hub/interactive/Gear%20Simulator.html">⚙️ Gear Simulator</a>
+<a href="https://engineeringshare.co.uk/interactive/Gear%20Simulator.html">⚙️ Gear Simulator</a>
 
 ## Other Materials:
 

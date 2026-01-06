@@ -13,7 +13,7 @@ Effective workspace organisation is crucial in robotics and manufacturing enviro
 ## Audio:
 
 <audio controls>
-    <source src="https://EngineeringShare.github.io/engineering-hub/audio/Workspace Organisation.mp3" type="audio/mpeg">
+    <source src="https://engineeringshare.co.uk/audio/Workspace Organisation.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
@@ -22,7 +22,7 @@ Effective workspace organisation is crucial in robotics and manufacturing enviro
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/Workspace Organisation.pdf" 
+        src="https://engineeringshare.co.uk/presentations/Workspace Organisation.pdf" 
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

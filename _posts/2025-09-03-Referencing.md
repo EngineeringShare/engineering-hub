@@ -13,7 +13,7 @@ units: ["T-Level Year 2"]
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/Referencing.pdf"
+        src="https://engineeringshare.co.uk/presentations/Referencing.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

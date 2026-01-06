@@ -13,7 +13,7 @@ units: ["T-Level Unit 10", "HTQ Unit 4015"]
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/Open-Closed Loop Systems.pdf"
+        src="https://engineeringshare.co.uk/presentations/Open-Closed Loop Systems.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
@@ -43,7 +43,7 @@ units: ["T-Level Unit 10", "HTQ Unit 4015"]
 
 ## Interactive Tools:
 
-<a href="https://engineeringshare.github.io/engineering-hub/interactive/Control%20System%20Match.html">🧩 Match Game</a>
+<a href="https://engineeringshare.co.uk/interactive/Control%20System%20Match.html">🧩 Match Game</a>
 
 ## Other Materials:
 * [YouTube: Open Loop Systems](https://youtu.be/DE0hWLdkckg?si=nfoYuunOkl2AwdQV)

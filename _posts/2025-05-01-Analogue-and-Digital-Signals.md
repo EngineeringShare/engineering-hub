@@ -13,7 +13,7 @@ units: ["HTQ Unit 4019", "T-Level Unit 08", "BTEC Unit 19", "HTQ Unit 4015"]
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/Analogue and Digital Signals.pdf"
+        src="https://engineeringshare.co.uk/presentations/Analogue and Digital Signals.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
@@ -43,7 +43,7 @@ units: ["HTQ Unit 4019", "T-Level Unit 08", "BTEC Unit 19", "HTQ Unit 4015"]
 
 ## Interactive Tools:
 
-<a href="https://engineeringshare.github.io/engineering-hub/interactive/Analogue%20Digital%20Sort.html">🧩 Sort Game</a>
+<a href="https://engineeringshare.co.uk/interactive/Analogue%20Digital%20Sort.html">🧩 Sort Game</a>
 
 ## Other Materials:
 * [YouTube: Physics - Waves - Analogue and Digital Signals](https://youtu.be/XCu6L4kQF3k?si=UCaScr82F8xvw51n)

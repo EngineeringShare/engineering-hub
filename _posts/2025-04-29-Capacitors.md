@@ -13,7 +13,7 @@ units: ["T-Level Unit 08", "BTEC Unit 56"]
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/Capacitors.pdf"
+        src="https://engineeringshare.co.uk/presentations/Capacitors.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

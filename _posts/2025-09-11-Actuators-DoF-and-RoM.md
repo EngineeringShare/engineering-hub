@@ -17,7 +17,7 @@ Systems can be characterized by their Degrees of Freedom (DoF), which refers to 
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/Degrees of Freedom and Range of Motion.pdf"
+        src="https://engineeringshare.co.uk/presentations/Degrees of Freedom and Range of Motion.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
@@ -47,7 +47,7 @@ Systems can be characterized by their Degrees of Freedom (DoF), which refers to 
 
 ## Interactive Tools:
 
-<a href="https://engineeringshare.github.io/engineering-hub/interactive/2D%20Robot%20Arm%20Simulation.html">🦾 2D Robot Arm Simulator</a>
+<a href="https://engineeringshare.co.uk/interactive/2D%20Robot%20Arm%20Simulation.html">🦾 2D Robot Arm Simulator</a>
 
 ## Other Materials:
 
