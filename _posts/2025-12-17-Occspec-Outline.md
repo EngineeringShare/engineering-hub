@@ -15,7 +15,7 @@ This page gives you an outline for everything you should be submitting for your 
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://EngineeringShare.github.io/engineering-hub/presentations/OccSpec Outline.pdf"
+        src="https://engineeringshare.co.uk/presentations/OccSpec Outline.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
