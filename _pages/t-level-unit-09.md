@@ -62,7 +62,7 @@ This is the hub for T-Level Unit 9: Mechatronics — covering sensors and transd
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
     {% if post.units contains "T-Level Unit 09" %}
-      <a class="card-link" href="{{post.url}}">
+      <a class="card-link" href="{{ post.url | relative_url }}">
         <div class="card">
           <h3>{{ post.title }}</h3>
         </div>

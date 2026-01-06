@@ -60,7 +60,7 @@ permalink: /classes/t-level-year-2/
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
     {% if post.units contains "T-Level Year 2" %}
-      <a class="card-link" href="{{post.url}}">
+      <a class="card-link" href="{{ post.url | relative_url }}">
         <div class="card">
           <h3>{{ post.title }}</h3>
         </div>

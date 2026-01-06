@@ -62,7 +62,7 @@ Welcome to the Unit 24 hub. This is where you'll find all class materials, lesso
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
     {% if post.units contains "BTEC Unit 24" %}
-      <a class="card-link" href="{{post.url}}">
+      <a class="card-link" href="{{ post.url | relative_url }}">
         <div class="card">
           <h3>{{ post.title }}</h3>
         </div>

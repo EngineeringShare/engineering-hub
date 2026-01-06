@@ -62,7 +62,7 @@ This is the hub for Engineering Maths. Topics include algebra, trigonometry, cal
   {% assign all_posts = site.posts | sort: "title" %}
   {% for post in all_posts %}
     {% if post.units contains "HTQ Unit 4002" %}
-      <a class="card-link" href="{{post.url}}">
+      <a class="card-link" href="{{ post.url | relative_url }}">
         <div class="card">
           <h3>{{ post.title }}</h3>
         </div>
