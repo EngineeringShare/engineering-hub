@@ -1,0 +1,18 @@
+{
+  "id": "math-basics",
+  "name": "Math Basics",
+  "cards": [
+    {
+      "id": "m1",
+      "question": "What is 7 × 8?",
+      "answer": "56",
+      "tags": ["multiplication", "times-tables"]
+    },
+    {
+      "id": "m2",
+      "question": "What is the square root of 144?",
+      "answer": "12",
+      "tags": ["square-roots", "algebra"]
+    }
+  ]
+}
