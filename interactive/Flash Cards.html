@@ -105,7 +105,7 @@
     async function loadCardSets() {
       try {
         // Load the index file that lists all available card sets
-        const indexResponse = await fetch('./card-sets/index.json');
+        const indexResponse = await fetch('https://raw.githubusercontent.com/EngineeringShare/engineering-hub/refs/heads/main/interactive/card-sets/index.json');
         if (!indexResponse.ok) {
           throw new Error('Could not load card sets index. Make sure card-sets/index.json exists.');
         }
