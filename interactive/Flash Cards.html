@@ -113,7 +113,7 @@
         
         // Load all card set files
         const loadPromises = fileList.map(async (filename) => {
-          const response = await fetch(`./card-sets/${filename}`);
+          const response = await fetch(`${filename}`);
           if (!response.ok) {
             throw new Error(`Could not load ${filename}`);
           }
