@@ -105,7 +105,7 @@
     async function loadCardSets() {
       try {
         // Load the index file that lists all available card sets
-        const indexResponse = await fetch('https://raw.githubusercontent.com/EngineeringShare/engineering-hub/refs/heads/main/interactive/card-sets/index.json');
+        const indexResponse = await fetch('./card-sets/index.json');
         if (!indexResponse.ok) {
           throw new Error('Could not load card sets index. Make sure card-sets/index.json exists.');
         }
@@ -330,15 +330,17 @@
               <div class="card-container w-full max-w-2xl" style="height: 400px;">
                 <div class="flashcard relative w-full h-full ${appState.isFlipped ? 'flipped' : ''}" onclick="flipCard()">
                   <div class="card-front" style="background: linear-gradient(135deg, ${primaryColor}, ${primaryColor}dd); color: white; cursor: pointer;">
-                    <div class="text-center">
+                    <div class="text-center w-full">
                       <p class="text-sm opacity-75 mb-4">QUESTION</p>
+                      ${card.questionImage ? `<img src="${card.questionImage}" alt="Question image" class="max-w-full max-h-48 mx-auto mb-4 rounded-lg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" style="object-fit: contain;"><p style="display:none;" class="text-sm opacity-75 mb-4">Image failed to load</p>` : ''}
                       <h2 class="font-bold">${card.question}</h2>
                       <p class="text-sm opacity-75 mt-6">Click to reveal answer</p>
                     </div>
                   </div>
                   <div class="card-back" style="background-color: ${surfaceColor}; border: 3px solid ${primaryColor}; cursor: pointer;">
-                    <div class="text-center">
+                    <div class="text-center w-full">
                       <p class="text-sm opacity-75 mb-4">ANSWER</p>
+                      ${card.answerImage ? `<img src="${card.answerImage}" alt="Answer image" class="max-w-full max-h-48 mx-auto mb-4 rounded-lg" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" style="object-fit: contain;"><p style="display:none;" class="text-sm opacity-75 mb-4">Image failed to load</p>` : ''}
                       <h2 class="font-bold" style="color: ${primaryColor};">${card.answer}</h2>
                     </div>
                   </div>
@@ -418,5 +420,5 @@
 
     init();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b94944855ee438f',t:'MTc2NzYzMjkyMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b9a4524249ad519',t:'MTc2NzY5MjU5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

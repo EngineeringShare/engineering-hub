@@ -1,0 +1,27 @@
+{
+  "id": "circuit-basics",
+  "name": "Circuit-Basics",
+  "cards": [
+    {
+      "id": "circuits-1",
+      "question": "What do this symbol represent in a circuit diagram?",
+      "answer": "Resistor",
+      "questionImage": "https://res02.jakelectronics.com/res/article/20210621/202004241156255501.jpg",
+      "tags": ["circuit-diagrams", "components"]
+    },
+    {
+      "id": "circuits-2",
+      "question": "What does this symbol represent in a circuit diagram?",
+      "answer": "Capacitor",
+      "questionImage": "https://passive-components.eu/wp-content/uploads/2022/01/capacitor-symbols-featured.jpg",
+      "tags": ["circuit-diagrams", "components"]
+    },
+    {
+      "id": "circuits-3",
+      "question": "What does this symbol represent in a circuit diagram?",
+      "answer": "Inductor",
+      "questionImage": "https://ecstudiosystems.com/discover/textbooks/basic-electronics/inductors/images/inductor.jpg",
+      "tags": ["circuit-diagrams", "components"]
+    }
+  ]
+}
