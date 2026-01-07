@@ -136,7 +136,7 @@ This site is your one-stop destination for accessing class slides, assignments, 
 ## 🧠 Engineering Fun Fact
 
 <span id="fun-fact">Loading...</span>
-<script src="https://engineeringshare.github.io/engineering-hub/fun-fact.js" defer></script>
+<script src="https://engineeringshare.co.uk/fun-fact.js" defer></script>
 
 ---
 
