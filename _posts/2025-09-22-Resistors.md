@@ -47,6 +47,7 @@ Resistors are fundamental components in electronic circuits, used to control the
 ## Interactive Tools:
 
 <a href="https://engineeringshare.co.uk/interactive/Resistor%20Game.html">⚡ Resistor Code Game</a>
+<a href="https://engineeringshare.co.uk/interactive/Series%20and%20Parallel%20Resistors%20Quiz.html">⚡ Series and Parallel Resistors Quiz</a>
 
 ## Other Materials:
 
