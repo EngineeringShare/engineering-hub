@@ -118,7 +118,7 @@
     </div>
     <div class="flex items-center gap-3">
      <a href="https://engineeringshare.github.io/engineering-hub/interactive-hub/" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px">
-      ← Back to Interactive Hub
+        ← Back to Interactive Hub
      </a>
      <div class="pill px-3 py-1 rounded-full text-sm">
       Goal: Stay in scoring zone
@@ -146,10 +146,10 @@
       </div>
       <div class="pill rounded-xl p-4">
        <div class="text-slate-300 text-xs uppercase tracking-wider">
-        Best Time
+        Best Score
        </div>
        <div id="ui-best" class="text-2xl font-bold mt-1">
-        0.0s
+        0
        </div>
       </div>
       <div class="pill rounded-xl p-4">
@@ -382,10 +382,10 @@
     <p id="loseSub" class="text-slate-300 mb-4">You turned the lab into a splash park. The janitor says thanks for the job security.</p>
     <div class="flex items-center justify-center gap-3 mb-4">
      <div class="pill px-3 py-1 rounded-full text-sm">
-      Time Alive: <span id="loseTime" class="font-bold">0.0s</span>
+      Score: <span id="loseScore" class="font-bold">0</span>
      </div>
      <div class="pill px-3 py-1 rounded-full text-sm">
-      Best: <span id="loseBest" class="font-bold">0.0s</span>
+      Best Score: <span id="loseBestScore" class="font-bold">0</span>
      </div>
     </div><button id="playAgain" class="btn-primary px-4 py-2 rounded-lg font-semibold">Play Again</button>
    </div>
@@ -395,7 +395,7 @@
     const dt = 0.05; // seconds per tick
     let running = false;
     let elapsed = 0;
-    let bestTime = parseFloat(localStorage.getItem('pid_best_time') || '0') || 0;
+    let bestScore = parseInt(localStorage.getItem('pid_best_score') || '0') || 0;
 
     // Tank and limits
     let level = 0.5; // 0..1
@@ -476,7 +476,7 @@
       score: null,
       scoreBox: document.getElementById('ui-score-box')
     };
-    ui.best.textContent = bestTime.toFixed(1) + 's';
+    ui.best.textContent = bestScore.toLocaleString();
 
     // Controls
     const kpEl = document.getElementById('kp');
@@ -489,8 +489,8 @@
 
     // Lose overlay
     const loseOverlay = document.getElementById('loseOverlay');
-    const loseTime = document.getElementById('loseTime');
-    const loseBest = document.getElementById('loseBest');
+    const loseScore = document.getElementById('loseScore');
+    const loseBestScore = document.getElementById('loseBestScore');
     const loseTitle = document.getElementById('loseTitle');
     const loseSub = document.getElementById('loseSub');
     const loseEmoji = document.getElementById('loseEmoji');
@@ -738,13 +738,14 @@
 
     function showLose(reason) {
       running = false;
-      // Update best time
-      if (elapsed > bestTime) {
-        bestTime = elapsed;
-        localStorage.setItem('pid_best_time', String(bestTime));
+      const currentScore = Math.round(window._score || 0);
+      // Update best score
+      if (currentScore > bestScore) {
+        bestScore = currentScore;
+        localStorage.setItem('pid_best_score', String(bestScore));
       }
-      loseTime.textContent = elapsed.toFixed(1) + 's';
-      loseBest.textContent = bestTime.toFixed(1) + 's';
+      loseScore.textContent = currentScore.toLocaleString();
+      loseBestScore.textContent = bestScore.toLocaleString();
 
       if (reason === 'overflow') {
         loseTitle.textContent = 'Overflow!';
@@ -973,7 +974,7 @@
     function updateUI(inflow, leak, random, tide, pulse=0, shock=0, drift=0) {
       ui.level.textContent = Math.round(level * 100) + '%';
       ui.time.textContent = elapsed.toFixed(1) + 's';
-      ui.best.textContent = bestTime.toFixed(1) + 's';
+      ui.best.textContent = bestScore.toLocaleString();
       ui.inflow.textContent = inflow.toFixed(2);
       ui.outflow.textContent = (leak + random + tide + pulse + shock + drift + surge + noise + squall + maelstrom).toFixed(2);
       if (ui.scoreBox) ui.scoreBox.textContent = Math.round((window._score || 0)).toLocaleString();
@@ -1102,5 +1103,5 @@
       }
     }, dt * 1000);
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bb554fcc786cd25',t:'MTc2Nzk3NjM2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bb5649cf063941b',t:'MTc2Nzk3NzAwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
