@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PID Control Methods Visualizer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&amp;family=Outfit:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+    * {
+      font-family: 'Outfit', sans-serif;
+    }
+    .mono {
+      font-family: 'Space Mono', monospace;
+    }
+    
+    .graph-container {
+      background: linear-gradient(180deg, rgba(15,23,42,0.95) 0%, rgba(30,41,59,0.95) 100%);
+      border: 1px solid rgba(148,163,184,0.2);
+    }
+    
+    .control-card {
+      background: linear-gradient(135deg, rgba(30,41,59,0.9) 0%, rgba(15,23,42,0.95) 100%);
+      border: 1px solid rgba(148,163,184,0.15);
+      transition: all 0.3s ease;
+    }
+    
+    .control-card:hover {
+      border-color: rgba(148,163,184,0.3);
+      transform: translateY(-2px);
+    }
+    
+    .setpoint-line {
+      stroke-dasharray: 8, 4;
+      animation: dash 1s linear infinite;
+    }
+    
+    @keyframes dash {
+      to { stroke-dashoffset: -12; }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .live-indicator {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+    
+    .slider-track {
+      background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%);
+    }
+    
+    input[type="range"] {
+      -webkit-appearance: none;
+      background: transparent;
+    }
+    
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+      margin-top: -8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    
+    input[type="range"]::-webkit-slider-runnable-track {
+      width: 100%;
+      height: 4px;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
+    }
+    
+    .formula-box {
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(148,163,184,0.1);
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-slate-900 text-slate-100 overflow-auto">
+  <div id="app-wrapper" class="w-full min-h-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900"><!-- Header -->
+   <header class="w-full py-6 px-4 border-b border-slate-700/50">
+    <div class="max-w-7xl mx-auto">
+     <h1 id="page-title" class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Control Systems: From Bang-Bang to PID</h1>
+     <p class="text-slate-400 mt-2 text-lg">Interactive visualization of how different control methods respond to setpoint changes</p>
+    </div>
+   </header><!-- Main Content -->
+   <main class="w-full px-4 py-8">
+    <div class="max-w-7xl mx-auto space-y-8"><!-- Setpoint Control Panel -->
+     <section class="control-card rounded-2xl p-6">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+       <div class="flex items-center gap-4">
+        <div class="w-3 h-3 rounded-full bg-green-400 live-indicator"></div><span class="text-slate-300 font-medium">Live Simulation</span>
+       </div>
+       <div class="flex flex-wrap items-center gap-6">
+        <div class="flex items-center gap-3"><label id="setpoint-label" class="text-slate-300 font-medium">Target Temperature:</label> <input type="range" id="setpoint-slider" min="20" max="80" value="50" class="w-40"> <span id="setpoint-value" class="mono text-xl font-bold text-blue-400 w-16">50°C</span>
+        </div><button id="step-change-btn" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg font-medium hover:opacity-90 transition-opacity"> Step Change (+20°) </button> <button id="reset-btn" class="px-4 py-2 bg-slate-700 rounded-lg font-medium hover:bg-slate-600 transition-colors"> Reset All </button>
+       </div>
+      </div>
+     </section><!-- Control Methods Grid -->
+     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6"><!-- Bang-Bang Control -->
+      <section class="control-card rounded-2xl overflow-hidden">
+       <div class="p-5 border-b border-slate-700/50">
+        <div class="flex items-center justify-between">
+         <div>
+          <h2 class="text-xl font-bold text-orange-400">Bang-Bang Control</h2>
+          <p class="text-slate-400 text-sm mt-1">On/Off control - simplest form</p>
+         </div>
+         <div class="formula-box px-3 py-2 rounded-lg"><code class="mono text-xs text-slate-300">if (error &gt; 0) ON else OFF</code>
+         </div>
+        </div>
+       </div>
+       <div class="p-4">
+        <div class="graph-container rounded-xl p-4 h-48">
+         <svg id="graph-bangbang" class="w-full h-full" viewbox="0 0 400 150" preserveaspectratio="none"><defs>
+           <lineargradient id="grad-orange" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#f97316;stop-opacity:0.3" />
+            <stop offset="100%" style="stop-color:#f97316;stop-opacity:0" />
+           </lineargradient>
+          </defs> <line x1="0" y1="75" x2="400" y2="75" class="setpoint-line" stroke="#3b82f6" stroke-width="2" /> <path id="path-bangbang" fill="url(#grad-orange)" stroke="#f97316" stroke-width="2" />
+         </svg>
+        </div>
+        <div class="flex justify-between mt-3 text-sm"><span class="text-slate-400">Current: <span id="val-bangbang" class="mono text-orange-400 font-bold">50.0°C</span></span> <span class="text-slate-400">Status: <span id="status-bangbang" class="font-medium text-green-400">HEATING</span></span>
+        </div>
+       </div>
+       <div class="px-5 py-4 bg-slate-800/50">
+        <p class="text-slate-400 text-sm"><strong class="text-orange-400">Behavior:</strong> Oscillates around setpoint. Heater is either 100% ON or 100% OFF. Simple but causes overshoot and constant cycling.</p>
+       </div>
+      </section><!-- P Control -->
+      <section class="control-card rounded-2xl overflow-hidden">
+       <div class="p-5 border-b border-slate-700/50">
+        <div class="flex items-center justify-between">
+         <div>
+          <h2 class="text-xl font-bold text-cyan-400">P Control (Proportional)</h2>
+          <p class="text-slate-400 text-sm mt-1">Output proportional to error</p>
+         </div>
+         <div class="formula-box px-3 py-2 rounded-lg"><code class="mono text-xs text-slate-300">u(t) = Kp × e(t)</code>
+         </div>
+        </div>
+       </div>
+       <div class="p-4">
+        <div class="graph-container rounded-xl p-4 h-48">
+         <svg id="graph-p" class="w-full h-full" viewbox="0 0 400 150" preserveaspectratio="none"><defs>
+           <lineargradient id="grad-cyan" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:0.3" />
+            <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:0" />
+           </lineargradient>
+          </defs> <line x1="0" y1="75" x2="400" y2="75" class="setpoint-line" stroke="#3b82f6" stroke-width="2" /> <path id="path-p" fill="url(#grad-cyan)" stroke="#06b6d4" stroke-width="2" />
+         </svg>
+        </div>
+        <div class="flex justify-between mt-3 text-sm"><span class="text-slate-400">Current: <span id="val-p" class="mono text-cyan-400 font-bold">50.0°C</span></span> <span class="text-slate-400">Offset: <span id="offset-p" class="mono text-yellow-400">0.0°C</span></span>
+        </div>
+       </div>
+       <div class="px-5 py-4 bg-slate-800/50">
+        <p class="text-slate-400 text-sm"><strong class="text-cyan-400">Behavior:</strong> Smooth response but never reaches setpoint exactly. Has steady-state error (offset) because output decreases as error decreases.</p>
+       </div>
+      </section><!-- PI Control -->
+      <section class="control-card rounded-2xl overflow-hidden">
+       <div class="p-5 border-b border-slate-700/50">
+        <div class="flex items-center justify-between">
+         <div>
+          <h2 class="text-xl font-bold text-green-400">PI Control (Proportional-Integral)</h2>
+          <p class="text-slate-400 text-sm mt-1">Eliminates steady-state error</p>
+         </div>
+         <div class="formula-box px-3 py-2 rounded-lg"><code class="mono text-xs text-slate-300">u(t) = Kp×e + Ki×∫e dt</code>
+         </div>
+        </div>
+       </div>
+       <div class="p-4">
+        <div class="graph-container rounded-xl p-4 h-48">
+         <svg id="graph-pi" class="w-full h-full" viewbox="0 0 400 150" preserveaspectratio="none"><defs>
+           <lineargradient id="grad-green" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#22c55e;stop-opacity:0.3" />
+            <stop offset="100%" style="stop-color:#22c55e;stop-opacity:0" />
+           </lineargradient>
+          </defs> <line x1="0" y1="75" x2="400" y2="75" class="setpoint-line" stroke="#3b82f6" stroke-width="2" /> <path id="path-pi" fill="url(#grad-green)" stroke="#22c55e" stroke-width="2" />
+         </svg>
+        </div>
+        <div class="flex justify-between mt-3 text-sm"><span class="text-slate-400">Current: <span id="val-pi" class="mono text-green-400 font-bold">50.0°C</span></span> <span class="text-slate-400">Integral: <span id="integral-pi" class="mono text-purple-400">0.0</span></span>
+        </div>
+       </div>
+       <div class="px-5 py-4 bg-slate-800/50">
+        <p class="text-slate-400 text-sm"><strong class="text-green-400">Behavior:</strong> Integral term accumulates error over time, eliminating offset. May overshoot and takes longer to settle.</p>
+       </div>
+      </section><!-- PD Control -->
+      <section class="control-card rounded-2xl overflow-hidden">
+       <div class="p-5 border-b border-slate-700/50">
+        <div class="flex items-center justify-between">
+         <div>
+          <h2 class="text-xl font-bold text-yellow-400">PD Control (Proportional-Derivative)</h2>
+          <p class="text-slate-400 text-sm mt-1">Anticipates future error</p>
+         </div>
+         <div class="formula-box px-3 py-2 rounded-lg"><code class="mono text-xs text-slate-300">u(t) = Kp×e + Kd×de/dt</code>
+         </div>
+        </div>
+       </div>
+       <div class="p-4">
+        <div class="graph-container rounded-xl p-4 h-48">
+         <svg id="graph-pd" class="w-full h-full" viewbox="0 0 400 150" preserveaspectratio="none"><defs>
+           <lineargradient id="grad-yellow" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#eab308;stop-opacity:0.3" />
+            <stop offset="100%" style="stop-color:#eab308;stop-opacity:0" />
+           </lineargradient>
+          </defs> <line x1="0" y1="75" x2="400" y2="75" class="setpoint-line" stroke="#3b82f6" stroke-width="2" /> <path id="path-pd" fill="url(#grad-yellow)" stroke="#eab308" stroke-width="2" />
+         </svg>
+        </div>
+        <div class="flex justify-between mt-3 text-sm"><span class="text-slate-400">Current: <span id="val-pd" class="mono text-yellow-400 font-bold">50.0°C</span></span> <span class="text-slate-400">Rate: <span id="rate-pd" class="mono text-pink-400">0.0°/s</span></span>
+        </div>
+       </div>
+       <div class="px-5 py-4 bg-slate-800/50">
+        <p class="text-slate-400 text-sm"><strong class="text-yellow-400">Behavior:</strong> Derivative predicts error change, reducing overshoot and improving response. Still has steady-state offset like P control.</p>
+       </div>
+      </section><!-- Full PID Control -->
+      <section class="control-card rounded-2xl overflow-hidden lg:col-span-2">
+       <div class="p-5 border-b border-slate-700/50">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+         <div>
+          <h2 class="text-xl font-bold text-pink-400">Full PID Control</h2>
+          <p class="text-slate-400 text-sm mt-1">Combined: fast response, no offset, minimal overshoot</p>
+         </div>
+         <div class="formula-box px-3 py-2 rounded-lg"><code class="mono text-xs text-slate-300">u(t) = Kp×e + Ki×∫e dt + Kd×de/dt</code>
+         </div>
+        </div>
+       </div>
+       <div class="p-4">
+        <div class="graph-container rounded-xl p-4 h-56">
+         <svg id="graph-pid" class="w-full h-full" viewbox="0 0 800 180" preserveaspectratio="none"><defs>
+           <lineargradient id="grad-pink" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#ec4899;stop-opacity:0.3" />
+            <stop offset="100%" style="stop-color:#ec4899;stop-opacity:0" />
+           </lineargradient>
+          </defs> <line x1="0" y1="90" x2="800" y2="90" class="setpoint-line" stroke="#3b82f6" stroke-width="2" /> <path id="path-pid" fill="url(#grad-pink)" stroke="#ec4899" stroke-width="2.5" />
+         </svg>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+         <div class="text-center p-3 bg-slate-800/50 rounded-lg">
+          <div class="text-slate-400 text-xs mb-1">
+           Current Value
+          </div>
+          <div id="val-pid" class="mono text-xl font-bold text-pink-400">
+           50.0°C
+          </div>
+         </div>
+         <div class="text-center p-3 bg-slate-800/50 rounded-lg">
+          <div class="text-slate-400 text-xs mb-1">
+           P Component
+          </div>
+          <div id="p-component" class="mono text-xl font-bold text-cyan-400">
+           0.0
+          </div>
+         </div>
+         <div class="text-center p-3 bg-slate-800/50 rounded-lg">
+          <div class="text-slate-400 text-xs mb-1">
+           I Component
+          </div>
+          <div id="i-component" class="mono text-xl font-bold text-green-400">
+           0.0
+          </div>
+         </div>
+         <div class="text-center p-3 bg-slate-800/50 rounded-lg">
+          <div class="text-slate-400 text-xs mb-1">
+           D Component
+          </div>
+          <div id="d-component" class="mono text-xl font-bold text-yellow-400">
+           0.0
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="px-5 py-4 bg-slate-800/50">
+        <p class="text-slate-400 text-sm"><strong class="text-pink-400">Behavior:</strong> The gold standard of control. P provides quick response, I eliminates offset, D reduces overshoot. Well-tuned PID reaches setpoint quickly with minimal oscillation.</p>
+       </div>
+      </section>
+     </div><!-- Comparison Summary -->
+     <section class="control-card rounded-2xl p-6">
+      <h3 class="text-xl font-bold text-slate-200 mb-4">Control Method Comparison</h3>
+      <div class="overflow-x-auto">
+       <table class="w-full text-sm">
+        <thead>
+         <tr class="border-b border-slate-700">
+          <th class="text-left py-3 px-4 text-slate-400 font-medium">Method</th>
+          <th class="text-center py-3 px-4 text-slate-400 font-medium">Speed</th>
+          <th class="text-center py-3 px-4 text-slate-400 font-medium">Accuracy</th>
+          <th class="text-center py-3 px-4 text-slate-400 font-medium">Overshoot</th>
+          <th class="text-center py-3 px-4 text-slate-400 font-medium">Complexity</th>
+         </tr>
+        </thead>
+        <tbody>
+         <tr class="border-b border-slate-700/50">
+          <td class="py-3 px-4 font-medium text-orange-400">Bang-Bang</td>
+          <td class="text-center py-3 px-4">⚡ Fast</td>
+          <td class="text-center py-3 px-4">❌ Poor</td>
+          <td class="text-center py-3 px-4">�� High</td>
+          <td class="text-center py-3 px-4">��� Simple</td>
+         </tr>
+         <tr class="border-b border-slate-700/50">
+          <td class="py-3 px-4 font-medium text-cyan-400">P Only</td>
+          <td class="text-center py-3 px-4">⚡ Fast</td>
+          <td class="text-center py-3 px-4">⚠️ Offset</td>
+          <td class="text-center py-3 px-4">📉 Low</td>
+          <td class="text-center py-3 px-4">✅ Simple</td>
+         </tr>
+         <tr class="border-b border-slate-700/50">
+          <td class="py-3 px-4 font-medium text-green-400">PI</td>
+          <td class="text-center py-3 px-4">🐢 Slower</td>
+          <td class="text-center py-3 px-4">✅ Good</td>
+          <td class="text-center py-3 px-4">📈 Medium</td>
+          <td class="text-center py-3 px-4">⚠️ Medium</td>
+         </tr>
+         <tr class="border-b border-slate-700/50">
+          <td class="py-3 px-4 font-medium text-yellow-400">PD</td>
+          <td class="text-center py-3 px-4">⚡ Fast</td>
+          <td class="text-center py-3 px-4">⚠️ Offset</td>
+          <td class="text-center py-3 px-4">📉 Low</td>
+          <td class="text-center py-3 px-4">⚠️ Medium</td>
+         </tr>
+         <tr>
+          <td class="py-3 px-4 font-medium text-pink-400">Full PID</td>
+          <td class="text-center py-3 px-4">⚡ Fast</td>
+          <td class="text-center py-3 px-4">✅ Excellent</td>
+          <td class="text-center py-3 px-4">📉 Minimal</td>
+          <td class="text-center py-3 px-4">❌ Complex</td>
+         </tr>
+        </tbody>
+       </table>
+      </div>
+     </section>
+    </div>
+   </main>
+  </div>
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      page_title: 'Control Systems: From Bang-Bang to PID',
+      setpoint_label: 'Target Temperature:',
+      background_color: '#0f172a',
+      surface_color: '#1e293b',
+      text_color: '#e2e8f0',
+      primary_color: '#ec4899',
+      secondary_color: '#3b82f6',
+      font_family: 'Outfit',
+      font_size: 16
+    };
+
+    // Simulation state
+    let setpoint = 50;
+    let simTime = 0;
+    const dt = 0.15; // Increased from 0.05 for more dramatic oscillations
+    const maxPoints = 400;
+
+    // Controller states
+    const controllers = {
+      bangbang: { value: 30, history: [], on: true },
+      p: { value: 30, history: [] },
+      pi: { value: 30, history: [], integral: 0 },
+      pd: { value: 30, history: [], lastError: 0 },
+      pid: { value: 30, history: [], integral: 0, lastError: 0 }
+    };
+
+    // PID gains - tuned differently for each controller
+    const gains = {
+      p: { Kp: 3.5 },
+      pi: { Kp: 3.5, Ki: 4.5 },
+      pd: { Kp: 3.5, Kd: 0.15 },
+      pid: { Kp: 4.2, Ki: 1.8, Kd: 0.35 }
+    };
+
+    // System parameters
+    const systemGain = 1.5;
+    const systemDecay = 0.03;
+    const hysteresis = 2;
+
+    function simulate() {
+      simTime += dt;
+
+      // Bang-Bang Control
+      const bbError = setpoint - controllers.bangbang.value;
+      if (controllers.bangbang.on && bbError < -hysteresis) {
+        controllers.bangbang.on = false;
+      } else if (!controllers.bangbang.on && bbError > hysteresis) {
+        controllers.bangbang.on = true;
+      }
+      const bbOutput = controllers.bangbang.on ? 1 : 0;
+      controllers.bangbang.value += (bbOutput * systemGain - systemDecay * (controllers.bangbang.value - 20)) * dt * 20;
+      controllers.bangbang.history.push(controllers.bangbang.value);
+
+      // P Control
+      const pError = setpoint - controllers.p.value;
+      const pOutput = Math.max(0, Math.min(1, gains.p.Kp * pError / 30));
+      controllers.p.value += (pOutput * systemGain - systemDecay * (controllers.p.value - 20)) * dt * 20;
+      controllers.p.history.push(controllers.p.value);
+
+      // PI Control
+      const piError = setpoint - controllers.pi.value;
+      controllers.pi.integral += piError * dt;
+      controllers.pi.integral = Math.max(-100, Math.min(100, controllers.pi.integral));
+      const piOutput = Math.max(0, Math.min(1, (gains.pi.Kp * piError / 30 + gains.pi.Ki * controllers.pi.integral / 30)));
+      controllers.pi.value += (piOutput * systemGain - systemDecay * (controllers.pi.value - 20)) * dt * 20;
+      controllers.pi.history.push(controllers.pi.value);
+
+      // PD Control
+      const pdError = setpoint - controllers.pd.value;
+      const pdDerivative = (pdError - controllers.pd.lastError) / dt;
+      controllers.pd.lastError = pdError;
+      const pdOutput = Math.max(0, Math.min(1, (gains.pd.Kp * pdError / 30 + gains.pd.Kd * pdDerivative / 30)));
+      controllers.pd.value += (pdOutput * systemGain - systemDecay * (controllers.pd.value - 20)) * dt * 20;
+      controllers.pd.history.push(controllers.pd.value);
+
+      // Full PID Control
+      const pidError = setpoint - controllers.pid.value;
+      controllers.pid.integral += pidError * dt;
+      controllers.pid.integral = Math.max(-100, Math.min(100, controllers.pid.integral));
+      const pidDerivative = (pidError - controllers.pid.lastError) / dt;
+      controllers.pid.lastError = pidError;
+      const pidOutput = Math.max(0, Math.min(1, (gains.pid.Kp * pidError / 30 + gains.pid.Ki * controllers.pid.integral / 30 + gains.pid.Kd * pidDerivative / 30)));
+      controllers.pid.value += (pidOutput * systemGain - systemDecay * (controllers.pid.value - 20)) * dt * 20;
+      controllers.pid.history.push(controllers.pid.value);
+
+      // Trim histories
+      Object.values(controllers).forEach(c => {
+        if (c.history.length > maxPoints) c.history.shift();
+      });
+
+      updateGraphs();
+      updateDisplays();
+    }
+
+    function valueToY(value, height, minVal = 0, maxVal = 100) {
+      return height - ((value - minVal) / (maxVal - minVal)) * height;
+    }
+
+    function historyToPath(history, width, height, minVal = 0, maxVal = 100) {
+      if (history.length < 2) return '';
+      
+      const points = history.map((val, i) => {
+        const x = (i / (maxPoints - 1)) * width;
+        const y = valueToY(val, height, minVal, maxVal);
+        return `${x},${y}`;
+      });
+      
+      const linePath = `M${points.join(' L')}`;
+      const areaPath = `${linePath} L${width},${height} L0,${height} Z`;
+      
+      return areaPath;
+    }
+
+    function updateGraphs() {
+      // Update setpoint lines
+      const setpointY150 = valueToY(setpoint, 150);
+      const setpointY180 = valueToY(setpoint, 180);
+      
+      document.querySelectorAll('#graph-bangbang line, #graph-p line, #graph-pi line, #graph-pd line').forEach(line => {
+        line.setAttribute('y1', setpointY150);
+        line.setAttribute('y2', setpointY150);
+      });
+      document.querySelector('#graph-pid line').setAttribute('y1', setpointY180);
+      document.querySelector('#graph-pid line').setAttribute('y2', setpointY180);
+
+      // Update paths
+      document.getElementById('path-bangbang').setAttribute('d', historyToPath(controllers.bangbang.history, 400, 150));
+      document.getElementById('path-p').setAttribute('d', historyToPath(controllers.p.history, 400, 150));
+      document.getElementById('path-pi').setAttribute('d', historyToPath(controllers.pi.history, 400, 150));
+      document.getElementById('path-pd').setAttribute('d', historyToPath(controllers.pd.history, 400, 150));
+      document.getElementById('path-pid').setAttribute('d', historyToPath(controllers.pid.history, 800, 180));
+    }
+
+    function updateDisplays() {
+      document.getElementById('val-bangbang').textContent = controllers.bangbang.value.toFixed(1) + '°C';
+      document.getElementById('status-bangbang').textContent = controllers.bangbang.on ? 'HEATING' : 'COOLING';
+      document.getElementById('status-bangbang').className = controllers.bangbang.on ? 'font-medium text-red-400' : 'font-medium text-blue-400';
+
+      document.getElementById('val-p').textContent = controllers.p.value.toFixed(1) + '°C';
+      document.getElementById('offset-p').textContent = (setpoint - controllers.p.value).toFixed(1) + '°C';
+
+      document.getElementById('val-pi').textContent = controllers.pi.value.toFixed(1) + '°C';
+      document.getElementById('integral-pi').textContent = controllers.pi.integral.toFixed(1);
+
+      document.getElementById('val-pd').textContent = controllers.pd.value.toFixed(1) + '°C';
+      const rate = controllers.pd.history.length > 1 ? 
+        (controllers.pd.history[controllers.pd.history.length - 1] - controllers.pd.history[controllers.pd.history.length - 2]) / dt : 0;
+      document.getElementById('rate-pd').textContent = rate.toFixed(1) + '°/s';
+
+      document.getElementById('val-pid').textContent = controllers.pid.value.toFixed(1) + '°C';
+      
+      const pidError = setpoint - controllers.pid.value;
+      document.getElementById('p-component').textContent = (gains.pid.Kp * pidError).toFixed(1);
+      document.getElementById('i-component').textContent = (gains.pid.Ki * controllers.pid.integral).toFixed(1);
+      document.getElementById('d-component').textContent = (gains.pid.Kd * controllers.pid.lastError).toFixed(1);
+    }
+
+    function resetAll() {
+      Object.keys(controllers).forEach(key => {
+        controllers[key].value = 30;
+        controllers[key].history = [];
+        if (controllers[key].integral !== undefined) controllers[key].integral = 0;
+        if (controllers[key].lastError !== undefined) controllers[key].lastError = 0;
+        if (controllers[key].on !== undefined) controllers[key].on = true;
+      });
+      setpoint = 50;
+      document.getElementById('setpoint-slider').value = 50;
+      document.getElementById('setpoint-value').textContent = '50°C';
+    }
+
+    // Event listeners
+    document.getElementById('setpoint-slider').addEventListener('input', function() {
+      setpoint = parseInt(this.value);
+      document.getElementById('setpoint-value').textContent = setpoint + '°C';
+    });
+
+    document.getElementById('step-change-btn').addEventListener('click', function() {
+      setpoint = Math.min(80, setpoint + 20);
+      document.getElementById('setpoint-slider').value = setpoint;
+      document.getElementById('setpoint-value').textContent = setpoint + '°C';
+    });
+
+    document.getElementById('reset-btn').addEventListener('click', resetAll);
+
+    // Start simulation
+    setInterval(simulate, dt * 1000);
+
+    // Element SDK initialization
+    async function onConfigChange(config) {
+      const title = config.page_title || defaultConfig.page_title;
+      const setpointLabel = config.setpoint_label || defaultConfig.setpoint_label;
+      const fontFamily = config.font_family || defaultConfig.font_family;
+      const fontSize = config.font_size || defaultConfig.font_size;
+      const bgColor = config.background_color || defaultConfig.background_color;
+      const surfaceColor = config.surface_color || defaultConfig.surface_color;
+      const textColor = config.text_color || defaultConfig.text_color;
+      const primaryColor = config.primary_color || defaultConfig.primary_color;
+      const secondaryColor = config.secondary_color || defaultConfig.secondary_color;
+
+      document.getElementById('page-title').textContent = title;
+      document.getElementById('setpoint-label').textContent = setpointLabel;
+
+      // Apply font
+      document.body.style.fontFamily = `${fontFamily}, Outfit, sans-serif`;
+      
+      // Apply font sizes
+      document.getElementById('page-title').style.fontSize = `${fontSize * 2}px`;
+      
+      // Apply colors
+      document.getElementById('app-wrapper').style.background = `linear-gradient(135deg, ${bgColor} 0%, ${surfaceColor} 100%)`;
+      document.body.style.color = textColor;
+    }
+
+    function mapToCapabilities(config) {
+      return {
+        recolorables: [
+          {
+            get: () => config.background_color || defaultConfig.background_color,
+            set: (value) => { config.background_color = value; window.elementSdk.setConfig({ background_color: value }); }
+          },
+          {
+            get: () => config.surface_color || defaultConfig.surface_color,
+            set: (value) => { config.surface_color = value; window.elementSdk.setConfig({ surface_color: value }); }
+          },
+          {
+            get: () => config.text_color || defaultConfig.text_color,
+            set: (value) => { config.text_color = value; window.elementSdk.setConfig({ text_color: value }); }
+          },
+          {
+            get: () => config.primary_color || defaultConfig.primary_color,
+            set: (value) => { config.primary_color = value; window.elementSdk.setConfig({ primary_color: value }); }
+          },
+          {
+            get: () => config.secondary_color || defaultConfig.secondary_color,
+            set: (value) => { config.secondary_color = value; window.elementSdk.setConfig({ secondary_color: value }); }
+          }
+        ],
+        borderables: [],
+        fontEditable: {
+          get: () => config.font_family || defaultConfig.font_family,
+          set: (value) => { config.font_family = value; window.elementSdk.setConfig({ font_family: value }); }
+        },
+        fontSizeable: {
+          get: () => config.font_size || defaultConfig.font_size,
+          set: (value) => { config.font_size = value; window.elementSdk.setConfig({ font_size: value }); }
+        }
+      };
+    }
+
+    function mapToEditPanelValues(config) {
+      return new Map([
+        ['page_title', config.page_title || defaultConfig.page_title],
+        ['setpoint_label', config.setpoint_label || defaultConfig.setpoint_label]
+      ]);
+    }
+
+    // Initialize SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange,
+        mapToCapabilities,
+        mapToEditPanelValues
+      });
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bb47217b3bd438f',t:'MTc2Nzk2NzA2Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
