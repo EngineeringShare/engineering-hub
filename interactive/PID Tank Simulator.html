@@ -1,16 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
+ <head>
+  <meta charset="UTF-8">
   <title>PID Water Tank Simulator — Canva Code</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <!-- Tailwind CSS -->
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     /* Beautiful background and subtle animations */
     body {
       background: radial-gradient(1200px 800px at 10% 10%, #0ea5e9 0%, #1e293b 40%, #0b1324 80%);
       min-height: 100vh;
+      box-sizing: border-box;
     }
     .glass {
       background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
@@ -92,284 +92,304 @@
     }
     /* Force all text to white for better contrast */
     body, body * { color: #fff !important; }
+
+    /* Scoring zone indicator */
+    .score-zone {
+      position: absolute;
+      left: 0;
+      right: 0;
+      background: rgba(34, 211, 238, 0.15);
+      border-top: 1px dashed rgba(34, 211, 238, 0.5);
+      border-bottom: 1px dashed rgba(34, 211, 238, 0.5);
+      pointer-events: none;
+    }
   </style>
-</head>
-<body class="text-slate-100 antialiased">
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+  <script src="/_sdk/element_sdk.js" type="text/javascript"></script>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body class="text-slate-100 antialiased">
   <div class="max-w-7xl mx-auto p-6 md:p-8 space-y-6">
-    <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
-      <div>
-        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">PID Water Tank Simulator</h1>
-        <p class="text-slate-300 mt-1">Tune Kp, Ki, Kd to keep the water between the underfill line and the top without spilling.</p>
-      </div>
-      <div class="flex items-center gap-3">
-        <nav style="max-width:1000px;margin:0 auto 10px auto;">
-          <a href="https://engineeringshare.github.io/engineering-hub/interactive-hub/" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px">
-            ← Back to Interactive Hub
-            </a>
-        </nav>
-        <div class="pill px-3 py-1 rounded-full text-sm">Goal: Survive as long as you can</div>
-      </div>
-    </header>
-
-    <div class="grid lg:grid-cols-2 gap-6">
-      <!-- Left: Tank + Controls -->
-      <section class="glass rounded-2xl p-5 md:p-6 space-y-5">
-        <!-- Stats -->
-        <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
-          <div class="pill rounded-xl p-4">
-            <div class="text-slate-300 text-xs uppercase tracking-wider">Water Level</div>
-            <div id="ui-level" class="text-2xl font-bold mt-1">0%</div>
-          </div>
-          <div class="pill rounded-xl p-4">
-            <div class="text-slate-300 text-xs uppercase tracking-wider">Time Alive</div>
-            <div id="ui-time" class="text-2xl font-bold mt-1">0.0s</div>
-          </div>
-          <div class="pill rounded-xl p-4">
-            <div class="text-slate-300 text-xs uppercase tracking-wider">Best Time</div>
-            <div id="ui-best" class="text-2xl font-bold mt-1">0.0s</div>
-          </div>
-          <div class="pill rounded-xl p-4">
-            <div class="text-slate-300 text-xs uppercase tracking-wider">Valve (Inflow)</div>
-            <div id="ui-inflow" class="text-2xl font-bold mt-1">0.00</div>
-          </div>
-          <div class="pill rounded-xl p-4">
-            <div class="text-xs uppercase tracking-wider">Difficulty</div>
-            <div id="ui-diff" class="text-2xl font-bold mt-1">x1.0</div>
-          </div>
-          <!-- Score tile removed from the top stats; score now lives below the tank -->
-        </div>
-
-        <!-- Tank -->
-        <div class="relative rounded-2xl overflow-hidden p-4 glass">
-          <div class="flex items-center justify-between mb-3">
-            <div class="font-semibold">Tank</div>
-            <div>Don't let water over or under flow</div>
-          </div>
-          <div class="relative mx-auto" style="max-width:520px;">
-            <div class="relative mx-auto border-2 border-sky-300/60 rounded-xl" style="height: 360px;">
-              <!-- Top label -->
-              <div class="absolute top-0 left-0 right-0">
-                <div class="flex items-center justify-between px-3 pt-2">
-                  <span class="text-xs text-slate-300">Top (Overflow)</span>
-                  <span id="ui-setpoint" class="text-xs text-sky-200">Setpoint: 65%</span>
-                </div>
-              </div>
-
-              <!-- Underfill line -->
-              <div id="underfillLine" class="absolute left-0 right-0" style="height: 0;">
-                <div class="border-t-2 border-amber-400/80"></div>
-              </div>
-              <div class="absolute left-2 -translate-y-1/2" id="underfillLabel">
-                <span class="bg-amber-400 text-slate-900 text-[10px] font-bold px-2 py-0.5 rounded">Underfill</span>
-              </div>
-
-              <!-- Setpoint line -->
-              <div id="setpointLine" class="absolute left-0 right-0" style="height: 0;">
-                <div class="border-t border-dashed border-sky-300/70"></div>
-              </div>
-
-              <!-- Water fill -->
-              <div id="water" class="water rounded-b-xl" style="height: 50%;"></div>
-
-              <!-- Scale marks removed as requested (keeping only underflow line) -->
-            </div>
-          </div>
-          <div class="mt-3 text-xs text-slate-300">
-            Tip: Start the sim, then tweak Kp, Ki, Kd. Too much Kp makes it twitchy; Ki removes steady error; Kd dampens overshoot.
-          </div>
-        </div>
-
-        <!-- Controls -->
-        <form id="pidForm" class="glass rounded-2xl p-5 space-y-4">
-          <div class="flex items-center justify-between gap-3">
-            <h3 class="font-semibold text-lg">PID Controls</h3>
-            <div class="text-slate-300 text-xs">Setpoint is the middle of the safe zone</div>
-          </div>
-          <div class="grid sm:grid-cols-3 gap-4">
-            <label class="block">
-              <span class="text-sm">Kp</span>
-              <input id="kp" type="text" inputmode="decimal" autocomplete="off" pattern="[0-9]*[.,]?[0-9]*" value="2.0" aria-label="Kp" title="Enter a number"
-                     class="mt-1 w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 text-black" style="color:#000 !important;" />
-            </label>
-            <label class="block">
-              <span class="text-sm">Ki</span>
-              <input id="ki" type="text" inputmode="decimal" autocomplete="off" pattern="[0-9]*[.,]?[0-9]*" value="0.5" aria-label="Ki" title="Enter a number"
-                     class="mt-1 w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 text-black" style="color:#000 !important;" />
-            </label>
-            <label class="block">
-              <span class="text-sm">Kd</span>
-              <input id="kd" type="text" inputmode="decimal" autocomplete="off" pattern="[0-9]*[.,]?[0-9]*" value="0.3" aria-label="Kd" title="Enter a number"
-                     class="mt-1 w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 text-black" style="color:#000 !important;"
-            </label>
-          </div>
-          <div class="flex flex-wrap items-center gap-3">
-            <button id="applyBtn" class="btn-primary px-4 py-2 rounded-lg font-semibold" type="submit">Apply PID</button>
-            <button id="startBtn" class="btn-secondary px-4 py-2 rounded-lg font-semibold" type="button">Start</button>
-            <button id="pauseBtn" class="px-4 py-2 rounded-lg font-semibold bg-slate-700 hover:bg-slate-600" type="button">Pause</button>
-            <button id="resetBtn" class="btn-danger px-4 py-2 rounded-lg font-semibold" type="button">Reset</button>
-            <span id="statusDot" class="ml-auto inline-flex items-center gap-2 text-sm">
-              <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400" id="statusLight"></span>
-              <span id="statusLabel" class="text-slate-300">Ready</span>
-            </span>
-          </div>
-        </form>
-      </section>
-
-      <!-- Right: Outflows & graphs -->
-      <section class="space-y-5">
-        <div class="glass rounded-2xl p-5">
-          <div class="flex items-center justify-between mb-3">
-            <h3 class="font-semibold text-lg">Outflows</h3>
-            <div class="text-sm text-slate-300">Total Outflow: <span id="ui-outflow" class="font-bold text-slate-100">0.00</span></div>
-          </div>
-          <div class="grid gap-4">
-            <!-- Constant Leak -->
-            <div class="pill rounded-xl p-4">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
-                  <div class="font-semibold">Leak (steady)</div>
-                </div>
-                <div class="text-sm text-slate-300">Flow: <span id="ui-leak" class="font-bold">0.00</span></div>
-              </div>
-              <canvas id="graph-leak" class="spark"></canvas>
-            </div>
-            <!-- Random Valve -->
-            <div class="pill rounded-xl p-4">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-rose-400"></span>
-                  <div class="font-semibold">Random Valve (bursts)</div>
-                </div>
-                <div class="text-sm text-slate-300">Flow: <span id="ui-random" class="font-bold">0.00</span></div>
-              </div>
-              <canvas id="graph-random" class="spark"></canvas>
-            </div>
-            <!-- Tide -->
-            <div class="pill rounded-xl p-4">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-                  <div class="font-semibold">Tide (slow wave)</div>
-                </div>
-                <div class="text-sm text-slate-300">Flow: <span id="ui-tide" class="font-bold">0.00</span></div>
-              </div>
-              <canvas id="graph-tide" class="spark"></canvas>
-            </div>
-            <!-- Pulse Ramp (unlock 15s) -->
-            <div id="card-pulse" class="pill rounded-xl p-4 hidden">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
-                  <div class="font-semibold">Pulse Ramp (unlock 15s)</div>
-                </div>
-                <div class="text-sm text-slate-300">Flow: <span id="ui-pulse" class="font-bold">0.00</span></div>
-              </div>
-              <canvas id="graph-pulse" class="spark"></canvas>
-            </div>
-            <!-- Shock Spikes (unlock 30s) -->
-            <div id="card-shock" class="pill rounded-xl p-4 hidden">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-                  <div class="font-semibold">Shock Spikes (unlock 30s)</div>
-                </div>
-                <div class="text-sm text-slate-300">Flow: <span id="ui-shock" class="font-bold">0.00</span></div>
-              </div>
-              <canvas id="graph-shock" class="spark"></canvas>
-            </div>
-            <!-- Drift (unlock 45s) -->
-            <div id="card-drift" class="pill rounded-xl p-4 hidden">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-fuchsia-500"></span>
-                  <div class="font-semibold">Drift (unlock 45s)</div>
-                </div>
-                <div class="text-sm text-slate-300">Flow: <span id="ui-drift" class="font-bold">0.00</span></div>
-              </div>
-              <canvas id="graph-drift" class="spark"></canvas>
-            </div>
-            <!-- Surge (unlock 60s) -->
-            <div id="card-surge" class="pill rounded-xl p-4 hidden">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-sky-400"></span>
-                  <div class="font-semibold">Surge (unlock 60s)</div>
-                </div>
-                <div class="text-sm text-slate-300">Flow: <span id="ui-surge" class="font-bold">0.00</span></div>
-              </div>
-              <canvas id="graph-surge" class="spark"></canvas>
-            </div>
-            <!-- Noise (unlock 75s) -->
-            <div id="card-noise" class="pill rounded-xl p-4 hidden">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-gray-300"></span>
-                  <div class="font-semibold">Noise (unlock 75s)</div>
-                </div>
-                <div class="text-sm text-slate-300">Flow: <span id="ui-noise" class="font-bold">0.00</span></div>
-              </div>
-              <canvas id="graph-noise" class="spark"></canvas>
-            </div>
-            <!-- Squall (unlock 90s) -->
-            <div id="card-squall" class="pill rounded-xl p-4 hidden">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-400"></span>
-                  <div class="font-semibold">Squall (unlock 90s)</div>
-                </div>
-                <div class="text-sm">Flow: <span id="ui-squall" class="font-bold">0.00</span></div>
-              </div>
-              <canvas id="graph-squall" class="spark"></canvas>
-            </div>
-            <!-- Maelstrom (unlock 120s) -->
-            <div id="card-maelstrom" class="pill rounded-xl p-4 hidden">
-              <div class="flex items-center justify-between mb-2">
-                <div class="flex items-center gap-2">
-                  <span class="inline-block w-2.5 h-2.5 rounded-full bg-yellow-300"></span>
-                  <div class="font-semibold">Maelstrom (unlock 120s)</div>
-                </div>
-                <div class="text-sm">Flow: <span id="ui-maelstrom" class="font-bold">0.00</span></div>
-              </div>
-              <canvas id="graph-maelstrom" class="spark"></canvas>
-            </div>
-          </div>
-        </div>
-
-        <!-- Score box under tank -->
-        <div class="glass rounded-2xl p-5">
-          <h3 class="font-semibold mb-2">Score</h3>
-          <div class="text-3xl font-extrabold" id="ui-score-box">0</div>
-          <p class="text-sm opacity-80 mt-1">Earns +10 × multiplier every second you survive.</p>
-        </div>
-
-        <!-- How to win -->
-        <div class="glass rounded-2xl p-5">
-          <h3 class="font-semibold mb-2 text-white">How to play</h3>
-          <ul class="list-disc list-inside text-white space-y-1 text-sm">
-            <li>Click Start, then tune Kp, Ki, Kd to keep the water between the underfill line and the top.</li>
-            <li>If you overflow, it spills and you lose. If you drop below the underfill line, you lose.</li>
-            <li>Each outflow has a live graph so you can see what's stealing your water.</li>
-          </ul>
-        </div>
-      </section>
+   <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+    <div>
+     <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight">PID Water Tank Simulator</h1>
+     <p class="text-slate-300 mt-1">Tune Kp, Ki, Kd to keep the water between the underfill line and the top without spilling.</p>
     </div>
-  </div>
-
-  <!-- Lose overlay -->
+    <div class="flex items-center gap-3">
+     <div class="pill px-3 py-1 rounded-full text-sm">
+      Made by Canva Code
+     </div>
+     <div class="pill px-3 py-1 rounded-full text-sm">
+      Goal: Stay in scoring zone
+     </div>
+    </div>
+   </header>
+   <div class="grid lg:grid-cols-2 gap-6"><!-- Left: Tank + Controls -->
+    <section class="glass rounded-2xl p-5 md:p-6 space-y-5"><!-- Stats -->
+     <div class="grid grid-cols-2 sm:grid-cols-5 gap-4">
+      <div class="pill rounded-xl p-4">
+       <div class="text-slate-300 text-xs uppercase tracking-wider">
+        Water Level
+       </div>
+       <div id="ui-level" class="text-2xl font-bold mt-1">
+        0%
+       </div>
+      </div>
+      <div class="pill rounded-xl p-4">
+       <div class="text-slate-300 text-xs uppercase tracking-wider">
+        Time Alive
+       </div>
+       <div id="ui-time" class="text-2xl font-bold mt-1">
+        0.0s
+       </div>
+      </div>
+      <div class="pill rounded-xl p-4">
+       <div class="text-slate-300 text-xs uppercase tracking-wider">
+        Best Time
+       </div>
+       <div id="ui-best" class="text-2xl font-bold mt-1">
+        0.0s
+       </div>
+      </div>
+      <div class="pill rounded-xl p-4">
+       <div class="text-slate-300 text-xs uppercase tracking-wider">
+        Valve (Inflow)
+       </div>
+       <div id="ui-inflow" class="text-2xl font-bold mt-1">
+        0.00
+       </div>
+      </div>
+      <div class="pill rounded-xl p-4">
+       <div class="text-xs uppercase tracking-wider">
+        Difficulty
+       </div>
+       <div id="ui-diff" class="text-2xl font-bold mt-1">
+        x1.0
+       </div>
+      </div>
+     </div><!-- Tank -->
+     <div class="relative rounded-2xl overflow-hidden p-4 glass">
+      <div class="flex items-center justify-between mb-3">
+       <div class="font-semibold">
+        Tank
+       </div>
+       <div>
+        Don't let water over or under flow
+       </div>
+      </div>
+      <div class="relative mx-auto" style="max-width:520px;">
+       <div class="relative mx-auto border-2 border-sky-300/60 rounded-xl" style="height: 360px;"><!-- Top label -->
+        <div class="absolute top-0 left-0 right-0">
+         <div class="flex items-center justify-between px-3 pt-2"><span class="text-xs text-slate-300">Top (Overflow)</span> <span id="ui-setpoint" class="text-xs text-sky-200">Setpoint: 65%</span>
+         </div>
+        </div><!-- Scoring zone (±5% around setpoint) -->
+        <div id="scoreZone" class="score-zone"></div><!-- Underfill line -->
+        <div id="underfillLine" class="absolute left-0 right-0" style="height: 0;">
+         <div class="border-t-2 border-amber-400/80"></div>
+        </div>
+        <div class="absolute left-2 -translate-y-1/2" id="underfillLabel"><span class="bg-amber-400 text-slate-900 text-[10px] font-bold px-2 py-0.5 rounded">Underfill</span>
+        </div><!-- Setpoint line -->
+        <div id="setpointLine" class="absolute left-0 right-0" style="height: 0;">
+         <div class="border-t border-dashed border-sky-300/70"></div>
+        </div><!-- Water fill -->
+        <div id="water" class="water rounded-b-xl" style="height: 50%;"></div>
+       </div>
+      </div>
+      <div class="mt-3 text-xs text-slate-300">
+       Tip: You only earn points when the water level stays within ±5% of the setpoint (cyan zone). Oscillate too much and you lose scoring time!
+      </div>
+     </div><!-- Controls -->
+     <form id="pidForm" class="glass rounded-2xl p-5 space-y-4">
+      <div class="flex items-center justify-between gap-3">
+       <h3 class="font-semibold text-lg">PID Controls</h3>
+       <div class="text-slate-300 text-xs">
+        Setpoint is the middle of the safe zone
+       </div>
+      </div>
+      <div class="grid sm:grid-cols-3 gap-4"><label class="block"> <span class="text-sm">Kp</span> <input id="kp" type="text" inputmode="decimal" autocomplete="off" pattern="[0-9]*[.,]?[0-9]*" value="2.0" aria-label="Kp" title="Enter a number" class="mt-1 w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 text-black" style="color:#000 !important;"> </label> <label class="block"> <span class="text-sm">Ki</span> <input id="ki" type="text" inputmode="decimal" autocomplete="off" pattern="[0-9]*[.,]?[0-9]*" value="0.5" aria-label="Ki" title="Enter a number" class="mt-1 w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 text-black" style="color:#000 !important;"> </label> <label class="block"> <span class="text-sm">Kd</span> <input id="kd" type="text" inputmode="decimal" autocomplete="off" pattern="[0-9]*[.,]?[0-9]*" value="0.3" aria-label="Kd" title="Enter a number" class="mt-1 w-full px-3 py-2 rounded-lg bg-white border border-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 text-black" style="color:#000 !important;"></label>
+      </div>
+      <div class="flex flex-wrap items-center gap-3"><button id="applyBtn" class="btn-primary px-4 py-2 rounded-lg font-semibold" type="submit">Apply PID</button> <button id="startBtn" class="btn-secondary px-4 py-2 rounded-lg font-semibold" type="button">Start</button> <button id="pauseBtn" class="px-4 py-2 rounded-lg font-semibold bg-slate-700 hover:bg-slate-600" type="button">Pause</button> <button id="resetBtn" class="btn-danger px-4 py-2 rounded-lg font-semibold" type="button">Reset</button> <span id="statusDot" class="ml-auto inline-flex items-center gap-2 text-sm"> <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400" id="statusLight"></span> <span id="statusLabel" class="text-slate-300">Ready</span> </span>
+      </div>
+     </form>
+    </section><!-- Right: Outflows & graphs -->
+    <section class="space-y-5">
+     <div class="glass rounded-2xl p-5">
+      <div class="flex items-center justify-between mb-3">
+       <h3 class="font-semibold text-lg">Outflows</h3>
+       <div class="text-sm text-slate-300">
+        Total Outflow: <span id="ui-outflow" class="font-bold text-slate-100">0.00</span>
+       </div>
+      </div>
+      <div class="grid gap-4"><!-- Constant Leak -->
+       <div class="pill rounded-xl p-4">
+        <div class="flex items-center justify-between mb-2">
+         <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+          <div class="font-semibold">
+           Leak (steady)
+          </div>
+         </div>
+         <div class="text-sm text-slate-300">
+          Flow: <span id="ui-leak" class="font-bold">0.00</span>
+         </div>
+        </div>
+        <canvas id="graph-leak" class="spark"></canvas>
+       </div><!-- Random Valve -->
+       <div class="pill rounded-xl p-4">
+        <div class="flex items-center justify-between mb-2">
+         <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+          <div class="font-semibold">
+           Random Valve (bursts)
+          </div>
+         </div>
+         <div class="text-sm text-slate-300">
+          Flow: <span id="ui-random" class="font-bold">0.00</span>
+         </div>
+        </div>
+        <canvas id="graph-random" class="spark"></canvas>
+       </div><!-- Tide -->
+       <div class="pill rounded-xl p-4">
+        <div class="flex items-center justify-between mb-2">
+         <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+          <div class="font-semibold">
+           Tide (slow wave)
+          </div>
+         </div>
+         <div class="text-sm text-slate-300">
+          Flow: <span id="ui-tide" class="font-bold">0.00</span>
+         </div>
+        </div>
+        <canvas id="graph-tide" class="spark"></canvas>
+       </div><!-- Pulse Ramp (unlock 15s) -->
+       <div id="card-pulse" class="pill rounded-xl p-4 hidden">
+        <div class="flex items-center justify-between mb-2">
+         <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full bg-indigo-400"></span>
+          <div class="font-semibold">
+           Pulse Ramp (unlock 15s)
+          </div>
+         </div>
+         <div class="text-sm text-slate-300">
+          Flow: <span id="ui-pulse" class="font-bold">0.00</span>
+         </div>
+        </div>
+        <canvas id="graph-pulse" class="spark"></canvas>
+       </div><!-- Shock Spikes (unlock 30s) -->
+       <div id="card-shock" class="pill rounded-xl p-4 hidden">
+        <div class="flex items-center justify-between mb-2">
+         <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+          <div class="font-semibold">
+           Shock Spikes (unlock 30s)
+          </div>
+         </div>
+         <div class="text-sm text-slate-300">
+          Flow: <span id="ui-shock" class="font-bold">0.00</span>
+         </div>
+        </div>
+        <canvas id="graph-shock" class="spark"></canvas>
+       </div><!-- Drift (unlock 45s) -->
+       <div id="card-drift" class="pill rounded-xl p-4 hidden">
+        <div class="flex items-center justify-between mb-2">
+         <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full bg-fuchsia-500"></span>
+          <div class="font-semibold">
+           Drift (unlock 45s)
+          </div>
+         </div>
+         <div class="text-sm text-slate-300">
+          Flow: <span id="ui-drift" class="font-bold">0.00</span>
+         </div>
+        </div>
+        <canvas id="graph-drift" class="spark"></canvas>
+       </div><!-- Surge (unlock 60s) -->
+       <div id="card-surge" class="pill rounded-xl p-4 hidden">
+        <div class="flex items-center justify-between mb-2">
+         <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full bg-sky-400"></span>
+          <div class="font-semibold">
+           Surge (unlock 60s)
+          </div>
+         </div>
+         <div class="text-sm text-slate-300">
+          Flow: <span id="ui-surge" class="font-bold">0.00</span>
+         </div>
+        </div>
+        <canvas id="graph-surge" class="spark"></canvas>
+       </div><!-- Noise (unlock 75s) -->
+       <div id="card-noise" class="pill rounded-xl p-4 hidden">
+        <div class="flex items-center justify-between mb-2">
+         <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full bg-gray-300"></span>
+          <div class="font-semibold">
+           Noise (unlock 75s)
+          </div>
+         </div>
+         <div class="text-sm text-slate-300">
+          Flow: <span id="ui-noise" class="font-bold">0.00</span>
+         </div>
+        </div>
+        <canvas id="graph-noise" class="spark"></canvas>
+       </div><!-- Squall (unlock 90s) -->
+       <div id="card-squall" class="pill rounded-xl p-4 hidden">
+        <div class="flex items-center justify-between mb-2">
+         <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full bg-red-400"></span>
+          <div class="font-semibold">
+           Squall (unlock 90s)
+          </div>
+         </div>
+         <div class="text-sm">
+          Flow: <span id="ui-squall" class="font-bold">0.00</span>
+         </div>
+        </div>
+        <canvas id="graph-squall" class="spark"></canvas>
+       </div><!-- Maelstrom (unlock 120s) -->
+       <div id="card-maelstrom" class="pill rounded-xl p-4 hidden">
+        <div class="flex items-center justify-between mb-2">
+         <div class="flex items-center gap-2"><span class="inline-block w-2.5 h-2.5 rounded-full bg-yellow-300"></span>
+          <div class="font-semibold">
+           Maelstrom (unlock 120s)
+          </div>
+         </div>
+         <div class="text-sm">
+          Flow: <span id="ui-maelstrom" class="font-bold">0.00</span>
+         </div>
+        </div>
+        <canvas id="graph-maelstrom" class="spark"></canvas>
+       </div>
+      </div>
+     </div><!-- Score box under tank -->
+     <div class="glass rounded-2xl p-5">
+      <h3 class="font-semibold mb-2">Score</h3>
+      <div class="text-3xl font-extrabold" id="ui-score-box">
+       0
+      </div>
+      <p class="text-sm opacity-80 mt-1">Earns +10 × multiplier per second ONLY when within ±5% of setpoint!</p>
+     </div><!-- How to win -->
+     <div class="glass rounded-2xl p-5">
+      <h3 class="font-semibold mb-2 text-white">How to play</h3>
+      <ul class="list-disc list-inside text-white space-y-1 text-sm">
+       <li>Click Start, then tune Kp, Ki, Kd to keep the water between the underfill line and the top.</li>
+       <li>If you overflow, it spills and you lose. If you drop below the underfill line, you lose.</li>
+       <li>You ONLY earn points when within the cyan scoring zone (±5% of setpoint).</li>
+       <li>Smooth, precise control wins - wild oscillation means no points!</li>
+      </ul>
+     </div>
+    </section>
+   </div>
+  </div><!-- Lose overlay -->
   <div id="loseOverlay" class="fixed inset-0 hidden items-center justify-center overlay z-50">
-    <div class="max-w-md w-[94%] mx-auto glass rounded-2xl p-6 text-center pop">
-      <div id="loseEmoji" class="text-6xl mb-3 bounce">💦</div>
-      <h2 id="loseTitle" class="text-2xl font-extrabold mb-1">Overflow!</h2>
-      <p id="loseSub" class="text-slate-300 mb-4">You turned the lab into a splash park. The janitor says thanks for the job security.</p>
-      <div class="flex items-center justify-center gap-3 mb-4">
-        <div class="pill px-3 py-1 rounded-full text-sm">Time Alive: <span id="loseTime" class="font-bold">0.0s</span></div>
-        <div class="pill px-3 py-1 rounded-full text-sm">Best: <span id="loseBest" class="font-bold">0.0s</span></div>
-      </div>
-      <button id="playAgain" class="btn-primary px-4 py-2 rounded-lg font-semibold">Play Again</button>
+   <div class="max-w-md w-[94%] mx-auto glass rounded-2xl p-6 text-center pop">
+    <div id="loseEmoji" class="text-6xl mb-3 bounce">
+     💦
     </div>
+    <h2 id="loseTitle" class="text-2xl font-extrabold mb-1">Overflow!</h2>
+    <p id="loseSub" class="text-slate-300 mb-4">You turned the lab into a splash park. The janitor says thanks for the job security.</p>
+    <div class="flex items-center justify-center gap-3 mb-4">
+     <div class="pill px-3 py-1 rounded-full text-sm">
+      Time Alive: <span id="loseTime" class="font-bold">0.0s</span>
+     </div>
+     <div class="pill px-3 py-1 rounded-full text-sm">
+      Best: <span id="loseBest" class="font-bold">0.0s</span>
+     </div>
+    </div><button id="playAgain" class="btn-primary px-4 py-2 rounded-lg font-semibold">Play Again</button>
+   </div>
   </div>
-
   <script>
     // Simulation state
     const dt = 0.05; // seconds per tick
@@ -381,7 +401,10 @@
     let level = 0.5; // 0..1
     const lowerLimit = 0.30; // underfill
     const upperLimit = 1.00; // tank top
-    const maxInflow = 5.0;
+    const maxInflow = 8.0; // increased to handle maelstrom
+    
+    // Scoring zone: ±5% around setpoint
+    const scoreZoneTolerance = 0.05;
 
     // PID
     let Kp = 2.0, Ki = 0.5, Kd = 0.3;
@@ -427,6 +450,7 @@
       underfillLine: document.getElementById('underfillLine'),
       underfillLabel: document.getElementById('underfillLabel'),
       setpointLine: document.getElementById('setpointLine'),
+      scoreZone: document.getElementById('scoreZone'),
       graphs: {
         leak: document.getElementById('graph-leak'),
         random: document.getElementById('graph-random'),
@@ -473,7 +497,7 @@
     const playAgain = document.getElementById('playAgain');
 
     // Graph buffers
-    const historyLength = 240; // ~12s of history at 20Hz
+    const historyLength = 120; // ~6s of history at 20Hz (reduced for performance)
     const hist = {
       leak: Array(historyLength).fill(0),
       random: Array(historyLength).fill(0),
@@ -570,6 +594,14 @@
       const setpointY = (1 - setpoint) * height;
       ui.setpointLine.style.top = setpointY + 'px';
 
+      // Scoring zone (±5% around setpoint)
+      const zoneTop = setpoint + scoreZoneTolerance;
+      const zoneBottom = setpoint - scoreZoneTolerance;
+      const zoneTopY = (1 - zoneTop) * height;
+      const zoneBottomY = (1 - zoneBottom) * height;
+      ui.scoreZone.style.top = zoneTopY + 'px';
+      ui.scoreZone.style.height = (zoneBottomY - zoneTopY) + 'px';
+
       // Update setpoint label
       ui.setpointLabel.textContent = 'Setpoint: ' + Math.round(setpoint * 100) + '%';
     }
@@ -659,16 +691,32 @@
       pulseUnlocked = false;
       shockUnlocked = false;
       driftUnlocked = false;
-      pulse = 0; shock = 0; drift = 0;
-      pulsePhase = 0; shockTimer = 0; driftBase = 0;
+      surgeUnlocked = false;
+      noiseUnlocked = false;
+      squallUnlocked = false;
+      maelUnlocked = false;
+      pulse = 0; shock = 0; drift = 0; surge = 0; noise = 0; squall = 0; maelstrom = 0;
+      pulsePhase = 0; shockTimer = 0; driftBase = 0; surgePhase = 0; noiseTimer = 0; squallPhase = 0; maelPhase = 0;
 
       // Hide optional cards
       if (ui.cards && ui.cards.pulse) ui.cards.pulse.classList.add('hidden');
       if (ui.cards && ui.cards.shock) ui.cards.shock.classList.add('hidden');
       if (ui.cards && ui.cards.drift) ui.cards.drift.classList.add('hidden');
+      if (ui.cards && ui.cards.surge) ui.cards.surge.classList.add('hidden');
+      if (ui.cards && ui.cards.noise) ui.cards.noise.classList.add('hidden');
+      if (ui.cards && ui.cards.squall) ui.cards.squall.classList.add('hidden');
+      if (ui.cards && ui.cards.maelstrom) ui.cards.maelstrom.classList.add('hidden');
 
       // Reset contexts to re-init on unlock
-      if (typeof ctxs !== 'undefined') { ctxs.pulse = null; ctxs.shock = null; ctxs.drift = null; }
+      if (typeof ctxs !== 'undefined') { 
+        ctxs.pulse = null; 
+        ctxs.shock = null; 
+        ctxs.drift = null; 
+        ctxs.surge = null;
+        ctxs.noise = null;
+        ctxs.squall = null;
+        ctxs.maelstrom = null;
+      }
 
       // Clear histories
       if (hist.leak) hist.leak.fill(0);
@@ -677,6 +725,10 @@
       if (hist.pulse) hist.pulse.fill(0);
       if (hist.shock) hist.shock.fill(0);
       if (hist.drift) hist.drift.fill(0);
+      if (hist.surge) hist.surge.fill(0);
+      if (hist.noise) hist.noise.fill(0);
+      if (hist.squall) hist.squall.fill(0);
+      if (hist.maelstrom) hist.maelstrom.fill(0);
 
       // UI
       updateUI(0, 0, 0, 0, 0, 0, 0);
@@ -711,9 +763,18 @@
     function step() {
       if (running) {
         elapsed += dt;
-        // Score: +10 * multiplier per second
+        
+        // Score: Only earn points when within ±5% of setpoint
         if (!window._score) window._score = 0;
-        window._score += difficulty * 10 * dt;
+        const setpoint = getSetpoint();
+        const error = Math.abs(level - setpoint);
+        
+        if (error <= scoreZoneTolerance) {
+          // In scoring zone - earn points!
+          window._score += difficulty * 10 * dt;
+        }
+        // Outside zone = no points earned (but no penalty either)
+        
         if (ui.scoreBox) ui.scoreBox.textContent = Math.round(window._score).toLocaleString();
       }
 
@@ -833,25 +894,62 @@
 
       const totalOut = leak + randomFlow + tide + pulse + shock + drift + surge + noise + squall + maelstrom;
 
-      // PID inflow
+      // PID inflow (instant valve response)
       const setpoint = getSetpoint();
       const error = setpoint - level;
+      let inflow = 0;
 
-      // Anti-windup: clamp integral contribution to keep output within [0, maxInflow]
-      integral += error * dt;
-      const iTerm = Ki * integral;
-      const dTerm = Kd * ((error - prevError) / dt);
-      let control = Kp * error + iTerm + dTerm;
+      // Check if all gains are zero -> bang-bang control
+      if (Kp === 0 && Ki === 0 && Kd === 0) {
+        // Bang-bang: turn on when below setpoint, off when above
+        const bangLower = lowerLimit + 0.05;
+        const bangUpper = upperLimit - 0.15;
+        
+        if (level < bangLower) {
+          inflow = maxInflow; // full blast
+        } else if (level > bangUpper) {
+          inflow = 0; // shut off completely
+        } else {
+          inflow = inflow; // maintain current (but this will oscillate wildly)
+        }
+        
+        // Reset PID state
+        integral = 0;
+        prevError = 0;
+      } else {
+        // PID control with selective terms
+        let control = 0;
 
-      // Saturate inflow
-      let inflow = clamp(control, 0, maxInflow);
+        // Proportional term (only if Kp > 0)
+        if (Kp > 0) {
+          control += Kp * error;
+        }
 
-      // If saturated, apply conditional integration to reduce windup
-      if ((inflow === 0 && error < 0) || (inflow === maxInflow && error > 0)) {
-        integral -= error * dt * 0.7;
+        // Integral term (only if Ki > 0)
+        if (Ki > 0) {
+          integral += error * dt;
+          control += Ki * integral;
+        } else {
+          integral = 0; // reset if not using
+        }
+
+        // Derivative term (only if Kd > 0)
+        if (Kd > 0) {
+          control += Kd * ((error - prevError) / dt);
+        }
+
+        prevError = error;
+
+        // Saturate inflow
+        inflow = clamp(control, 0, maxInflow);
+
+        // If using integral and saturated, apply conditional integration to reduce windup
+        if (Ki > 0) {
+          if ((inflow === 0 && error < 0) || (inflow === maxInflow && error > 0)) {
+            integral -= error * dt * 0.7;
+          }
+        }
       }
-
-      prevError = error;
 
       // Tank level update
       if (running) {
@@ -909,7 +1007,7 @@
       hist.noise.push(noise); hist.noise.shift();
       hist.squall.push(squall); hist.squall.shift();
       hist.maelstrom.push(maelstrom); hist.maelstrom.shift();
-      drawAllGraphs();
+      // Graph drawing now happens in main loop at reduced frequency
     }
 
     function drawGraph(ctx, values, color) {
@@ -994,7 +1092,15 @@
     drawAllGraphs();
 
     // Main loop
-    setInterval(step, dt * 1000);
+    let frameCount = 0;
+    setInterval(() => {
+      step();
+      frameCount++;
+      // Only redraw graphs every 3rd frame to reduce canvas operations
+      if (frameCount % 3 === 0) {
+        drawAllGraphs();
+      }
+    }, dt * 1000);
   </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'981a8c04469bccb2',t:'MTc1ODMwMDI1OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9bb554fcc786cd25',t:'MTc2Nzk3NjM2MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
