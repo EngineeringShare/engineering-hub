@@ -13,7 +13,7 @@ units: ["BTEC Unit 31", "T-Level Unit 08"]
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/presentations/AC Generation.pdf"
+        src="https://engineeringshare.github.io/engineering-resources/presentations/AC Generation.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

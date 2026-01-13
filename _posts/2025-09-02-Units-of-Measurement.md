@@ -13,7 +13,7 @@ Standardised units of measurement form the foundation of modern engineering and 
 ## Audio:
 
 <audio controls>
-    <source src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/audio/Units of Measurement.mp3" type="audio/mpeg">
+    <source src="https://engineeringshare.github.io/engineering-resources/audio/Units of Measurement.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
@@ -22,7 +22,7 @@ Standardised units of measurement form the foundation of modern engineering and 
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/presentations/SI Units.pdf"
+        src="https://engineeringshare.github.io/engineering-resources/presentations/SI Units.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

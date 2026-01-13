@@ -13,7 +13,7 @@ In mechatronics, sensors, actuators, and controllers form the core building bloc
 ## Audio:
 
 <audio controls>
-    <source src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/audio/Sensors Actuators and Controllers.mp3" type="audio/mpeg">
+    <source src="https://engineeringshare.github.io/engineering-resources/audio/Sensors Actuators and Controllers.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
@@ -22,7 +22,7 @@ In mechatronics, sensors, actuators, and controllers form the core building bloc
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/presentations/Sensors, Actuators and Microcontrollers.pdf"
+        src="https://engineeringshare.github.io/engineering-resources/presentations/Sensors, Actuators and Microcontrollers.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
