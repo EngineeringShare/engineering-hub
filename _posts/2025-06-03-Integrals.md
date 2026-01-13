@@ -15,7 +15,7 @@ Integration is a fundamental concept in calculus that involves finding the integ
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.co.uk/presentations/Integration.pdf"
+        src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/presentations/Integration.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

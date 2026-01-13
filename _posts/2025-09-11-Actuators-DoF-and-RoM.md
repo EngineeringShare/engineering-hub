@@ -17,7 +17,7 @@ Systems can be characterized by their Degrees of Freedom (DoF), which refers to 
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.co.uk/presentations/Degrees of Freedom and Range of Motion.pdf"
+        src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/presentations/Degrees of Freedom and Range of Motion.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

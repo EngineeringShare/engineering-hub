@@ -13,7 +13,7 @@ Vectors and coordinates are fundamental concepts in physics and engineering that
 ## Audio:
 
 <audio controls>
-    <source src="https://engineeringshare.co.uk/audio/Vectors and Coordinates.mp3" type="audio/mpeg">
+    <source src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/audio/Vectors and Coordinates.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
@@ -22,7 +22,7 @@ Vectors and coordinates are fundamental concepts in physics and engineering that
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.co.uk/presentations/Vectors and Coordinates.pdf"
+        src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/presentations/Vectors and Coordinates.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

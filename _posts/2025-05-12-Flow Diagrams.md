@@ -13,7 +13,7 @@ Flowcharts are a visual method of representing how a program or system operates,
 ## Audio:
 
 <audio controls>
-    <source src="https://engineeringshare.co.uk/audio/Flow Charts.mp3" type="audio/mpeg">
+    <source src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/audio/Flow Charts.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
@@ -22,7 +22,7 @@ Flowcharts are a visual method of representing how a program or system operates,
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.co.uk/presentations/FlowCharts.pdf"
+        src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/presentations/FlowCharts.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

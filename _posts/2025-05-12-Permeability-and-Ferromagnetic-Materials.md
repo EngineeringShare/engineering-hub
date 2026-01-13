@@ -15,7 +15,7 @@ Permeability is a measure of how easily a material can support the formation of 
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.co.uk/presentations/Permeability & ferromagnetic materials.pdf" 
+        src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/presentations/Permeability & ferromagnetic materials.pdf" 
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

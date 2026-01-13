@@ -13,7 +13,7 @@ units: ["HTQ Unit 4002"]
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.co.uk/presentations/Dimensional Analysis.pdf"
+        src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/presentations/Dimensional Analysis.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
@@ -46,7 +46,7 @@ units: ["HTQ Unit 4002"]
 <div id="example-pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="example-pdf-frame"
-        src="https://engineeringshare.co.uk/worked_examples/Dimensional Analysis.pdf"
+        src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/worked_examples/Dimensional Analysis.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

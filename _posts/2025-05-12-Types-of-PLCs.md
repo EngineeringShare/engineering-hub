@@ -17,7 +17,7 @@ A Programmable Logic Controller (PLC) is an industrial digital computer designed
 ## Audio:
 
 <audio controls>
-    <source src="https://engineeringshare.co.uk/audio/PLC Theory - Types of PLCs.mp3" type="audio/mpeg">
+    <source src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/audio/PLC Theory - Types of PLCs.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
 </audio>
 
@@ -26,7 +26,7 @@ A Programmable Logic Controller (PLC) is an industrial digital computer designed
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.co.uk/presentations/PLC Theory - Types of PLCs.pdf"
+        src="https://raw.githubusercontent.com/EngineeringShare/engineering-resources/main/presentations/PLC Theory - Types of PLCs.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
