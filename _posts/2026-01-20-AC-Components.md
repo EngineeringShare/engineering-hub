@@ -1,28 +1,19 @@
 ---
-title: "Evaluation and Implementation"
-date: 2025-09-10
-tags: ["Evaluation", "Report"]
-subject: "Other"
-units: ["T-Level Year 2"]
+title: "AC Components"
+date: 2026-01-20
+tags: ["Sinusoidal", "Power", "Circuit", "RLC", "AC", "Capacitor", "Inductor", "Resistor", "Reactance", "Impedance", "Phase Angle", "Admittance"]
+subject: "electronics"
+units: ["HTQ Unit 4019", "BTEC Unit 56"]
 ---
 
 ## Intro:
-
-The evaluation and implementation report is a crucial document that assesses the effectiveness of a project or solution after its deployment. This report typically includes an analysis of the project's outcomes, the challenges faced during implementation, and recommendations for future improvements. It serves as a reflective tool to understand what worked well and what could be enhanced in subsequent projects.  
-
-## Audio:
-
-<audio controls>
-    <source src="https://engineeringshare.github.io/engineering-resources/audio/Evaluation and Implementation Report.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
 
 ## Presentation:
 
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.github.io/engineering-resources/presentations/Evaluation and Implementation Report.pdf"
+        src="https://engineeringshare.github.io/engineering-resources/presentations/AC Components.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
