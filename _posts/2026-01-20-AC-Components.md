@@ -8,6 +8,10 @@ units: ["HTQ Unit 4019", "BTEC Unit 56"]
 
 ## Intro:
 
+Different components in AC circuits—resistors, capacitors, and inductors—behave uniquely when subjected to alternating current. Resistors oppose current flow uniformly, while capacitors and inductors introduce reactance, which varies with frequency. Capacitors store energy in an electric field, causing current to lead voltage, whereas inductors store energy in a magnetic field, causing voltage to lead current. The combined effect of these components results in impedance, a complex quantity that encompasses both resistance and reactance. Understanding these behaviors is crucial for analyzing AC circuits, as they influence phase angles, power consumption, and overall circuit performance.
+
+This presentation delves into the characteristics of AC components, exploring how they interact within circuits, their impact on signal phase relationships, and the mathematical principles governing their operation. Key concepts such as reactance, impedance, and admittance are examined to provide a comprehensive understanding of AC circuit analysis.
+
 ## Presentation:
 
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
@@ -42,6 +46,8 @@ units: ["HTQ Unit 4019", "BTEC Unit 56"]
 </script>
 
 ## Other Materials:
+* [Electronics Tutorials: AC Inductance and Inductive Reactance](https://www.electronics-tutorials.ws/accircuits/ac-inductance.html)
+* [Electronics Tutorials: AC Capacitance and Capacitive Reactance](https://www.electronics-tutorials.ws/accircuits/ac-capacitance.html)
 
 ## ---
 
