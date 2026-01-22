@@ -41,6 +41,12 @@ units: ["T-Level Unit 08", "BTEC Unit 56"]
     }
 </script>
 
+## Interactive Tools:
+
+<a href="https://phet.colorado.edu/sims/html/capacitor-lab-basics/latest/capacitor-lab-basics_all.html">PhET Capacitor Lab Basics Simulation</a>
+
+(Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC-BY-4.0 (https://phet.colorado.edu).)
+
 ## Other Materials:
 * [YouTube: Capacitors Explained - The basics how capacitors work working principle](https://youtu.be/X4EUwTwZ110)
 * [YouTube: Every Type of Capacitor for Power Electronics Compared & Analysed](https://youtu.be/Fwng7mRuOVw?si=02tune5xZNSTOcdr)
