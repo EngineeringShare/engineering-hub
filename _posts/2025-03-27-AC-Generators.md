@@ -41,6 +41,12 @@ units: ["BTEC Unit 31", "T-Level Unit 08"]
     }
 </script>
 
+## Interactive Tools:
+
+<a href="https://phet.colorado.edu/sims/html/generator/latest/generator_all.html">PhET AC Generator Simulation</a>
+
+(Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC-BY-4.0 (https://phet.colorado.edu).)
+
 ## Other Materials:
 * [YouTube: AC Electrical Generator Basics - How electricity is generated](https://www.youtube.com/watch?v=WhATjUHgzxQ)
 

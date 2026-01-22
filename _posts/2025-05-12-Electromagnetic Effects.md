@@ -43,6 +43,14 @@ Electromagnetic effects refer to the phenomena associated with the interaction b
     }
 </script>
 
+## Interactive Tools:
+
+<a href="https://phet.colorado.edu/sims/html/magnets-and-electromagnets/latest/magnets-and-electromagnets_all.html">PhET Magnets and Electromagnets Simulation</a>
+
+<a href="https://phet.colorado.edu/sims/html/faradays-electromagnetic-lab/latest/faradays-electromagnetic-lab_all.html">PhET Faraday's Electromagnetic Lab Simulation</a>
+
+(Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC-BY-4.0 (https://phet.colorado.edu).)
+
 ## Other Materials:
 * [BBC: Electromagnetic Effects](https://www.bbc.co.uk/bitesize/articles/z6yhcxs#zy43jfr)
 * [Youtube: GCSE Physics - Electromagnetism](https://youtu.be/79_SF5AZtzo)

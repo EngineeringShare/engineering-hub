@@ -47,6 +47,8 @@ Atomic structure refers to the arrangement and composition of atoms, which are t
 
 <a href="https://phet.colorado.edu/sims/html/build-an-atom/latest/build-an-atom_all.html">PhET Build an Atom Simulation</a>
 
+(Simulation by PhET Interactive Simulations, University of Colorado Boulder, licensed under CC-BY-4.0 (https://phet.colorado.edu).)
+
 ## Other Materials:
 
 
