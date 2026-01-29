@@ -55,6 +55,8 @@ Electromagnetic effects refer to the phenomena associated with the interaction b
 * [BBC: Electromagnetic Effects](https://www.bbc.co.uk/bitesize/articles/z6yhcxs#zy43jfr)
 * [Youtube: GCSE Physics - Electromagnetism](https://youtu.be/79_SF5AZtzo)
 * [YouTube: GCSE Physics - Generator Effect / Electromagnetic Induction](https://youtu.be/pkzY7QfTowM)
+* [John Bird: Electrical and Electronic Principles and Technology, 2nd Edition (Chapter 8) (Page 82)](https://nit-edu.org/wp-content/uploads/2021/09/Electrical-Electronic-Principles-Technology-John-Bird-2nd-Ed.pdf#page=92)
+
 
 
 ## ---

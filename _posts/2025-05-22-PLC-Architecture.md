@@ -52,6 +52,7 @@ A Programmable Logic Controller (PLC) is a rugged industrial computer designed t
 
 ## Other Materials:
 * [YouTube: Programable Logic Controller Basics Explained - automation engineering](https://youtu.be/uOtdWHMKhnw)
+* [W.Bolton: Programmable Logic Controllers, 5th Edition (Chapter 1) (Page 5)](https://books.google.co.uk/books?id=sDqnBQAAQBAJ&lpg=PP1&ots=-cgw4k5fdv&dq=Bolton%20W%20%E2%80%93%20Programmable%20Logic%20Controllers%20(Newnes%2C%202006)%20ISBN%200750681128&lr&pg=PP1#v=onepage&q&f=false)
 
 ## ---
 
