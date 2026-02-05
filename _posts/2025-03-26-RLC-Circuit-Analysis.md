@@ -7,9 +7,8 @@ units: ["HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 08"]
 ---
 
 <head>
-    <link rel="shortcut icon" type="image/png" href="/favicon.png">
+    <link rel="shortcut icon" type="image/png" href="{{ "/favicon.png" | prepend: site.baseurl }}" >
 </head>
-
 
 ## Intro:
 
