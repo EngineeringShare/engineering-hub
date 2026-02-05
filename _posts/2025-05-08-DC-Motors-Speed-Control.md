@@ -42,7 +42,7 @@ units: ["BTEC Unit 56", "BTEC Unit 31", "T-Level Unit 09"]
 </script>
 
 ## Other Materials:
-* [Electrical Easy: Speed Control Methods of DC Motor](https://www.electricaleasy.com/2014/01/speed-control-methods-of-dc-motor.htmlU)
+* [Electrical Easy: Speed Control Methods of DC Motor](https://www.electricaleasy.com/2014/01/speed-control-methods-of-dc-motor.html)
 * [Carotron: Armature Controlled vs. Field Controlled DC Motor](https://www.carotron.com/articles/armature-field-control/#:~:text=Armature%20Control%20for%20DC%20Motors&text=Once%20resistance%20has%20been%20increased,the%20voltage%20that%27s%20being%20applied.)
 
 ## ---
