@@ -6,6 +6,10 @@ subject: "electronics"
 units: ["HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 08"]
 ---
 
+<head>
+    <link rel="shortcut icon" type="image/png" href="favicon.png">
+</head>
+
 ## Intro:
 
 ## Presentation:
