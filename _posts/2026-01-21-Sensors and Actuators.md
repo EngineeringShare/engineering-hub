@@ -86,7 +86,7 @@ units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
   <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Limit-Switch/">
     <div class="card">
       <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/PLC-Icons/NO_Contact.png" alt="Normally Open Contact Symbol">
+        <img src="https://engineeringshare.co.uk/images/Sensors-Actuators-Icons/Limit_Switch.png" alt="Limit Switch Symbol">
       </div>
       <h3>Limit Switch</h3>
     </div>
