@@ -6,7 +6,7 @@ permalink: /Sensors-and-Actuators/Limit-Switch/
 <a href="https://engineeringshare.github.io/engineering-hub/2026/01/21/Sensors-and-Actuators.html">🔙 Back to Sensors and Actuators</a>
 
 <div style="text-align: center;">
-    <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Limit Switch.png" alt="Limit Switch" style="max-width: 200px; height: auto;">
+    <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Limit_Switch.png" alt="Limit Switch" style="max-width: 200px; height: auto;">
 </div>
 
 <h2>Limit Switch Overview</h2>
