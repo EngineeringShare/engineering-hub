@@ -67,11 +67,6 @@ This is the hub for HTQ Unit 4015: covering automated systems, industrial roboti
 {% assign unit_name = "HTQ Unit 4015" %}
 
 {%- comment -%} 
-  Set the unit name for this page 
-{%- endcomment -%}
-{% assign unit_name = page.title | split: " - " | first %}
-
-{%- comment -%} 
   1. FIRST PASS: Find all unique LOs for this specific unit
 {%- endcomment -%}
 {% assign lo_list = "" %}

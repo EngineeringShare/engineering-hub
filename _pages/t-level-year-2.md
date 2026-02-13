@@ -59,11 +59,6 @@ permalink: /classes/t-level-year-2/
 {% assign unit_name = "T-Level Year 2" %}
 
 {%- comment -%} 
-  Set the unit name for this page 
-{%- endcomment -%}
-{% assign unit_name = page.title | split: " - " | first %}
-
-{%- comment -%} 
   1. FIRST PASS: Find all unique LOs for this specific unit
 {%- endcomment -%}
 {% assign lo_list = "" %}

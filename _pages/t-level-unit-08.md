@@ -61,11 +61,6 @@ This is the hub for T-Level Unit 8: Electrical and Electronic Principles — cov
 {% assign unit_name = "T-Level Unit 08" %}
 
 {%- comment -%} 
-  Set the unit name for this page 
-{%- endcomment -%}
-{% assign unit_name = page.title | split: " - " | first %}
-
-{%- comment -%} 
   1. FIRST PASS: Find all unique LOs for this specific unit
 {%- endcomment -%}
 {% assign lo_list = "" %}

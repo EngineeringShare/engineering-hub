@@ -61,11 +61,6 @@ Welcome to the Unit 31 class hub. Here you'll find everything from motor theory 
 {% assign unit_name = "BTEC Unit 31" %}
 
 {%- comment -%} 
-  Set the unit name for this page 
-{%- endcomment -%}
-{% assign unit_name = page.title | split: " - " | first %}
-
-{%- comment -%} 
   1. FIRST PASS: Find all unique LOs for this specific unit
 {%- endcomment -%}
 {% assign lo_list = "" %}

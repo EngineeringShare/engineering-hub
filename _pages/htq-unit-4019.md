@@ -61,11 +61,6 @@ This hub covers everything from Ohm's Law and phasor diagrams to semiconductors 
 {% assign unit_name = "HTQ Unit 4019" %}
 
 {%- comment -%} 
-  Set the unit name for this page 
-{%- endcomment -%}
-{% assign unit_name = page.title | split: " - " | first %}
-
-{%- comment -%} 
   1. FIRST PASS: Find all unique LOs for this specific unit
 {%- endcomment -%}
 {% assign lo_list = "" %}

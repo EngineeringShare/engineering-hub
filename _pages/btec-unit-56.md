@@ -61,11 +61,6 @@ Welcome to the Unit 56 hub. This page contains all lessons, assignments, and res
 {% assign unit_name = "BTEC Unit 56" %}
 
 {%- comment -%} 
-  Set the unit name for this page 
-{%- endcomment -%}
-{% assign unit_name = page.title | split: " - " | first %}
-
-{%- comment -%} 
   1. FIRST PASS: Find all unique LOs for this specific unit
 {%- endcomment -%}
 {% assign lo_list = "" %}
