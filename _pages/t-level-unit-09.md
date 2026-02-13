@@ -60,55 +60,48 @@ This is the hub for T-Level Unit 9: Mechatronics — covering sensors and transd
 
 {% assign unit_name = "T-Level Unit 09" %}
 
-{%- comment -%}
-1) Build a unique list of LOs used for this unit
-{%- endcomment -%}
-{% assign los = "" | split: "" %}
+{%- comment -%} Build a pipe-separated list of LOs for this unit {%- endcomment -%}
+{% assign los_str = "" %}
 
 {% for post in site.posts %}
   {% if post.units %}
     {% for u in post.units %}
       {% if u.unit == unit_name %}
         {% assign lo = u.lo | default: "Unsorted" %}
-        {% unless los contains lo %}
-          {% assign los = los | push: lo %}
-        {% endunless %}
+        {% capture los_str %}{{ los_str }}|{{ lo }}{% endcapture %}
       {% endif %}
     {% endfor %}
   {% endif %}
 {% endfor %}
 
-{%- comment -%}
-Optional: sort LO headings (string sort)
-{%- endcomment -%}
-{% assign los = los | sort %}
+{%- assign los = los_str | split: "|" | uniq | sort -%}
 
-{%- comment -%}
-2) Render each LO section + cards
-{%- endcomment -%}
+{%- assign posts_sorted = site.posts | sort: "title" -%}
+
 {% for lo in los %}
-  <h2 style="margin-top:2rem;">{{ lo }}</h2>
+  {% if lo != "" %}
+    <h2 style="margin-top:2rem;">{{ lo }}</h2>
 
-  <div class="projects">
-    {% assign posts_sorted = site.posts | sort: "title" %}
-    {% for post in posts_sorted %}
-      {% assign post_lo = nil %}
+    <div class="projects">
+      {% for post in posts_sorted %}
+        {% assign post_lo = "" %}
 
-      {% if post.units %}
-        {% for u in post.units %}
-          {% if u.unit == unit_name %}
-            {% assign post_lo = u.lo | default: "Unsorted" %}
-          {% endif %}
-        {% endfor %}
-      {% endif %}
+        {% if post.units %}
+          {% for u in post.units %}
+            {% if u.unit == unit_name %}
+              {% assign post_lo = u.lo | default: "Unsorted" %}
+            {% endif %}
+          {% endfor %}
+        {% endif %}
 
-      {% if post_lo == lo %}
-        <a class="card-link" href="{{ post.url | relative_url }}">
-          <div class="card">
-            <h3>{{ post.title }}</h3>
-          </div>
-        </a>
-      {% endif %}
-    {% endfor %}
-  </div>
+        {% if post_lo == lo %}
+          <a class="card-link" href="{{ post.url | relative_url }}">
+            <div class="card">
+              <h3>{{ post.title }}</h3>
+            </div>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
 {% endfor %}
