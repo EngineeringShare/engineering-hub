@@ -60,15 +60,41 @@ Welcome to the Unit 31 class hub. Here you'll find everything from motor theory 
 
 {% assign unit_name = "BTEC Unit 31" %}
 
- <ul>
+{%- comment -%}
+Collect posts that contain this unit, and annotate each with the LO for this unit.
+{%- endcomment -%}
+{% assign matched = "" | split: "" %}
+
 {% for post in site.posts %}
   {% if post.units %}
-    {% comment %} Check if units is actually a list/array {% endcomment %}
-    {% if post.units[0] %}
-      <li>Checking: {{ post.title }} - ✅ Format OK</li>
-    {% else %}
-      <li style="color: red;">Checking: {{ post.title }} - ❌ ERROR: Units is not a list!</li>
-    {% endif %}
+    {% for u in post.units %}
+      {% if u.unit == unit_name %}
+        {% assign item = post | merge: { "unit_lo": u.lo } %}
+        {% assign matched = matched | push: item %}
+      {% endif %}
+    {% endfor %}
   {% endif %}
 {% endfor %}
-</ul>
+
+{%- assign matched = matched | sort: "unit_lo" -%}
+
+{%- comment -%}
+Build a list of LOs present (unique), then loop them.
+{%- endcomment -%}
+{% assign los = matched | map: "unit_lo" | uniq %}
+
+{% for lo in los %}
+  <h2 style="margin-top:2rem;">{{ lo }}</h2>
+
+  <div class="projects">
+    {% for post in matched %}
+      {% if post.unit_lo == lo %}
+        <a class="card-link" href="{{ post.url | relative_url }}">
+          <div class="card">
+            <h3>{{ post.title }}</h3>
+          </div>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endfor %}
