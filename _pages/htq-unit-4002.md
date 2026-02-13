@@ -60,45 +60,15 @@ This is the hub for Engineering Maths. Topics include algebra, trigonometry, cal
 
 {% assign unit_name = "HTQ Unit 4002" %}
 
-{% comment %} 
-  1. Extract all 'units' arrays from all posts 
-  2. Flatten them into one list
-  3. Filter that list to only include items matching your unit_name
-  4. Map those items to just their 'lo' strings
-{% endcomment %}
-
-{% assign all_unit_entries = site.posts | map: "units" | compact %}
-{% assign relevant_los = "" | split: "" %}
-
-{% for entry_array in all_unit_entries %}
-  {% for entry in entry_array %}
-    {% if entry.unit == unit_name %}
-      {% assign lo_name = entry.lo | default: "Unsorted" %}
-      {% assign relevant_los = relevant_los | push: lo_name %}
+ <ul>
+{% for post in site.posts %}
+  {% if post.units %}
+    {% comment %} Check if units is actually a list/array {% endcomment %}
+    {% if post.units[0] %}
+      <li>Checking: {{ post.title }} - ✅ Format OK</li>
+    {% else %}
+      <li style="color: red;">Checking: {{ post.title }} - ❌ ERROR: Units is not a list!</li>
     {% endif %}
-  {% endfor %}
+  {% endif %}
 {% endfor %}
-
-{% assign final_los = relevant_los | uniq | sort %}
-
-{% for lo in final_los %}
-  <h2 style="margin-top:2rem;">{{ lo }}</h2>
-  <div class="projects">
-    {% for post in site.posts %}
-      {% assign match = false %}
-      {% for u in post.units %}
-        {% if u.unit == unit_name and u.lo == lo %}
-          {% assign match = true %}
-        {% endif %}
-      {% endfor %}
-
-      {% if match %}
-        <a class="card-link" href="{{ post.url | relative_url }}">
-          <div class="card">
-            <h3>{{ post.title }}</h3>
-          </div>
-        </a>
-      {% endif %}
-    {% endfor %}
-  </div>
-{% endfor %}
+</ul>
