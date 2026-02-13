@@ -61,34 +61,48 @@ This is the hub for T-Level Unit 10: Engineering and Manufacturing Control Syste
 {% assign unit_name = "T-Level Unit 10" %}
 
 {%- comment -%}
-Collect posts that contain this unit, and annotate each with the LO for this unit.
+1) Build a unique list of LOs used for this unit
 {%- endcomment -%}
-{% assign matched = "" | split: "" %}
+{% assign los = "" | split: "" %}
 
 {% for post in site.posts %}
   {% if post.units %}
     {% for u in post.units %}
       {% if u.unit == unit_name %}
-        {% assign item = post | merge: { "unit_lo": u.lo } %}
-        {% assign matched = matched | push: item %}
+        {% assign lo = u.lo | default: "Unsorted" %}
+        {% unless los contains lo %}
+          {% assign los = los | push: lo %}
+        {% endunless %}
       {% endif %}
     {% endfor %}
   {% endif %}
 {% endfor %}
 
-{%- assign matched = matched | sort: "unit_lo" -%}
+{%- comment -%}
+Optional: sort LO headings (string sort)
+{%- endcomment -%}
+{% assign los = los | sort %}
 
 {%- comment -%}
-Build a list of LOs present (unique), then loop them.
+2) Render each LO section + cards
 {%- endcomment -%}
-{% assign los = matched | map: "unit_lo" | uniq %}
-
 {% for lo in los %}
   <h2 style="margin-top:2rem;">{{ lo }}</h2>
 
   <div class="projects">
-    {% for post in matched %}
-      {% if post.unit_lo == lo %}
+    {% assign posts_sorted = site.posts | sort: "title" %}
+    {% for post in posts_sorted %}
+      {% assign post_lo = nil %}
+
+      {% if post.units %}
+        {% for u in post.units %}
+          {% if u.unit == unit_name %}
+            {% assign post_lo = u.lo | default: "Unsorted" %}
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {% if post_lo == lo %}
         <a class="card-link" href="{{ post.url | relative_url }}">
           <div class="card">
             <h3>{{ post.title }}</h3>
