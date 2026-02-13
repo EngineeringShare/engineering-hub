@@ -60,48 +60,45 @@ This is the hub for T-Level Unit 8: Electrical and Electronic Principles — cov
 
 {% assign unit_name = "T-Level Unit 08" %}
 
-{%- comment -%} Build a pipe-separated list of LOs for this unit {%- endcomment -%}
-{% assign los_str = "" %}
+{% comment %} 
+  1. Extract all 'units' arrays from all posts 
+  2. Flatten them into one list
+  3. Filter that list to only include items matching your unit_name
+  4. Map those items to just their 'lo' strings
+{% endcomment %}
 
-{% for post in site.posts %}
-  {% if post.units %}
-    {% for u in post.units %}
-      {% if u.unit == unit_name %}
-        {% assign lo = u.lo | default: "Unsorted" %}
-        {% capture los_str %}{{ los_str }}|{{ lo }}{% endcapture %}
-      {% endif %}
-    {% endfor %}
-  {% endif %}
+{% assign all_unit_entries = site.posts | map: "units" | compact %}
+{% assign relevant_los = "" | split: "" %}
+
+{% for entry_array in all_unit_entries %}
+  {% for entry in entry_array %}
+    {% if entry.unit == unit_name %}
+      {% assign lo_name = entry.lo | default: "Unsorted" %}
+      {% assign relevant_los = relevant_los | push: lo_name %}
+    {% endif %}
+  {% endfor %}
 {% endfor %}
 
-{%- assign los = los_str | split: "|" | uniq | sort -%}
+{% assign final_los = relevant_los | uniq | sort %}
 
-{%- assign posts_sorted = site.posts | sort: "title" -%}
-
-{% for lo in los %}
-  {% if lo != "" %}
-    <h2 style="margin-top:2rem;">{{ lo }}</h2>
-
-    <div class="projects">
-      {% for post in posts_sorted %}
-        {% assign post_lo = "" %}
-
-        {% if post.units %}
-          {% for u in post.units %}
-            {% if u.unit == unit_name %}
-              {% assign post_lo = u.lo | default: "Unsorted" %}
-            {% endif %}
-          {% endfor %}
-        {% endif %}
-
-        {% if post_lo == lo %}
-          <a class="card-link" href="{{ post.url | relative_url }}">
-            <div class="card">
-              <h3>{{ post.title }}</h3>
-            </div>
-          </a>
+{% for lo in final_los %}
+  <h2 style="margin-top:2rem;">{{ lo }}</h2>
+  <div class="projects">
+    {% for post in site.posts %}
+      {% assign match = false %}
+      {% for u in post.units %}
+        {% if u.unit == unit_name and u.lo == lo %}
+          {% assign match = true %}
         {% endif %}
       {% endfor %}
-    </div>
-  {% endif %}
+
+      {% if match %}
+        <a class="card-link" href="{{ post.url | relative_url }}">
+          <div class="card">
+            <h3>{{ post.title }}</h3>
+          </div>
+        </a>
+      {% endif %}
+    {% endfor %}
+  </div>
 {% endfor %}
