@@ -60,38 +60,30 @@ This is the hub for Engineering Maths. Topics include algebra, trigonometry, cal
 
 {% assign unit_name = "HTQ Unit 4002" %}
 
-{%- comment -%} 
-  1. FIRST PASS: Find all unique LOs for this specific unit
-{%- endcomment -%}
+{% assign target_unit = "BTEC Unit 19" %}
+
+{%- comment -%} Gather Unique LOs {%- endcomment -%}
 {% assign lo_list = "" %}
 {% for post in site.posts %}
-  {% if post.units %}
-    {% for u in post.units %}
-      {% if u.unit == unit_name %}
-        {% capture lo_name %}{{ u.lo | default: "General" }}{% endcapture %}
-        {% assign lo_list = lo_list | append: lo_name | append: "###" %}
-      {% endif %}
-    {% endfor %}
-  {% endif %}
+  {% for u in post.units %}
+    {% if u.unit == target_unit %}
+      {% capture lo_name %}{{ u.lo | default: "General" }}{% endcapture %}
+      {% assign lo_list = lo_list | append: lo_name | append: "###" %}
+    {% endif %}
+  {% endfor %}
 {% endfor %}
-
 {% assign unique_los = lo_list | split: "###" | uniq | sort %}
 
-{%- comment -%} 
-  2. SECOND PASS: Loop through LOs and find matching posts
-{%- endcomment -%}
+{%- comment -%} Render Sections {%- endcomment -%}
 {% for lo in unique_los %}
   {% if lo != "" %}
-    <h2 style="margin-top: 2.5rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">
-      {{ lo }}
-    </h2>
+    <h2 style="margin-top: 2rem; border-bottom: 2px solid #eee;">{{ lo }}</h2>
     
     <div class="projects">
       {% for post in site.posts %}
         {% assign is_match = false %}
-        
         {% for u in post.units %}
-          {% if u.unit == unit_name and u.lo == lo %}
+          {% if u.unit == target_unit and u.lo == lo %}
             {% assign is_match = true %}
           {% endif %}
         {% endfor %}
@@ -100,7 +92,6 @@ This is the hub for Engineering Maths. Topics include algebra, trigonometry, cal
           <a class="card-link" href="{{ post.url | relative_url }}">
             <div class="card">
               <h3>{{ post.title }}</h3>
-              <p style="font-size: 0.8rem; color: #666;">{{ post.date | date: "%B %d, %Y" }}</p>
             </div>
           </a>
         {% endif %}
