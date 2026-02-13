@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: BTEC Unit 19 - PLCs
 permalink: /classes/btec-unit-19/
 ---
