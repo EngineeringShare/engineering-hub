@@ -77,21 +77,29 @@ This site is your one-stop destination for accessing class slides, assignments, 
 <p>Select a unit to view posts and resources:</p>
 
 <div class="projects">
-  {% assign all_classes = "" | split: "," %}
-  {% for post in site.posts %}
-    {% for class in post.units %}
-      {% unless all_classes contains class %}
-        {% assign all_classes = all_classes | push: class %}
-      {% endunless %}
-    {% endfor %}
-  {% endfor %}
-  {% assign all_classes = all_classes | sort %}
+  {%- comment -%} 1. Initialize an empty array {%- endcomment -%}
+  {% assign unit_names = "" | split: "" %}
 
-  {% for class in all_classes %}
-    {% assign slugified_class = class | slugify %}
-    <a class="card-link" href="{{ '/classes/' | append: slugified_class | relative_url }}">
+  {%- comment -%} 2. Collect only the 'unit' string from the units objects {%- endcomment -%}
+  {% for post in site.posts %}
+    {% if post.units %}
+      {% for item in post.units %}
+        {% if item.unit %}
+          {% assign unit_names = unit_names | push: item.unit %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+
+  {%- comment -%} 3. Now it is safe to uniq and sort because it's an array of strings {%- endcomment -%}
+  {% assign sorted_units = unit_names | uniq | sort %}
+
+  {%- comment -%} 4. Render the cards {%- endcomment -%}
+  {% for unit in sorted_units %}
+    {% assign slugified_class = unit | slugify %}
+    <a class="card-link" href="{{ '/classes/' | append: slugified_class | append: '/' | relative_url }}">
       <div class="card">
-        <h3>{{ class }}</h3>
+        <h3>{{ unit }}</h3>
       </div>
     </a>
   {% endfor %}
