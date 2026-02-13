@@ -3,7 +3,13 @@ title: "Power Transmission and Signals"
 date: 2026-02-03
 tags: ["Mechanical Power Transmission", "Belt Drives", "Chain Drives", "Gear Trains", "Signal Types", "Analog Signals", "Digital Signals"]
 subject: "Robotics"
-units: ["BTEC Unit 40", "HTQ Unit 4015"]
+units:
+  - unit: "HTQ Unit 4015"
+    lo: "LO3 - Industrial Robotics"
+  - unit: "BTEC Unit 19"
+    lo: "LO1- PLC Hardware and Software"
+  - unit: "T-Level Unit 09"
+    lo: "Signals and Power Transmission (9.1 and 9.3)"
 ---
 
 ## Intro:

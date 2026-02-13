@@ -3,7 +3,13 @@ title: "AC Components"
 date: 2026-01-20
 tags: ["Sinusoidal", "Power", "Circuit", "RLC", "AC", "Capacitor", "Inductor", "Resistor", "Reactance", "Impedance", "Phase Angle", "Admittance"]
 subject: "electronics"
-units: ["HTQ Unit 4019", "BTEC Unit 56"]
+units:
+  - unit: "HTQ Unit 4019"
+    lo: "LO2 - AC Circuits"
+  - unit: "BTEC Unit 56"
+    lo: "LO4 - AC Circuits"
+  - unit: "T-Level Unit 08"
+    lo: "AC Circuits (8.1)"
 ---
 
 ## Intro:

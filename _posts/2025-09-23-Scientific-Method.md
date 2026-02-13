@@ -3,7 +3,9 @@ title: "Scientific Method"
 date: 2025-09-23
 tags: ["observation", "question", "hypothesis", "prediction", "experiment", "analysis", "conclusion", "variables", "control", "dependent", "independent"]
 subject: "Science"
-units: ["T-Level Unit 05"]
+units:
+  - unit: "T-Level Unit 05"
+    lo: "Scientific Method (5.3)"
 ---
 
 ## Intro:

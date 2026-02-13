@@ -3,7 +3,9 @@ title: "Reliable Data"
 date: 2025-10-02
 tags: ["data", "reliable", "valid", "accurate", "precision", "consistency", "replication", "peer review", "bias", "error"]
 subject: "Science"
-units: ["T-Level Unit 05"]
+units:
+  - unit: "T-Level Unit 05"
+    lo: "Scientific Method (5.3)"
 ---
 
 ## Intro:

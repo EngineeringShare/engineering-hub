@@ -3,7 +3,9 @@ title: "Norton's Theorem"
 date: 2025-11-04
 tags: ["Norton's Theorem", "Circuits", "Equivalent Circuits", "Current Sources", "Voltage Sources"]
 subject: "electronics"
-units: ["HTQ Unit 4019"]
+units:
+  - unit: "HTQ Unit 4019"
+    lo: "LO1 - DC Circuits"
 ---
 
 ## Intro:

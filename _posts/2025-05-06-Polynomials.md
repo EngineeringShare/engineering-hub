@@ -3,7 +3,9 @@ title: "Polynomials"
 date: 2025-05-06
 tags: ["maths", "exponentials"]
 subject: "Maths"
-units: ["HTQ Unit 4002"]
+units:
+  - unit: "HTQ Unit 4002"
+    lo: "LO4 - Calculus"
 ---
 
 ## Intro:

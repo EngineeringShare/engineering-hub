@@ -3,7 +3,9 @@ title: "Measurement Principles"
 date: 2025-11-13
 tags: ["measurement", "principles", "science", "data", "accuracy", "precision", "uncertainty", "calibration", "resolution", "tolerance"]
 subject: "Science"
-units: ["T-Level Unit 05"]
+units:
+  - unit: "T-Level Unit 05"
+    lo: "Measurement Equipment and Principles (5.4)"
 ---
 
 ## Intro:

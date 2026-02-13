@@ -3,7 +3,9 @@ title: "Hypothesis Testing"
 date: 2025-08-27
 tags: ["statistics"]
 subject: "Maths"
-units: ["HTQ Unit 4002", "T-Level Unit 05"]
+units:
+  - unit: "HTQ Unit 4002"
+    lo: "LO2 - Statistics"
 ---
 
 ## Intro:

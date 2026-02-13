@@ -3,7 +3,9 @@ title: "Binomial and Normal Distribution"
 date: 2025-06-17
 tags: ["maths", "statistics", "binomial", "normal", "z table"]
 subject: "Maths"
-units: ["HTQ Unit 4002"]
+units:
+  - unit: "HTQ Unit 4002"
+    lo: "LO2 - Statistics"
 ---
 
 ## Intro:

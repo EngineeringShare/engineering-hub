@@ -3,7 +3,13 @@ title: "PLC Programming - Ladder Logic Symbols and Functions"
 date: 2025-10-20
 tags: ["PLC", "Programming", "Rungs", "NO", "NC", "Timers", "Counters"]
 subject: "PLCs"
-units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
+units:
+  - unit: "T-Level Unit 09"
+    lo: "PLCs (9.2)"
+  - unit: "BTEC Unit 19"
+    lo: "LO2 - PLC Programming"
+  - unit: "HTQ Unit 4015"
+    lo: "LO2 - PLC Program Design and Development"
 ---
 
 <head>

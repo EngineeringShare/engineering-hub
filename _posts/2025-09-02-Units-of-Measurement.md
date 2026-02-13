@@ -3,7 +3,9 @@ title: "Units of Measurement"
 date: 2025-09-02
 tags: ["SI Units", "Metric", "Imperial"]
 subject: "Science"
-units: ["T-Level Unit 05"]
+units:
+  - unit: "T-Level Unit 05"
+    lo: "SI Units and Measurement (5.1)"
 ---
 
 ## Intro:

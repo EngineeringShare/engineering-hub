@@ -3,7 +3,12 @@ title: "Open and Closed Loop Control Systems"
 date: 2025-05-08
 tags: ["Microcontrollers", "Microcomputers", "systems", "control"]
 subject: "mechatronics"
-units: ["T-Level Unit 10", "HTQ Unit 4015"]
+units:
+  - unit: "T-Level Unit 10"
+    lo: "Control Systems (10.1)"
+  - unit: "HTQ Unit 4015"
+    lo: "LO1 - Characteristics of a PLC System"
+
 ---
 
 ## Intro:

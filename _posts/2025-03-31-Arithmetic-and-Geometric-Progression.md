@@ -3,7 +3,9 @@ title: "Arithmetic & Geometric Progressions"
 date: 2025-03-31
 tags: ["maths", "sequences"]
 subject: "Maths"
-units: ["HTQ Unit 4002"]
+units:
+  - unit: "HTQ Unit 4002"
+    lo: "LO1 - Mathematical Methods"
 ---
 
 ## Intro:

@@ -3,7 +3,9 @@ title: "Semiconductors (T-Level)"
 date: 2026-01-29
 tags: ["Semiconductor", "N-Type", "P-Type", "Doping", "Band Gap", "Diodes", "Transistors"]
 subject: "Electronics"
-units: ["T-Level Unit 08"]
+units:
+  - unit: "T-Level Unit 08"
+    lo: "Semiconductors (8.1)"
 ---
 
 ## Intro:

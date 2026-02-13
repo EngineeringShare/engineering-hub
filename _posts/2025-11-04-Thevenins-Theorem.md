@@ -3,7 +3,9 @@ title: "Thévenin’s Theorem"
 date: 2025-11-04
 tags: ["Thevenin's Theorem", "Circuits", "Equivalent Circuits", "Voltage Sources", "Current Sources"]
 subject: "electronics"
-units: ["HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 08"]
+units:
+  - unit: "HTQ Unit 4019"
+    lo: "LO1 - DC Circuits"
 ---
 
 ## Intro:

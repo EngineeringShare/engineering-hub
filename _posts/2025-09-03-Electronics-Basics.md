@@ -3,7 +3,14 @@ title: "Electronics Basics"
 date: 2025-09-03
 tags: ["Power", "Voltage", "Current", "Resistance", "Energy", "Force", "Joules", "Watts", "Atomic Structure", "Electron", "Flow", "Conventional"]
 subject: "electronics"
-units: ["HTQ Unit 4019", "T-Level Unit 08", "BTEC Unit 56"]
+units:
+  - unit: "HTQ Unit 4019"
+    lo: "LO1- DC Circuits"
+  - unit: "T-Level Unit 08"
+    lo: "DC Circuits (8.1)"
+  - unit: "BTEC Unit 56"
+    lo: "LO1 - DC Circuits"
+
 ---
 
 ## Intro:

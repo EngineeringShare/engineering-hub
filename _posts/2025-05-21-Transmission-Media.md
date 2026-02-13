@@ -3,7 +3,13 @@ title: "Transmission Media"
 date: 2025-05-21
 tags: ["Wire", "Fibre Optic", "Coaxial", "Twisted Pairs"]
 subject: "PLCs"
-units: ["BTEC Unit 19", "T-Level Unit 08"]
+units:
+  - unit: "HTQ Unit 4015"
+    lo: "LO1 - Characteristics of a PLC System"
+  - unit: "BTEC Unit 19"
+    lo: "LO4 - PLC Communication and Networking"
+  - unit: "T-Level Unit 09"
+    lo: "Signals and Power Transmission (9.1 and 9.3)"
 ---
 
 ## Intro:

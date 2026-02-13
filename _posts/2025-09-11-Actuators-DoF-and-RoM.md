@@ -3,7 +3,11 @@ title: "Actuators, DoF and RoM"
 date: 2025-09-11
 tags: ["Actuators", "DoF", "Degrees of Freedom", "RoM", "Range of Motion"]
 subject: "Robotics"
-units: ["BTEC Unit 40", "HTQ Unit 4015", "T-Level Unit 09"]
+units:
+  - unit: "HTQ Unit 4015"
+    lo: "LO3 - Industrial Robotics"
+  - unit: "BTEC Unit 40"
+    lo: "LO1 - Robotic Principles"
 ---
 
 ## Intro:

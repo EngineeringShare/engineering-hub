@@ -3,7 +3,13 @@ title: "Resistors"
 date: 2025-09-22
 tags: ["Resistance", "Ohm's Law", "Carbon Film", "Metal Film", "Wirewound", "potentiometer", "Rheostat", "Light Dependent Resistor", "Thermistor", "Varistor", "Colour Code", "Tolerance", "Power Rating"]
 subject: "Electronics"
-units: ["BTEC Unit 56", "T-Level Unit 08"]
+units:
+  - unit: "HTQ Unit 4019"
+    lo: "LO1- DC Circuits"
+  - unit: "T-Level Unit 08"
+    lo: "Electronic Components (8.1)"
+  - unit: "BTEC Unit 56"
+    lo: "LO1 - DC Circuits"
 ---
 
 ## Intro:

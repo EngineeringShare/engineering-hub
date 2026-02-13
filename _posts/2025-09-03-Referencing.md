@@ -3,7 +3,9 @@ title: "Referencing"
 date: 2025-09-03
 tags: ["Harvard"]
 subject: "Other"
-units: ["T-Level Year 2"]
+units:
+  - unit: "T-Level Year 2"
+    lo: "Occupational Specialism" 
 ---
 
 ## Intro:

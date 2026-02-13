@@ -3,7 +3,15 @@ title: "Sinusoidal Waveforms"
 date: 2025-04-01
 tags: ["maths", "vectors", "sinusoidal", "AC", "phasors"]
 subject: "maths"
-units: ["HTQ Unit 4002", "HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 08"]
+units:
+  - unit: "HTQ Unit 4002"
+    lo: "LO3 - Sinusoidals and Vectors"
+  - unit: "HTQ Unit 4019"
+    lo: "LO2 - AC Circuits"
+  - unit: "BTEC Unit 56"
+    lo: "LO4 - AC Circuits"
+  - unit: "T-Level Unit 08"
+    lo: "AC Circuits (8.1)"
 ---
 
 ## Intro:

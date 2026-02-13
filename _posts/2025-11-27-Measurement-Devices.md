@@ -3,7 +3,9 @@ title: "Measurement Devices"
 date: 2025-11-27
 tags: ["measurement", "vernier calipers", "micrometer", "guage blocks", "rulers", "CMM", "Dial test indicator", "measuring tools", "instruments"]
 subject: "Science"
-units: ["T-Level Unit 05"]
+units:
+  - unit: "T-Level Unit 05"
+    lo: "Measurement Equipment and Principles (5.4)"
 ---
 
 ## Intro:

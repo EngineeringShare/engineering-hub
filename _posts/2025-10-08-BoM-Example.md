@@ -3,7 +3,9 @@ title: "BoM Example"
 date: 2025-10-08
 tags: ["BoM", "Occspec"]
 subject: "Other"
-units: ["T-Level Year 2"]
+units:
+  - unit: "T-Level Year 2"
+    lo: "Occupational Specialism" 
 ---
 
 ## Intro:

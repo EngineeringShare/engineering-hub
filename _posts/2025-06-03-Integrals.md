@@ -3,7 +3,9 @@ title: "Integrals"
 date: 2025-06-03
 tags: ["maths", "integration"]
 subject: "Maths"
-units: ["HTQ Unit 4002"]
+units:
+  - unit: "HTQ Unit 4002"
+    lo: "LO4 - Calculus"
 ---
 
 ## Intro:

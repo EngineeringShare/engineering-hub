@@ -3,7 +3,9 @@ title: "Derivatives"
 date: 2025-05-13
 tags: ["maths", "vectors", "differentiation"]
 subject: "Maths"
-units: ["HTQ Unit 4002"]
+units:
+  - unit: "HTQ Unit 4002"
+    lo: "LO4 - Calculus"
 ---
 
 ## Intro:

@@ -3,7 +3,9 @@ title: "Semiconductor Materials"
 date: 2025-04-02
 tags: ["Semiconductors", "components", "PN", "Doping"]
 subject: "electronics"
-units: ["HTQ Unit 4019"]
+units:
+  - unit: "HTQ Unit 4019"
+    lo: "LO3 - Semiconductors"
 ---
 
 ## Intro:

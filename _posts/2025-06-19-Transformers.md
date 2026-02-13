@@ -3,7 +3,13 @@ title: "Transformers"
 date: 2025-06-19
 tags: ["Transformers", "Coils", "AC"]
 subject: "electronic devices"
-units: ["BTEC Unit 31", "T-Level Unit 08"]
+units:
+  - unit: "HTQ Unit 4019"
+    lo: "LO2 - AC Circuits"
+  - unit: "BTEC Unit 31"
+    lo: "LO2 - AC Machines"
+  - unit: "T-Level Unit 08"
+    lo: "Electrical Machines (8.1)"
 ---
 
 ## Intro:

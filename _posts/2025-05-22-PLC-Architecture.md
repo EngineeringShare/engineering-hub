@@ -3,7 +3,13 @@ title: "PLC Theory - PLC Architecture"
 date: 2025-05-22
 tags: ["PLC", "Scan Cycle", "CPU", "Memory", "I/O", "Power Supply"]
 subject: "PLCs"
-units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
+units:
+  - unit: "T-Level Unit 09"
+    lo: "PLCs (9.2)"
+  - unit: "BTEC Unit 19"
+    lo: "LO1 - PLC Theory and Architecture"
+  - unit: "HTQ Unit 4015"
+    lo: "LO1 - Characteristics of a PLC System"
 ---
 
 ## Intro:

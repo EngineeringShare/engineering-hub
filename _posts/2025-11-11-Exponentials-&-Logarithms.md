@@ -3,7 +3,9 @@ title: "Exponentials & Logarithms"
 date: 2025-11-11
 tags: ["maths", "exponentials", "logarithms", natural log", "e"]
 subject: "Maths"
-units: ["HTQ Unit 4002"]
+units:
+  - unit: "HTQ Unit 4002"
+    lo: "LO1 - Mathematical Methods"
 ---
 
 ## Intro:

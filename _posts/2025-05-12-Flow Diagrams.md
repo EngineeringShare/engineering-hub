@@ -3,7 +3,14 @@ title: "Flow Diagrams"
 date: 2025-05-12
 tags: ["Control", "History"]
 subject: "PLCs"
-units: ["T-Level Unit 10", "BTEC Unit 19"]
+units:
+  - unit: "T-Level Unit 10"
+    lo: "Control Systems (10.1)"
+  - unit: "BTEC Unit 19"
+    lo: "LO3 - PLC Applications and Documentation"
+  - unit: "HTQ Unit 4015"
+    lo: "LO2 - PLC Program Design and Development"
+
 ---
 
 ## Intro:

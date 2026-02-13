@@ -3,7 +3,9 @@ title: "Occupational Specialism Outline"
 date: 2025-12-17
 tags: ["Outline", "Report", "Occupational Specialism", "T-Level"]
 subject: "Other"
-units: ["T-Level Year 2"]
+units:
+  - unit: "T-Level Year 2"
+    lo: "Occupational Specialism"
 ---
 
 ## Intro:

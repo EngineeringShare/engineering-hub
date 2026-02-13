@@ -3,7 +3,9 @@ title: "Atomic Structure"
 date: 2026-01-22
 tags: ["Atom", "Atomic Number", "Mass Number", "Protons", "Neutrons", "Electrons", "Electron Shells", "Electron Clouds", "Electron Configuration", "Ions"]
 subject: "Science"
-units: ["T-Level Unit 05"]
+units:
+  - unit: "T-Level Unit 05"
+    lo: "Chemical Composition and Behaviours (5.5)"
 ---
 
 ## Intro:

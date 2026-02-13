@@ -3,7 +3,13 @@ title: "PLC Theory - Types of PLCs"
 date: 2025-05-12
 tags: ["PLC", "Unitary", "Modular", "Rack Mounted", "History"]
 subject: "PLCs"
-units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
+units:
+  - unit: "T-Level Unit 09"
+    lo: "PLCs (9.2)"
+  - unit: "BTEC Unit 19"
+    lo: "LO1 - PLC Hardware and Software"
+  - unit: "HTQ Unit 4015"
+    lo: "LO1 - Characteristics of a PLC System"
 ---
 
 ## Intro:

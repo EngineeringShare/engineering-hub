@@ -3,7 +3,9 @@ title: "Grouped Data"
 date: 2025-06-17
 tags: ["maths", "statistics", "mean", "median", "mode", "standard deviation"]
 subject: "Maths"
-units: ["HTQ Unit 4002"]
+units:
+  - unit: "HTQ Unit 4002"
+    lo: "LO2 - Statistics"
 ---
 
 ## Intro:

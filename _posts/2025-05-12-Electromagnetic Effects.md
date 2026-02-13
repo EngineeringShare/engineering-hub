@@ -3,7 +3,11 @@ title: "Electromagnetic Effects"
 date: 2025-05-12
 tags: ["Faraday", "Lenz", "Maxwell", "EMF", "Magnet", "Induction"]
 subject: "magnetics"
-units: ["BTEC Unit 56", "T-Level Unit 08"]
+units:
+  - unit: "BTEC Unit 56"
+    lo: "LO3 - Magnetic Effects"
+  - unit: "T-Level Unit 08"
+    lo: "Magnetic Effects (8.1)"
 ---
 
 ## Intro:

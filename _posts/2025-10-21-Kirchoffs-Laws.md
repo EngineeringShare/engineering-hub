@@ -3,7 +3,13 @@ title: "Kirchoff's Laws"
 date: 2025-10-21
 tags: ["Kirchoff's Laws", "Circuits", "KVL", "KCL"]
 subject: "electronics"
-units: ["HTQ Unit 4019", "BTEC Unit 56", "T-Level Unit 08"]
+units:
+  - unit: "BTEC Unit 56"
+    lo: "LO1 - DC Circuits"
+  - unit: "T-Level Unit 08"
+    lo: "DC Circuits (8.1)"
+  - unit: "HTQ Unit 4019"
+    lo: "LO1 - DC Circuits"
 ---
 
 ## Intro:

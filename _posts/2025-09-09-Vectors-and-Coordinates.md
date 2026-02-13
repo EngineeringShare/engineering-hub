@@ -3,7 +3,11 @@ title: "Vectors and Coordinates"
 date: 2025-09-09
 tags: ["Vectors", "Coordinates", "Scalars", "2D", "Magnitude", "Direction", "Cartesian", "Polar"]
 subject: "Science"
-units: ["T-Level Unit 05"]
+units:
+  - unit: "HTQ Unit 4002"
+    lo: "LO3 - Sinusoidals and Vectors"
+  - unit: "T-Level Unit 05"
+    lo: "Vectors and Coordinates (5.2)"
 ---
 
 ## Intro:

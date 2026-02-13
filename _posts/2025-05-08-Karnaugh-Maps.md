@@ -3,7 +3,11 @@ title: "Karnaugh Maps"
 date: 2025-05-08
 tags: ["logic", "binary", "control", "gates"]
 subject: "mechatronics"
-units: ["BTEC Unit 24"]
+units:
+  - unit: "HTQ Unit 4019"
+    lo: "LO4 - Digital and Analogue Electronics"
+  - unit: "BTEC Unit 24"
+    lo: "LO3 - Logic Circuits"
 ---
 
 ## Intro:

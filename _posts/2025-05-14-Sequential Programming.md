@@ -3,7 +3,13 @@ title: "PLC Programming - Sequential Programming"
 date: 2025-05-14
 tags: ["PLC", "Move", "Sequence", "Comparator"]
 subject: "PLCs"
-units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
+units:
+  - unit: "T-Level Unit 09"
+    lo: "PLCs (9.2)"
+  - unit: "BTEC Unit 19"
+    lo: "LO2 - PLC Programming"
+  - unit: "HTQ Unit 4015"
+    lo: "LO2 - PLC Program Design and Development"
 ---
 
 ## Intro:

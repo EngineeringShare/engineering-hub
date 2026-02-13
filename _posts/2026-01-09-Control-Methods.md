@@ -3,7 +3,11 @@ title: "Control Methods"
 date: 2026-01-09
 tags: ["Bang-Bang Control", "PID Control", "Proportional", "Integral", "Derivative", "Robotics"]
 subject: "Robotics"
-units: ["BTEC Unit 40", "HTQ Unit 4015"]
+units:
+  - unit: "BTEC Unit 40"
+    lo: "LO3 - Industrial Robotics"
+  - unit: "HTQ Unit 4015"
+    lo: "LO2 - PLC Program Design and Development"
 ---
 
 ## Intro:

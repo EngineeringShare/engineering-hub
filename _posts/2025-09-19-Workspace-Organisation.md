@@ -4,6 +4,11 @@ date: 2025-09-19
 tags: ["Workspace", "Feed of Work", "Robot-to-Robot", "Material Flow", "Logistics"]
 subject: "Robotics"
 units: ["BTEC Unit 40", "HTQ Unit 4015"]
+units:
+  - unit: "BTEC Unit 40"
+    lo: "LO1 - Robotic Principles"
+  - unit: "HTQ Unit 4015"
+    lo: "LO3 - Industrial Robotics"
 ---
 
 ## Intro:

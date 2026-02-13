@@ -3,7 +3,9 @@ title: "Chemicals"
 date: 2026-02-06
 tags: ["Chemicals", "Elements", "Compounds", "Mixtures", "Solutions", "Molecules", "Salts", "Saturation", "Suspensions", "Homogeneous", "Heterogeneous"]
 subject: "Science"
-units: ["T-Level Unit 05"]
+units:
+  - unit: "T-Level Unit 05"
+    lo: "Chemical Composition and Behaviours (5.5)"
 ---
 
 ## Intro:

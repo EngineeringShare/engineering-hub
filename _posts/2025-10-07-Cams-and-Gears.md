@@ -3,7 +3,13 @@ title: "Cams and Gears"
 date: 2025-10-07
 tags: ["Cams", "Followers", "Cam Profiles", "Gears", "Spur Gears", "Bevel Gears", "Worm Gears", "Gear Ratios", "Mechanical Advantage"]
 subject: "Mechatronics"
-units: ["T-Level Unit 09", "BTEC Unit 40", "HTQ Unit 4015"]
+units:
+  - unit: "T-Level Unit 09"
+    lo: "Mechanical Systems (9.1)"
+  - unit: "BTEC Unit 40"
+    lo: "LO1 - Robotic Principles"
+  - unit: "HTQ Unit 4015"
+    lo: "LO3 - Industrial Robotics"
 ---
 
 ## Intro:

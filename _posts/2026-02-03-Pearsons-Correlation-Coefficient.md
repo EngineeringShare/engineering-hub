@@ -3,7 +3,9 @@ title: "Pearson's Correlation Coefficient"
 date: 2026-02-03
 tags: ["statistics"]
 subject: "Maths"
-units: ["HTQ Unit 4002"]
+units:
+  - unit: "HTQ Unit 4002"
+    lo: "LO2 - Statistics"
 ---
 
 ## Intro:

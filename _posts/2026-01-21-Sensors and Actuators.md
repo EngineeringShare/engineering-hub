@@ -4,6 +4,17 @@ date: 2026-01-21
 tags: ["Sensors", "Actuators", "Position", "Movement", "Motion", "Proximity", "Light", "Temperature", "Pressure"]
 subject: "Mechatronics"
 units: ["T-Level Unit 09", "BTEC Unit 19", "HTQ Unit 4015"]
+units:
+  - unit: "BTEC Unit 19"
+    lo: "LO1 - PLC Hardware and Software"
+  - unit: "BTEC Unit 40"
+    lo: "LO2 - Robotic Sensors and End Effectors"
+  - unit: "HTQ Unit 4015"
+    lo: "LO3 - Industrial Robotics"
+  - unit: "T-Level Unit 09"
+    lo: "Sensors and Actuators (9.1)"
+  - unit: "T-Level Unit 10"
+    lo: "Sensors and Actuators (10.2)"
 ---
 
 <head>
