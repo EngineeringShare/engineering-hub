@@ -47,7 +47,7 @@ This hub covers everything from Ohm's Law and phasor diagrams to semiconductors 
 
 ---
 
-{% assign unit_name = "HTQ Unit 4019" %}
+{% assign target_unit = "HTQ Unit 4019" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}

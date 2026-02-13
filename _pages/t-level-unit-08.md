@@ -47,7 +47,7 @@ This is the hub for T-Level Unit 8: Electrical and Electronic Principles — cov
 
 ---
 
-{% assign unit_name = "T-Level Unit 08" %}
+{% assign target_unit = "T-Level Unit 08" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}

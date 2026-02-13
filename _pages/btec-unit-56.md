@@ -47,7 +47,7 @@ Welcome to the Unit 56 hub. This page contains all lessons, assignments, and res
 
 ---
 
-{% assign unit_name = "BTEC Unit 56" %}
+{% assign target_unit = "BTEC Unit 56" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}

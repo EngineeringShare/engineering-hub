@@ -47,7 +47,7 @@ This is the hub for T-Level Unit 5: Engineering Science — covering mechanical 
 
 ---
 
-{% assign unit_name = "T-Level Unit 05" %}
+{% assign target_unit = "T-Level Unit 05" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}

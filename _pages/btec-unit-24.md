@@ -47,7 +47,7 @@ Welcome to the Unit 24 hub. This is where you'll find all class materials, lesso
 
 ---
 
-{% assign unit_name = "BTEC Unit 24" %}
+{% assign target_unit = "BTEC Unit 24" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}

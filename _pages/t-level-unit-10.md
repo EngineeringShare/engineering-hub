@@ -47,7 +47,7 @@ This is the hub for T-Level Unit 10: Engineering and Manufacturing Control Syste
 
 ---
 
-{% assign unit_name = "T-Level Unit 10" %}
+{% assign target_unit = "T-Level Unit 10" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}

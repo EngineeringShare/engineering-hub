@@ -47,7 +47,7 @@ Welcome to the Unit 31 class hub. Here you'll find everything from motor theory 
 
 ---
 
-{% assign unit_name = "BTEC Unit 31" %}
+{% assign target_unit = "BTEC Unit 31" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}

@@ -47,7 +47,7 @@ Welcome to the Unit 40 class hub. Here you'll find everything from robot types t
 
 ---
 
-{% assign unit_name = "BTEC Unit 40" %}
+{% assign target_unit = "BTEC Unit 40" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}

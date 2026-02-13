@@ -47,7 +47,7 @@ This is the hub for HTQ Unit 4015: covering automated systems, industrial roboti
 
 ---
 
-{% assign unit_name = "HTQ Unit 4015" %}
+{% assign target_unit = "HTQ Unit 4015" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}

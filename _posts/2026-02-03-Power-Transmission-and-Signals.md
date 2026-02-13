@@ -7,7 +7,7 @@ units:
   - unit: "HTQ Unit 4015"
     lo: "LO3 - Industrial Robotics"
   - unit: "BTEC Unit 19"
-    lo: "LO1- PLC Hardware and Software"
+    lo: "LO1 - PLC Hardware and Software"
   - unit: "T-Level Unit 09"
     lo: "Signals and Power Transmission (9.1 and 9.3)"
 ---

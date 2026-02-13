@@ -45,7 +45,7 @@ p  { font-size: 1.1rem; }
 
 ---
 
-{% assign unit_name = "T-Level Year 2" %}
+{% assign target_unit = "T-Level Year 2" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}

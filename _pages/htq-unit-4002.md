@@ -47,7 +47,7 @@ This is the hub for Engineering Maths. Topics include algebra, trigonometry, cal
 
 ---
 
-{% assign unit_name = "HTQ Unit 4002" %}
+{% assign target_unit = "HTQ Unit 4002" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}

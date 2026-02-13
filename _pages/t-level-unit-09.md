@@ -47,7 +47,7 @@ This is the hub for T-Level Unit 9: Mechatronics — covering sensors and transd
 
 ---
 
-{% assign unit_name = "T-Level Unit 09" %}
+{% assign target_unit = "T-Level Unit 09" %}
 
 {% assign lo_list = "" %}
 {% for post in site.posts %}
