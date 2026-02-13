@@ -52,9 +52,9 @@ permalink: /classes/htq-unit-4019/
   </style>
 </head>
 
-# 🔧 HTQ Unit 4019 – Electrical & Electronic Principles
+# 🔧 HTQ Unit 4019 - Electrical & Electronic Principles
 
-This hub covers everything from Ohm’s Law and phasor diagrams to semiconductors and AC systems. Select a card below to access lesson content and resources.
+This hub covers everything from Ohm's Law and phasor diagrams to semiconductors and AC systems. Select a card below to access lesson content and resources.
 
 ---
 

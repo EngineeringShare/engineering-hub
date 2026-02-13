@@ -52,9 +52,9 @@ permalink: /classes/btec-unit-40/
   </style>
 </head>
 
-# 🤖 BTEC Unit 40 – Industrial Robotics
+# 🤖 BTEC Unit 40 - Industrial Robotics
 
-Welcome to the Unit 40 class hub. Here you’ll find everything from robot types to applications in industry. Click a card to view lessons, assignments, or reference material.
+Welcome to the Unit 40 class hub. Here you'll find everything from robot types to applications in industry. Click a card to view lessons, assignments, or reference material.
 
 ---
 

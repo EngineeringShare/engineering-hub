@@ -58,7 +58,7 @@ permalink: /classes/htq-unit-4015/
   </style>
 </head>
 
-# 🤖 HTQ Unit 4015 – Automation, Robotics & PLCs
+# 🤖 HTQ Unit 4015 - Automation, Robotics & PLCs
 
 This is the hub for HTQ Unit 4015: covering automated systems, industrial robotics, and PLC programming. Use the cards below to access lessons, assignments, and support materials.
 

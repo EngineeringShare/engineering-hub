@@ -47,7 +47,7 @@ units:
 
 ## Other Materials:
 * [YouTube: Introduction to Karnaugh Maps - Combinational Logic Circuits, Functions, & Truth Tables](https://youtu.be/RO5alU6PpSU?si=7LEqxa7_iZQkTErV)
-* [YouTube: Karnaugh Maps – Introduction](https://youtu.be/3vkMgTmieZI?si=T8uNI7qK8Tecm6Pq)
+* [YouTube: Karnaugh Maps - Introduction](https://youtu.be/3vkMgTmieZI?si=T8uNI7qK8Tecm6Pq)
 
 ## ---
 

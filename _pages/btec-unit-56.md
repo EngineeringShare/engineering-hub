@@ -52,7 +52,7 @@ permalink: /classes/btec-unit-56/
   </style>
 </head>
 
-# ⚡ BTEC Unit 56 – Electrical & Electronic Principles
+# ⚡ BTEC Unit 56 - Electrical & Electronic Principles
 
 Welcome to the Unit 56 hub. This page contains all lessons, assignments, and resources covering DC, AC, electromagnetism, and electronic systems. Use the cards below to navigate the content.
 

@@ -52,7 +52,7 @@ permalink: /classes/btec-unit-24/
   </style>
 </head>
 
-# 🔌 BTEC Unit 24 – Electronic Devices and Circuits
+# 🔌 BTEC Unit 24 - Electronic Devices and Circuits
 
 Welcome to the Unit 24 hub. This is where you'll find all class materials, lesson notes, and assignments related to semiconductors, amplifiers, and circuit analysis. Click any card to get started.
 
@@ -102,3 +102,4 @@ Welcome to the Unit 24 hub. This is where you'll find all class materials, lesso
     {% endfor %}
   </div>
 {% endfor %}
+ 

@@ -28,7 +28,7 @@ A Programmable Logic Controller (PLC) is a rugged industrial computer designed t
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.github.io/engineering-resources/presentations/PLC Theory – PLC Architecture.pdf"
+        src="https://engineeringshare.github.io/engineering-resources/presentations/PLC Theory - PLC Architecture.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

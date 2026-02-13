@@ -52,7 +52,7 @@ permalink: /classes/htq-unit-4002/
   </style>
 </head>
 
-# 📐 HTQ Unit 4002 – Engineering Maths
+# 📐 HTQ Unit 4002 - Engineering Maths
 
 This is the hub for Engineering Maths. Topics include algebra, trigonometry, calculus, and complex numbers. Click on a card below to explore posts and lesson content.
 

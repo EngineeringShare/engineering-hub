@@ -1,5 +1,5 @@
 ---
-title: "Thévenin’s Theorem"
+title: "Thévenin's Theorem"
 date: 2025-11-04
 tags: ["Thevenin's Theorem", "Circuits", "Equivalent Circuits", "Voltage Sources", "Current Sources"]
 subject: "electronics"

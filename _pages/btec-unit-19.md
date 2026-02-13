@@ -52,7 +52,7 @@ permalink: /classes/btec-unit-19/
   </style>
 </head>
 
-# 🛠 BTEC Unit 19 – Programmable Logic Controllers (PLCs)
+# 🛠 BTEC Unit 19 - Programmable Logic Controllers (PLCs)
 
 Welcome to the Unit 19 class hub. Below are all resources, lessons, and posts related to PLCs. Click on a card to view content.
 

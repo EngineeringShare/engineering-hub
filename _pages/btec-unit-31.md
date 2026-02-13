@@ -52,9 +52,9 @@ permalink: /classes/btec-unit-31/
   </style>
 </head>
 
-# ⚙️ BTEC Unit 31 – Electrical Machines
+# ⚙️ BTEC Unit 31 - Electrical Machines
 
-Welcome to the Unit 31 class hub. Here you’ll find everything from motor theory to transformer applications. Click a card to view lessons, assignments, or reference material.
+Welcome to the Unit 31 class hub. Here you'll find everything from motor theory to transformer applications. Click a card to view lessons, assignments, or reference material.
 
 ---
 
