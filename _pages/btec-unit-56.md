@@ -60,41 +60,56 @@ Welcome to the Unit 56 hub. This page contains all lessons, assignments, and res
 
 {% assign unit_name = "BTEC Unit 56" %}
 
-{%- comment -%}
-Collect posts that contain this unit, and annotate each with the LO for this unit.
+{%- comment -%} 
+  Set the unit name for this page 
 {%- endcomment -%}
-{% assign matched = "" | split: "" %}
+{% assign unit_name = page.title | split: " - " | first %}
 
+{%- comment -%} 
+  1. FIRST PASS: Find all unique LOs for this specific unit
+{%- endcomment -%}
+{% assign lo_list = "" %}
 {% for post in site.posts %}
   {% if post.units %}
     {% for u in post.units %}
       {% if u.unit == unit_name %}
-        {% assign item = post | merge: { "unit_lo": u.lo } %}
-        {% assign matched = matched | push: item %}
+        {% capture lo_name %}{{ u.lo | default: "General" }}{% endcapture %}
+        {% assign lo_list = lo_list | append: lo_name | append: "###" %}
       {% endif %}
     {% endfor %}
   {% endif %}
 {% endfor %}
 
-{%- assign matched = matched | sort: "unit_lo" -%}
+{% assign unique_los = lo_list | split: "###" | uniq | sort %}
 
-{%- comment -%}
-Build a list of LOs present (unique), then loop them.
+{%- comment -%} 
+  2. SECOND PASS: Loop through LOs and find matching posts
 {%- endcomment -%}
-{% assign los = matched | map: "unit_lo" | uniq %}
+{% for lo in unique_los %}
+  {% if lo != "" %}
+    <h2 style="margin-top: 2.5rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">
+      {{ lo }}
+    </h2>
+    
+    <div class="projects">
+      {% for post in site.posts %}
+        {% assign is_match = false %}
+        
+        {% for u in post.units %}
+          {% if u.unit == unit_name and u.lo == lo %}
+            {% assign is_match = true %}
+          {% endif %}
+        {% endfor %}
 
-{% for lo in los %}
-  <h2 style="margin-top:2rem;">{{ lo }}</h2>
-
-  <div class="projects">
-    {% for post in matched %}
-      {% if post.unit_lo == lo %}
-        <a class="card-link" href="{{ post.url | relative_url }}">
-          <div class="card">
-            <h3>{{ post.title }}</h3>
-          </div>
-        </a>
-      {% endif %}
-    {% endfor %}
-  </div>
+        {% if is_match %}
+          <a class="card-link" href="{{ post.url | relative_url }}">
+            <div class="card">
+              <h3>{{ post.title }}</h3>
+              <p style="font-size: 0.8rem; color: #666;">{{ post.date | date: "%B %d, %Y" }}</p>
+            </div>
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
 {% endfor %}
