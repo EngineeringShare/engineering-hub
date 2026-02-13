@@ -1,4 +1,5 @@
 ---
+layout: page
 title: BTEC Unit 19 - PLCs
 permalink: /classes/btec-unit-19/
 ---
@@ -11,9 +12,7 @@ permalink: /classes/btec-unit-19/
   margin-top: 2rem;
 }
 
-.card-link {
-  text-decoration: none;
-}
+.card-link { text-decoration: none; }
 
 .card {
   background: #ffffff;
@@ -29,9 +28,7 @@ permalink: /classes/btec-unit-19/
   height: 100%;
 }
 
-.card:hover {
-  transform: scale(1.03);
-}
+.card:hover { transform: scale(1.03); }
 
 .card h3 {
   color: #1f2937;
@@ -40,14 +37,8 @@ permalink: /classes/btec-unit-19/
   font-size: 1rem;
 }
 
-h1 {
-  font-size: 2rem;
-  margin-top: 2rem;
-}
-
-p {
-  font-size: 1.1rem;
-}
+h1 { font-size: 2rem; margin-top: 2rem; }
+p  { font-size: 1.1rem; }
 </style>
 
 # 🛠 BTEC Unit 19 - Programmable Logic Controllers (PLCs)
@@ -58,7 +49,6 @@ Welcome to the Unit 19 class hub. Below are all resources, lessons, and posts re
 
 {% assign target_unit = "BTEC Unit 19" %}
 
-{%- comment -%} Gather Unique LOs {%- endcomment -%}
 {% assign lo_list = "" %}
 {% for post in site.posts %}
 {% if post.units %}
@@ -72,7 +62,6 @@ Welcome to the Unit 19 class hub. Below are all resources, lessons, and posts re
 {% endfor %}
 {% assign unique_los = lo_list | split: "###" | uniq | sort %}
 
-{%- comment -%} Render Sections {%- endcomment -%}
 {% for lo in unique_los %}
 {% assign lo_clean = lo | strip %}
 {% if lo_clean != "" %}
