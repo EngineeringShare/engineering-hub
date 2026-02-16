@@ -7,7 +7,7 @@ units:
   - unit: "BTEC Unit 31"
     lo: "LO2 - AC Machines"
   - unit: "T-Level Unit 08"
-    lo: "Electrical Machines (8.1)"
+    lo: "(8.1) Electrical Machines"
 ---
 
 ## Intro:

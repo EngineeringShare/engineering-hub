@@ -5,7 +5,7 @@ tags: ["logic", "binary", "control", "gates"]
 subject: "mechatronics"
 units:
   - unit: "HTQ Unit 4015"
-    lo: "LO2- PLC Program Design and Development"
+    lo: "LO2 - PLC Program Design and Development"
   - unit: "HTQ Unit 4019"
     lo: "LO4 - Digital and Analogue Electronics"
   - unit: "T-Level Unit 10"

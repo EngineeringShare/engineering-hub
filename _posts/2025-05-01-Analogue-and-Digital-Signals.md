@@ -9,7 +9,7 @@ units:
   - unit: "T-Level Unit 08"
     lo: "Signals (8.1)"
   - unit: "T-Level Unit 10"
-    lo: Control Systems (10.1)"
+    lo: "Control Systems (10.1)"
   - unit: "BTEC Unit 19"
     lo: "LO1 - PLC Hardware and Software"
   - unit: "HTQ Unit 4015"

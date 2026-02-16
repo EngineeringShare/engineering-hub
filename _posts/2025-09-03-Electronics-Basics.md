@@ -5,7 +5,7 @@ tags: ["Power", "Voltage", "Current", "Resistance", "Energy", "Force", "Joules",
 subject: "electronics"
 units:
   - unit: "HTQ Unit 4019"
-    lo: "LO1- DC Circuits"
+    lo: "LO1 - DC Circuits"
   - unit: "T-Level Unit 08"
     lo: "DC Circuits (8.1)"
   - unit: "BTEC Unit 56"

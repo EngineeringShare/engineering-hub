@@ -5,7 +5,7 @@ tags: ["Resistance", "Ohm's Law", "Carbon Film", "Metal Film", "Wirewound", "pot
 subject: "Electronics"
 units:
   - unit: "HTQ Unit 4019"
-    lo: "LO1- DC Circuits"
+    lo: "LO1 - DC Circuits"
   - unit: "T-Level Unit 08"
     lo: "Electronic Components (8.1)"
   - unit: "BTEC Unit 56"
