@@ -15,20 +15,30 @@ Chemical behaviours refer to the various reactions and interactions that occur b
 ## Presentation:
 
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
+    <!-- Colour Overlay -->
+    <div id="dyslexia-overlay"
+         style="position:absolute; top:0; left:0; width:100%; height:100%;
+                background:#f4ecd8; opacity:0; pointer-events:none; 
+                transition:opacity 0.3s ease; z-index:5;">
+    </div>
+
     <iframe 
         id="pdf-frame"
         src="https://engineeringshare.github.io/engineering-resources/presentations/Chemical Behaviours.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
-        allowfullscreen
-        webkitallowfullscreen
-        mozallowfullscreen>
+        allowfullscreen>
     </iframe>
 
     <!-- Fullscreen button -->
-    <button 
-        onclick="openFullscreen()" 
-        style="position:absolute; top:10px; right:10px; z-index:10; padding:6px 12px; border:none; background:#243040; color:white; border-radius:6px; cursor:pointer;">
+    <button onclick="openFullscreen()"
+        style="position:absolute; top:10px; right:10px; z-index:10;">
         ⛶ Fullscreen
+    </button>
+
+    <!-- Dyslexia Toggle -->
+    <button onclick="toggleOverlay()"
+        style="position:absolute; top:50px; right:10px; z-index:10;">
+        Dyslexia Mode
     </button>
 </div>
 
@@ -42,6 +52,11 @@ Chemical behaviours refer to the various reactions and interactions that occur b
         } else if (elem.msRequestFullscreen) { // IE11
             elem.msRequestFullscreen();
         }
+    }
+
+    function toggleOverlay() {
+        const overlay = document.getElementById("dyslexia-overlay");
+        overlay.style.opacity = overlay.style.opacity === "0" ? "0.8" : "0";
     }
 </script>
 
