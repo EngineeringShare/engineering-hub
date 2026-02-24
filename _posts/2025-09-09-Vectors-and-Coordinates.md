@@ -7,7 +7,7 @@ units:
   - unit: "HTQ Unit 4002"
     lo: "LO3 - Sinusoidals and Vectors"
   - unit: "T-Level Unit 05"
-    lo: "Vectors and Coordinates (5.2)"
+    lo: "(5.2) Vectors and Coordinates"
 ---
 
 ## Intro:

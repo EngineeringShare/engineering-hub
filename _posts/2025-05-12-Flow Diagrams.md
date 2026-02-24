@@ -5,7 +5,7 @@ tags: ["Control", "History"]
 subject: "PLCs"
 units:
   - unit: "T-Level Unit 10"
-    lo: "Control Systems (10.1)"
+    lo: "(10.1) Control Systems"
   - unit: "BTEC Unit 19"
     lo: "LO3 - PLC Applications and Documentation"
   - unit: "HTQ Unit 4015"

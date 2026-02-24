@@ -5,7 +5,7 @@ tags: ["Microcontrollers", "Microcomputers", "systems", "control"]
 subject: "mechatronics"
 units:
   - unit: "T-Level Unit 10"
-    lo: "Control Systems (10.1)"
+    lo: "(10.1) Control Systems"
   - unit: "HTQ Unit 4015"
     lo: "LO1 - Characteristics of a PLC System"
 

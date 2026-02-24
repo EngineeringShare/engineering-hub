@@ -5,7 +5,7 @@ tags: ["measurement", "principles", "science", "data", "accuracy", "precision", 
 subject: "Science"
 units:
   - unit: "T-Level Unit 05"
-    lo: "Measurement Equipment and Principles (5.4)"
+    lo: "(5.4) Measurement Equipment and Principles"
 ---
 
 ## Intro:

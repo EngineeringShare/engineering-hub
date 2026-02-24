@@ -5,7 +5,7 @@ tags: ["PLC", "Programming", "Rungs", "NO", "NC", "Timers", "Counters"]
 subject: "PLCs"
 units:
   - unit: "T-Level Unit 09"
-    lo: "PLCs (9.2)"
+    lo: "(9.2) PLCs"
   - unit: "BTEC Unit 19"
     lo: "LO2 - PLC Programming"
   - unit: "HTQ Unit 4015"

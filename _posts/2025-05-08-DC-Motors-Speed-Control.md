@@ -7,7 +7,7 @@ units:
   - unit: "BTEC Unit 31"
     lo: "LO3 - DC Machines"
   - unit: "T-Level Unit 09"
-    lo: "Control Systems (9.1)"
+    lo: "(9.1) Control Systems"
 ---
 
 ## Intro:

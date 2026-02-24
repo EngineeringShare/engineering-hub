@@ -5,7 +5,7 @@ tags: ["Chemicals", "Combustion", "Decomposition", "Neutralisation", "Precipitat
 subject: "Science"
 units:
   - unit: "T-Level Unit 05"
-    lo: "Chemical Composition and Behaviours (5.5)"
+    lo: "(5.5) Chemical Composition and Behaviours"
 ---
 
 ## Intro:

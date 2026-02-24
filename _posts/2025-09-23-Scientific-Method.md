@@ -5,7 +5,7 @@ tags: ["observation", "question", "hypothesis", "prediction", "experiment", "ana
 subject: "Science"
 units:
   - unit: "T-Level Unit 05"
-    lo: "Scientific Method (5.3)"
+    lo: "(5.3) Scientific Method"
 ---
 
 ## Intro:

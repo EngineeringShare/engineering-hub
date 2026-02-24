@@ -12,9 +12,9 @@ units:
   - unit: "HTQ Unit 4015"
     lo: "LO3 - Industrial Robotics"
   - unit: "T-Level Unit 09"
-    lo: "Sensors and Actuators (9.1)"
+    lo: "(9.1) Sensors and Actuators"
   - unit: "T-Level Unit 10"
-    lo: "Sensors and Actuators (10.2)"
+    lo: "(10.2) Sensors and Actuators"
 ---
 
 <head>

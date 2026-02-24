@@ -5,7 +5,7 @@ tags: ["PLC", "Scan Cycle", "CPU", "Memory", "I/O", "Power Supply"]
 subject: "PLCs"
 units:
   - unit: "T-Level Unit 09"
-    lo: "PLCs (9.2)"
+    lo: "(9.2) PLCs"
   - unit: "BTEC Unit 19"
     lo: "LO1 - PLC Hardware and Software"
   - unit: "HTQ Unit 4015"

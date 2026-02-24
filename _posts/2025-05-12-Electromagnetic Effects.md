@@ -7,7 +7,7 @@ units:
   - unit: "BTEC Unit 56"
     lo: "LO3 - Magnetic Effects"
   - unit: "T-Level Unit 08"
-    lo: "Magnetic Effects (8.1)"
+    lo: "(8.1) Magnetic Effects"
 ---
 
 ## Intro:

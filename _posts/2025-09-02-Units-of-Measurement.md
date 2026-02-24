@@ -5,7 +5,7 @@ tags: ["SI Units", "Metric", "Imperial"]
 subject: "Science"
 units:
   - unit: "T-Level Unit 05"
-    lo: "SI Units and Measurement (5.1)"
+    lo: "(5.1) SI Units and Measurement"
 ---
 
 ## Intro:

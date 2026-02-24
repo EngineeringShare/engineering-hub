@@ -5,7 +5,7 @@ tags: ["Semiconductor", "N-Type", "P-Type", "Doping", "Band Gap", "Diodes", "Tra
 subject: "Electronics"
 units:
   - unit: "T-Level Unit 08"
-    lo: "Semiconductors (8.1)"
+    lo: "(8.1) Semiconductors"
 ---
 
 ## Intro:

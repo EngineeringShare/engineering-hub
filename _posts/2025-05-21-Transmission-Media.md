@@ -9,7 +9,7 @@ units:
   - unit: "BTEC Unit 19"
     lo: "LO4 - PLC Communication and Networking"
   - unit: "T-Level Unit 09"
-    lo: "Signals and Power Transmission (9.1 and 9.3)"
+    lo: "(9.1 and 9.3) Signals and Power Transmission"
 ---
 
 ## Intro:

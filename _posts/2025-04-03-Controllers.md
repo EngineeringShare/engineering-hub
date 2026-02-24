@@ -5,7 +5,7 @@ tags: ["Microcontrollers", "Microcomputers", "systems", "control"]
 subject: "mechatronics"
 units:
   - unit: "T-Level Unit 09"
-    lo: "Sensors and Actuators (9.1)"
+    lo: "(9.1) Sensors and Actuators"
 ---
 
 ## Intro:

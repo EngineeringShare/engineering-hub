@@ -7,7 +7,7 @@ units:
   - unit: "HTQ Unit 4019"
     lo: "LO2 - AC Circuits"
   - unit: "T-Level Unit 08"
-    lo: "Semiconductors (8.1)"
+    lo: "(8.1) Semiconductors"
 ---
 
 ## Intro:

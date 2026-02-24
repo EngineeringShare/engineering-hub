@@ -5,7 +5,7 @@ tags: ["logic", "binary", "control", "gates", "flip", "flop"]
 subject: "mechatronics"
 units:
   - unit: "T-Level Unit 10"
-    lo: "Control Systems (10.1)"
+    lo: "(10.1) Control Systems"
   - unit: "BTEC Unit 24"
     lo: "LO3 - Logic Circuits"
 ---

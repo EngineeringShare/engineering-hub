@@ -7,7 +7,7 @@ units:
   - unit: "HTQ Unit 4019"
     lo: "LO1 - DC Circuits"
   - unit: "T-Level Unit 08"
-    lo: "Electronic Components (8.1)"
+    lo: "(8.1) Electronic Components"
   - unit: "BTEC Unit 56"
     lo: "LO1 - DC Circuits"
 ---

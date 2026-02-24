@@ -5,7 +5,7 @@ tags: ["Cams", "Followers", "Cam Profiles", "Gears", "Spur Gears", "Bevel Gears"
 subject: "Mechatronics"
 units:
   - unit: "T-Level Unit 09"
-    lo: "Mechanical Systems (9.1)"
+    lo: "(9.1) Mechanical Systems"
   - unit: "BTEC Unit 40"
     lo: "LO1 - Robotic Principles"
   - unit: "HTQ Unit 4015"

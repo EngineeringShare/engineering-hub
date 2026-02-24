@@ -5,7 +5,7 @@ tags: ["data", "results", "presentation", "graphs", "charts", "tables", "visuali
 subject: "Science"
 units:
   - unit: "T-Level Unit 05"
-    lo: "Scientific Method (5.3)"
+    lo: "(5.3) Scientific Method"
 ---
 
 ## Intro:
