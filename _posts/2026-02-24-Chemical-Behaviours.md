@@ -56,7 +56,7 @@ Chemical behaviours refer to the various reactions and interactions that occur b
 
     function toggleOverlay() {
         const overlay = document.getElementById("dyslexia-overlay");
-        overlay.style.opacity = overlay.style.opacity === "0" ? "0.8" : "0";
+        overlay.style.opacity = overlay.style.opacity === "0" ? "0.4" : "0";
     }
 </script>
 
