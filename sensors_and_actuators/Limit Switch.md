@@ -56,6 +56,10 @@ permalink: /Sensors-and-Actuators/Limit-Switch/
     </tr>
 </table>
 
+<h3>What we use in college</h3>
+<p>
+    In college, we often use a 
+
 <h3>Example Video</h3>
 
 <div class="gif-row">

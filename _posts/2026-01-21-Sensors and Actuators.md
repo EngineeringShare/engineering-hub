@@ -106,9 +106,9 @@ units:
   <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/NC-Contact/">
     <div class="card">
       <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/PLC-Icons/NC_Contact.png" alt="Normally Closed Contact Symbol">
+        <img src="https://engineeringshare.co.uk/images/PLC-Icons/Diffuse_Sensor.jpg" alt="Diffuse Sensor Symbol">
       </div>
-      <h3>Normally Closed Contact (NC)</h3>
+      <h3>Diffuse Sensor</h3>
     </div>
   </a>
 
