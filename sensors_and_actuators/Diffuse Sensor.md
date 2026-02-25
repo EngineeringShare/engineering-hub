@@ -11,7 +11,7 @@ permalink: /Sensors-and-Actuators/Diffuse-Sensor/
 
 <h2>Diffuse Sensor Overview</h2>
 <p> 
-    Diffuse sensors are optical sensors that detect the presence of an object without physical contact. They emit a beam of light (usually infrared or visible light) and detect when an object interrupts this beam. When an object is detected, the sensor sends a signal to a control system, which can then trigger an action such as stopping a machine or activating an alarm. Diffuse sensors are commonly used in industrial automation, robotics, and safety applications due to their non-contact nature and reliability in detecting objects of various sizes and materials.
+    Diffuse sensors are optical sensors that detect the presence of an object without physical contact. They emit a beam of light (usually infrared or visible light) and detect when an object reflects the beam back to the sensor. When an object is detected, the sensor sends a signal to a control system, which can then trigger an action such as stopping a machine or activating an alarm. Diffuse sensors are commonly used in industrial automation, robotics, and safety applications due to their non-contact nature and reliability in detecting objects of various sizes and materials.
 </p>
 
 <h3>How it Works</h3>
@@ -26,9 +26,9 @@ permalink: /Sensors-and-Actuators/Diffuse-Sensor/
     <li><strong>Cost-Effective:</strong> Diffuse sensors are generally inexpensive and easy to install, making them a popular choice for many applications.</li>
 </ul>
 
-<h3>Operating Modes</h3>
+<h3>Other Uses of Diffuse Sensors</h3>
 <p>
-    Diffuse sensors can operate in different modes depending on the application. They can be normally open (NO) or normally closed (NC), meaning that the circuit is either open or closed when the actuator is not engaged. This allows for flexibility in how they are used within a control system. For instance, a normally closed diffuse sensor will break the circuit when activated, which can be used for safety applications to stop machinery immediately when a certain position is reached.
+    Diffuse sensors are not only used for object detection but can also be used for specific colour detection (not general colour). This works by analyzing the wavelength of the reflected light, allowing the sensor to differentiate between different colours. For instance a diffuse sensor using infrared light can be used to detect the presence of a dark object as it will not reflect much light back to the receiver, whereas a light object will reflect more light (for instance a red or metallic object) and be easily detected. This makes diffuse sensors useful in applications such as sorting systems, where they can be used to separate objects based on colour or material properties.
 </p>
 
 <h3>Breakdown Table</h3>

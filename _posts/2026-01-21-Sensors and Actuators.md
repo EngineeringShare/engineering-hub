@@ -103,10 +103,10 @@ units:
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/NC-Contact/">
+  <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Diffuse-Sensor/">
     <div class="card">
       <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/PLC-Icons/Diffuse_Sensor.jpg" alt="Diffuse Sensor Symbol">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Diffuse_Sensor.jpg" alt="Diffuse Sensor Symbol">
       </div>
       <h3>Diffuse Sensor</h3>
     </div>
