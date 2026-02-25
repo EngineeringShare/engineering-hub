@@ -19,6 +19,18 @@ permalink: /Sensors-and-Actuators/Limit-Switch/
     When an object presses against the actuator of the limit switch it either completes or breaks an electrical circuit. This change in the circuit can be used to stop a machine, start a process, or trigger an alarm. For example, in a conveyor system, a limit switch can be placed at the end of the conveyor to detect when an item has reached the end and stop the conveyor belt to prevent items from falling off.
 </p>
 
+<h3>Key Features</h3>
+<ul>
+    <li><strong>Durability:</strong> Limit switches are designed to withstand harsh industrial environments, making them reliable for long-term use.</li>
+    <li><strong>Versatility:</strong> They can be used in a wide range of applications, from simple on/off control to complex automation systems.</li>
+    <li><strong>Cost-Effective:</strong> Limit switches are generally inexpensive and easy to install, making them a popular choice for many applications.</li>
+</ul>
+
+<h3>Operating Modes</h3>
+<p>
+    Limit switches can operate in different modes depending on the application. They can be normally open (NO) or normally closed (NC), meaning that the circuit is either open or closed when the actuator is not engaged. This allows for flexibility in how they are used within a control system. For instance, a normally closed limit switch will break the circuit when activated, which can be used for safety applications to stop machinery immediately when a certain position is reached.
+</p>
+
 <h3>Breakdown Table</h3>
 
 <table style="width: 100%; border-collapse: collapse;">
@@ -44,91 +56,10 @@ permalink: /Sensors-and-Actuators/Limit-Switch/
     </tr>
 </table>
 
-<h3>Limit Switch – Interactive Simulator</h3>
+<h3>Example Video</h3>
 
-<p>
-This simulator shows how a limit switch responds when its <strong>mechanical actuator is pressed</strong>,
-and how that action affects the <strong>electrical contact state</strong>.
-You can switch between <strong>Normally Open (NO)</strong> and <strong>Normally Closed (NC)</strong> behaviour.
-</p>
+<img src="https://engineeringshare.github.io/engineering-resources/gifs/NO Limit Switch.gif" alt="NO Limit Switch Example" style="max-width: 100%; height: auto;">
 
-<ul>
-    <li><strong>NO (Normally Open):</strong> Contact is open until the actuator is pressed</li>
-    <li><strong>NC (Normally Closed):</strong> Contact is closed until the actuator is pressed</li>
-</ul>
-
-<div id="limitSwitchSim" style="max-width: 720px; margin: 1rem auto; padding: 1rem; border: 1px solid #ddd; border-radius: 10px; background: #fafafa;">
-
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
-
-        <label style="font-weight: 600;">
-            <input type="checkbox" id="lsPressed">
-            Actuator pressed
-        </label>
-
-        <label style="font-weight: 600;">
-            Contact type:
-            <select id="lsType">
-                <option value="NO">NO</option>
-                <option value="NC">NC</option>
-            </select>
-        </label>
-
-        <div>
-            Input state:
-            <strong id="lsState">OFF</strong>
-        </div>
-    </div>
-
-    <svg viewBox="0 0 720 160" style="width: 100%; margin-top: 1rem;">
-        <!-- Rails -->
-        <line x1="40" y1="30" x2="40" y2="130" stroke="#333" stroke-width="6"/>
-        <line x1="680" y1="30" x2="680" y2="130" stroke="#333" stroke-width="6"/>
-
-        <!-- Wiring -->
-        <line id="wireLeft" x1="40" y1="80" x2="260" y2="80" stroke="#aaa" stroke-width="4"/>
-        <line id="wireRight" x1="360" y1="80" x2="680" y2="80" stroke="#aaa" stroke-width="4"/>
-
-        <!-- Contact -->
-        <line x1="260" y1="55" x2="260" y2="105" stroke="#aaa" stroke-width="5"/>
-        <line x1="360" y1="55" x2="360" y2="105" stroke="#aaa" stroke-width="5"/>
-        <line id="contactBridge" x1="260" y1="80" x2="360" y2="80" stroke="#16a34a" stroke-width="5" opacity="0"/>
-
-        <!-- Labels -->
-        <text x="230" y="45" font-size="12" fill="#555">Limit switch</text>
-        <text x="520" y="45" font-size="12" fill="#555">PLC input</text>
-    </svg>
-
-    <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #555;">
-        When the contact closes, the input becomes <strong>ON</strong>.
-        When it opens, the input becomes <strong>OFF</strong>.
-    </p>
-</div>
-
-<script>
-(function () {
-    const pressed = document.getElementById("lsPressed");
-    const type = document.getElementById("lsType");
-    const state = document.getElementById("lsState");
-    const bridge = document.getElementById("contactBridge");
-
-    function update() {
-        const isPressed = pressed.checked;
-        const mode = type.value;
-
-        const contactClosed =
-            (mode === "NO" && isPressed) ||
-            (mode === "NC" && !isPressed);
-
-        bridge.style.opacity = contactClosed ? 1 : 0;
-        state.textContent = contactClosed ? "ON" : "OFF";
-    }
-
-    pressed.addEventListener("change", update);
-    type.addEventListener("change", update);
-    update();
-})();
-</script>
-
+<img src="https://engineeringshare.github.io/engineering-resources/gifs/NC Limit Switch.gif" alt="NC Limit Switch Example" style="max-width: 100%; height: auto;">
 
 <a href="https://engineeringshare.github.io/engineering-hub/2026/01/21/Sensors-and-Actuators.html">🔙 Back to Sensors and Actuators</a>

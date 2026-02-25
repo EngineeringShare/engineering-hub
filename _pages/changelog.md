@@ -58,6 +58,7 @@ Welcome to the Engineering Hub ChangeLog!
 
 This ChangeLog will detail the changes I make to the Engineering Hub site over time. It will include new features, updates, and improvements to enhance your experience. Note it will not include content additions like new presentations or audio files, just changes to the site itself.
 
+- 13/02/2026: Changed the method used for categorising pages by learning outcome from using the "units" field in the front matter to using tags. This allows for more flexible categorisation and easier searching/filtering of content by learning outcome.
 - 13/01/2026: Relocated all large binary files (PDFs, audio) to the engineering-resources repository to improve site performance and reliability.
 - 12/10/2025: Added fullscreen button to PDF presentations for better viewing experience. (Requested by users)
 - 11/09/2025: Added license to homepage

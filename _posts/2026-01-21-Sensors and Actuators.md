@@ -97,7 +97,7 @@ units:
   <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Limit-Switch/">
     <div class="card">
       <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/Sensors-Actuators-Icons/Limit Switch.png" alt="Limit Switch Symbol">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Limit_Switch.png" alt="Limit Switch Symbol">
       </div>
       <h3>Limit Switch</h3>
     </div>
