@@ -58,8 +58,27 @@ permalink: /Sensors-and-Actuators/Limit-Switch/
 
 <h3>Example Video</h3>
 
-<img src="https://engineeringshare.github.io/engineering-resources/gifs/NO Limit Switch.gif" alt="NO Limit Switch Example" style="max-width: 100%; height: auto;">
+<div class="gif-row">
+  <img src="https://engineeringshare.github.io/engineering-resources/gifs/NO Limit Switch.gif"
+       alt="NO Limit Switch Example">
 
-<img src="https://engineeringshare.github.io/engineering-resources/gifs/NC Limit Switch.gif" alt="NC Limit Switch Example" style="max-width: 100%; height: auto;">
+  <img src="https://engineeringshare.github.io/engineering-resources/gifs/NC Limit Switch.gif"
+       alt="NC Limit Switch Example">
+</div>
+
+<style>
+  .gif-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap; /* allows stacking on small screens */
+  }
+
+  .gif-row img {
+    width: 48%;
+    height: auto;
+  }
+</style>
 
 <a href="https://engineeringshare.github.io/engineering-hub/2026/01/21/Sensors-and-Actuators.html">🔙 Back to Sensors and Actuators</a>
