@@ -112,12 +112,12 @@ units:
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/Output/">
+  <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Capacitive-Sensor/">
     <div class="card">
       <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/PLC-Icons/Output.png" alt="Output Coil Symbol">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Capacitive_Sensor.png" alt="Capacitive Sensor Symbol">
       </div>
-      <h3>Output Coil</h3>
+      <h3>Capacitive Sensor</h3>
     </div>
   </a>
 
