@@ -66,6 +66,9 @@ permalink: /Sensors-and-Actuators/Diffuse-Sensor/
 <div class="gif-row">
   <img src="https://engineeringshare.github.io/engineering-resources/gifs/Diffuse Sensor.gif"
        alt="Diffuse Sensor Example">
+
+  <img src="https://engineeringshare.github.io/engineering-resources/gifs/Diffuse Sensor Colour.gif"
+       alt="Diffuse Sensor Colour Detection Example">
 </div>
 
 <style>

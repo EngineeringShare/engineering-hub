@@ -121,13 +121,12 @@ units:
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/Set-Reset-Output/">
+  <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Pressure-Sensor/">
     <div class="card">
       <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/PLC-Icons/Set_Output.png" alt="Set Output Symbol">
-        <img src="https://engineeringshare.co.uk/images/PLC-Icons/Reset_Output.png" alt="Reset Output Symbol">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Pressure_Sensor.jpg" alt="Pressure Sensor Symbol" style="width: 150px; height: auto;">
       </div>
-      <h3>Set & Reset Output (S)/(R)</h3>
+      <h3>Pressure Sensor</h3>
     </div>
   </a>
 
