@@ -49,6 +49,7 @@ permalink: /Sensors-and-Actuators/Capacitive-Sensor/
         <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Common Applications</th>
         <td style="border: 1px solid #ddd; padding: 8px;">Industrial machinery, robotics, consumer electronics, touchscreens, proximity sensing.</td>
     </tr>
+</table>
 
 <h3>What we use in college</h3>
 <p>
@@ -58,11 +59,8 @@ permalink: /Sensors-and-Actuators/Capacitive-Sensor/
 <h3>Example Video</h3>
 
 <div class="gif-row">
-  <img src="https://engineeringshare.github.io/engineering-resources/gifs/NO Limit Switch.gif"
-       alt="NO Limit Switch Example">
-
-  <img src="https://engineeringshare.github.io/engineering-resources/gifs/NC Limit Switch.gif"
-       alt="NC Limit Switch Example">
+  <img src="https://engineeringshare.github.io/engineering-resources/gifs/Capacitive Sensor.gif"
+       alt="Capacitive Sensor Example">
 </div>
 
 <style>
