@@ -56,12 +56,18 @@ permalink: /Sensors-and-Actuators/Pressure-Sensor/
 <p>
     In college, we use a festo pressure sensor (Code: SPAU-P10R-W-G18FD-L-PNLK-PNVBA-M12U) in our lab setup. We typically use it to monitor the pressure in pneumatic systems, such as those used in our MPS (Mechatronic Production Systems) setups. The sensor has 5 pins, which include power supply, ground, and signal output. We connect the 24v to our power supply, the 0v to ground, and our output to Q2. We can then connect this to a PLC or a mechantronic system to monitor the pressure and ensure that it stays within safe operating limits. This allows us to automate processes and prevent damage to equipment due to overpressure situations.
 </p>
+<p>
+    The festo pressure sensors have the ability to change the value at which they activate based on the pressure. This means that we can set a specific pressure threshold, and when the pressure in the system reaches that threshold, the sensor will activate and send a signal to our control system.
+</p>
 
 <h3>Example Video</h3>
 
 <div class="gif-row">
-  <img src="https://engineeringshare.github.io/engineering-resources/gifs/Pressure Sensor.gif"
-       alt="Pressure Sensor Example">
+  <figure>
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Pressure Sensor.gif"
+        alt="Pressure Sensor Example">
+    <figcaption>Pressure sensor detecting the pressure in a pneumatic system. When the button is not pressed there is no pressure in the system and the indicator LED remains off. When the button is pressed, it creates pressure in the system which is detected by the sensor, lighting up the indicator LED.</figcaption>
+  </figure>
 </div>
 
 <style>
@@ -70,12 +76,24 @@ permalink: /Sensors-and-Actuators/Pressure-Sensor/
     gap: 1rem;
     justify-content: center;
     align-items: flex-start;
-    flex-wrap: wrap; /* allows stacking on small screens */
+    flex-wrap: wrap;
+  }
+
+  .gif-row figure {
+    width: 48%;
+    margin: 0;
+    text-align: center;
   }
 
   .gif-row img {
-    width: 48%;
+    width: 100%;
     height: auto;
+  }
+
+  .gif-row figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #555;
   }
 </style>
 

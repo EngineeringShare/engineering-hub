@@ -59,8 +59,11 @@ permalink: /Sensors-and-Actuators/Capacitive-Sensor/
 <h3>Example Video</h3>
 
 <div class="gif-row">
-  <img src="https://engineeringshare.github.io/engineering-resources/gifs/Capacitive Sensor.gif"
-       alt="Capacitive Sensor Example">
+  <figure>
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Capacitive Sensor.gif"
+        alt="Capacitive Sensor Example">
+    <figcaption>Capacitive sensor detecting the presence of a metal object. When the plastic object is in front of the sensor, it does not detect it and the indicator LED remains off. When the metal object is brought close to the sensor, it detects the change in capacitance and lights up the indicator LED.</figcaption>
+  </figure>
 </div>
 
 <style>
@@ -69,12 +72,24 @@ permalink: /Sensors-and-Actuators/Capacitive-Sensor/
     gap: 1rem;
     justify-content: center;
     align-items: flex-start;
-    flex-wrap: wrap; /* allows stacking on small screens */
+    flex-wrap: wrap;
+  }
+
+  .gif-row figure {
+    width: 48%;
+    margin: 0;
+    text-align: center;
   }
 
   .gif-row img {
-    width: 48%;
+    width: 100%;
     height: auto;
+  }
+
+  .gif-row figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #555;
   }
 </style>
 

@@ -58,16 +58,23 @@ permalink: /Sensors-and-Actuators/Limit-Switch/
 
 <h3>What we use in college</h3>
 <p>
-    In college, we often use a 
+    In college, we often use a festo limit switch (Code: D:S-ESG-A-R-SIBU) in our lab setups. We typically use it to detect the position of pneumatic cylinders in our workbench setups. The limit switch is mounted in a fixed position, and when the pneumatic cylinder extends or retracts to a certain point, it engages the actuator of the limit switch, which then changes the state of the electrical circuit. This allows us to automate processes such as stopping a machine when a certain position is reached or triggering an alarm if a part is out of place.
+</p>
 
 <h3>Example Video</h3>
 
 <div class="gif-row">
-  <img src="https://engineeringshare.github.io/engineering-resources/gifs/NO Limit Switch.gif"
-       alt="NO Limit Switch Example">
+  <figure>
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/NO Limit Switch.gif"
+        alt="NO Limit Switch Example">
+    <figcaption>Limit switch in normally open (NO) configuration. When the actuator is not engaged, the circuit is open and the indicator LED is off. When the actuator is pressed, it completes the circuit and lights up the indicator LED.</figcaption>
+  </figure>
 
-  <img src="https://engineeringshare.github.io/engineering-resources/gifs/NC Limit Switch.gif"
-       alt="NC Limit Switch Example">
+  <figure>
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/NC Limit Switch.gif"
+        alt="NC Limit Switch Example">
+    <figcaption>Limit switch in normally closed (NC) configuration. When the actuator is not engaged, the circuit is closed and the indicator LED is on. When the actuator is pressed, it breaks the circuit and turns off the indicator LED.</figcaption>
+  </figure>
 </div>
 
 <style>
@@ -76,12 +83,24 @@ permalink: /Sensors-and-Actuators/Limit-Switch/
     gap: 1rem;
     justify-content: center;
     align-items: flex-start;
-    flex-wrap: wrap; /* allows stacking on small screens */
+    flex-wrap: wrap;
+  }
+
+  .gif-row figure {
+    width: 48%;
+    margin: 0;
+    text-align: center;
   }
 
   .gif-row img {
-    width: 48%;
+    width: 100%;
     height: auto;
+  }
+
+  .gif-row figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #555;
   }
 </style>
 

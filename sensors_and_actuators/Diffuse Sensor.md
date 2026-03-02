@@ -64,11 +64,17 @@ permalink: /Sensors-and-Actuators/Diffuse-Sensor/
 <h3>Example Video</h3>
 
 <div class="gif-row">
-  <img src="https://engineeringshare.github.io/engineering-resources/gifs/Diffuse Sensor.gif"
-       alt="Diffuse Sensor Example">
+  <figure>
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Diffuse Sensor.gif"
+         alt="Diffuse Sensor Example">
+    <figcaption>Diffuse sensor detecting an object via reflected light. When my hand is in front of the sensor, it detects the object and completes the circuit lighting up the indicator LED.</figcaption>
+  </figure>
 
-  <img src="https://engineeringshare.github.io/engineering-resources/gifs/Diffuse Sensor Colour.gif"
-       alt="Diffuse Sensor Colour Detection Example">
+  <figure>
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Diffuse Sensor Colour.gif"
+         alt="Diffuse Sensor Colour Detection Example">
+    <figcaption>Diffuse sensor detecting red vs black objects. The sensor detects the red object more easily as it reflects more light back to the receiver, while the black object is less easily detected due to its low reflectivity.When the sensor detects a red object, it lights up the indicator LED.</figcaption>
+  </figure>
 </div>
 
 <style>
@@ -77,12 +83,24 @@ permalink: /Sensors-and-Actuators/Diffuse-Sensor/
     gap: 1rem;
     justify-content: center;
     align-items: flex-start;
-    flex-wrap: wrap; /* allows stacking on small screens */
+    flex-wrap: wrap;
+  }
+
+  .gif-row figure {
+    width: 48%;
+    margin: 0;
+    text-align: center;
   }
 
   .gif-row img {
-    width: 48%;
+    width: 100%;
     height: auto;
+  }
+
+  .gif-row figcaption {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #555;
   }
 </style>
 

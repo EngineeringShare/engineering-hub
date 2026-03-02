@@ -130,12 +130,12 @@ units:
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/Timer/">
+  <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Vacuum-Sensor/">
     <div class="card">
       <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/PLC-Icons/TON_Timer.png" alt="Timer Symbol">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Vacuum_Sensor.jpg" alt="Vacuum Sensor Symbol">
       </div>
-      <h3>Timer (TON / TOF)</h3>
+      <h3>Vacum Sensor</h3>
     </div>
   </a>
 
