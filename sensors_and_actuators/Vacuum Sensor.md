@@ -49,6 +49,7 @@ permalink: /Sensors-and-Actuators/Vacuum-Sensor/
         <th style="border: 1px solid #ddd; padding: 8px; text-align: left; background-color: #f2f2f2;">Common Applications</th>
         <td style="border: 1px solid #ddd; padding: 8px;">Industrial machinery, automotive systems, medical devices, consumer electronics.</td>
     </tr>
+</table>
 
 <h3>What we use in college</h3>
 <p>
@@ -59,7 +60,7 @@ permalink: /Sensors-and-Actuators/Vacuum-Sensor/
 
 <div class="gif-row">
   <figure>
-    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Vacuum Sensor.gif"
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Sensor-Actuator/Vacuum Sensor.gif"
          alt="Vacuum Sensor Example">
     <figcaption>Vacuum sensor detecting the vacuum pressure in a pneumatic system. The sensor is connected to a festo vacuum generator, when the button is pressed, the vacuum generator creates a vacuum pressure which is detected by the sensor. The indicator LED on the sensor lights up when the vacuum pressure reaches a certain threshold, indicating that the system is operating within safe limits.</figcaption>
   </figure>

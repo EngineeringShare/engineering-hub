@@ -65,13 +65,13 @@ permalink: /Sensors-and-Actuators/Diffuse-Sensor/
 
 <div class="gif-row">
   <figure>
-    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Diffuse Sensor.gif"
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Sensor-Actuator/Diffuse Sensor.gif"
          alt="Diffuse Sensor Example">
     <figcaption>Diffuse sensor detecting an object via reflected light. When my hand is in front of the sensor, it detects the object and completes the circuit lighting up the indicator LED.</figcaption>
   </figure>
 
   <figure>
-    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Diffuse Sensor Colour.gif"
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Sensor-Actuator/Diffuse Sensor Colour.gif"
          alt="Diffuse Sensor Colour Detection Example">
     <figcaption>Diffuse sensor detecting red vs black objects. The sensor detects the red object more easily as it reflects more light back to the receiver, while the black object is less easily detected due to its low reflectivity.When the sensor detects a red object, it lights up the indicator LED.</figcaption>
   </figure>

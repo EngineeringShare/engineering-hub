@@ -65,13 +65,13 @@ permalink: /Sensors-and-Actuators/Limit-Switch/
 
 <div class="gif-row">
   <figure>
-    <img src="https://engineeringshare.github.io/engineering-resources/gifs/NO Limit Switch.gif"
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Sensor-Actuator/NO Limit Switch.gif"
         alt="NO Limit Switch Example">
     <figcaption>Limit switch in normally open (NO) configuration. When the actuator is not engaged, the circuit is open and the indicator LED is off. When the actuator is pressed, it completes the circuit and lights up the indicator LED.</figcaption>
   </figure>
 
   <figure>
-    <img src="https://engineeringshare.github.io/engineering-resources/gifs/NC Limit Switch.gif"
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Sensor-Actuator/NC Limit Switch.gif"
         alt="NC Limit Switch Example">
     <figcaption>Limit switch in normally closed (NC) configuration. When the actuator is not engaged, the circuit is closed and the indicator LED is on. When the actuator is pressed, it breaks the circuit and turns off the indicator LED.</figcaption>
   </figure>

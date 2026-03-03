@@ -64,7 +64,7 @@ permalink: /Sensors-and-Actuators/Pressure-Sensor/
 
 <div class="gif-row">
   <figure>
-    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Pressure Sensor.gif"
+    <img src="https://engineeringshare.github.io/engineering-resources/gifs/Sensor-Actuator/Pressure Sensor.gif"
         alt="Pressure Sensor Example">
     <figcaption>Pressure sensor detecting the pressure in a pneumatic system. When the button is not pressed there is no pressure in the system and the indicator LED remains off. When the button is pressed, it creates pressure in the system which is detected by the sensor, lighting up the indicator LED.</figcaption>
   </figure>
