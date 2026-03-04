@@ -90,14 +90,14 @@ units:
 
 ---
 
-## Position, Movement & Motion Sensors:
+## Sensors:
 
 <div class="projects">
 
   <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Limit-Switch/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Limit_Switch.png" alt="Limit Switch Symbol">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Limit_Switch.png" alt="Limit Switch">
       </div>
       <h3>Limit Switch</h3>
     </div>
@@ -106,7 +106,7 @@ units:
   <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Diffuse-Sensor/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Diffuse_Sensor.jpg" alt="Diffuse Sensor Symbol">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Diffuse_Sensor.jpg" alt="Diffuse Sensor">
       </div>
       <h3>Diffuse Sensor</h3>
     </div>
@@ -115,7 +115,7 @@ units:
   <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Capacitive-Sensor/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Capacitive_Sensor.png" alt="Capacitive Sensor Symbol">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Capacitive_Sensor.png" alt="Capacitive Sensor">
       </div>
       <h3>Capacitive Sensor</h3>
     </div>
@@ -124,7 +124,7 @@ units:
   <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Pressure-Sensor/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Pressure_Sensor.jpg" alt="Pressure Sensor Symbol" style="width: 150px; height: auto;">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Pressure_Sensor.jpg" alt="Pressure Sensor" style="width: 150px; height: auto;">
       </div>
       <h3>Pressure Sensor</h3>
     </div>
@@ -133,36 +133,18 @@ units:
   <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Vacuum-Sensor/">
     <div class="card">
       <div class="card-image">
-        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Vacuum_Sensor.jpg" alt="Vacuum Sensor Symbol">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Vacuum_Sensor.jpg" alt="Vacuum Sensor">
       </div>
-      <h3>Vacum Sensor</h3>
+      <h3>Vacuum Sensor</h3>
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/Counter/">
+  <a class="card-link" href="https://engineeringshare.co.uk/Sensors-and-Actuators/Light-Gate/">
     <div class="card">
       <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/PLC-Icons/CTU_Counter.png" alt="Counter Symbol">
+        <img src="https://EngineeringShare.github.io/engineering-hub/images/Sensors-Actuators-Icons/Light_Gate.png" alt="Light Gate">
       </div>
-      <h3>Counter (CTU / CTD)</h3>
-    </div>
-  </a>
-
-  <a class="card-link" href="https://engineeringshare.co.uk/PLC-Ladder-Logic/Comparison/">
-    <div class="card">
-      <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/PLC-Icons/CMP_Equals.png" alt="Comparison Symbol">
-      </div>
-      <h3>Comparison Functions</h3>
-    </div>
-  </a>
-
-  <a class="card-link" href="#">
-    <div class="card">
-      <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/PLC-Icons/Move_Function.png" alt="Move Function Symbol">
-      </div>
-      <h3>Data Movement Function</h3>
+      <h3>Light Gate</h3>
     </div>
   </a>
 
@@ -170,7 +152,7 @@ units:
 
 ---
 
-## Ladder Logic Functions:
+## Actuators:
 
 ---
 
