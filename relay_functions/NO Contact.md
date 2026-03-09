@@ -8,6 +8,10 @@ permalink: /Relay/NO-Contact/
 <div style="text-align:center;">
   <img src="https://EngineeringShare.github.io/engineering-hub/images/Relay-Icons/NO_Contact.png"
        alt="Normally Open Contact Symbol" style="max-width:200px;height:auto;">
+  <img src="https://EngineeringShare.github.io/engineering-hub/images/Relay-Icons/NO_Relay_Off.png"
+       alt="Relay internal components diagram" style="max-width:200px;height:auto;">
+  <img src="https://EngineeringShare.github.io/engineering-hub/images/Relay-Icons/NO_Relay_On.png"
+       alt="Relay internal components diagram" style="max-width:200px;height:auto;">
 </div>
 
 <h2>Normally Open Contact (NO)</h2>
