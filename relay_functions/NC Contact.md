@@ -8,6 +8,10 @@ permalink: /Relay/NC-Contact/
 <div style="text-align:center;">
   <img src="https://EngineeringShare.github.io/engineering-hub/images/Relay-Icons/NC_Contact.png"
        alt="Normally Closed Contact Symbol" style="max-width:200px;height:auto;">
+  <img src="https://EngineeringShare.github.io/engineering-hub/images/Relay-Icons/NC_Relay_Off.png"
+       alt="Relay internal components diagram" style="max-width:200px;height:auto;">
+  <img src="https://EngineeringShare.github.io/engineering-hub/images/Relay-Icons/NC_Relay_On.png"
+       alt="Relay internal components diagram" style="max-width:200px;height:auto;">
 </div>
 
 <h2>Normally Closed Contact (NC)</h2>
