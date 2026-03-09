@@ -3,10 +3,10 @@ title: "NC Contact"
 permalink: /Relay/NC-Contact/
 ---
 
-<a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
+<a href="https://engineeringshare.github.io/engineering-hub/2026/02/19/Relay-Symbols.html">🔙 Back to Relay Symbols and Functions</a>
 
 <div style="text-align:center;">
-  <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/NC_Contact.png"
+  <img src="https://EngineeringShare.github.io/engineering-hub/images/Relay-Icons/NC_Contact.png"
        alt="Normally Closed Contact Symbol" style="max-width:200px;height:auto;">
 </div>
 
@@ -91,4 +91,4 @@ The table below shows how a Normally Closed contact behaves:
   }
 </style>
 
-<a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
+<a href="https://engineeringshare.github.io/engineering-hub/2026/02/19/Relay-Symbols.html">🔙 Back to Relay Symbols and Functions</a>
