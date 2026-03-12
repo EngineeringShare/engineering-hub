@@ -1,7 +1,7 @@
 ---
-title: "Forces and Motion"
+title: "Forces and Motion 1"
 date: 2026-03-03
-tags: ["Physics", "Forces", "Motion", "Newton's Laws", "Gravity", "Friction", "Acceleration", "Velocity", "Inertia"]
+tags: ["Physics", "Forces", "Motion", "Newton's Laws", "Gravity", "Friction", "Acceleration", "Velocity", "Trigonometry", "Kinematics", "SUVAT Equations"]
 subject: "Science"
 units:
   - unit: "T-Level Unit 05"
