@@ -51,9 +51,9 @@ This is the hub for T-Level Unit 5: Engineering Science — covering mechanical 
 
 {% assign sorted_posts = site.posts | sort: "date" %}
 {% assign lo_list = "" %}
-{% for post in site.posts %}
-{% if sorted_posts %}
-{% for u in sorted_posts %}
+{% for post in sorted_posts %}
+{% if post.units %}
+{% for u in post.units %}
 {% if u.unit == target_unit %}
 {% capture lo_name %}{{ u.lo | default: "General" | strip }}{% endcapture %}
 {% assign lo_list = lo_list | append: lo_name | append: "###" %}
@@ -69,10 +69,10 @@ This is the hub for T-Level Unit 5: Engineering Science — covering mechanical 
 <h2 style="margin-top: 2rem; border-bottom: 2px solid #eee;">{{ lo_clean }}</h2>
 
 <div class="projects">
-{% for post in site.posts %}
+{% for post in sorted_posts %}
 {% assign is_match = false %}
-{% if sorted_posts %}
-{% for u in sorted_posts %}
+{% if post.units %}
+{% for u in post.units %}
 {% assign u_unit = u.unit | strip %}
 {% assign u_lo = u.lo | default: "General" | strip %}
 {% if u_unit == target_unit and u_lo == lo_clean %}
