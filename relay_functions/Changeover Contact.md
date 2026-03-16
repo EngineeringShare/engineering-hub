@@ -66,6 +66,7 @@ The table below shows how a Normally Open contact behaves:
     <img src="https://engineeringshare.github.io/engineering-resources/gifs/Relays/2 to 1 Changeover Fluid Sim.gif"
          alt="Changeover Contact Example (2 to 1)">
     <figcaption>In this fluid sim example, we have a changeover contact connected to relay R1. When R1 is not energized, the common terminal is connected to the NC terminal, allowing the 24v signal to flow through to the motor (high speed). When R1 is energized, the changeover contact switches allowing 12v to flow through to the motor (low speed).</figcaption>
+  </figure>
 </div>
 
 <style>
