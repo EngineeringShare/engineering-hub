@@ -8,6 +8,10 @@ permalink: /Relay/Changeover-Contact/
 <div style="text-align:center;">
   <img src="https://EngineeringShare.github.io/engineering-hub/images/Relay-Icons/Changeover_Contact.png"
        alt="Normally Open Contact Symbol" style="max-width:200px;height:auto;">
+  <img src="https://EngineeringShare.github.io/engineering-hub/images/Relay-Icons/Changeover_Relay_Off.png"
+       alt="Relay internal components diagram" style="max-width:200px;height:auto;">
+  <img src="https://EngineeringShare.github.io/engineering-hub/images/Relay-Icons/Changeover_Relay_On.png"
+       alt="Relay internal components diagram" style="max-width:200px;height:auto;">
 </div>
 
 <h2>Changeover Contact</h2>
