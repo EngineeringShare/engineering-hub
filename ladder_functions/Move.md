@@ -140,8 +140,8 @@ permalink: /PLC-Ladder-Logic/Move/
 
     <div class="kv">
       Active Mode: <b id="activeModeText">Medium</b> &nbsp;|&nbsp;
-      T1.PRE: <b id="presetTextTop">5000 ms</b> &nbsp;|&nbsp;
-      T1.ACC: <b id="accTextTop">0 ms</b> &nbsp;|&nbsp;
+      T1.PT: <b id="presetTextTop">5000 ms</b> &nbsp;|&nbsp;
+      T1.ET: <b id="accTextTop">0 ms</b> &nbsp;|&nbsp;
       T1.DN: <b id="doneTextTop">OFF</b>
     </div>
   </div>
@@ -237,25 +237,22 @@ permalink: /PLC-Ladder-Logic/Move/
       <text class="timer-text" id="timerAccText" x="395" y="412" text-anchor="middle">ACC: 0 ms</text>
       <text class="timer-text" id="timerDnText" x="395" y="434" text-anchor="middle">DN: OFF</text>
 
-      <path class="wire" d="M530 390 H 910" />
+      <!-- Wire to coil -->
+      <path class="wire" d="M530 390 H 720" />
+
+      <!-- Output coil -->
+      <path class="coil" d="M790 368 A30 22 0 0 0 790 412" />
+      <path class="coil" d="M790 412 A30 22 0 0 0 790 368" />
+      <circle class="lamp" cx="790" cy="390" r="18" />
+
+      <!-- Final wires -->
+      <path class="wire" d="M720 390 H 760" />
+      <path class="wire" d="M820 390 H 910" />
+
+      <text class="lbl" x="760" y="430">Q0.0</text>
+
+      <!-- Flow -->
       <path class="flow" id="flowTimer" d="M70 390 H 910" />
-
-      <!-- ================= RUNG 5 OUTPUT ================= -->
-      <text class="lbl" x="80" y="455">Rung 5</text>
-      <path class="wire" d="M70 470 H 150" />
-      <line class="contact-post" x1="150" y1="440" x2="150" y2="500"/>
-      <line class="contact-post" x1="190" y1="440" x2="190" y2="500"/>
-      <line class="contact-bridge" id="bridgeDone" x1="150" y1="470" x2="190" y2="470"/>
-      <text class="lbl" x="142" y="430">T1.DN</text>
-
-      <path class="wire" d="M190 470 H 720" />
-      <path class="coil" d="M790 448 A30 22 0 0 0 790 492" />
-      <path class="coil" d="M790 492 A30 22 0 0 0 790 448" />
-      <circle class="lamp" cx="790" cy="470" r="18" />
-      <path class="wire" d="M720 470 H 760" />
-      <path class="wire" d="M820 470 H 910" />
-      <text class="lbl" x="760" y="510">Q0.0</text>
-      <path class="flow" id="flowDone" d="M70 470 H 910" />
     </svg>
   </div>
 
@@ -352,7 +349,7 @@ permalink: /PLC-Ladder-Logic/Move/
     flowMedium.style.opacity = modeMedium.checked ? 1 : 0;
     flowLong.style.opacity = modeLong.checked ? 1 : 0;
     flowTimer.style.opacity = startTimer.checked ? 1 : 0;
-    flowDone.style.opacity = timerDN ? 1 : 0;
+    sim.classList.toggle('on', timerDN);
 
     moveShortState.textContent = mode === 'short' ? 'Instruction executed' : 'Instruction idle';
     moveMediumState.textContent = mode === 'medium' ? 'Instruction executed' : 'Instruction idle';
@@ -366,8 +363,8 @@ permalink: /PLC-Ladder-Logic/Move/
     accTextTop.textContent = formatMs(timerACC);
     doneTextTop.textContent = timerDN ? 'ON' : 'OFF';
 
-    timerPreText.textContent = `PRE: ${formatMs(timerPRE)}`;
-    timerAccText.textContent = `ACC: ${formatMs(timerACC)}`;
+    timerPreText.textContent = `PT: ${formatMs(timerPRE)}`;
+    timerAccText.textContent = `ET: ${formatMs(timerACC)}`;
     timerDnText.textContent = `DN: ${timerDN ? 'ON' : 'OFF'}`;
 
     sim.classList.toggle('on', timerDN);
