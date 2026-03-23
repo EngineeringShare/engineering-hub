@@ -109,185 +109,338 @@ permalink: /PLC-Ladder-Logic/Move/
     The move function also allows us to simplify repetitive code. For instance, if we have a process that requires the same operation to be performed but for varying amounts of time or under different conditions, we can use a move function to update the parameters of that operation without needing to rewrite the logic for each case.
 </p>
 
-<!-- === MOVE Function Example (select time -> move into timer preset) === -->
-<div class="ladder-rung" id="moveRung">
+<!-- === MOVE + TON Multi-Rung Example === -->
+<div class="ladder-rung" id="moveTonSim">
   <div class="top">
     <div class="switch-row">
-      <label>
-        Mode:
-        <select id="moveMode">
-          <option value="2000">Short Cycle (2s)</option>
-          <option value="5000" selected>Medium Cycle (5s)</option>
-          <option value="8000">Long Cycle (8s)</option>
-        </select>
+      <label class="switch">
+        <input id="modeShort" type="checkbox">
+        <span>Short Mode</span>
       </label>
 
       <label class="switch">
-        <input id="moveStart" type="checkbox">
+        <input id="modeMedium" type="checkbox" checked>
+        <span>Medium Mode</span>
+      </label>
+
+      <label class="switch">
+        <input id="modeLong" type="checkbox">
+        <span>Long Mode</span>
+      </label>
+
+      <label class="switch">
+        <input id="startTimer" type="checkbox">
         <span>Start Timer</span>
       </label>
 
-      <button id="moveBtn" type="button" style="padding:.45rem .8rem;border:1px solid #cbd5e1;border-radius:8px;background:#fff;cursor:pointer;">
-        MOVE Selected Time
-      </button>
-
-      <button id="moveReset" type="button" style="padding:.45rem .8rem;border:1px solid #cbd5e1;border-radius:8px;background:#fff;cursor:pointer;">
+      <button id="resetMoveTon" type="button" style="padding:.45rem .8rem;border:1px solid #cbd5e1;border-radius:8px;background:#fff;cursor:pointer;">
         Reset
       </button>
     </div>
 
     <div class="kv">
-      Source: <b id="moveSource">5000 ms</b> &nbsp;|&nbsp;
-      Timer Preset: <b id="movePreset">5000 ms</b> &nbsp;|&nbsp;
-      Accumulated: <b id="moveAcc">0 ms</b> &nbsp;|&nbsp;
-      Done Bit: <b id="moveDone">OFF</b>
+      Active Mode: <b id="activeModeText">Medium</b> &nbsp;|&nbsp;
+      T1.PRE: <b id="presetTextTop">5000 ms</b> &nbsp;|&nbsp;
+      T1.ACC: <b id="accTextTop">0 ms</b> &nbsp;|&nbsp;
+      T1.DN: <b id="doneTextTop">OFF</b>
     </div>
   </div>
 
   <div class="panel">
-    <svg viewBox="0 0 980 180"
-         role="img"
-         aria-label="Move function sending a selected time value into a timer preset">
+    <svg viewBox="0 0 980 520" role="img" aria-label="Multi-rung PLC example showing move instructions on separate rungs feeding a timer preset">
+
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
 
       <!-- Rails -->
-      <line class="rail" x1="70"  y1="20" x2="70"  y2="160"/>
-      <line class="rail" x1="910" y1="20" x2="910" y2="160"/>
-      <text class="lbl" x="58"  y="14">L (Power)</text>
+      <line class="rail" x1="70" y1="20" x2="70" y2="500"/>
+      <line class="rail" x1="910" y1="20" x2="910" y2="500"/>
+      <text class="lbl" x="58" y="14">L (Power)</text>
       <text class="lbl" x="902" y="14">N</text>
 
-      <!-- Left wire -->
+      <!-- ================= RUNG 1 SHORT ================= -->
+      <text class="lbl" x="80" y="55">Rung 1</text>
       <path class="wire" d="M70 90 H 150" />
-      
-      <!-- Start contact -->
       <line class="contact-post" x1="150" y1="60" x2="150" y2="120"/>
       <line class="contact-post" x1="190" y1="60" x2="190" y2="120"/>
-      <line class="contact-bridge" id="moveContactBridge" x1="150" y1="90" x2="190" y2="90"/>
-      <text class="lbl" x="142" y="50">Start</text>
+      <line class="contact-bridge" id="bridgeShort" x1="150" y1="90" x2="190" y2="90"/>
+      <text class="lbl" x="140" y="50">Short</text>
+      <path class="wire" d="M190 90 H 270" />
 
-      <!-- Wire to MOVE -->
-      <path class="wire" d="M190 90 H 260" />
+      <rect class="timer-box" x="270" y="45" width="210" height="90" rx="8" ry="8"/>
+      <text class="timer-text" x="375" y="68" text-anchor="middle" style="font-weight:bold;">MOVE</text>
+      <text class="timer-text" x="375" y="92" text-anchor="middle">2000 → T1.PRE</text>
+      <text class="timer-text" id="moveShortState" x="375" y="116" text-anchor="middle">Instruction idle</text>
 
-      <!-- MOVE block -->
-      <rect class="timer-box" x="260" y="40" width="170" height="100" rx="8" ry="8" />
-      <text class="timer-text" x="345" y="60" text-anchor="middle" style="font-weight:bold;">MOVE</text>
-      <text class="timer-text" id="moveBlockSource" x="345" y="85" text-anchor="middle">IN: 5000 ms</text>
-      <text class="timer-text" id="moveBlockDest" x="345" y="110" text-anchor="middle">OUT: T1.PRE</text>
-      <text class="timer-text" x="345" y="128" text-anchor="middle">Copies selected time</text>
+      <path class="wire" d="M480 90 H 910" />
+      <path class="flow" id="flowShort" d="M70 90 H 910" />
 
-      <!-- Wire to timer -->
-      <path class="wire" d="M430 90 H 500" />
+      <!-- ================= RUNG 2 MEDIUM ================= -->
+      <text class="lbl" x="80" y="155">Rung 2</text>
+      <path class="wire" d="M70 190 H 150" />
+      <line class="contact-post" x1="150" y1="160" x2="150" y2="220"/>
+      <line class="contact-post" x1="190" y1="160" x2="190" y2="220"/>
+      <line class="contact-bridge" id="bridgeMedium" x1="150" y1="190" x2="190" y2="190"/>
+      <text class="lbl" x="130" y="150">Medium</text>
+      <path class="wire" d="M190 190 H 270" />
 
-      <!-- Timer block -->
-      <rect class="timer-box" x="500" y="35" width="220" height="110" rx="8" ry="8" />
-      <text class="timer-text" x="610" y="58" text-anchor="middle" style="font-weight:bold;">TON T1</text>
-      <text class="timer-text" id="timerPresetText" x="610" y="83" text-anchor="middle">PRE: 5000 ms</text>
-      <text class="timer-text" id="timerAccumText" x="610" y="106" text-anchor="middle">ACC: 0 ms</text>
-      <text class="timer-text" id="timerStatusText" x="610" y="128" text-anchor="middle">DN: OFF</text>
+      <rect class="timer-box" x="270" y="145" width="210" height="90" rx="8" ry="8"/>
+      <text class="timer-text" x="375" y="168" text-anchor="middle" style="font-weight:bold;">MOVE</text>
+      <text class="timer-text" x="375" y="192" text-anchor="middle">5000 → T1.PRE</text>
+      <text class="timer-text" id="moveMediumState" x="375" y="216" text-anchor="middle">Instruction executed</text>
 
-      <!-- Wire to coil -->
-      <path class="wire" d="M720 90 H 780" />
+      <path class="wire" d="M480 190 H 910" />
+      <path class="flow" id="flowMedium" d="M70 190 H 910" />
 
-      <!-- Output coil -->
-      <path class="coil" d="M840 68 A30 22 0 0 0 840 112" />
-      <path class="coil" d="M840 112 A30 22 0 0 0 840 68" />
-      <circle class="lamp" cx="840" cy="90" r="18" />
-      <path class="wire" d="M780 90 H 810" />
-      <path class="wire" d="M870 90 H 910" />
-      <text class="lbl" x="812" y="140">Output Q0.0</text>
+      <!-- ================= RUNG 3 LONG ================= -->
+      <text class="lbl" x="80" y="255">Rung 3</text>
+      <path class="wire" d="M70 290 H 150" />
+      <line class="contact-post" x1="150" y1="260" x2="150" y2="320"/>
+      <line class="contact-post" x1="190" y1="260" x2="190" y2="320"/>
+      <line class="contact-bridge" id="bridgeLong" x1="150" y1="290" x2="190" y2="290"/>
+      <text class="lbl" x="145" y="250">Long</text>
+      <path class="wire" d="M190 290 H 270" />
 
-      <!-- Animated flow -->
-      <path class="flow" id="moveFlow1" d="M70 90 H 260" />
-      <path class="flow" id="moveFlow2" d="M430 90 H 720" />
-      <path class="flow" id="moveFlow3" d="M720 90 H 910" />
+      <rect class="timer-box" x="270" y="245" width="210" height="90" rx="8" ry="8"/>
+      <text class="timer-text" x="375" y="268" text-anchor="middle" style="font-weight:bold;">MOVE</text>
+      <text class="timer-text" x="375" y="292" text-anchor="middle">8000 → T1.PRE</text>
+      <text class="timer-text" id="moveLongState" x="375" y="316" text-anchor="middle">Instruction idle</text>
+
+      <path class="wire" d="M480 290 H 910" />
+      <path class="flow" id="flowLong" d="M70 290 H 910" />
+
+      <!-- ================= DATA ARROW TO TIMER ================= -->
+      <path d="M520 190 C600 190, 650 190, 650 360"
+            stroke="#94a3b8" stroke-width="4" fill="none" stroke-dasharray="8 8"/>
+      <polygon points="644,355 656,355 650,368" fill="#94a3b8"/>
+      <text class="lbl" x="560" y="180">Data written to T1.PRE</text>
+
+      <!-- ================= RUNG 4 TIMER ================= -->
+      <text class="lbl" x="80" y="355">Rung 4</text>
+      <path class="wire" d="M70 390 H 150" />
+      <line class="contact-post" x1="150" y1="360" x2="150" y2="420"/>
+      <line class="contact-post" x1="190" y1="360" x2="190" y2="420"/>
+      <line class="contact-bridge" id="bridgeStart" x1="150" y1="390" x2="190" y2="390"/>
+      <text class="lbl" x="145" y="350">Start</text>
+      <path class="wire" d="M190 390 H 260" />
+
+      <rect class="timer-box" x="260" y="340" width="270" height="100" rx="8" ry="8"/>
+      <text class="timer-text" x="395" y="365" text-anchor="middle" style="font-weight:bold;">TON T1</text>
+      <text class="timer-text" id="timerPreText" x="395" y="390" text-anchor="middle">PRE: 5000 ms</text>
+      <text class="timer-text" id="timerAccText" x="395" y="412" text-anchor="middle">ACC: 0 ms</text>
+      <text class="timer-text" id="timerDnText" x="395" y="434" text-anchor="middle">DN: OFF</text>
+
+      <path class="wire" d="M530 390 H 910" />
+      <path class="flow" id="flowTimer" d="M70 390 H 910" />
+
+      <!-- ================= RUNG 5 OUTPUT ================= -->
+      <text class="lbl" x="80" y="455">Rung 5</text>
+      <path class="wire" d="M70 470 H 150" />
+      <line class="contact-post" x1="150" y1="440" x2="150" y2="500"/>
+      <line class="contact-post" x1="190" y1="440" x2="190" y2="500"/>
+      <line class="contact-bridge" id="bridgeDone" x1="150" y1="470" x2="190" y2="470"/>
+      <text class="lbl" x="142" y="430">T1.DN</text>
+
+      <path class="wire" d="M190 470 H 720" />
+      <path class="coil" d="M790 448 A30 22 0 0 0 790 492" />
+      <path class="coil" d="M790 492 A30 22 0 0 0 790 448" />
+      <circle class="lamp" cx="790" cy="470" r="18" />
+      <path class="wire" d="M720 470 H 760" />
+      <path class="wire" d="M820 470 H 910" />
+      <text class="lbl" x="760" y="510">Q0.0</text>
+      <path class="flow" id="flowDone" d="M70 470 H 910" />
     </svg>
   </div>
 
   <p style="margin:.75rem 0 0;">
-    This example shows how a <code>MOVE</code> instruction can copy a selected time value into a timer preset.
-    The timer logic does not change — only the preset value changes.
+    Each mode rung contains its own <code>MOVE</code> instruction. The active mode writes a different preset value into <code>T1.PRE</code>. The timer itself is on a separate rung, and the output only energises when <code>T1.DN</code> becomes true.
   </p>
 </div>
 
 <script>
 (function(){
-  const rung = document.getElementById('moveRung');
-  const modeSel = document.getElementById('moveMode');
-  const startSw = document.getElementById('moveStart');
-  const moveBtn = document.getElementById('moveBtn');
-  const resetBtn = document.getElementById('moveReset');
+  const sim = document.getElementById('moveTonSim');
 
-  const moveSource = document.getElementById('moveSource');
-  const movePreset = document.getElementById('movePreset');
-  const moveAcc = document.getElementById('moveAcc');
-  const moveDone = document.getElementById('moveDone');
+  const modeShort = document.getElementById('modeShort');
+  const modeMedium = document.getElementById('modeMedium');
+  const modeLong = document.getElementById('modeLong');
+  const startTimer = document.getElementById('startTimer');
+  const resetBtn = document.getElementById('resetMoveTon');
 
-  const moveBlockSource = document.getElementById('moveBlockSource');
-  const timerPresetText = document.getElementById('timerPresetText');
-  const timerAccumText = document.getElementById('timerAccumText');
-  const timerStatusText = document.getElementById('timerStatusText');
+  const activeModeText = document.getElementById('activeModeText');
+  const presetTextTop = document.getElementById('presetTextTop');
+  const accTextTop = document.getElementById('accTextTop');
+  const doneTextTop = document.getElementById('doneTextTop');
 
-  const flow1 = document.getElementById('moveFlow1');
-  const flow2 = document.getElementById('moveFlow2');
-  const flow3 = document.getElementById('moveFlow3');
-  const contactBridge = document.getElementById('moveContactBridge');
+  const moveShortState = document.getElementById('moveShortState');
+  const moveMediumState = document.getElementById('moveMediumState');
+  const moveLongState = document.getElementById('moveLongState');
 
-  let sourceValue = parseInt(modeSel.value, 10);
-  let timerPreset = sourceValue;
-  let acc = 0;
-  let done = false;
+  const timerPreText = document.getElementById('timerPreText');
+  const timerAccText = document.getElementById('timerAccText');
+  const timerDnText = document.getElementById('timerDnText');
+
+  const bridgeShort = document.getElementById('bridgeShort');
+  const bridgeMedium = document.getElementById('bridgeMedium');
+  const bridgeLong = document.getElementById('bridgeLong');
+  const bridgeStart = document.getElementById('bridgeStart');
+  const bridgeDone = document.getElementById('bridgeDone');
+
+  const flowShort = document.getElementById('flowShort');
+  const flowMedium = document.getElementById('flowMedium');
+  const flowLong = document.getElementById('flowLong');
+  const flowTimer = document.getElementById('flowTimer');
+  const flowDone = document.getElementById('flowDone');
+
+  let timerPRE = 5000;
+  let timerACC = 0;
+  let timerDN = false;
   let lastTime = null;
 
-  function formatMs(ms){
-    return `${ms} ms`;
+  function setExclusiveMode(selected){
+    modeShort.checked = selected === 'short';
+    modeMedium.checked = selected === 'medium';
+    modeLong.checked = selected === 'long';
   }
 
-  function updateModeDisplay(){
-    sourceValue = parseInt(modeSel.value, 10);
-    moveSource.textContent = formatMs(sourceValue);
-    moveBlockSource.textContent = `IN: ${formatMs(sourceValue)}`;
+  function getActiveMode(){
+    if(modeShort.checked) return 'short';
+    if(modeLong.checked) return 'long';
+    return 'medium';
   }
 
-  function doMove(){
-    timerPreset = sourceValue;
-    movePreset.textContent = formatMs(timerPreset);
-    timerPresetText.textContent = `PRE: ${formatMs(timerPreset)}`;
+  function executeMoveFromMode(){
+    const mode = getActiveMode();
+
+    if(mode === 'short'){
+      timerPRE = 2000;
+    } else if(mode === 'medium'){
+      timerPRE = 5000;
+    } else {
+      timerPRE = 8000;
+    }
+
+    if(timerACC > timerPRE){
+      timerACC = timerPRE;
+    }
+    if(timerACC < timerPRE){
+      timerDN = false;
+    }
   }
 
-  function resetTimer(){
-    acc = 0;
-    done = false;
-    lastTime = null;
-    startSw.checked = false;
-    render();
+  function formatMs(v){
+    return `${Math.round(v)} ms`;
   }
 
   function render(){
-    moveAcc.textContent = formatMs(acc);
-    moveDone.textContent = done ? 'ON' : 'OFF';
-    timerAccumText.textContent = `ACC: ${formatMs(acc)}`;
-    timerStatusText.textContent = `DN: ${done ? 'ON' : 'OFF'}`;
+    const mode = getActiveMode();
 
-    const running = startSw.checked && !done;
+    bridgeShort.style.opacity = modeShort.checked ? '1' : '0.2';
+    bridgeMedium.style.opacity = modeMedium.checked ? '1' : '0.2';
+    bridgeLong.style.opacity = modeLong.checked ? '1' : '0.2';
+    bridgeStart.style.opacity = startTimer.checked ? '1' : '0.2';
+    bridgeDone.style.opacity = timerDN ? '1' : '0.2';
 
-    contactBridge.style.opacity = startSw.checked ? '1' : '0.2';
+    flowShort.style.opacity = modeShort.checked ? 1 : 0;
+    flowMedium.style.opacity = modeMedium.checked ? 1 : 0;
+    flowLong.style.opacity = modeLong.checked ? 1 : 0;
+    flowTimer.style.opacity = startTimer.checked ? 1 : 0;
+    flowDone.style.opacity = timerDN ? 1 : 0;
 
-    flow1.style.opacity = startSw.checked ? 1 : 0;
-    flow2.style.opacity = startSw.checked ? 1 : 0;
-    flow3.style.opacity = done ? 1 : 0;
+    moveShortState.textContent = mode === 'short' ? 'Instruction executed' : 'Instruction idle';
+    moveMediumState.textContent = mode === 'medium' ? 'Instruction executed' : 'Instruction idle';
+    moveLongState.textContent = mode === 'long' ? 'Instruction executed' : 'Instruction idle';
 
-    rung.classList.toggle('on', done);
+    activeModeText.textContent =
+      mode === 'short' ? 'Short' :
+      mode === 'medium' ? 'Medium' : 'Long';
+
+    presetTextTop.textContent = formatMs(timerPRE);
+    accTextTop.textContent = formatMs(timerACC);
+    doneTextTop.textContent = timerDN ? 'ON' : 'OFF';
+
+    timerPreText.textContent = `PRE: ${formatMs(timerPRE)}`;
+    timerAccText.textContent = `ACC: ${formatMs(timerACC)}`;
+    timerDnText.textContent = `DN: ${timerDN ? 'ON' : 'OFF'}`;
+
+    sim.classList.toggle('on', timerDN);
   }
 
+  function resetAll(){
+    startTimer.checked = false;
+    timerACC = 0;
+    timerDN = false;
+    lastTime = null;
+    executeMoveFromMode();
+    render();
+  }
+
+  modeShort.addEventListener('change', () => {
+    if(modeShort.checked){
+      setExclusiveMode('short');
+      executeMoveFromMode();
+      timerACC = 0;
+      timerDN = false;
+      render();
+    } else if(!modeMedium.checked && !modeLong.checked){
+      setExclusiveMode('medium');
+      executeMoveFromMode();
+      render();
+    }
+  });
+
+  modeMedium.addEventListener('change', () => {
+    if(modeMedium.checked){
+      setExclusiveMode('medium');
+      executeMoveFromMode();
+      timerACC = 0;
+      timerDN = false;
+      render();
+    } else if(!modeShort.checked && !modeLong.checked){
+      setExclusiveMode('medium');
+      executeMoveFromMode();
+      render();
+    }
+  });
+
+  modeLong.addEventListener('change', () => {
+    if(modeLong.checked){
+      setExclusiveMode('long');
+      executeMoveFromMode();
+      timerACC = 0;
+      timerDN = false;
+      render();
+    } else if(!modeShort.checked && !modeMedium.checked){
+      setExclusiveMode('medium');
+      executeMoveFromMode();
+      render();
+    }
+  });
+
+  startTimer.addEventListener('change', () => {
+    lastTime = null;
+    render();
+  });
+
+  resetBtn.addEventListener('click', resetAll);
+
   function tick(timestamp){
-    if(startSw.checked && !done){
+    if(startTimer.checked && !timerDN){
       if(lastTime === null) lastTime = timestamp;
-      const delta = timestamp - lastTime;
+      const dt = timestamp - lastTime;
       lastTime = timestamp;
 
-      acc += delta;
-      if(acc >= timerPreset){
-        acc = timerPreset;
-        done = true;
+      timerACC += dt;
+      if(timerACC >= timerPRE){
+        timerACC = timerPRE;
+        timerDN = true;
       }
     } else {
       lastTime = timestamp;
@@ -297,32 +450,12 @@ permalink: /PLC-Ladder-Logic/Move/
     requestAnimationFrame(tick);
   }
 
-  modeSel.addEventListener('change', () => {
-    updateModeDisplay();
-  });
-
-  moveBtn.addEventListener('click', () => {
-    doMove();
-    acc = 0;
-    done = false;
-    render();
-  });
-
-  resetBtn.addEventListener('click', resetTimer);
-
-  startSw.addEventListener('change', () => {
-    if(!startSw.checked){
-      lastTime = null;
-    }
-    render();
-  });
-
-  updateModeDisplay();
-  doMove();
+  setExclusiveMode('medium');
+  executeMoveFromMode();
   render();
   requestAnimationFrame(tick);
 })();
 </script>
-<!-- === /MOVE Function Example === -->
+<!-- === /MOVE + TON Multi-Rung Example === -->
 
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
