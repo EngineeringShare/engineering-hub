@@ -148,24 +148,6 @@ units:
     </div>
   </a>
 
-  <a class="card-link" href="https://engineeringshare.co.uk/Relay/Changeover-Contact/">
-    <div class="card">
-      <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/Relay-Icons/Changeover_Contact.png" alt="Changeover Contact Symbol">
-      </div>
-      <h3>Changeover Contact</h3>
-    </div>
-  </a>
-
-  <a class="card-link" href="https://engineeringshare.co.uk/Relay/Relay-Coil/">
-    <div class="card">
-      <div class="card-image">
-        <img src="https://engineeringshare.co.uk/images/Relay-Icons/Relay_Coil.png" alt="Relay Coil Symbol">
-      </div>
-      <h3>Relay Coil</h3>
-    </div>
-  </a>
-
 </div>
 
 ---
