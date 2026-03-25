@@ -116,10 +116,8 @@ permalink: /PLC-Ladder-Logic/Move/
 </style>
 
 <div style="text-align: center;">
-    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/CMP_Equals.png" alt="Comparator Function Symbol" style="max-width: 200px; height: auto;">
-    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/CMP_Not_Equals.png" alt="Comparator Function Symbol" style="max-width: 200px; height: auto;">
-    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/CMP_Greater.png" alt="Comparator Function Symbol" style="max-width: 200px; height: auto;">
-    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/CMP_Lesser.png" alt="Comparator Function Symbol" style="max-width: 200px; height: auto;">
+    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/Move_Function.png" alt="Move Function Symbol" style="max-width: 200px; height: auto;">
+    <img src="https://EngineeringShare.github.io/engineering-hub/images/PLC-Icons/TON_Move.png" alt="Comparator Function Symbol" style="max-width: 200px; height: auto;">
 </div>
 
 <h2>Data Move Function Overview</h2>
