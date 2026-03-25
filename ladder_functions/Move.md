@@ -176,7 +176,7 @@ permalink: /PLC-Ladder-Logic/Move/
 
       <rect class="timer-box" x="270" y="45" width="210" height="90" rx="8" ry="8"/>
       <text class="timer-text" x="375" y="68" text-anchor="middle" style="font-weight:bold;">MOVE</text>
-      <text class="timer-text" x="375" y="92" text-anchor="middle">2000 → T1.PRE</text>
+      <text class="timer-text" x="375" y="92" text-anchor="middle">2000 → T1.PT</text>
       <text class="timer-text" id="moveShortState" x="375" y="116" text-anchor="middle">Instruction idle</text>
 
       <path class="wire" d="M480 90 H 910" />
@@ -193,7 +193,7 @@ permalink: /PLC-Ladder-Logic/Move/
 
       <rect class="timer-box" x="270" y="145" width="210" height="90" rx="8" ry="8"/>
       <text class="timer-text" x="375" y="168" text-anchor="middle" style="font-weight:bold;">MOVE</text>
-      <text class="timer-text" x="375" y="192" text-anchor="middle">5000 → T1.PRE</text>
+      <text class="timer-text" x="375" y="192" text-anchor="middle">5000 → T1.PT</text>
       <text class="timer-text" id="moveMediumState" x="375" y="216" text-anchor="middle">Instruction executed</text>
 
       <path class="wire" d="M480 190 H 910" />
@@ -210,7 +210,7 @@ permalink: /PLC-Ladder-Logic/Move/
 
       <rect class="timer-box" x="270" y="245" width="210" height="90" rx="8" ry="8"/>
       <text class="timer-text" x="375" y="268" text-anchor="middle" style="font-weight:bold;">MOVE</text>
-      <text class="timer-text" x="375" y="292" text-anchor="middle">8000 → T1.PRE</text>
+      <text class="timer-text" x="375" y="292" text-anchor="middle">8000 → T1.PT</text>
       <text class="timer-text" id="moveLongState" x="375" y="316" text-anchor="middle">Instruction idle</text>
 
       <path class="wire" d="M480 290 H 910" />
@@ -220,7 +220,7 @@ permalink: /PLC-Ladder-Logic/Move/
       <path d="M520 190 C600 190, 650 190, 650 360"
             stroke="#94a3b8" stroke-width="4" fill="none" stroke-dasharray="8 8"/>
       <polygon points="644,355 656,355 650,368" fill="#94a3b8"/>
-      <text class="lbl" x="560" y="180">Data written to T1.PRE</text>
+      <text class="lbl" x="560" y="180">Data written to T1.PT</text>
 
       <!-- ================= RUNG 4 TIMER ================= -->
       <text class="lbl" x="80" y="355">Rung 4</text>
@@ -233,8 +233,8 @@ permalink: /PLC-Ladder-Logic/Move/
 
       <rect class="timer-box" x="260" y="340" width="270" height="100" rx="8" ry="8"/>
       <text class="timer-text" x="395" y="365" text-anchor="middle" style="font-weight:bold;">TON T1</text>
-      <text class="timer-text" id="timerPreText" x="395" y="390" text-anchor="middle">PRE: 5000 ms</text>
-      <text class="timer-text" id="timerAccText" x="395" y="412" text-anchor="middle">ACC: 0 ms</text>
+      <text class="timer-text" id="timerPreText" x="395" y="390" text-anchor="middle">PT: 5000 ms</text>
+      <text class="timer-text" id="timerAccText" x="395" y="412" text-anchor="middle">ET: 0 ms</text>
       <text class="timer-text" id="timerDnText" x="395" y="434" text-anchor="middle">DN: OFF</text>
 
       <!-- Wire to coil -->
@@ -257,7 +257,7 @@ permalink: /PLC-Ladder-Logic/Move/
   </div>
 
   <p style="margin:.75rem 0 0;">
-    Each mode rung contains its own <code>MOVE</code> instruction. The active mode writes a different preset value into <code>T1.PRE</code>. The timer itself is on a separate rung, and the output only energises when <code>T1.DN</code> becomes true.
+    Each mode rung contains its own <code>MOVE</code> instruction. The active mode writes a different preset value into <code>T1.PT</code>. The timer itself is on a separate rung, and the output only energises when <code>T1.DN</code> becomes true.
   </p>
 </div>
 
@@ -288,16 +288,14 @@ permalink: /PLC-Ladder-Logic/Move/
   const bridgeMedium = document.getElementById('bridgeMedium');
   const bridgeLong = document.getElementById('bridgeLong');
   const bridgeStart = document.getElementById('bridgeStart');
-  const bridgeDone = document.getElementById('bridgeDone');
 
   const flowShort = document.getElementById('flowShort');
   const flowMedium = document.getElementById('flowMedium');
   const flowLong = document.getElementById('flowLong');
   const flowTimer = document.getElementById('flowTimer');
-  const flowDone = document.getElementById('flowDone');
 
-  let timerPRE = 5000;
-  let timerACC = 0;
+  let timerPT = 5000;
+  let timerET = 0;
   let timerDN = false;
   let lastTime = null;
 
@@ -317,17 +315,17 @@ permalink: /PLC-Ladder-Logic/Move/
     const mode = getActiveMode();
 
     if(mode === 'short'){
-      timerPRE = 2000;
+      timerPT = 2000;
     } else if(mode === 'medium'){
-      timerPRE = 5000;
+      timerPT = 5000;
     } else {
-      timerPRE = 8000;
+      timerPT = 8000;
     }
 
-    if(timerACC > timerPRE){
-      timerACC = timerPRE;
+    if(timerET > timerPT){
+      timerET = timerPT;
     }
-    if(timerACC < timerPRE){
+    if(timerET < timerPT){
       timerDN = false;
     }
   }
@@ -343,13 +341,11 @@ permalink: /PLC-Ladder-Logic/Move/
     bridgeMedium.style.opacity = modeMedium.checked ? '1' : '0.2';
     bridgeLong.style.opacity = modeLong.checked ? '1' : '0.2';
     bridgeStart.style.opacity = startTimer.checked ? '1' : '0.2';
-    bridgeDone.style.opacity = timerDN ? '1' : '0.2';
 
     flowShort.style.opacity = modeShort.checked ? 1 : 0;
     flowMedium.style.opacity = modeMedium.checked ? 1 : 0;
     flowLong.style.opacity = modeLong.checked ? 1 : 0;
     flowTimer.style.opacity = startTimer.checked ? 1 : 0;
-    sim.classList.toggle('on', timerDN);
 
     moveShortState.textContent = mode === 'short' ? 'Instruction executed' : 'Instruction idle';
     moveMediumState.textContent = mode === 'medium' ? 'Instruction executed' : 'Instruction idle';
@@ -359,12 +355,12 @@ permalink: /PLC-Ladder-Logic/Move/
       mode === 'short' ? 'Short' :
       mode === 'medium' ? 'Medium' : 'Long';
 
-    presetTextTop.textContent = formatMs(timerPRE);
-    accTextTop.textContent = formatMs(timerACC);
+    presetTextTop.textContent = formatMs(timerPT);
+    accTextTop.textContent = formatMs(timerET);
     doneTextTop.textContent = timerDN ? 'ON' : 'OFF';
 
-    timerPreText.textContent = `PT: ${formatMs(timerPRE)}`;
-    timerAccText.textContent = `ET: ${formatMs(timerACC)}`;
+    timerPreText.textContent = `PT: ${formatMs(timerPT)}`;
+    timerAccText.textContent = `ET: ${formatMs(timerET)}`;
     timerDnText.textContent = `DN: ${timerDN ? 'ON' : 'OFF'}`;
 
     sim.classList.toggle('on', timerDN);
@@ -372,7 +368,7 @@ permalink: /PLC-Ladder-Logic/Move/
 
   function resetAll(){
     startTimer.checked = false;
-    timerACC = 0;
+    timerET = 0;
     timerDN = false;
     lastTime = null;
     executeMoveFromMode();
@@ -383,7 +379,7 @@ permalink: /PLC-Ladder-Logic/Move/
     if(modeShort.checked){
       setExclusiveMode('short');
       executeMoveFromMode();
-      timerACC = 0;
+      timerET = 0;
       timerDN = false;
       render();
     } else if(!modeMedium.checked && !modeLong.checked){
@@ -397,7 +393,7 @@ permalink: /PLC-Ladder-Logic/Move/
     if(modeMedium.checked){
       setExclusiveMode('medium');
       executeMoveFromMode();
-      timerACC = 0;
+      timerET = 0;
       timerDN = false;
       render();
     } else if(!modeShort.checked && !modeLong.checked){
@@ -411,7 +407,7 @@ permalink: /PLC-Ladder-Logic/Move/
     if(modeLong.checked){
       setExclusiveMode('long');
       executeMoveFromMode();
-      timerACC = 0;
+      timerET = 0;
       timerDN = false;
       render();
     } else if(!modeShort.checked && !modeMedium.checked){
@@ -434,9 +430,9 @@ permalink: /PLC-Ladder-Logic/Move/
       const dt = timestamp - lastTime;
       lastTime = timestamp;
 
-      timerACC += dt;
-      if(timerACC >= timerPRE){
-        timerACC = timerPRE;
+      timerET += dt;
+      if(timerET >= timerPT){
+        timerET = timerPT;
         timerDN = true;
       }
     } else {
@@ -453,6 +449,5 @@ permalink: /PLC-Ladder-Logic/Move/
   requestAnimationFrame(tick);
 })();
 </script>
-<!-- === /MOVE + TON Multi-Rung Example === -->
 
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
