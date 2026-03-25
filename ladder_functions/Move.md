@@ -18,7 +18,6 @@ permalink: /PLC-Ladder-Logic/Move/
   .hero-img{ text-align:center; margin: .5rem 0 1rem; }
   .hero-img img{ max-width: 220px; height:auto; }
 
-  /* Table polish */
   table{
     width:100%;
     border-collapse: collapse;
@@ -34,21 +33,73 @@ permalink: /PLC-Ladder-Logic/Move/
   tbody td{ border-top:1px solid #f1f5f9; }
   code{ background:#f3f4f6; padding:.05rem .35rem; border-radius:6px; }
 
-  /* Simulator styles (same “nice” layout as NC page) */
-  .ladder-rung{--rail:#0f172a;--wire:#cbd5e1;--text:#0b1324;--muted:#64748b;--active:#16a34a;--coil:#2563eb;
-    max-width:760px;margin:1rem auto;border:1px solid #e5e7eb;border-radius:14px;padding:1rem;background:#fff;
-    box-shadow:0 6px 20px rgba(2,6,23,.06);}
-  .ladder-rung .top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;gap:.75rem;flex-wrap:wrap}
-  .kv{color:var(--muted)} .kv b{color:var(--text)}
-  .switch{display:inline-flex;align-items:center;gap:.6rem;font-weight:600;color:var(--text)}
-  .switch input{appearance:none;width:48px;height:28px;border-radius:999px;background:#e2e8f0;position:relative;cursor:pointer;transition:background .18s}
-  .switch input:after{content:"";position:absolute;left:3px;top:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.25);transition:left .18s}
-  .switch input:checked{background:#bbf7d0}.switch input:checked:after{left:23px}
-  .panel{background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;padding:.5rem}
+  .ladder-rung{
+    --rail:#0f172a;
+    --wire:#cbd5e1;
+    --text:#0b1324;
+    --muted:#64748b;
+    --active:#16a34a;
+    --coil:#2563eb;
+    max-width:760px;
+    margin:1rem auto;
+    border:1px solid #e5e7eb;
+    border-radius:14px;
+    padding:1rem;
+    background:#fff;
+    box-shadow:0 6px 20px rgba(2,6,23,.06);
+  }
+  .ladder-rung .top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:.5rem;
+    gap:.75rem;
+    flex-wrap:wrap
+  }
+  .kv{color:var(--muted)}
+  .kv b{color:var(--text)}
+  .switch{
+    display:inline-flex;
+    align-items:center;
+    gap:.6rem;
+    font-weight:600;
+    color:var(--text)
+  }
+  .switch input{
+    appearance:none;
+    width:48px;
+    height:28px;
+    border-radius:999px;
+    background:#e2e8f0;
+    position:relative;
+    cursor:pointer;
+    transition:background .18s
+  }
+  .switch input:after{
+    content:"";
+    position:absolute;
+    left:3px;
+    top:3px;
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 1px 2px rgba(0,0,0,.25);
+    transition:left .18s
+  }
+  .switch input:checked{background:#bbf7d0}
+  .switch input:checked:after{left:23px}
+
+  .panel{
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:.5rem
+  }
   svg{width:100%;height:auto;display:block}
   .rail{stroke:var(--rail);stroke-width:7;stroke-linecap:round}
   .wire{stroke:var(--wire);stroke-width:5;fill:none;stroke-linecap:round}
-  .contact-post{stroke:var(--wire);stroke-width:6}       /* NO posts (no slash) */
+  .contact-post{stroke:var(--wire);stroke-width:6}
   .contact-bridge{stroke:var(--wire);stroke-width:6;stroke-linecap:round;opacity:.2;transition:opacity .12s}
   .coil{stroke:var(--coil);stroke-width:6;fill:none}
   .lamp{fill:#fbbf24;opacity:.15;transition:opacity .18s;filter:url(#glow)}
@@ -59,21 +110,9 @@ permalink: /PLC-Ladder-Logic/Move/
   .on .lamp{opacity:.95}
   @keyframes flow{to{stroke-dashoffset:-22}}
   .lbl{fill:var(--muted);font-size:12px}
-  .actuator .cyl-body{fill:none;stroke:var(--wire);stroke-width:5 ;stroke-linecap:round;}
-  .actuator .rod line{stroke:var(--wire);stroke-width:5;stroke-linecap:round;}
-  .actuator .rod circle{fill:var(--wire);stroke:var(--wire);stroke-width:2;}
-  .actuator .rod{transform:translateX(0);transform-box:fill-box;transform-origin:center;transition:transform .18s ease-out;}
-  .ladder-rung.on .actuator .rod{transform:translateX(32px);}
   .switch-row{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;}
-  .timer-box{stroke: var(--wire);stroke-width: 4;fill: #f8fafc;   /* or #ffffff, but not default/black */}
+  .timer-box{stroke:var(--wire);stroke-width:4;fill:#f8fafc}
   .timer-text{fill:var(--muted);font-size:12px;}
-  /* CTU-specific “on” styling (only right side / coil) */
-  #ctuRung.ctu-on .coil{stroke:var(--active);}
-  #ctuRung.ctu-on .lamp{opacity:.95;}
-  #ctuRung.ctu-on .flow-out{opacity:1;animation:flow 1.05s linear infinite;}
-  #ctdRung.ctd-on .coil{stroke: var(--active);}
-  #ctdRung.ctd-on .lamp{opacity: .95;}
-  #ctdRung.ctd-on .flow-out{opacity: 1;animation: flow 1.05s linear infinite;}
 </style>
 
 <div style="text-align: center;">
@@ -84,7 +123,7 @@ permalink: /PLC-Ladder-Logic/Move/
 </div>
 
 <h2>Data Move Function Overview</h2>
-<p> 
+<p>
     The data move function is used to transfer data from one location to another within the PLC. It is a fundamental operation in PLC programming, allowing for the manipulation and routing of data throughout the control system. The move function typically takes a source value and moves it to a destination address, which can be a memory location, an output, or another variable. This function is essential for tasks such as updating values, controlling outputs based on input conditions, facilitating communication between different parts of the program and controlling sequential operations.
 </p>
 
@@ -173,14 +212,12 @@ permalink: /PLC-Ladder-Logic/Move/
       <line class="contact-bridge" id="bridgeShort" x1="150" y1="90" x2="190" y2="90"/>
       <text class="lbl" x="140" y="50">Short</text>
       <path class="wire" d="M190 90 H 270" />
-
+      <path class="wire" d="M480 90 H 910" />
+      <path class="flow" id="flowShort" d="M70 90 H 910" />
       <rect class="timer-box" x="270" y="45" width="210" height="90" rx="8" ry="8"/>
       <text class="timer-text" x="375" y="68" text-anchor="middle" style="font-weight:bold;">MOVE</text>
       <text class="timer-text" x="375" y="92" text-anchor="middle">2000 → T1.PT</text>
       <text class="timer-text" id="moveShortState" x="375" y="116" text-anchor="middle">Instruction idle</text>
-
-      <path class="wire" d="M480 90 H 910" />
-      <path class="flow" id="flowShort" d="M70 90 H 910" />
 
       <!-- ================= RUNG 2 MEDIUM ================= -->
       <text class="lbl" x="80" y="155">Rung 2</text>
@@ -190,14 +227,12 @@ permalink: /PLC-Ladder-Logic/Move/
       <line class="contact-bridge" id="bridgeMedium" x1="150" y1="190" x2="190" y2="190"/>
       <text class="lbl" x="130" y="150">Medium</text>
       <path class="wire" d="M190 190 H 270" />
-
+      <path class="wire" d="M480 190 H 910" />
+      <path class="flow" id="flowMedium" d="M70 190 H 910" />
       <rect class="timer-box" x="270" y="145" width="210" height="90" rx="8" ry="8"/>
       <text class="timer-text" x="375" y="168" text-anchor="middle" style="font-weight:bold;">MOVE</text>
       <text class="timer-text" x="375" y="192" text-anchor="middle">5000 → T1.PT</text>
       <text class="timer-text" id="moveMediumState" x="375" y="216" text-anchor="middle">Instruction executed</text>
-
-      <path class="wire" d="M480 190 H 910" />
-      <path class="flow" id="flowMedium" d="M70 190 H 910" />
 
       <!-- ================= RUNG 3 LONG ================= -->
       <text class="lbl" x="80" y="255">Rung 3</text>
@@ -207,14 +242,12 @@ permalink: /PLC-Ladder-Logic/Move/
       <line class="contact-bridge" id="bridgeLong" x1="150" y1="290" x2="190" y2="290"/>
       <text class="lbl" x="145" y="250">Long</text>
       <path class="wire" d="M190 290 H 270" />
-
+      <path class="wire" d="M480 290 H 910" />
+      <path class="flow" id="flowLong" d="M70 290 H 910" />
       <rect class="timer-box" x="270" y="245" width="210" height="90" rx="8" ry="8"/>
       <text class="timer-text" x="375" y="268" text-anchor="middle" style="font-weight:bold;">MOVE</text>
       <text class="timer-text" x="375" y="292" text-anchor="middle">8000 → T1.PT</text>
       <text class="timer-text" id="moveLongState" x="375" y="316" text-anchor="middle">Instruction idle</text>
-
-      <path class="wire" d="M480 290 H 910" />
-      <path class="flow" id="flowLong" d="M70 290 H 910" />
 
       <!-- ================= DATA ARROW TO TIMER ================= -->
       <path d="M520 190 C600 190, 650 190, 650 360"
@@ -251,8 +284,9 @@ permalink: /PLC-Ladder-Logic/Move/
 
       <text class="lbl" x="760" y="430">Q0.0</text>
 
-      <!-- Flow -->
-      <path class="flow" id="flowTimer" d="M70 390 H 910" />
+      <!-- Split flow -->
+      <path class="flow" id="flowTimerIn" d="M70 390 H 260" />
+      <path class="flow" id="flowTimerOut" d="M530 390 H 910" />
     </svg>
   </div>
 
@@ -292,7 +326,8 @@ permalink: /PLC-Ladder-Logic/Move/
   const flowShort = document.getElementById('flowShort');
   const flowMedium = document.getElementById('flowMedium');
   const flowLong = document.getElementById('flowLong');
-  const flowTimer = document.getElementById('flowTimer');
+  const flowTimerIn = document.getElementById('flowTimerIn');
+  const flowTimerOut = document.getElementById('flowTimerOut');
 
   let timerPT = 5000;
   let timerET = 0;
@@ -345,7 +380,8 @@ permalink: /PLC-Ladder-Logic/Move/
     flowShort.style.opacity = modeShort.checked ? 1 : 0;
     flowMedium.style.opacity = modeMedium.checked ? 1 : 0;
     flowLong.style.opacity = modeLong.checked ? 1 : 0;
-    flowTimer.style.opacity = startTimer.checked ? 1 : 0;
+    flowTimerIn.style.opacity = startTimer.checked ? 1 : 0;
+    flowTimerOut.style.opacity = timerDN ? 1 : 0;
 
     moveShortState.textContent = mode === 'short' ? 'Instruction executed' : 'Instruction idle';
     moveMediumState.textContent = mode === 'medium' ? 'Instruction executed' : 'Instruction idle';
@@ -449,5 +485,6 @@ permalink: /PLC-Ladder-Logic/Move/
   requestAnimationFrame(tick);
 })();
 </script>
+<!-- === /MOVE + TON Multi-Rung Example === -->
 
 <a href="https://engineeringshare.github.io/engineering-hub/2025/10/20/PLC-Ladder-Logic-Functions.html">🔙 Back to Ladder Logic Functions</a>
