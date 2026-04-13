@@ -77,10 +77,9 @@ This site is your one-stop destination for accessing class slides, assignments, 
 <p>Select a unit to view posts and resources:</p>
 
 <div class="projects">
-  {%- comment -%} 1. Initialize an empty array {%- endcomment -%}
   {% assign unit_names = "" | split: "" %}
 
-  {%- comment -%} 2. Collect only the 'unit' string from the units objects {%- endcomment -%}
+  {%- comment -%} Collect unit names from post front matter {%- endcomment -%}
   {% for post in site.posts %}
     {% if post.units %}
       {% for item in post.units %}
@@ -91,10 +90,11 @@ This site is your one-stop destination for accessing class slides, assignments, 
     {% endif %}
   {% endfor %}
 
-  {%- comment -%} 3. Now it is safe to uniq and sort because it's an array of strings {%- endcomment -%}
+  {%- comment -%} Add standalone hub pages manually {%- endcomment -%}
+  {% assign unit_names = unit_names | push: "T-Level Revision" %}
+
   {% assign sorted_units = unit_names | uniq | sort %}
 
-  {%- comment -%} 4. Render the cards {%- endcomment -%}
   {% for unit in sorted_units %}
     {% assign slugified_class = unit | slugify %}
     <a class="card-link" href="{{ '/classes/' | append: slugified_class | append: '/' | relative_url }}">
