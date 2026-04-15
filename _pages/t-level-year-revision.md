@@ -107,8 +107,48 @@ h1 {
 # 🧭 T-Level Engineering Revision Hub
 
 <div class="revision-intro">
-  <p><strong>Use these example question sets to practise exam-style questions across key T-Level engineering topics.</strong></p>
-  <p>Each set includes a separate mark scheme so you can check your answers or use them for guided revision in class.</p>
+  <p><strong>Welcome to the T-Level Engineering Revision Hub!</strong></p>
+  <p>This page is your go-to resource for revising key engineering concepts covered in the T-Level curriculum. Below, you'll find example questions, revision tools and games and links to further resources to help you prepare for your exams and assessments.</p>
+</div>
+
+## Revision Tools & Games
+
+<div class="projects">
+  <div class="card">
+    <div>
+      <h3>Flash Cards</h3>
+      <p class="topic">Test your knowledge with our interactive flash cards covering key engineering concepts, formulas and definitions.</p>
+    </div>
+    <div class="downloads">
+      <a class="button primary" href="https://engineeringshare.co.uk/interactive/Flash Cards.html" target="_blank">
+         Flash Cards Interactive Tool
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div>
+      <h3>Series and Parallel Resistors Game</h3>
+      <p class="topic">Practice calculating total resistance in series and parallel circuits with our interactive game.</p>
+    </div>
+    <div class="downloads">
+      <a class="button primary" href="https://engineeringshare.co.uk/interactive/Series and Parallel Resistors Quiz.html" target="_blank">
+         Series and Parallel Resistors Game
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div>
+      <h3>Series and Parallel Capacitors Game</h3>
+      <p class="topic">Practice calculating total capacitance in series and parallel circuits with our interactive game.</p>
+    </div>
+    <div class="downloads">
+      <a class="button primary" href="https://engineeringshare.co.uk/interactive/Series and Parallel Capacitors Quiz.html" target="_blank">
+         Series and Parallel Capacitors Game
+      </a>
+    </div>
+  </div>
 </div>
 
 ## Example Questions
