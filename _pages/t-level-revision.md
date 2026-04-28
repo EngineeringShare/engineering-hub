@@ -213,4 +213,19 @@ h1 {
       </a>
     </div>
   </div>
+
+  <div class="card">
+    <div>
+      <h3>Example Set 6</h3>
+      <p class="topic">Semiconductors</p>
+    </div>
+    <div class="downloads">
+      <a class="button primary" href="https://engineeringshare.github.io/engineering-resources/questions/TLevel Example Set 6.pdf" download>
+        Download Question Set
+      </a>
+      <a class="button secondary" href="https://engineeringshare.github.io/engineering-resources/questions/TLevel Example Set 6 Mark Scheme.pdf" download>
+        Download Mark Scheme
+      </a>
+    </div>
+  </div>
 </div>

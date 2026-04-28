@@ -1,7 +1,7 @@
 ---
 title: "Resistors"
 date: 2025-09-22
-tags: ["Resistance", "Ohm's Law", "Carbon Film", "Metal Film", "Wirewound", "potentiometer", "Rheostat", "Light Dependent Resistor", "Thermistor", "Varistor", "Colour Code", "Tolerance", "Power Rating"]
+tags: ["Resistance", "Ohm's Law", "Carbon Film", "Metal Film", "Wirewound", "potentiometer", "Rheostat", "Light Dependent Resistor", "Thermistor", "Varistor", "Colour Code", "Tolerance", "Power Rating", "Potential Divider"]
 subject: "Electronics"
 units:
   - unit: "HTQ Unit 4019"
