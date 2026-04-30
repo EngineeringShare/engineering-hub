@@ -16,27 +16,231 @@
     },
     {
       "id": "scientific-method-3",
-      "question": "What is a predicition in the context of the scientific method?",
+      "question": "What is a prediction in the context of the scientific method?",
       "answer": "A prediction is a specific statement about what you expect to happen in your experiment if your hypothesis is correct.",
       "tags": ["prediction", "hypothesis"]
     },
     {
-        "id": "scientific-method-4",
-        "question": "Why is it important to communicate your results?",
-        "answer": "Communicating results allows others to evaluate, replicate, and build upon your work, which is essential for scientific progress.",
-        "tags": ["communication", "research"]
+      "id": "scientific-method-4",
+      "question": "Why is it important to communicate your results?",
+      "answer": "Communicating results allows others to evaluate, replicate, and build upon your work, which is essential for scientific progress.",
+      "tags": ["communication", "research"]
     },
     {
-        "id": "scientific-method-5",
-        "question": "What is the purpose of conducting background research?",
-        "answer": "Background research helps you understand what is already known about your topic, refine your question, and design a better experiment.",
-        "tags": ["research", "preparation"]
+      "id": "scientific-method-5",
+      "question": "What is the purpose of conducting background research?",
+      "answer": "Background research helps you understand what is already known about your topic, refine your question, and design a better experiment.",
+      "tags": ["research", "preparation"]
     },
     {
-        "id": "scientific-method-6",
-        "question": "What is the difference between qualitative and quantitative data?",
-        "answer": "Qualitative data describes qualities or characteristics (e.g., color, texture), while quantitative data involves numerical measurements (e.g., height, weight).",
-        "tags": ["data", "analysis"]
+      "id": "scientific-method-6",
+      "question": "What is the difference between qualitative and quantitative data?",
+      "answer": "Qualitative data describes qualities or characteristics (e.g., color, texture), while quantitative data involves numerical measurements (e.g., height, weight).",
+      "tags": ["data", "analysis"]
+    },
+    {
+      "id": "scientific-method-7",
+      "question": "What is an independent variable?",
+      "answer": "The variable that is deliberately changed or manipulated during an experiment.",
+      "tags": ["variables", "experiment"]
+    },
+    {
+      "id": "scientific-method-8",
+      "question": "What is a dependent variable?",
+      "answer": "The variable that is measured or observed to see the effect of changes made during the experiment.",
+      "tags": ["variables", "experiment"]
+    },
+    {
+      "id": "scientific-method-9",
+      "question": "What is a control variable?",
+      "answer": "A variable kept constant during an experiment to ensure a fair test.",
+      "tags": ["variables", "fair-test"]
+    },
+    {
+      "id": "scientific-method-10",
+      "question": "What is a fair test?",
+      "answer": "A test where only one variable is changed while all others are controlled.",
+      "tags": ["fair-test", "experiment"]
+    },
+    {
+      "id": "scientific-method-11",
+      "question": "What is an experiment?",
+      "answer": "A controlled procedure used to test a hypothesis and collect data.",
+      "tags": ["experiment", "testing"]
+    },
+    {
+      "id": "scientific-method-12",
+      "question": "What is an observation?",
+      "answer": "Information gathered using senses or measuring equipment during an investigation.",
+      "tags": ["observation", "data"]
+    },
+    {
+      "id": "scientific-method-13",
+      "question": "What is a conclusion in the scientific method?",
+      "answer": "A summary of the findings that explains whether the hypothesis was supported or rejected.",
+      "tags": ["conclusion", "analysis"]
+    },
+    {
+      "id": "scientific-method-14",
+      "question": "What does it mean if a hypothesis is supported?",
+      "answer": "The results of the experiment agree with the prediction and suggest the hypothesis may be correct.",
+      "tags": ["hypothesis", "results"]
+    },
+    {
+      "id": "scientific-method-15",
+      "question": "What does it mean if a hypothesis is rejected?",
+      "answer": "The experimental results do not support the prediction or hypothesis.",
+      "tags": ["hypothesis", "results"]
+    },
+    {
+      "id": "scientific-method-16",
+      "question": "What is reliability in an experiment?",
+      "answer": "The degree to which an experiment produces consistent results when repeated.",
+      "tags": ["reliability", "experiment"]
+    },
+    {
+      "id": "scientific-method-17",
+      "question": "What is validity in an experiment?",
+      "answer": "Whether the experiment actually measures what it is intended to measure.",
+      "tags": ["validity", "experiment"]
+    },
+    {
+      "id": "scientific-method-18",
+      "question": "What is repeatability?",
+      "answer": "The ability to repeat an experiment under the same conditions and get similar results.",
+      "tags": ["repeatability", "reliability"]
+    },
+    {
+      "id": "scientific-method-19",
+      "question": "Why are repeated trials important?",
+      "answer": "They reduce the effect of random errors and improve reliability.",
+      "tags": ["reliability", "trials"]
+    },
+    {
+      "id": "scientific-method-20",
+      "question": "What is an anomaly in data?",
+      "answer": "A result that does not fit the pattern of the other results.",
+      "tags": ["data", "analysis"]
+    },
+    {
+      "id": "scientific-method-21",
+      "question": "What is a trend in data?",
+      "answer": "A general pattern or relationship seen in collected results.",
+      "tags": ["data", "analysis"]
+    },
+    {
+      "id": "scientific-method-22",
+      "question": "What is a sample in scientific research?",
+      "answer": "A smaller group selected from a larger population for testing or study.",
+      "tags": ["sampling", "research"]
+    },
+    {
+      "id": "scientific-method-23",
+      "question": "What is a population in research?",
+      "answer": "The entire group being studied or investigated.",
+      "tags": ["sampling", "research"]
+    },
+    {
+      "id": "scientific-method-24",
+      "question": "What is systematic error?",
+      "answer": "An error caused by faulty equipment or flawed experimental design that affects results consistently.",
+      "tags": ["errors", "measurement"]
+    },
+    {
+      "id": "scientific-method-25",
+      "question": "What is random error?",
+      "answer": "An unpredictable variation in measurements caused by uncontrollable factors.",
+      "tags": ["errors", "measurement"]
+    },
+    {
+      "id": "scientific-method-26",
+      "question": "What is precision in measurement?",
+      "answer": "How close repeated measurements are to each other.",
+      "tags": ["measurement", "precision"]
+    },
+    {
+      "id": "scientific-method-27",
+      "question": "What is accuracy in measurement?",
+      "answer": "How close a measured value is to the true value.",
+      "tags": ["measurement", "accuracy"]
+    },
+    {
+      "id": "scientific-method-28",
+      "question": "What is a variable in an experiment?",
+      "answer": "Any factor that can change or be changed during an investigation.",
+      "tags": ["variables", "experiment"]
+    },
+    {
+      "id": "scientific-method-29",
+      "question": "Why should experiments be repeatable?",
+      "answer": "To confirm that results are reliable and not due to chance.",
+      "tags": ["repeatability", "reliability"]
+    },
+    {
+      "id": "scientific-method-30",
+      "question": "What is peer review?",
+      "answer": "The process where other experts evaluate scientific work before publication.",
+      "tags": ["peer-review", "research"]
+    },
+    {
+      "id": "scientific-method-31",
+      "question": "Why is peer review important?",
+      "answer": "It helps identify errors, improve quality, and ensure scientific credibility.",
+      "tags": ["peer-review", "quality"]
+    },
+    {
+      "id": "scientific-method-32",
+      "question": "What is a scientific theory?",
+      "answer": "A well-supported explanation of natural phenomena based on repeated evidence.",
+      "tags": ["theory", "science"]
+    },
+    {
+      "id": "scientific-method-33",
+      "question": "What is a scientific law?",
+      "answer": "A statement describing a consistent natural relationship or pattern.",
+      "tags": ["law", "science"]
+    },
+    {
+      "id": "scientific-method-34",
+      "question": "What is the purpose of graphing data?",
+      "answer": "To make patterns, relationships, and trends easier to interpret.",
+      "tags": ["graphs", "data"]
+    },
+    {
+      "id": "scientific-method-35",
+      "question": "What type of graph is commonly used for continuous data?",
+      "answer": "A line graph.",
+      "tags": ["graphs", "data"]
+    },
+    {
+      "id": "scientific-method-36",
+      "question": "What type of graph is commonly used for comparing categories?",
+      "answer": "A bar chart.",
+      "tags": ["graphs", "data"]
+    },
+    {
+      "id": "scientific-method-37",
+      "question": "Why is a control group used in experiments?",
+      "answer": "To provide a comparison against the experimental group.",
+      "tags": ["control-group", "experiment"]
+    },
+    {
+      "id": "scientific-method-38",
+      "question": "What is an experimental group?",
+      "answer": "The group in an experiment that receives the variable being tested.",
+      "tags": ["experiment", "groups"]
+    },
+    {
+      "id": "scientific-method-39",
+      "question": "What does correlation mean in data analysis?",
+      "answer": "A relationship between two variables where one changes as the other changes.",
+      "tags": ["correlation", "analysis"]
+    },
+    {
+      "id": "scientific-method-40",
+      "question": "Why is it important to record data carefully?",
+      "answer": "Accurate records improve reliability, analysis, and repeatability of results.",
+      "tags": ["data", "recording"]
     }
   ]
 }

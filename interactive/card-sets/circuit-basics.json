@@ -4,7 +4,7 @@
   "cards": [
     {
       "id": "circuits-1",
-      "question": "What do this symbol represent in a circuit diagram?",
+      "question": "What does this symbol represent in a circuit diagram?",
       "answer": "Resistor",
       "questionImage": "https://res02.jakelectronics.com/res/article/20210621/202004241156255501.jpg",
       "tags": ["circuit-diagrams", "components"]
@@ -27,7 +27,7 @@
       "id": "circuits-4",
       "question": "What does this symbol represent in a circuit diagram?",
       "answer": "Diode",
-      "questionImage": "https://thevalleyofcode.com/posts_images/electronics-components-diodes/Screen_Shot_2020-12-06_at_11.54.39.png",
+      "questionImage": "https://cdn.sparkfun.com/assets/d/6/b/f/a/5171b6bece395ff53c000000.PNG",
       "tags": ["circuit-diagrams", "components"]
     },
     {
@@ -42,14 +42,212 @@
       "question": "What is the configuration of this circuit?",
       "answer": "Series Circuit",
       "questionImage": "https://anitocircuits.com/wp-content/uploads/2024/02/cap-series-1024x618.png",
-      "tags": ["circuit-diagrams", "components"]
+      "tags": ["circuit-diagrams", "configurations"]
     },
     {
       "id": "circuits-7",
       "question": "What is the configuration of this circuit?",
       "answer": "Parallel Circuit",
       "questionImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Resistors_in_parallel.svg/1920px-Resistors_in_parallel.svg.png",
-      "tags": ["circuit-diagrams", "components"]
+      "tags": ["circuit-diagrams", "configurations"]
+    },
+    {
+      "id": "circuits-8",
+      "question": "What unit is used to measure current?",
+      "answer": "Amps (A)",
+      "tags": ["units", "current"]
+    },
+    {
+      "id": "circuits-9",
+      "question": "What unit is used to measure voltage?",
+      "answer": "Volts (V)",
+      "tags": ["units", "voltage"]
+    },
+    {
+      "id": "circuits-10",
+      "question": "What unit is used to measure resistance?",
+      "answer": "Ohms (Ω)",
+      "tags": ["units", "resistance"]
+    },
+    {
+      "id": "circuits-11",
+      "question": "What does Ohm’s Law state?",
+      "answer": "Voltage equals current multiplied by resistance (V = I × R)",
+      "tags": ["formulas", "ohms-law"]
+    },
+    {
+      "id": "circuits-12",
+      "question": "What is current in a circuit?",
+      "answer": "The flow of electric charge through a conductor.",
+      "tags": ["basics", "current"]
+    },
+    {
+      "id": "circuits-13",
+      "question": "What is voltage in a circuit?",
+      "answer": "The electrical potential difference that pushes current through a circuit.",
+      "tags": ["basics", "voltage"]
+    },
+    {
+      "id": "circuits-14",
+      "question": "What is resistance?",
+      "answer": "The opposition to current flow in a circuit.",
+      "tags": ["basics", "resistance"]
+    },
+    {
+      "id": "circuits-15",
+      "question": "What does a resistor do in a circuit?",
+      "answer": "Limits current flow and drops voltage.",
+      "tags": ["components", "resistors"]
+    },
+    {
+      "id": "circuits-16",
+      "question": "What does a capacitor store?",
+      "answer": "Electrical charge in an electric field.",
+      "tags": ["components", "capacitors"]
+    },
+    {
+      "id": "circuits-17",
+      "question": "What does an inductor store?",
+      "answer": "Energy in a magnetic field.",
+      "tags": ["components", "inductors"]
+    },
+    {
+      "id": "circuits-18",
+      "question": "What is an open circuit?",
+      "answer": "A broken path where no current can flow.",
+      "tags": ["faults", "circuits"]
+    },
+    {
+      "id": "circuits-19",
+      "question": "What is a closed circuit?",
+      "answer": "A complete path allowing current to flow.",
+      "tags": ["circuits", "basics"]
+    },
+    {
+      "id": "circuits-20",
+      "question": "What is a short circuit?",
+      "answer": "A low-resistance path causing excessive current flow.",
+      "tags": ["faults", "circuits"]
+    },
+    {
+      "id": "circuits-21",
+      "question": "In a series circuit, what stays the same throughout the circuit?",
+      "answer": "Current.",
+      "tags": ["series-circuits", "rules"]
+    },
+    {
+      "id": "circuits-22",
+      "question": "In a parallel circuit, what stays the same across each branch?",
+      "answer": "Voltage.",
+      "tags": ["parallel-circuits", "rules"]
+    },
+    {
+      "id": "circuits-23",
+      "question": "How is total resistance found in a series circuit?",
+      "answer": "Add all resistances together.",
+      "tags": ["series-circuits", "resistance"]
+    },
+    {
+      "id": "circuits-24",
+      "question": "How does total resistance behave in a parallel circuit?",
+      "answer": "Total resistance decreases and is lower than the smallest resistor.",
+      "tags": ["parallel-circuits", "resistance"]
+    },
+    {
+      "id": "circuits-25",
+      "question": "What is electrical power measured in?",
+      "answer": "Watts (W)",
+      "tags": ["power", "units"]
+    },
+    {
+      "id": "circuits-26",
+      "question": "What is the formula for electrical power?",
+      "answer": "P = V × I",
+      "tags": ["power", "formulas"]
+    },
+    {
+      "id": "circuits-27",
+      "question": "What does a fuse do?",
+      "answer": "Protects a circuit by breaking when current becomes too high.",
+      "tags": ["protection", "components"]
+    },
+    {
+      "id": "circuits-28",
+      "question": "What does a switch do in a circuit?",
+      "answer": "Opens or closes the electrical path.",
+      "tags": ["components", "switches"]
+    },
+    {
+      "id": "circuits-29",
+      "question": "What is AC?",
+      "answer": "Alternating Current, where current changes direction periodically.",
+      "tags": ["ac-dc", "basics"]
+    },
+    {
+      "id": "circuits-30",
+      "question": "What is DC?",
+      "answer": "Direct Current, where current flows in one direction.",
+      "tags": ["ac-dc", "basics"]
+    },
+    {
+      "id": "circuits-31",
+      "question": "What device measures voltage?",
+      "answer": "Voltmeter.",
+      "tags": ["measurement", "instruments"]
+    },
+    {
+      "id": "circuits-32",
+      "question": "What device measures current?",
+      "answer": "Ammeter.",
+      "tags": ["measurement", "instruments"]
+    },
+    {
+      "id": "circuits-33",
+      "question": "What device measures resistance?",
+      "answer": "Ohmmeter.",
+      "tags": ["measurement", "instruments"]
+    },
+    {
+      "id": "circuits-34",
+      "question": "How is an ammeter connected in a circuit?",
+      "answer": "In series.",
+      "tags": ["measurement", "meters"]
+    },
+    {
+      "id": "circuits-35",
+      "question": "How is a voltmeter connected in a circuit?",
+      "answer": "In parallel.",
+      "tags": ["measurement", "meters"]
+    },
+    {
+      "id": "circuits-36",
+      "question": "What is conductivity?",
+      "answer": "A material’s ability to allow electric current to flow.",
+      "tags": ["materials", "conductivity"]
+    },
+    {
+      "id": "circuits-37",
+      "question": "What is an insulator?",
+      "answer": "A material that resists the flow of electric current.",
+      "tags": ["materials", "insulators"]
+    },
+    {
+      "id": "circuits-38",
+      "question": "What is a conductor?",
+      "answer": "A material that allows electric current to flow easily.",
+      "tags": ["materials", "conductors"]
+    },
+    {
+      "id": "circuits-39",
+      "question": "What is continuity in a circuit?",
+      "answer": "A complete path that allows current to flow.",
+      "tags": ["testing", "continuity"]
+    },
+    {
+      "id": "circuits-40",
+      "question": "What does a multimeter do?",
+      "answer": "Measures voltage, current, and resistance.",
+      "tags": ["measurement", "multimeter"]
     }
   ]
 }

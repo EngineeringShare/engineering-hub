@@ -1,0 +1,246 @@
+{
+  "id": "semiconductor-basics",
+  "name": "Semiconductor-Basics",
+  "cards": [
+    {
+      "id": "semi-1",
+      "question": "What is a semiconductor?",
+      "answer": "A material with electrical conductivity between that of a conductor and an insulator, whose conductivity can be controlled.",
+      "tags": ["semiconductors", "basics"]
+    },
+    {
+      "id": "semi-2",
+      "question": "What are the most common semiconductor materials?",
+      "answer": "Silicon, Germanium, and Gallium Arsenide.",
+      "tags": ["materials", "semiconductors"]
+    },
+    {
+      "id": "semi-3",
+      "question": "Why is silicon commonly used in semiconductors?",
+      "answer": "Silicon is abundant, stable, inexpensive, and forms a reliable oxide layer useful in manufacturing.",
+      "tags": ["materials", "silicon"]
+    },
+    {
+      "id": "semi-4",
+      "question": "What is a valence shell?",
+      "answer": "The outermost electron shell of an atom that contains electrons involved in bonding.",
+      "tags": ["atomic-structure", "valence-shell"]
+    },
+    {
+      "id": "semi-5",
+      "question": "How many valence electrons does silicon have?",
+      "answer": "4 valence electrons.",
+      "tags": ["silicon", "valence-shell"]
+    },
+    {
+      "id": "semi-6",
+      "question": "What is the band gap in a semiconductor?",
+      "answer": "The energy difference between the valence band and the conduction band.",
+      "tags": ["band-gap", "semiconductors"]
+    },
+    {
+      "id": "semi-7",
+      "question": "Why is the band gap important in semiconductors?",
+      "answer": "It determines how easily electrons can move and therefore how conductive the material becomes.",
+      "tags": ["band-gap", "conductivity"]
+    },
+    {
+      "id": "semi-8",
+      "question": "What happens when electrons gain enough energy to cross the band gap?",
+      "answer": "They move into the conduction band and become free to carry current.",
+      "tags": ["band-gap", "electrons"]
+    },
+    {
+      "id": "semi-9",
+      "question": "What is doping in semiconductors?",
+      "answer": "The process of adding impurities to a semiconductor to change its electrical properties.",
+      "tags": ["doping", "semiconductors"]
+    },
+    {
+      "id": "semi-10",
+      "question": "What is an intrinsic semiconductor?",
+      "answer": "A pure semiconductor material with no added impurities.",
+      "tags": ["intrinsic", "semiconductors"]
+    },
+    {
+      "id": "semi-11",
+      "question": "What is an extrinsic semiconductor?",
+      "answer": "A semiconductor that has been doped with impurities to improve conductivity.",
+      "tags": ["extrinsic", "doping"]
+    },
+    {
+      "id": "semi-12",
+      "question": "What is an N-type semiconductor?",
+      "answer": "A semiconductor doped with atoms that provide extra electrons.",
+      "tags": ["doping", "n-type"]
+    },
+    {
+      "id": "semi-13",
+      "question": "What type of dopant is used to create N-type material?",
+      "answer": "Pentavalent atoms such as Phosphorus or Arsenic.",
+      "tags": ["n-type", "dopants"]
+    },
+    {
+      "id": "semi-14",
+      "question": "What is a P-type semiconductor?",
+      "answer": "A semiconductor doped with atoms that create holes by accepting electrons.",
+      "tags": ["doping", "p-type"]
+    },
+    {
+      "id": "semi-15",
+      "question": "What type of dopant is used to create P-type material?",
+      "answer": "Trivalent atoms such as Boron or Gallium.",
+      "tags": ["p-type", "dopants"]
+    },
+    {
+      "id": "semi-16",
+      "question": "What is a hole in semiconductor theory?",
+      "answer": "A missing electron in a valence shell that behaves like a positive charge carrier.",
+      "tags": ["holes", "charge-carriers"]
+    },
+    {
+      "id": "semi-17",
+      "question": "What forms when P-type and N-type materials are joined?",
+      "answer": "A PN junction.",
+      "tags": ["pn-junction", "diodes"]
+    },
+    {
+      "id": "semi-18",
+      "question": "What is a diode?",
+      "answer": "A semiconductor device that allows current to flow mainly in one direction.",
+      "tags": ["diodes", "components"]
+    },
+    {
+      "id": "semi-19",
+      "question": "What is forward bias in a diode?",
+      "answer": "When the positive terminal is connected to the P-side and negative to the N-side, allowing current flow.",
+      "tags": ["diodes", "biasing"]
+    },
+    {
+      "id": "semi-20",
+      "question": "What is reverse bias in a diode?",
+      "answer": "When the polarity opposes current flow, widening the depletion region.",
+      "tags": ["diodes", "biasing"]
+    },
+    {
+      "id": "semi-21",
+      "question": "What is the depletion region in a PN junction?",
+      "answer": "An area around the junction where charge carriers are depleted, creating resistance to current flow.",
+      "tags": ["pn-junction", "depletion-region"]
+    },
+    {
+      "id": "semi-22",
+      "question": "What is a junction diode mainly used for?",
+      "answer": "Rectification and allowing current flow in one direction.",
+      "tags": ["junction-diode", "applications"]
+    },
+    {
+      "id": "semi-23",
+      "question": "What is a Zener diode?",
+      "answer": "A diode designed to operate in reverse breakdown for voltage regulation.",
+      "tags": ["zener-diode", "diodes"]
+    },
+    {
+      "id": "semi-24",
+      "question": "What is the main difference between a junction diode and a Zener diode?",
+      "answer": "A junction diode blocks reverse current, while a Zener diode is designed to conduct in reverse once breakdown voltage is reached.",
+      "tags": ["zener-diode", "junction-diode"]
+    },
+    {
+      "id": "semi-25",
+      "question": "What is Zener breakdown?",
+      "answer": "The controlled reverse-bias conduction that occurs when a diode reaches its specified breakdown voltage.",
+      "tags": ["zener-diode", "breakdown"]
+    },
+    {
+      "id": "semi-26",
+      "question": "What is a transistor?",
+      "answer": "A semiconductor device used for switching or amplification.",
+      "tags": ["transistors", "basics"]
+    },
+    {
+      "id": "semi-27",
+      "question": "What does BJT stand for?",
+      "answer": "Bipolar Junction Transistor.",
+      "tags": ["bjt", "transistors"]
+    },
+    {
+      "id": "semi-28",
+      "question": "What are the three terminals of a BJT?",
+      "answer": "Emitter, Base, and Collector.",
+      "tags": ["bjt", "transistor-structure"]
+    },
+    {
+      "id": "semi-29",
+      "question": "How does a BJT operate?",
+      "answer": "A small current at the base controls a larger current between collector and emitter.",
+      "tags": ["bjt", "operation"]
+    },
+    {
+      "id": "semi-30",
+      "question": "What does FET stand for?",
+      "answer": "Field Effect Transistor.",
+      "tags": ["fet", "transistors"]
+    },
+    {
+      "id": "semi-31",
+      "question": "What are the three terminals of a FET?",
+      "answer": "Source, Gate, and Drain.",
+      "tags": ["fet", "transistor-structure"]
+    },
+    {
+      "id": "semi-32",
+      "question": "How does a FET operate?",
+      "answer": "Voltage applied to the gate controls current flow between drain and source.",
+      "tags": ["fet", "operation"]
+    },
+    {
+      "id": "semi-33",
+      "question": "What is the main difference between a BJT and a FET?",
+      "answer": "A BJT is current-controlled, while a FET is voltage-controlled.",
+      "tags": ["bjt", "fet", "comparison"]
+    },
+    {
+      "id": "semi-34",
+      "question": "Which transistor type generally has higher input impedance?",
+      "answer": "FET.",
+      "tags": ["fet", "comparison"]
+    },
+    {
+      "id": "semi-35",
+      "question": "Which transistor type generally consumes less input power?",
+      "answer": "FET.",
+      "tags": ["fet", "comparison"]
+    },
+    {
+      "id": "semi-36",
+      "question": "Which transistor type is often used for amplification requiring higher gain?",
+      "answer": "BJT.",
+      "tags": ["bjt", "applications"]
+    },
+    {
+      "id": "semi-37",
+      "question": "What is Gallium Arsenide commonly used for?",
+      "answer": "High-frequency and microwave applications.",
+      "tags": ["materials", "gallium-arsenide"]
+    },
+    {
+      "id": "semi-38",
+      "question": "What is Germanium known for in semiconductor use?",
+      "answer": "Lower forward voltage drop compared to silicon.",
+      "tags": ["materials", "germanium"]
+    },
+    {
+      "id": "semi-39",
+      "question": "What is the conduction band?",
+      "answer": "The energy band where electrons are free to move and conduct electricity.",
+      "tags": ["band-gap", "conduction-band"]
+    },
+    {
+      "id": "semi-40",
+      "question": "What is the valence band?",
+      "answer": "The energy band containing electrons involved in atomic bonding.",
+      "tags": ["band-gap", "valence-band"]
+    }
+  ]
+}
