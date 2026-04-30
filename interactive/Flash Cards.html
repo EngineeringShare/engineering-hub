@@ -105,7 +105,10 @@
     async function loadCardSets() {
       try {
         // Load the index file that lists all available card sets
-        const indexResponse = await fetch('https://raw.githubusercontent.com/EngineeringShare/engineering-hub/refs/heads/main/interactive/card-sets/index.json');
+        const indexResponse = await fetch(
+          'https://raw.githubusercontent.com/EngineeringShare/engineering-hub/refs/heads/main/interactive/card-sets/index.json',
+          { cache: 'no-cache' }
+        );
         if (!indexResponse.ok) {
           throw new Error('Could not load card sets index. Make sure card-sets/index.json exists.');
         }
@@ -113,7 +116,7 @@
         
         // Load all card set files
         const loadPromises = fileList.map(async (filename) => {
-          const response = await fetch(`${filename}`);
+          const response = await fetch(`${filename}`, { cache: 'no-cache' });
           if (!response.ok) {
             throw new Error(`Could not load ${filename}`);
           }
