@@ -228,4 +228,19 @@ h1 {
       </a>
     </div>
   </div>
+
+  <div class="card">
+    <div>
+      <h3>Example Set 7</h3>
+      <p class="topic">Resistors and Kirchhoff's Laws</p>
+    </div>
+    <div class="downloads">
+      <a class="button primary" href="https://engineeringshare.github.io/engineering-resources/questions/TLevel Example Set 7.pdf" download>
+        Download Question Set
+      </a>
+      <a class="button secondary" href="https://engineeringshare.github.io/engineering-resources/questions/TLevel Example Set 7 Mark Scheme.pdf" download>
+        Download Mark Scheme
+      </a>
+    </div>
+  </div>
 </div>
