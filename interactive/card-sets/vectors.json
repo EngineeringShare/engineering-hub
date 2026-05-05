@@ -1,0 +1,288 @@
+{
+  "id": "vectors",
+  "name": "Vectors",
+  "cards": [
+    {
+      "id": "vectors-1",
+      "question": "What is a vector?",
+      "answer": "A quantity with both magnitude and direction.",
+      "tags": ["vector-basics"]
+    },
+    {
+      "id": "vectors-2",
+      "question": "What is a scalar?",
+      "answer": "A quantity with magnitude only and no direction.",
+      "tags": ["vector-basics"]
+    },
+    {
+      "id": "vectors-3",
+      "question": "Give three examples of vector quantities.",
+      "answer": "Force, velocity, displacement, acceleration, and momentum are examples of vector quantities.",
+      "tags": ["vector-basics", "examples"]
+    },
+    {
+      "id": "vectors-4",
+      "question": "Give three examples of scalar quantities.",
+      "answer": "Mass, temperature, speed, distance, and time are examples of scalar quantities.",
+      "tags": ["vector-basics", "examples"]
+    },
+    {
+      "id": "vectors-5",
+      "question": "How can a 2D vector be written in component form?",
+      "answer": "As x and y components, for example: v = (x, y).",
+      "tags": ["writing-vectors", "components"]
+    },
+    {
+      "id": "vectors-6",
+      "question": "What does the x-component of a vector represent?",
+      "answer": "The horizontal part of the vector.",
+      "tags": ["components", "writing-vectors"]
+    },
+    {
+      "id": "vectors-7",
+      "question": "What does the y-component of a vector represent?",
+      "answer": "The vertical part of the vector.",
+      "tags": ["components", "writing-vectors"]
+    },
+    {
+      "id": "vectors-8",
+      "question": "How can a vector be written using unit vectors?",
+      "answer": "Using i and j, for example: v = 3i + 4j.",
+      "tags": ["writing-vectors", "unit-vectors"]
+    },
+    {
+      "id": "vectors-9",
+      "question": "What does i represent in vector notation?",
+      "answer": "The unit vector in the x-direction.",
+      "tags": ["unit-vectors", "writing-vectors"]
+    },
+    {
+      "id": "vectors-10",
+      "question": "What does j represent in vector notation?",
+      "answer": "The unit vector in the y-direction.",
+      "tags": ["unit-vectors", "writing-vectors"]
+    },
+    {
+      "id": "vectors-11",
+      "question": "What is the magnitude of a vector?",
+      "answer": "The size or length of the vector.",
+      "tags": ["magnitude", "vector-basics"]
+    },
+    {
+      "id": "vectors-12",
+      "question": "How do you calculate the magnitude of a 2D vector v = (x, y)?",
+      "answer": "Use |v| = √(x² + y²).",
+      "tags": ["magnitude", "cartesian-form"]
+    },
+    {
+      "id": "vectors-13",
+      "question": "What is the magnitude of the vector (3, 4)?",
+      "answer": "5",
+      "tags": ["magnitude", "examples"]
+    },
+    {
+      "id": "vectors-14",
+      "question": "What is Cartesian form for a vector?",
+      "answer": "A vector written using horizontal and vertical components, such as (x, y).",
+      "tags": ["cartesian-form", "writing-vectors"]
+    },
+    {
+      "id": "vectors-15",
+      "question": "What is polar form for a vector?",
+      "answer": "A vector written using magnitude and direction, such as r∠θ.",
+      "tags": ["polar-form", "writing-vectors"]
+    },
+    {
+      "id": "vectors-16",
+      "question": "What information is needed to write a vector in polar form?",
+      "answer": "Magnitude and angle.",
+      "tags": ["polar-form", "writing-vectors"]
+    },
+    {
+      "id": "vectors-17",
+      "question": "How do you convert a vector from polar form to Cartesian form?",
+      "answer": "Use x = r cos(θ) and y = r sin(θ).",
+      "tags": ["polar-to-cartesian", "conversion"]
+    },
+    {
+      "id": "vectors-18",
+      "question": "In polar form, what does r represent?",
+      "answer": "The magnitude of the vector.",
+      "tags": ["polar-form", "magnitude"]
+    },
+    {
+      "id": "vectors-19",
+      "question": "In polar form, what does θ represent?",
+      "answer": "The angle or direction of the vector.",
+      "tags": ["polar-form", "direction"]
+    },
+    {
+      "id": "vectors-20",
+      "question": "Convert 10∠0° into Cartesian form.",
+      "answer": "(10, 0)",
+      "tags": ["polar-to-cartesian", "examples"]
+    },
+    {
+      "id": "vectors-21",
+      "question": "Convert 10∠90° into Cartesian form.",
+      "answer": "(0, 10)",
+      "tags": ["polar-to-cartesian", "examples"]
+    },
+    {
+      "id": "vectors-22",
+      "question": "Convert 10∠180° into Cartesian form.",
+      "answer": "(-10, 0)",
+      "tags": ["polar-to-cartesian", "examples"]
+    },
+    {
+      "id": "vectors-23",
+      "question": "Convert 10∠270° into Cartesian form.",
+      "answer": "(0, -10)",
+      "tags": ["polar-to-cartesian", "examples"]
+    },
+    {
+      "id": "vectors-24",
+      "question": "How do you convert a vector from Cartesian form to polar form?",
+      "answer": "Use r = √(x² + y²) and θ = tan⁻¹(y/x), checking the quadrant.",
+      "tags": ["cartesian-to-polar", "conversion"]
+    },
+    {
+      "id": "vectors-25",
+      "question": "Convert the vector (3, 4) into polar form.",
+      "answer": "5∠53.1° approximately.",
+      "tags": ["cartesian-to-polar", "examples"]
+    },
+    {
+    "id": "vectors-26",
+    "question": "Why can tan⁻¹(y/x) sometimes be misleading when converting Cartesian to polar form?",
+    "answer": "Because it may give a reference angle rather than the full direction of the vector.",
+    "tags": ["cartesian-to-polar", "direction"]
+    },
+    {
+      "id": "vectors-30",
+      "question": "How do you add two vectors in Cartesian form?",
+      "answer": "Add the x-components together and add the y-components together.",
+      "tags": ["adding-vectors", "cartesian-form"]
+    },
+    {
+      "id": "vectors-31",
+      "question": "Add the vectors (2, 3) and (4, 1).",
+      "answer": "(6, 4)",
+      "tags": ["adding-vectors", "examples"]
+    },
+    {
+      "id": "vectors-32",
+      "question": "Add the vectors (-2, 5) and (6, -3).",
+      "answer": "(4, 2)",
+      "tags": ["adding-vectors", "examples"]
+    },
+    {
+      "id": "vectors-33",
+      "question": "How do you subtract two vectors in Cartesian form?",
+      "answer": "Subtract the x-components and subtract the y-components.",
+      "tags": ["subtracting-vectors", "cartesian-form"]
+    },
+    {
+      "id": "vectors-34",
+      "question": "Subtract (1, 2) from (5, 7).",
+      "answer": "(4, 5)",
+      "tags": ["subtracting-vectors", "examples"]
+    },
+    {
+      "id": "vectors-35",
+      "question": "Calculate (3, -2) - (7, 4).",
+      "answer": "(-4, -6)",
+      "tags": ["subtracting-vectors", "examples"]
+    },
+    {
+      "id": "vectors-36",
+      "question": "Why is Cartesian form useful when adding or subtracting vectors?",
+      "answer": "Because the components can be added or subtracted directly.",
+      "tags": ["cartesian-form", "adding-vectors", "subtracting-vectors"]
+    },
+    {
+      "id": "vectors-37",
+      "question": "Why is polar form useful for describing a vector?",
+      "answer": "It clearly shows the vector’s magnitude and direction.",
+      "tags": ["polar-form", "direction"]
+    },
+    {
+      "id": "vectors-38",
+      "question": "What is the resultant vector?",
+      "answer": "The single vector produced by adding two or more vectors together.",
+      "tags": ["resultant", "adding-vectors"]
+    },
+    {
+      "id": "vectors-39",
+      "question": "What is the resultant of (4, 0) and (0, 3)?",
+      "answer": "(4, 3), with magnitude 5.",
+      "tags": ["resultant", "adding-vectors", "magnitude"]
+    },
+    {
+      "id": "vectors-40",
+      "question": "How do you add vectors that are given in polar form?",
+      "answer": "Convert each vector to Cartesian form, add the components, then convert back to polar form if needed.",
+      "tags": ["adding-vectors", "conversion", "polar-form"]
+    },
+    {
+      "id": "vectors-41",
+      "question": "How do you subtract vectors that are given in polar form?",
+      "answer": "Convert each vector to Cartesian form, subtract the components, then convert back to polar form if needed.",
+      "tags": ["subtracting-vectors", "conversion", "polar-form"]
+    },
+    {
+      "id": "vectors-42",
+      "question": "Convert 5∠30° into Cartesian form.",
+      "answer": "Approximately (4.33, 2.50).",
+      "tags": ["polar-to-cartesian", "examples"]
+    },
+    {
+      "id": "vectors-43",
+      "question": "Convert 8∠60° into Cartesian form.",
+      "answer": "Approximately (4.00, 6.93).",
+      "tags": ["polar-to-cartesian", "examples"]
+    },
+    {
+      "id": "vectors-44",
+      "question": "Convert the vector (0, 6) into polar form.",
+      "answer": "6∠90°.",
+      "tags": ["cartesian-to-polar", "examples"]
+    },
+    {
+      "id": "vectors-45",
+      "question": "Convert the vector (-5, 0) into polar form.",
+      "answer": "5∠180°.",
+      "tags": ["cartesian-to-polar", "examples"]
+    },
+    {
+      "id": "vectors-46",
+      "question": "What is a zero vector?",
+      "answer": "A vector with magnitude 0, often written as (0, 0).",
+      "tags": ["vector-basics", "zero-vector"]
+    },
+    {
+      "id": "vectors-47",
+      "question": "What happens when you add a zero vector to another vector?",
+      "answer": "The original vector remains unchanged.",
+      "tags": ["adding-vectors", "zero-vector"]
+    },
+    {
+      "id": "vectors-48",
+      "question": "What is a negative vector?",
+      "answer": "A vector with the same magnitude as the original but pointing in the opposite direction.",
+      "tags": ["subtracting-vectors", "direction"]
+    },
+    {
+      "id": "vectors-49",
+      "question": "What is the negative of the vector (3, -4)?",
+      "answer": "(-3, 4)",
+      "tags": ["subtracting-vectors", "examples"]
+    },
+    {
+      "id": "vectors-50",
+      "question": "How can vector subtraction be thought of graphically?",
+      "answer": "As adding the negative of the second vector.",
+      "tags": ["subtracting-vectors", "graphical-method"]
+    }
+  ]
+}
