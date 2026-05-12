@@ -1,0 +1,306 @@
+{
+  "id": "fluid-dynamics",
+  "name": "Fluid-Dynamics",
+  "cards": [
+    {
+      "id": "fluid-1",
+      "question": "What is fluid dynamics?",
+      "answer": "The study of how liquids and gases behave when they are moving.",
+      "tags": ["fluid-dynamics", "basics"]
+    },
+    {
+      "id": "fluid-2",
+      "question": "What is a fluid?",
+      "answer": "A substance that can flow and take the shape of its container, such as a liquid or gas.",
+      "tags": ["fluids", "basics"]
+    },
+    {
+      "id": "fluid-3",
+      "question": "What is hydrostatic pressure?",
+      "answer": "The pressure exerted by a stationary fluid due to its weight.",
+      "tags": ["hydrostatic-pressure", "pressure"]
+    },
+    {
+      "id": "fluid-4",
+      "question": "What factors affect hydrostatic pressure?",
+      "answer": "Fluid density, gravitational acceleration, and depth.",
+      "tags": ["hydrostatic-pressure", "pressure"]
+    },
+    {
+      "id": "fluid-5",
+      "question": "What is the formula for hydrostatic pressure?",
+      "answer": "P = ρgh",
+      "tags": ["hydrostatic-pressure", "formulas"]
+    },
+    {
+      "id": "fluid-6",
+      "question": "In the hydrostatic pressure equation P = ρgh, what does ρ represent?",
+      "answer": "Fluid density.",
+      "tags": ["hydrostatic-pressure", "formulas"]
+    },
+    {
+      "id": "fluid-7",
+      "question": "In the hydrostatic pressure equation P = ρgh, what does g represent?",
+      "answer": "Gravitational field strength.",
+      "tags": ["hydrostatic-pressure", "formulas"]
+    },
+    {
+      "id": "fluid-8",
+      "question": "In the hydrostatic pressure equation P = ρgh, what does h represent?",
+      "answer": "Depth below the fluid surface.",
+      "tags": ["hydrostatic-pressure", "formulas"]
+    },
+    {
+      "id": "fluid-9",
+      "question": "What happens to hydrostatic pressure as depth increases?",
+      "answer": "Hydrostatic pressure increases.",
+      "tags": ["hydrostatic-pressure", "pressure"]
+    },
+    {
+      "id": "fluid-10",
+      "question": "What is the centre of pressure?",
+      "answer": "The point where the total pressure force acts on a submerged surface.",
+      "tags": ["centre-of-pressure", "pressure"]
+    },
+    {
+      "id": "fluid-11",
+      "question": "Why is the centre of pressure important in engineering?",
+      "answer": "It helps determine forces and stability on submerged structures such as dams and gates.",
+      "tags": ["centre-of-pressure", "engineering"]
+    },
+    {
+      "id": "fluid-12",
+      "question": "What is viscosity?",
+      "answer": "A fluid’s resistance to flow.",
+      "tags": ["viscosity", "fluids"]
+    },
+    {
+      "id": "fluid-13",
+      "question": "Which fluid has a higher viscosity: honey or water?",
+      "answer": "Honey.",
+      "tags": ["viscosity", "examples"]
+    },
+    {
+      "id": "fluid-14",
+      "question": "How does increasing temperature usually affect liquid viscosity?",
+      "answer": "Viscosity decreases.",
+      "tags": ["viscosity", "temperature"]
+    },
+    {
+      "id": "fluid-15",
+      "question": "What is Bernoulli’s Principle?",
+      "answer": "As fluid velocity increases, pressure decreases.",
+      "tags": ["bernoulli", "pressure"]
+    },
+    {
+      "id": "fluid-16",
+      "question": "What does Bernoulli’s Principle help explain?",
+      "answer": "Lift generation on aircraft wings and pressure changes in flowing fluids.",
+      "tags": ["bernoulli", "aerodynamics"]
+    },
+    {
+      "id": "fluid-17",
+      "question": "What happens to pressure when fluid speed decreases according to Bernoulli’s Principle?",
+      "answer": "Pressure increases.",
+      "tags": ["bernoulli", "pressure"]
+    },
+    {
+      "id": "fluid-18",
+      "question": "What is meant by immersion of a body?",
+      "answer": "When an object is partially or fully submerged in a fluid.",
+      "tags": ["immersion", "fluids"]
+    },
+    {
+      "id": "fluid-19",
+      "question": "What upward force acts on an immersed body?",
+      "answer": "Buoyant force or upthrust.",
+      "tags": ["immersion", "buoyancy"]
+    },
+    {
+      "id": "fluid-20",
+      "question": "Why do some objects float in fluids?",
+      "answer": "Because the buoyant force equals or exceeds the object’s weight.",
+      "tags": ["immersion", "buoyancy"]
+    },
+    {
+      "id": "fluid-21",
+      "question": "What is laminar flow?",
+      "answer": "Smooth fluid flow in parallel layers with little mixing.",
+      "tags": ["laminar-flow", "flow-types"]
+    },
+    {
+      "id": "fluid-22",
+      "question": "What are characteristics of laminar flow?",
+      "answer": "Smooth motion, low turbulence, and predictable flow paths.",
+      "tags": ["laminar-flow", "characteristics"]
+    },
+    {
+      "id": "fluid-23",
+      "question": "What is turbulent flow?",
+      "answer": "Chaotic fluid flow with mixing and irregular movement.",
+      "tags": ["turbulent-flow", "flow-types"]
+    },
+    {
+      "id": "fluid-24",
+      "question": "What are characteristics of turbulent flow?",
+      "answer": "Swirling motion, vortices, and irregular velocity changes.",
+      "tags": ["turbulent-flow", "characteristics"]
+    },
+    {
+      "id": "fluid-25",
+      "question": "Which type of flow generally has lower energy loss: laminar or turbulent?",
+      "answer": "Laminar flow.",
+      "tags": ["laminar-flow", "turbulent-flow"]
+    },
+    {
+      "id": "fluid-26",
+      "question": "What is a vortex?",
+      "answer": "A rotating region of fluid caused by flow disturbances.",
+      "tags": ["vortices", "flow"]
+    },
+    {
+      "id": "fluid-27",
+      "question": "Where are vortices commonly formed?",
+      "answer": "Behind objects moving through fluids or where turbulent flow occurs.",
+      "tags": ["vortices", "turbulence"]
+    },
+    {
+      "id": "fluid-28",
+      "question": "Why can vortices be undesirable in engineering systems?",
+      "answer": "They can increase drag, vibration, and energy losses.",
+      "tags": ["vortices", "engineering"]
+    },
+    {
+      "id": "fluid-29",
+      "question": "What is a separation point in fluid flow?",
+      "answer": "The point where fluid flow detaches from a surface.",
+      "tags": ["separation-points", "flow"]
+    },
+    {
+      "id": "fluid-30",
+      "question": "What can happen after flow separation occurs?",
+      "answer": "Turbulence and vortices may form behind the object.",
+      "tags": ["separation-points", "turbulence"]
+    },
+    {
+      "id": "fluid-31",
+      "question": "Why are separation points important in aerodynamics?",
+      "answer": "They strongly affect drag and lift performance.",
+      "tags": ["separation-points", "aerodynamics"]
+    },
+    {
+      "id": "fluid-32",
+      "question": "What is aerodynamics?",
+      "answer": "The study of how gases interact with moving objects.",
+      "tags": ["aerodynamics", "basics"]
+    },
+    {
+      "id": "fluid-33",
+      "question": "Why is aerodynamics important in vehicle design?",
+      "answer": "It helps reduce drag and improve efficiency and stability.",
+      "tags": ["aerodynamics", "vehicles"]
+    },
+    {
+      "id": "fluid-34",
+      "question": "What is drag?",
+      "answer": "A resistive force opposing motion through a fluid.",
+      "tags": ["drag", "forces"]
+    },
+    {
+      "id": "fluid-35",
+      "question": "What factors affect drag force?",
+      "answer": "Fluid speed, object shape, surface roughness, and fluid density.",
+      "tags": ["drag", "forces"]
+    },
+    {
+      "id": "fluid-36",
+      "question": "How can drag be reduced?",
+      "answer": "By streamlining shapes and smoothing surfaces.",
+      "tags": ["drag", "aerodynamics"]
+    },
+    {
+      "id": "fluid-37",
+      "question": "What is thrust?",
+      "answer": "A force that pushes an object forwards through a fluid.",
+      "tags": ["thrust", "forces"]
+    },
+    {
+      "id": "fluid-38",
+      "question": "What produces thrust in a jet engine?",
+      "answer": "The high-speed expulsion of exhaust gases.",
+      "tags": ["thrust", "jet-engines"]
+    },
+    {
+      "id": "fluid-39",
+      "question": "What must happen for an aircraft to accelerate forwards?",
+      "answer": "Thrust must be greater than drag.",
+      "tags": ["thrust", "drag"]
+    },
+    {
+      "id": "fluid-40",
+      "question": "What is lift in aerodynamics?",
+      "answer": "An upward force generated by pressure differences around a wing.",
+      "tags": ["lift", "aerodynamics"]
+    },
+    {
+      "id": "fluid-41",
+      "question": "How does Bernoulli’s Principle contribute to lift?",
+      "answer": "Faster airflow over the wing reduces pressure above it, creating lift.",
+      "tags": ["bernoulli", "lift"]
+    },
+    {
+      "id": "fluid-42",
+      "question": "What is streamline flow another name for?",
+      "answer": "Laminar flow.",
+      "tags": ["laminar-flow", "flow-types"]
+    },
+    {
+      "id": "fluid-43",
+      "question": "Which type of flow is more predictable: laminar or turbulent?",
+      "answer": "Laminar flow.",
+      "tags": ["laminar-flow", "flow-types"]
+    },
+    {
+      "id": "fluid-44",
+      "question": "What effect does turbulence usually have on drag?",
+      "answer": "It generally increases drag.",
+      "tags": ["turbulent-flow", "drag"]
+    },
+    {
+      "id": "fluid-45",
+      "question": "Why are streamlined shapes used on aircraft and cars?",
+      "answer": "To reduce drag and improve efficiency.",
+      "tags": ["aerodynamics", "drag"]
+    },
+    {
+      "id": "fluid-46",
+      "question": "What is fluid density?",
+      "answer": "Mass per unit volume of a fluid.",
+      "tags": ["density", "fluids"]
+    },
+    {
+      "id": "fluid-47",
+      "question": "How does fluid density affect hydrostatic pressure?",
+      "answer": "Higher density fluids produce greater hydrostatic pressure at the same depth.",
+      "tags": ["density", "hydrostatic-pressure"]
+    },
+    {
+      "id": "fluid-48",
+      "question": "What is cavitation?",
+      "answer": "The formation of vapor bubbles in a fluid due to low pressure.",
+      "tags": ["cavitation", "pressure"]
+    },
+    {
+      "id": "fluid-49",
+      "question": "Why can cavitation damage equipment?",
+      "answer": "Collapsing bubbles create shock waves that erode surfaces.",
+      "tags": ["cavitation", "engineering"]
+    },
+    {
+      "id": "fluid-50",
+      "question": "What engineering applications commonly involve fluid dynamics?",
+      "answer": "Aircraft design, pipelines, pumps, turbines, ship hulls, and vehicle aerodynamics.",
+      "tags": ["applications", "fluid-dynamics"]
+    }
+  ]
+}
