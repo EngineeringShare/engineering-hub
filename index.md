@@ -58,16 +58,17 @@ This site is your one-stop destination for accessing class slides, assignments, 
   <ul id="results-container"></ul>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/1.9.2/simple-jekyll-search.min.js"></script>
+<script src="https://engineeringshare.github.io/engineering-hub/assets/js/vendor/simple-jekyll-search.min.js"></script>
 <script>
-  SimpleJekyllSearch({
-    searchInput: document.getElementById('search-input'),
-    resultsContainer: document.getElementById('results-container'),
-    json: 'search.json',
-    searchResultTemplate: '<li><a href="{url}">{title}</a></li>',
-    noResultsText: 'No results found',
-    limit: 20
-  })
+document.addEventListener("DOMContentLoaded", function () {
+  if (typeof SimpleJekyllSearch !== "undefined") {
+    SimpleJekyllSearch({
+      searchInput: document.getElementById("search-input"),
+      resultsContainer: document.getElementById("results-container"),
+      json: "{{ '/search.json' | relative_url }}"
+    });
+  }
+});
 </script>
 
 ---

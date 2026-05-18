@@ -51,28 +51,33 @@ Type to find a game, or browse all cards below.
   <div id="hub-hint" class="muted">Tip: try “matching”, “ohm”, “circuit”, etc.</div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/1.9.2/simple-jekyll-search.min.js"></script>
+<script src="https://engineeringshare.github.io/engineering-hub/assets/js/vendor/simple-jekyll-search.min.js"></script>
 <script>
+document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById('hub-search');
   const resultsEl = document.getElementById('hub-results');
   const hintEl = document.getElementById('hub-hint');
   const cardsSection = document.getElementById('hub-cards');
 
-  SimpleJekyllSearch({
-    searchInput: searchInput,
-    resultsContainer: resultsEl,
-    json: '{{ "/interactive-search.json" | relative_url }}',
-    searchResultTemplate: '<li><a href="{url}">{title}</a></li>',
-    noResultsText: '<li class="muted">No games found.</li>',
-    limit: 20
-  });
+  if (typeof SimpleJekyllSearch !== "undefined") {
+    SimpleJekyllSearch({
+      searchInput: searchInput,
+      resultsContainer: resultsEl,
+      json: '{{ "/interactive-search.json" | relative_url }}',
+      searchResultTemplate: '<li><a href="{url}">{title}</a></li>',
+      noResultsText: '<li class="muted">No games found.</li>',
+      limit: 20
+    });
+  }
 
-  // UX: hide the card grid when user types; show again when empty
-  searchInput.addEventListener('input', () => {
-    const hasQuery = searchInput.value.trim().length > 0;
-    cardsSection.style.display = hasQuery ? 'none' : '';
-    hintEl.style.display = hasQuery ? 'none' : '';
-  });
+  if (searchInput && cardsSection && hintEl) {
+    searchInput.addEventListener('input', () => {
+      const hasQuery = searchInput.value.trim().length > 0;
+      cardsSection.style.display = hasQuery ? 'none' : '';
+      hintEl.style.display = hasQuery ? 'none' : '';
+    });
+  }
+});
 </script>
 
 ---
