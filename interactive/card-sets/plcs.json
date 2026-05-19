@@ -1,0 +1,306 @@
+{
+  "id": "plcs",
+  "name": "PLCs",
+  "cards": [
+    {
+      "id": "plc-1",
+      "question": "What does PLC stand for?",
+      "answer": "Programmable Logic Controller.",
+      "tags": ["plc-basics"]
+    },
+    {
+      "id": "plc-2",
+      "question": "What is a PLC?",
+      "answer": "An industrial digital controller used to automate machines and industrial processes.",
+      "tags": ["plc-basics"]
+    },
+    {
+      "id": "plc-3",
+      "question": "Why are PLCs widely used in mechatronic systems?",
+      "answer": "Because they are reliable, programmable, rugged, and suitable for industrial environments.",
+      "tags": ["applications", "mechatronics"]
+    },
+    {
+      "id": "plc-4",
+      "question": "What are the three main sections of a PLC system?",
+      "answer": "Inputs, CPU, and outputs.",
+      "tags": ["plc-components"]
+    },
+    {
+      "id": "plc-5",
+      "question": "What is the role of the CPU in a PLC?",
+      "answer": "To process the control program and make decisions based on input signals.",
+      "tags": ["cpu", "plc-components"]
+    },
+    {
+      "id": "plc-6",
+      "question": "What is an input device in a PLC system?",
+      "answer": "A sensor or switch that sends information to the PLC.",
+      "tags": ["inputs", "devices"]
+    },
+    {
+      "id": "plc-7",
+      "question": "What is an output device in a PLC system?",
+      "answer": "A device controlled by the PLC, such as a motor, lamp, or solenoid.",
+      "tags": ["outputs", "devices"]
+    },
+    {
+      "id": "plc-8",
+      "question": "What is ladder logic?",
+      "answer": "A graphical PLC programming language that resembles electrical relay diagrams.",
+      "tags": ["programming", "ladder-logic"]
+    },
+    {
+      "id": "plc-9",
+      "question": "Why is ladder logic commonly used?",
+      "answer": "Because it is easy for electricians and engineers to understand and troubleshoot.",
+      "tags": ["programming", "ladder-logic"]
+    },
+    {
+      "id": "plc-10",
+      "question": "What is meant by a PLC scan cycle?",
+      "answer": "The repeated process of reading inputs, executing the program, and updating outputs.",
+      "tags": ["operation", "scan-cycle"]
+    },
+    {
+      "id": "plc-11",
+      "question": "What is a unitary PLC?",
+      "answer": "A PLC with fixed inputs, outputs, and CPU all contained in one unit.",
+      "tags": ["types", "unitary-plc"]
+    },
+    {
+      "id": "plc-12",
+      "question": "What is an advantage of a unitary PLC?",
+      "answer": "It is compact, simple, and usually lower cost.",
+      "tags": ["types", "advantages"]
+    },
+    {
+      "id": "plc-13",
+      "question": "What is a limitation of a unitary PLC?",
+      "answer": "It has limited expansion capability.",
+      "tags": ["types", "limitations"]
+    },
+    {
+      "id": "plc-14",
+      "question": "What is a unitary PLC with modular features?",
+      "answer": "A compact PLC that allows limited expansion modules to be added.",
+      "tags": ["types", "modular-features"]
+    },
+    {
+      "id": "plc-15",
+      "question": "What is an advantage of a PLC with modular features?",
+      "answer": "It provides more flexibility than a standard unitary PLC.",
+      "tags": ["types", "advantages"]
+    },
+    {
+      "id": "plc-16",
+      "question": "What is a modular PLC?",
+      "answer": "A PLC made from separate modules such as CPU, input, and output cards.",
+      "tags": ["types", "modular-plc"]
+    },
+    {
+      "id": "plc-17",
+      "question": "What is an advantage of a modular PLC?",
+      "answer": "It is highly expandable and suitable for large industrial systems.",
+      "tags": ["types", "advantages"]
+    },
+    {
+      "id": "plc-18",
+      "question": "What is a limitation of a modular PLC?",
+      "answer": "It is usually larger and more expensive than compact PLCs.",
+      "tags": ["types", "limitations"]
+    },
+    {
+      "id": "plc-19",
+      "question": "What is meant by PLC architecture?",
+      "answer": "The arrangement and structure of PLC hardware components.",
+      "tags": ["architecture", "plc-components"]
+    },
+    {
+      "id": "plc-20",
+      "question": "What hardware components are commonly found in PLC architecture?",
+      "answer": "CPU, memory, power supply, communication ports, and I/O modules.",
+      "tags": ["architecture", "hardware"]
+    },
+    {
+      "id": "plc-21",
+      "question": "What is sensor signal conditioning?",
+      "answer": "The process of modifying sensor signals so they can be safely and accurately read by the PLC.",
+      "tags": ["operation", "signal-conditioning"]
+    },
+    {
+      "id": "plc-22",
+      "question": "Why is signal conditioning important?",
+      "answer": "Because raw sensor signals may be noisy, weak, or incompatible with PLC input requirements.",
+      "tags": ["signal-conditioning", "inputs"]
+    },
+    {
+      "id": "plc-23",
+      "question": "What is PLC programming?",
+      "answer": "Writing instructions that tell the PLC how to control a process.",
+      "tags": ["programming", "operation"]
+    },
+    {
+      "id": "plc-24",
+      "question": "What is a process block in PLC systems?",
+      "answer": "A section of logic or software used to perform a specific control task.",
+      "tags": ["functions", "process-blocks"]
+    },
+    {
+      "id": "plc-25",
+      "question": "What is a motor driver integrated circuit?",
+      "answer": "An electronic device used to control the operation of motors from PLC outputs.",
+      "tags": ["functions", "motor-drivers"]
+    },
+    {
+      "id": "plc-26",
+      "question": "Why are motor driver ICs needed?",
+      "answer": "Because PLC outputs usually cannot supply enough current to directly drive motors.",
+      "tags": ["motor-drivers", "outputs"]
+    },
+    {
+      "id": "plc-27",
+      "question": "What is an interface device in a PLC system?",
+      "answer": "A device that allows communication or safe connection between the PLC and external equipment.",
+      "tags": ["functions", "interface-devices"]
+    },
+    {
+      "id": "plc-28",
+      "question": "Give an example of an interface device used with PLCs.",
+      "answer": "Relays, opto-isolators, and communication modules.",
+      "tags": ["interface-devices", "examples"]
+    },
+    {
+      "id": "plc-29",
+      "question": "How are PLCs used in robotic arms?",
+      "answer": "To control movement sequences, sensors, and actuators.",
+      "tags": ["applications", "robotic-arms"]
+    },
+    {
+      "id": "plc-30",
+      "question": "How are PLCs used on conveyor belts?",
+      "answer": "To control motors, detect objects, and automate sorting or movement.",
+      "tags": ["applications", "conveyor-belts"]
+    },
+    {
+      "id": "plc-31",
+      "question": "How are PLCs used in packaging systems?",
+      "answer": "To automate filling, sealing, labeling, and sorting operations.",
+      "tags": ["applications", "packaging"]
+    },
+    {
+      "id": "plc-32",
+      "question": "What does SCADA stand for?",
+      "answer": "Supervisory Control and Data Acquisition.",
+      "tags": ["scada", "applications"]
+    },
+    {
+      "id": "plc-33",
+      "question": "What is the purpose of SCADA systems?",
+      "answer": "To monitor and control industrial processes remotely.",
+      "tags": ["scada", "monitoring"]
+    },
+    {
+      "id": "plc-34",
+      "question": "How do PLCs interact with SCADA systems?",
+      "answer": "PLCs collect and control process data while SCADA provides monitoring and supervision.",
+      "tags": ["scada", "plcs"]
+    },
+    {
+      "id": "plc-35",
+      "question": "What is a remote terminal unit (RTU)?",
+      "answer": "A device used to collect field data and communicate with SCADA systems.",
+      "tags": ["rtu", "scada"]
+    },
+    {
+      "id": "plc-36",
+      "question": "How are PLCs used in animatronics?",
+      "answer": "To control motors, timing, movement sequences, and special effects.",
+      "tags": ["applications", "animatronics"]
+    },
+    {
+      "id": "plc-37",
+      "question": "What is one advantage of PLCs compared to dedicated integrated circuits?",
+      "answer": "PLCs can be reprogrammed for different tasks.",
+      "tags": ["advantages", "comparison"]
+    },
+    {
+      "id": "plc-38",
+      "question": "What is one limitation of PLCs compared to dedicated integrated circuits?",
+      "answer": "Dedicated integrated circuits may operate faster for specific tasks.",
+      "tags": ["limitations", "comparison"]
+    },
+    {
+      "id": "plc-39",
+      "question": "What is one advantage of PLCs compared to computer-based systems?",
+      "answer": "PLCs are generally more robust and reliable in harsh industrial environments.",
+      "tags": ["advantages", "comparison"]
+    },
+    {
+      "id": "plc-40",
+      "question": "What is one limitation of PLCs compared to computer-based systems?",
+      "answer": "Computer systems may provide greater processing power and advanced graphical interfaces.",
+      "tags": ["limitations", "comparison"]
+    },
+    {
+      "id": "plc-41",
+      "question": "Why are PLCs suitable for industrial automation?",
+      "answer": "They can reliably operate continuously with minimal downtime.",
+      "tags": ["applications", "automation"]
+    },
+    {
+      "id": "plc-42",
+      "question": "What type of signals are commonly used as PLC inputs?",
+      "answer": "Digital and analogue signals.",
+      "tags": ["inputs", "signals"]
+    },
+    {
+      "id": "plc-43",
+      "question": "What is a digital PLC input?",
+      "answer": "An input with only two states, such as ON or OFF.",
+      "tags": ["digital", "inputs"]
+    },
+    {
+      "id": "plc-44",
+      "question": "What is an analogue PLC input?",
+      "answer": "An input that can vary continuously, such as temperature or pressure.",
+      "tags": ["analogue", "inputs"]
+    },
+    {
+      "id": "plc-45",
+      "question": "What type of devices commonly provide analogue signals?",
+      "answer": "Sensors such as temperature, pressure, or flow sensors.",
+      "tags": ["analogue", "sensors"]
+    },
+    {
+      "id": "plc-46",
+      "question": "What is a relay output on a PLC?",
+      "answer": "An electrically operated switch controlled by the PLC.",
+      "tags": ["outputs", "relay"]
+    },
+    {
+      "id": "plc-47",
+      "question": "Why are relays commonly used with PLCs?",
+      "answer": "They allow low-power PLC outputs to control higher-power devices.",
+      "tags": ["relay", "outputs"]
+    },
+    {
+      "id": "plc-48",
+      "question": "What is troubleshooting in PLC systems?",
+      "answer": "The process of identifying and fixing faults in hardware or software.",
+      "tags": ["maintenance", "troubleshooting"]
+    },
+    {
+      "id": "plc-49",
+      "question": "Why is modular PLC design useful for maintenance?",
+      "answer": "Faulty modules can be replaced individually without replacing the whole PLC.",
+      "tags": ["maintenance", "modular-plc"]
+    },
+    {
+      "id": "plc-50",
+      "question": "Why are PLCs important in modern mechatronic systems?",
+      "answer": "They provide flexible, automated, and reliable control of industrial processes and machinery.",
+      "tags": ["mechatronics", "applications"]
+    }
+  ]
+}

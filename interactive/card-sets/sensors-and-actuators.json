@@ -1,0 +1,306 @@
+{
+  "id": "sensors-and-actuators",
+  "name": "Sensors and Actuators",
+  "cards": [
+    {
+      "id": "sa-1",
+      "question": "What is a sensor?",
+      "answer": "A device that detects a physical condition and converts it into a signal.",
+      "tags": ["sensors", "basics"]
+    },
+    {
+      "id": "sa-2",
+      "question": "What is an actuator?",
+      "answer": "A device that converts a control signal into physical movement or action.",
+      "tags": ["actuators", "basics"]
+    },
+    {
+      "id": "sa-3",
+      "question": "What is the main difference between a sensor and an actuator?",
+      "answer": "A sensor provides input to a system, while an actuator produces output from a system.",
+      "tags": ["comparison", "basics"]
+    },
+    {
+      "id": "sa-4",
+      "question": "Give three examples of sensors.",
+      "answer": "Temperature sensors, pressure sensors, proximity sensors, light sensors, and limit switches.",
+      "tags": ["sensors", "examples"]
+    },
+    {
+      "id": "sa-5",
+      "question": "Give three examples of actuators.",
+      "answer": "Motors, solenoids, relays, hydraulic cylinders, and pneumatic cylinders.",
+      "tags": ["actuators", "examples"]
+    },
+    {
+      "id": "sa-6",
+      "question": "What is a transducer?",
+      "answer": "A device that converts one form of energy into another.",
+      "tags": ["transducers", "basics"]
+    },
+    {
+      "id": "sa-7",
+      "question": "Why can many sensors be described as transducers?",
+      "answer": "Because they convert physical energy, such as heat, light, or pressure, into an electrical signal.",
+      "tags": ["sensors", "transducers"]
+    },
+    {
+      "id": "sa-8",
+      "question": "What is an analogue sensor?",
+      "answer": "A sensor that produces a continuously varying output signal.",
+      "tags": ["sensors", "analogue"]
+    },
+    {
+      "id": "sa-9",
+      "question": "What is a digital sensor?",
+      "answer": "A sensor that produces a discrete output, usually ON or OFF.",
+      "tags": ["sensors", "digital"]
+    },
+    {
+      "id": "sa-10",
+      "question": "What is a limit switch?",
+      "answer": "A mechanical sensor used to detect the presence or position of an object.",
+      "tags": ["sensors", "limit-switch"]
+    },
+    {
+      "id": "sa-11",
+      "question": "What is a proximity sensor?",
+      "answer": "A sensor that detects nearby objects without physical contact.",
+      "tags": ["sensors", "proximity"]
+    },
+    {
+      "id": "sa-12",
+      "question": "What is an inductive proximity sensor used to detect?",
+      "answer": "Metal objects.",
+      "tags": ["sensors", "inductive"]
+    },
+    {
+      "id": "sa-13",
+      "question": "What is a capacitive proximity sensor used to detect?",
+      "answer": "Metallic and non-metallic objects, including plastics, liquids, and powders.",
+      "tags": ["sensors", "capacitive"]
+    },
+    {
+      "id": "sa-14",
+      "question": "What is a photoelectric sensor?",
+      "answer": "A sensor that uses light to detect objects or changes in position.",
+      "tags": ["sensors", "photoelectric"]
+    },
+    {
+      "id": "sa-15",
+      "question": "What is an LDR?",
+      "answer": "A Light Dependent Resistor whose resistance changes with light intensity.",
+      "tags": ["sensors", "ldr"]
+    },
+    {
+      "id": "sa-16",
+      "question": "What happens to an LDR’s resistance as light intensity increases?",
+      "answer": "Its resistance decreases.",
+      "tags": ["sensors", "ldr"]
+    },
+    {
+      "id": "sa-17",
+      "question": "What is a thermistor?",
+      "answer": "A temperature-sensitive resistor.",
+      "tags": ["sensors", "temperature"]
+    },
+    {
+      "id": "sa-18",
+      "question": "What happens to the resistance of an NTC thermistor as temperature increases?",
+      "answer": "Its resistance decreases.",
+      "tags": ["sensors", "temperature"]
+    },
+    {
+      "id": "sa-19",
+      "question": "What does NTC stand for?",
+      "answer": "Negative Temperature Coefficient.",
+      "tags": ["sensors", "temperature"]
+    },
+    {
+      "id": "sa-20",
+      "question": "What does PTC stand for?",
+      "answer": "Positive Temperature Coefficient.",
+      "tags": ["sensors", "temperature"]
+    },
+    {
+      "id": "sa-21",
+      "question": "What is a pressure sensor?",
+      "answer": "A sensor that detects pressure and converts it into an electrical signal.",
+      "tags": ["sensors", "pressure"]
+    },
+    {
+      "id": "sa-22",
+      "question": "What is a flow sensor used for?",
+      "answer": "Measuring the movement or flow rate of a fluid.",
+      "tags": ["sensors", "flow"]
+    },
+    {
+      "id": "sa-23",
+      "question": "What is an encoder?",
+      "answer": "A sensor used to measure position, speed, or rotation.",
+      "tags": ["sensors", "encoder"]
+    },
+    {
+      "id": "sa-24",
+      "question": "What is the difference between an incremental encoder and an absolute encoder?",
+      "answer": "An incremental encoder gives movement pulses, while an absolute encoder gives a unique position value.",
+      "tags": ["sensors", "encoder"]
+    },
+    {
+      "id": "sa-25",
+      "question": "What is a Hall effect sensor?",
+      "answer": "A sensor that detects magnetic fields.",
+      "tags": ["sensors", "hall-effect"]
+    },
+    {
+      "id": "sa-26",
+      "question": "Where might a Hall effect sensor be used?",
+      "answer": "Motor speed sensing, position detection, and detecting magnets on moving parts.",
+      "tags": ["sensors", "hall-effect", "applications"]
+    },
+    {
+      "id": "sa-27",
+      "question": "What is signal conditioning?",
+      "answer": "The process of modifying a sensor signal so it can be used safely and accurately by a controller.",
+      "tags": ["signal-conditioning", "sensors"]
+    },
+    {
+      "id": "sa-28",
+      "question": "Why might a sensor signal need conditioning?",
+      "answer": "Because it may be too weak, noisy, or outside the required voltage range.",
+      "tags": ["signal-conditioning", "sensors"]
+    },
+    {
+      "id": "sa-29",
+      "question": "What is calibration?",
+      "answer": "Adjusting or checking a sensor so its output matches known reference values.",
+      "tags": ["calibration", "sensors"]
+    },
+    {
+      "id": "sa-30",
+      "question": "Why is sensor calibration important?",
+      "answer": "It improves measurement accuracy and reliability.",
+      "tags": ["calibration", "accuracy"]
+    },
+    {
+      "id": "sa-31",
+      "question": "What is sensor accuracy?",
+      "answer": "How close a sensor reading is to the true value.",
+      "tags": ["sensors", "accuracy"]
+    },
+    {
+      "id": "sa-32",
+      "question": "What is sensor resolution?",
+      "answer": "The smallest change a sensor can detect.",
+      "tags": ["sensors", "resolution"]
+    },
+    {
+      "id": "sa-33",
+      "question": "What is sensor range?",
+      "answer": "The minimum and maximum values a sensor can measure.",
+      "tags": ["sensors", "range"]
+    },
+    {
+      "id": "sa-34",
+      "question": "What is response time in a sensor?",
+      "answer": "The time taken for a sensor output to respond to a change in input.",
+      "tags": ["sensors", "response-time"]
+    },
+    {
+      "id": "sa-35",
+      "question": "What is hysteresis in a sensor?",
+      "answer": "When the sensor output depends partly on its previous input condition.",
+      "tags": ["sensors", "hysteresis"]
+    },
+    {
+      "id": "sa-36",
+      "question": "What is a motor?",
+      "answer": "An actuator that converts electrical energy into rotational motion.",
+      "tags": ["actuators", "motors"]
+    },
+    {
+      "id": "sa-37",
+      "question": "What is a DC motor?",
+      "answer": "A motor powered by direct current, commonly used for simple speed and direction control.",
+      "tags": ["actuators", "dc-motor"]
+    },
+    {
+      "id": "sa-38",
+      "question": "What is a stepper motor?",
+      "answer": "A motor that moves in fixed angular steps for precise positioning.",
+      "tags": ["actuators", "stepper-motor"]
+    },
+    {
+      "id": "sa-39",
+      "question": "What is a servo motor?",
+      "answer": "A motor with feedback control used to move accurately to a set position.",
+      "tags": ["actuators", "servo-motor"]
+    },
+    {
+      "id": "sa-40",
+      "question": "What is a solenoid?",
+      "answer": "An electromagnetic actuator that produces linear motion.",
+      "tags": ["actuators", "solenoid"]
+    },
+    {
+      "id": "sa-41",
+      "question": "What is a relay?",
+      "answer": "An electrically operated switch used to control a circuit.",
+      "tags": ["actuators", "relay"]
+    },
+    {
+      "id": "sa-42",
+      "question": "Why are relays useful in control systems?",
+      "answer": "They allow a low-power control signal to switch a higher-power circuit.",
+      "tags": ["actuators", "relay"]
+    },
+    {
+      "id": "sa-43",
+      "question": "What is a pneumatic actuator?",
+      "answer": "An actuator that uses compressed air to produce movement.",
+      "tags": ["actuators", "pneumatics"]
+    },
+    {
+      "id": "sa-44",
+      "question": "What is a hydraulic actuator?",
+      "answer": "An actuator that uses pressurised liquid to produce movement.",
+      "tags": ["actuators", "hydraulics"]
+    },
+    {
+      "id": "sa-45",
+      "question": "What is the main advantage of hydraulic actuators?",
+      "answer": "They can produce very large forces.",
+      "tags": ["actuators", "hydraulics"]
+    },
+    {
+      "id": "sa-46",
+      "question": "What is the main advantage of pneumatic actuators?",
+      "answer": "They are fast, simple, and suitable for many repetitive industrial tasks.",
+      "tags": ["actuators", "pneumatics"]
+    },
+    {
+      "id": "sa-47",
+      "question": "What is feedback in a control system?",
+      "answer": "Information from sensors that tells the controller what is happening in the system.",
+      "tags": ["control-systems", "feedback"]
+    },
+    {
+      "id": "sa-48",
+      "question": "How do sensors and actuators work together in a control system?",
+      "answer": "Sensors provide input data, the controller makes decisions, and actuators carry out the required action.",
+      "tags": ["control-systems", "sensors", "actuators"]
+    },
+    {
+      "id": "sa-49",
+      "question": "Give an example of sensors and actuators working together in a mechatronic system.",
+      "answer": "A conveyor system may use a proximity sensor to detect a box and a motor actuator to move the belt.",
+      "tags": ["mechatronics", "applications"]
+    },
+    {
+      "id": "sa-50",
+      "question": "Why are sensors and actuators important in automation?",
+      "answer": "They allow automated systems to detect conditions and physically respond to them.",
+      "tags": ["automation", "mechatronics"]
+    }
+  ]
+}

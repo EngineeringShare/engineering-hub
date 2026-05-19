@@ -1,15 +1,13 @@
 ---
-title: "Power Transmission and Signals"
-date: 2026-02-03
-tags: ["Mechanical Power Transmission", "Belt Drives", "Chain Drives", "Gear Trains", "Signal Types", "Analog Signals", "Digital Signals"]
-subject: "Robotics"
+title: "Electrical Signals"
+date: 2026-05-19
+tags: ["electrical", "signals", "analog", "digital", "PWM"]
+subject: "mechatronics"
 units:
   - unit: "HTQ Unit 4015"
-    lo: "LO3 - Industrial Robotics"
-  - unit: "BTEC Unit 19"
-    lo: "LO1 - PLC Hardware and Software"
-  - unit: "T-Level Unit 09"
-    lo: "(9.1 and 9.3) Signals and Power Transmission"
+    lo: "LO2 - PLC Program Design and Development"
+  - unit: "HTQ Unit 4019"
+    lo: "LO4 - Digital and Analogue Electronics"
 ---
 
 ## Intro:
@@ -19,7 +17,7 @@ units:
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.github.io/engineering-resources/presentations/Power Transmission and Signals.pdf"
+        src="https://engineeringshare.github.io/engineering-resources/presentations/Electrical Signals.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
@@ -48,6 +46,7 @@ units:
 </script>
 
 ## Other Materials:
+
 
 ## ---
 
