@@ -4,5 +4,6 @@
   "https://raw.githubusercontent.com/EngineeringShare/engineering-hub/refs/heads/main/interactive/card-sets/semiconductors.json",
   "https://raw.githubusercontent.com/EngineeringShare/engineering-hub/refs/heads/main/interactive/card-sets/vectors.json",
   "https://raw.githubusercontent.com/EngineeringShare/engineering-hub/refs/heads/main/interactive/card-sets/fluid-dynamics.json",
-  "https://raw.githubusercontent.com/EngineeringShare/engineering-hub/refs/heads/main/interactive/card-sets/plcs.json"
+  "https://raw.githubusercontent.com/EngineeringShare/engineering-hub/refs/heads/main/interactive/card-sets/plcs.json",
+  "https://raw.githubusercontent.com/EngineeringShare/engineering-hub/refs/heads/main/interactive/card-sets/sensors-and-actuators.json"
 ]

@@ -4,8 +4,6 @@ date: 2026-05-19
 tags: ["electrical", "signals", "analog", "digital", "PWM"]
 subject: "mechatronics"
 units:
-  - unit: "HTQ Unit 4015"
-    lo: "LO2 - PLC Program Design and Development"
   - unit: "HTQ Unit 4019"
     lo: "LO4 - Digital and Analogue Electronics"
 ---
