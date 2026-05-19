@@ -75,12 +75,20 @@
  </head>
  <body class="h-full">
   <div id="app" class="h-full w-full overflow-auto"></div>
+
   <script>
     let CARD_SETS = [];
 
     const defaultConfig = {
       app_title: 'Flashcard Study Tool',
-      instructions_text: 'Select your study sets and start practicing \n how to use \n - Click on the sets you wish to use \n - Click "Start Studying" \n - Click on the card to flip it \n - Mark if you got it right or wrong \n - Focus on the topics you find most difficult!',
+      instructions_title: 'How to use the flashcards',
+      instructions_steps: [
+        'Click on the sets you wish to use.',
+        'Click "Start Studying".',
+        'Click on the card to flip it.',
+        'Mark whether you got it right or wrong.',
+        'Use the results screen to focus on the topics you find most difficult.'
+      ],
       background_color: '#f0f4f8',
       surface_color: '#ffffff',
       text_color: '#1a202c',
@@ -99,7 +107,8 @@
       currentIndex: 0,
       isFlipped: false,
       results: [],
-      error: null
+      error: null,
+      showInstructions: false
     };
 
     async function loadCardSets() {
@@ -158,6 +167,16 @@
       render();
     }
 
+    function openInstructions() {
+      appState.showInstructions = true;
+      render();
+    }
+
+    function closeInstructions() {
+      appState.showInstructions = false;
+      render();
+    }
+
     function startStudying() {
       if (appState.selectedSets.length === 0) return;
       
@@ -172,6 +191,7 @@
       appState.currentIndex = 0;
       appState.isFlipped = false;
       appState.results = [];
+      appState.showInstructions = false;
       appState.screen = 'study';
       render();
     }
@@ -230,14 +250,62 @@
     function returnToMenu() {
       appState.screen = 'menu';
       appState.selectedSets = [];
+      appState.showInstructions = false;
       render();
     }
 
     function retryLoading() {
       appState.screen = 'loading';
       appState.error = null;
+      appState.showInstructions = false;
       render();
       loadCardSets();
+    }
+
+    function renderInstructionsModal(surfaceColor, textColor, primaryColor) {
+      if (!appState.showInstructions) return '';
+
+      return `
+        <div 
+          class="fixed inset-0 flex items-center justify-center p-4 z-50"
+          style="background-color: rgba(0, 0, 0, 0.55);"
+          onclick="closeInstructions()"
+        >
+          <div 
+            class="w-full max-w-lg rounded-xl p-6 shadow-xl"
+            style="background-color: ${surfaceColor}; color: ${textColor};"
+            onclick="event.stopPropagation()"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="instructions-title"
+          >
+            <div class="flex justify-between items-start mb-4">
+              <h2 id="instructions-title" class="text-2xl font-bold">${config.instructions_title}</h2>
+              <button 
+                onclick="closeInstructions()" 
+                class="text-2xl leading-none opacity-70 hover:opacity-100"
+                aria-label="Close instructions"
+              >
+                &times;
+              </button>
+            </div>
+
+            <ol class="list-decimal list-inside space-y-3 mb-6">
+              ${config.instructions_steps.map(step => `
+                <li class="opacity-85">${step}</li>
+              `).join('')}
+            </ol>
+
+            <button 
+              onclick="closeInstructions()" 
+              class="w-full py-3 px-6 rounded-lg font-semibold"
+              style="background-color: ${primaryColor}; color: white;"
+            >
+              Got it
+            </button>
+          </div>
+        </div>
+      `;
     }
 
     function render() {
@@ -284,7 +352,16 @@
           <div class="min-h-full w-full p-8" style="background-color: ${bgColor}; color: ${textColor};">
             <div class="max-w-4xl mx-auto">
               <h1 class="text-4xl font-bold mb-2 text-center">${config.app_title}</h1>
-              <p class="text-center mb-8 opacity-75">${config.instructions_text}</p>
+
+              <div class="flex justify-center mb-8">
+                <button 
+                  onclick="openInstructions()" 
+                  class="py-2 px-5 rounded-lg font-semibold transition-all hover:shadow-md"
+                  style="background-color: ${secondaryColor}; color: white;"
+                >
+                  How to use
+                </button>
+              </div>
               
               ${CARD_SETS.length === 0 ? `
                 <div class="text-center p-8" style="background-color: ${surfaceColor}; border-radius: 1rem;">
@@ -315,6 +392,8 @@
                 </button>
               `}
             </div>
+
+            ${renderInstructionsModal(surfaceColor, textColor, primaryColor)}
           </div>
         `;
       } else if (appState.screen === 'study') {
@@ -423,5 +502,5 @@
 
     init();
   </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9b9a4524249ad519',t:'MTc2NzY5MjU5Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ </body>
 </html>
