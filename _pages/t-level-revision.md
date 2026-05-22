@@ -269,10 +269,10 @@ h1 {
       <p class="topic">A mini mock exam covering unit 05, 08 and 09 topics.</p>
     </div>
     <div class="downloads">
-      <a class="button primary" href="https://engineeringshare.github.io/engineering-resources/questions/TLevel Example Set 1.pdf" download>
+      <a class="button primary" href="https://engineeringshare.github.io/engineering-resources/questions/TLevel Example Mock 1.pdf" download>
         Download Exam Paper
       </a>
-      <a class="button secondary" href="https://engineeringshare.github.io/engineering-resources/questions/TLevel Example Set 1 Mark Scheme.pdf" download>
+      <a class="button secondary" href="https://engineeringshare.github.io/engineering-resources/questions/TLevel Example Mock 1 Mark Scheme.pdf" download>
         Download Mark Scheme
       </a>
     </div>
