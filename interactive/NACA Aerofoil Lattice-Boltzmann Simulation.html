@@ -198,6 +198,31 @@
 
     .warning-box.show { display: block; }
 
+    .force-panel {
+      border: 1px solid var(--border);
+      border-radius: .75rem;
+      padding: .75rem;
+      background: rgba(31, 41, 55, .7);
+    }
+
+    .force-panel strong { display: block; margin-bottom: .35rem; }
+
+    .force-row {
+      display: flex;
+      justify-content: space-between;
+      gap: .75rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    .force-note {
+      margin: .45rem 0 0;
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.35;
+    }
+
     footer {
       padding: 1.5rem 0 2.5rem;
       color: var(--muted);
@@ -210,6 +235,12 @@
   </style>
 </head>
 <body>
+    <nav style="max-width:1000px;margin:0 auto 10px auto;">
+        <a href="https://engineeringshare.github.io/engineering-hub/interactive-hub/" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px">
+            ← Back to Interactive Hub
+        </a>
+    </nav>
+
   <header>
     <h1>NACA Aerofoil Flow Simulation</h1>
     <p class="lead">A browser-based lattice-Boltzmann wind tunnel focused on 4-digit NACA aerofoils. Enter a NACA code such as 0012, 2412, or 4415, adjust chord and angle of attack, then compare the wake and vortex behaviour.</p>
@@ -292,6 +323,15 @@
 
         <label class="checkbox-label"><input id="tracers" type="checkbox" /> Tracer particles</label>
         <label class="checkbox-label"><input id="traceLines" type="checkbox" /> Trace lines</label>
+        <label class="checkbox-label"><input id="forceArrows" type="checkbox" checked /> Show lift/drag arrows</label>
+
+        <div class="force-panel" aria-live="polite">
+          <strong>Estimated force on aerofoil</strong>
+          <div class="force-row"><span>Lift</span><span id="liftOut">0.000</span></div>
+          <div class="force-row"><span>Drag</span><span id="dragOut">0.000</span></div>
+          <div class="force-row"><span>L/D</span><span id="ldOut">—</span></div>
+          <p class="force-note">Qualitative only: values are based on momentum exchange at barrier cells, so use them to compare settings rather than as real aerodynamic coefficients.</p>
+        </div>
       </aside>
     </section>
 
@@ -306,7 +346,7 @@
       </article>
       <article class="card">
         <h2>Notes</h2>
-        <p>This is still a simplified lattice-Boltzmann teaching model, not a validated CFD solver. It is good for visual intuition, but it should not be used for real aerodynamic coefficients. Very low viscosity and high speed can become unstable.</p>
+        <p>This is still a simplified lattice-Boltzmann teaching model, not a validated CFD solver. The lift and drag readouts are approximate momentum-exchange indicators, useful for qualitative comparison only. They should not be used as real aerodynamic coefficients. Very low viscosity and high speed can become unstable.</p>
       </article>
     </section>
 
@@ -367,6 +407,10 @@ The "wind tunnel" entry/exit conditions are inspired by Graham Pullan's code. Ad
   const plotType = document.getElementById('plotType');
   const tracersCheck = document.getElementById('tracers');
   const traceLinesCheck = document.getElementById('traceLines');
+  const forceArrowsCheck = document.getElementById('forceArrows');
+  const liftOut = document.getElementById('liftOut');
+  const dragOut = document.getElementById('dragOut');
+  const ldOut = document.getElementById('ldOut');
 
   const chordOut = document.getElementById('chordOut');
   const angleOut = document.getElementById('angleOut');
@@ -392,6 +436,14 @@ The "wind tunnel" entry/exit conditions are inspired by Graham Pullan's code. Ad
   let mouseInCanvas = false;
   let mouseX = 0;
   let mouseY = 0;
+
+  let forceX = 0;
+  let forceY = 0;
+  let smoothedForceX = 0;
+  let smoothedForceY = 0;
+  let aerofoilCentreX = 0;
+  let aerofoilCentreY = 0;
+  let aerofoilChordCells = 58;
 
   const tracerCountSide = 16;
   const nTracers = tracerCountSide * tracerCountSide;
@@ -533,6 +585,8 @@ The "wind tunnel" entry/exit conditions are inspired by Graham Pullan's code. Ad
       }
     }
     time = 0;
+    forceX = forceY = smoothedForceX = smoothedForceY = 0;
+    updateForceReadout();
     initTracers();
     paint();
     updateReadout();
@@ -687,10 +741,13 @@ The "wind tunnel" entry/exit conditions are inspired by Graham Pullan's code. Ad
     const p = Number(code[1]) / 10;
     const t = Number(code.slice(2)) / 100;
     const chord = clamp(Math.round(Number(chordLength.value) || 58), 24, xdim - 30);
+    aerofoilChordCells = chord;
     const aoa = Number(angleAttack.value) * Math.PI / 180;
     const yOffset = Number(verticalPosition.value) || 0;
     const startX = Math.floor(xdim * 0.18);
     const centreY = Math.floor(ydim / 2 + yOffset);
+    aerofoilCentreX = startX + 0.45 * chord;
+    aerofoilCentreY = centreY;
     const pivot = 0.25 * chord;
     const samples = 90;
     const upper = [];
@@ -875,20 +932,95 @@ The "wind tunnel" entry/exit conditions are inspired by Graham Pullan's code. Ad
   }
 
   function bounce() {
+    forceX = 0;
+    forceY = 0;
     for (let y = 1; y < ydim - 1; y++) {
       for (let x = 1; x < xdim - 1; x++) {
         const i = idx(x, y);
         if (!barrier[i]) continue;
-        if (nN[i] > 0) { nS[idx(x, y - 1)] += nN[i]; nN[i] = 0; }
-        if (nS[i] > 0) { nN[idx(x, y + 1)] += nS[i]; nS[i] = 0; }
-        if (nE[i] > 0) { nW[idx(x - 1, y)] += nE[i]; nE[i] = 0; }
-        if (nW[i] > 0) { nE[idx(x + 1, y)] += nW[i]; nW[i] = 0; }
-        if (nNW[i] > 0) { nSE[idx(x + 1, y - 1)] += nNW[i]; nNW[i] = 0; }
-        if (nNE[i] > 0) { nSW[idx(x - 1, y - 1)] += nNE[i]; nNE[i] = 0; }
-        if (nSW[i] > 0) { nNE[idx(x + 1, y + 1)] += nSW[i]; nSW[i] = 0; }
-        if (nSE[i] > 0) { nNW[idx(x - 1, y + 1)] += nSE[i]; nSE[i] = 0; }
+        let amount;
+
+        amount = nN[i];
+        if (amount > 0) { nS[idx(x, y - 1)] += amount; nN[i] = 0; forceY += 2 * amount; }
+
+        amount = nS[i];
+        if (amount > 0) { nN[idx(x, y + 1)] += amount; nS[i] = 0; forceY -= 2 * amount; }
+
+        amount = nE[i];
+        if (amount > 0) { nW[idx(x - 1, y)] += amount; nE[i] = 0; forceX += 2 * amount; }
+
+        amount = nW[i];
+        if (amount > 0) { nE[idx(x + 1, y)] += amount; nW[i] = 0; forceX -= 2 * amount; }
+
+        amount = nNW[i];
+        if (amount > 0) { nSE[idx(x + 1, y - 1)] += amount; nNW[i] = 0; forceX -= 2 * amount; forceY += 2 * amount; }
+
+        amount = nNE[i];
+        if (amount > 0) { nSW[idx(x - 1, y - 1)] += amount; nNE[i] = 0; forceX += 2 * amount; forceY += 2 * amount; }
+
+        amount = nSW[i];
+        if (amount > 0) { nNE[idx(x + 1, y + 1)] += amount; nSW[i] = 0; forceX -= 2 * amount; forceY -= 2 * amount; }
+
+        amount = nSE[i];
+        if (amount > 0) { nNW[idx(x - 1, y + 1)] += amount; nSE[i] = 0; forceX += 2 * amount; forceY -= 2 * amount; }
       }
     }
+
+    // Smooth the very noisy cell-by-cell momentum exchange so the display is usable.
+    smoothedForceX = 0.88 * smoothedForceX + 0.12 * forceX;
+    smoothedForceY = 0.88 * smoothedForceY + 0.12 * forceY;
+    updateForceReadout();
+  }
+
+  function updateForceReadout() {
+    if (!liftOut || !dragOut || !ldOut) return;
+    const lift = smoothedForceY;
+    const drag = smoothedForceX;
+    liftOut.textContent = lift.toFixed(3);
+    dragOut.textContent = drag.toFixed(3);
+    ldOut.textContent = Math.abs(drag) > 1e-6 ? (lift / drag).toFixed(2) : '—';
+  }
+
+  function drawForceArrow(startX, startY, dx, dy, colour, label) {
+    const mag = Math.hypot(dx, dy);
+    if (mag < 1) return;
+    const endX = startX + dx;
+    const endY = startY + dy;
+    const ux = dx / mag;
+    const uy = dy / mag;
+    const head = 9;
+    ctx.save();
+    ctx.strokeStyle = colour;
+    ctx.fillStyle = colour;
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(endX, endY);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(endX, endY);
+    ctx.lineTo(endX - ux * head - uy * head * 0.55, endY - uy * head + ux * head * 0.55);
+    ctx.lineTo(endX - ux * head + uy * head * 0.55, endY - uy * head - ux * head * 0.55);
+    ctx.closePath();
+    ctx.fill();
+    ctx.font = 'bold 13px system-ui, sans-serif';
+    ctx.fillText(label, endX + 6, endY - 6);
+    ctx.restore();
+  }
+
+  function drawForceOverlay() {
+    if (!forceArrowsCheck.checked) return;
+    const lift = smoothedForceY;
+    const drag = smoothedForceX;
+    const scale = clamp(aerofoilChordCells * pixelsPerSquare * 0.09, 9, 24);
+    const baseX = (aerofoilCentreX + 0.5) * pixelsPerSquare;
+    const baseY = (ydim - (aerofoilCentreY + 0.5)) * pixelsPerSquare;
+
+    // Canvas y is downward, while lattice y is upward.
+    const liftPixels = clamp(lift * scale, -90, 90);
+    const dragPixels = clamp(drag * scale, -90, 90);
+    drawForceArrow(baseX, baseY, 0, -liftPixels, '#fef08a', 'Lift');
+    drawForceArrow(baseX, baseY, dragPixels, 0, '#fca5a5', 'Drag');
   }
 
   function moveTracers() {
@@ -995,6 +1127,7 @@ The "wind tunnel" entry/exit conditions are inspired by Graham Pullan's code. Ad
         ctx.fillRect(tx - 2, ty - 1, 4, 2);
       }
     }
+    drawForceOverlay();
     lastPaintMs = performance.now() - start;
   }
 
@@ -1050,6 +1183,7 @@ The "wind tunnel" entry/exit conditions are inspired by Graham Pullan's code. Ad
   plotType.addEventListener('change', paint);
   tracersCheck.addEventListener('change', () => { if (tracersCheck.checked) initTracers(); paint(); });
   traceLinesCheck.addEventListener('change', () => { if (traceLinesCheck.checked) initTracers(); paint(); });
+  forceArrowsCheck.addEventListener('change', paint);
 
   canvas.addEventListener('pointerdown', (evt) => {
     canvas.setPointerCapture(evt.pointerId);

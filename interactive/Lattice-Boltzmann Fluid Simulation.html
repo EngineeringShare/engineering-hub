@@ -42,6 +42,30 @@
       line-height: 1.1;
     }
 
+    .title-row {
+      display: flex;
+      align-items: center;
+      gap: .85rem;
+      flex-wrap: wrap;
+      margin-bottom: .35rem;
+    }
+
+    .hub-back-link {
+      display: inline-block;
+      background: #111827;
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+
+    .title-row h1 {
+      margin: 0;
+    }
+
     h2 { margin-top: 0; }
 
     a { color: var(--accent); }
@@ -211,7 +235,10 @@
 </head>
 <body>
   <header>
-    <h1>Lattice-Boltzmann Fluid Simulation</h1>
+    <div class="title-row">
+      <a class="hub-back-link" href="https://engineeringshare.github.io/engineering-hub/interactive-hub/">← Back to Interactive Hub</a>
+      <h1>Lattice-Boltzmann Fluid Simulation</h1>
+    </div>
     <p class="lead">A browser-based version of Daniel V. Schroeder's lattice-Boltzmann wind tunnel demo. Draw barriers into the flow, change viscosity and flow speed, and visualise speed, velocity, density, or curl.</p>
   </header>
 
