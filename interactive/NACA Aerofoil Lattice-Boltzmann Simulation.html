@@ -1,0 +1,1091 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NACA Aerofoil Lattice-Boltzmann Simulation</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --border: #334155;
+      --good: #86efac;
+      --warning: #fbbf24;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #1e3a8a 0, #0f172a 32rem);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    header, main, footer {
+      width: min(1480px, calc(100% - 2rem));
+      margin-inline: auto;
+    }
+
+    header {
+      padding: 2rem 0 1rem;
+    }
+
+    h1 {
+      margin: 0 0 .35rem;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      line-height: 1.1;
+    }
+
+    h2 { margin-top: 0; }
+
+    a { color: var(--accent); }
+
+    .lead {
+      max-width: 78ch;
+      color: var(--muted);
+      font-size: 1.05rem;
+      margin: 0;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .card {
+      background: rgba(17, 24, 39, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1rem;
+      box-shadow: 0 18px 50px rgba(0,0,0,.25);
+    }
+
+    .simulation-wrap {
+      overflow-x: auto;
+    }
+
+    canvas {
+      display: block;
+      background: #000;
+      border-radius: .65rem;
+      image-rendering: pixelated;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #111827;
+      cursor: crosshair;
+    }
+
+    .readout {
+      margin-top: .75rem;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .88rem;
+      min-height: 1.4rem;
+    }
+
+    .controls {
+      display: grid;
+      gap: .85rem;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    button, select, input[type="range"], input[type="text"], input[type="number"] {
+      font: inherit;
+    }
+
+    button {
+      border: 1px solid var(--border);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: .55rem;
+      padding: .55rem .75rem;
+      cursor: pointer;
+    }
+
+    button:hover, button:focus-visible {
+      border-color: var(--accent);
+      outline: none;
+    }
+
+    button.primary {
+      background: #0369a1;
+      border-color: #0ea5e9;
+    }
+
+    label {
+      display: grid;
+      gap: .25rem;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    label span {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    select, input[type="text"], input[type="number"] {
+      width: 100%;
+      background: var(--panel-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: .55rem;
+      padding: .55rem;
+    }
+
+    .checkbox-label {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .help {
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .help p, .credit p, .credit pre {
+      color: var(--muted);
+    }
+
+    .help strong { color: var(--text); }
+
+    .credit {
+      margin-top: 1rem;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      overflow: auto;
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: .75rem;
+      padding: 1rem;
+      font-size: .82rem;
+    }
+
+    .warning-box {
+      display: none;
+      margin-top: .5rem;
+      padding: .65rem .75rem;
+      border: 1px solid rgba(251, 191, 36, .65);
+      background: rgba(251, 191, 36, .12);
+      color: #fde68a;
+      border-radius: .65rem;
+      font-size: .9rem;
+      line-height: 1.35;
+    }
+
+    .warning-box.show { display: block; }
+
+    footer {
+      padding: 1.5rem 0 2.5rem;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    @media (max-width: 920px) {
+      .grid, .help { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NACA Aerofoil Flow Simulation</h1>
+    <p class="lead">A browser-based lattice-Boltzmann wind tunnel focused on 4-digit NACA aerofoils. Enter a NACA code such as 0012, 2412, or 4415, adjust chord and angle of attack, then compare the wake and vortex behaviour.</p>
+  </header>
+
+  <main>
+    <section class="grid" aria-label="Simulation and controls">
+      <div class="card simulation-wrap">
+        <canvas id="fluidCanvas" width="600" height="240" aria-label="Fluid simulation canvas"></canvas>
+        <div id="readout" class="readout">Move the mouse over the canvas to inspect local values.</div>
+      </div>
+
+      <aside class="card controls" aria-label="Aerofoil simulation controls">
+        <div class="button-row">
+          <button id="runBtn" class="primary">Run</button>
+          <button id="stepBtn">Step</button>
+          <button id="resetBtn">Reset fluid</button>
+        </div>
+
+        <label>
+          <span>Simulation size</span>
+          <select id="simulationSize">
+            <option value="small" selected>Small / smooth: 200 × 80</option>
+            <option value="large">Large / slower: 320 × 120</option>
+          </select>
+        </label>
+        <div id="sizeWarning" class="warning-box">Large mode gives the aerofoil wake more space, but it may lag on classroom laptops. Switch back to Small if the controls feel sluggish.</div>
+
+        <label>
+          <span>NACA 4-digit aerofoil</span>
+          <input id="nacaCode" type="text" value="2412" maxlength="4" inputmode="numeric" pattern="[0-9]{4}" aria-describedby="nacaHelp" />
+        </label>
+        <div id="nacaHelp" class="readout">Example: 2412 = 2% camber, 40% camber position, 12% thickness.</div>
+
+        <label>
+          <span>Chord length <output id="chordOut">58</output> cells</span>
+          <input id="chordLength" type="range" min="24" max="90" step="1" value="58" />
+        </label>
+
+        <label>
+          <span>Angle of attack <output id="angleOut">5</output>°</span>
+          <input id="angleAttack" type="range" min="-15" max="20" step="1" value="5" />
+        </label>
+
+        <label>
+          <span>Vertical position <output id="verticalOut">0</output></span>
+          <input id="verticalPosition" type="range" min="-25" max="25" step="1" value="0" />
+        </label>
+
+        <div class="button-row">
+          <button id="updateAerofoilBtn">Update aerofoil</button>
+          <button id="clearBtn">Clear aerofoil</button>
+        </div>
+
+        <label>
+          <span>Viscosity <output id="viscosityOut">0.02</output></span>
+          <input id="viscosity" type="range" min="0.01" max="1" step="0.01" value="0.02" />
+        </label>
+
+        <label>
+          <span>Flow speed <output id="speedOut">0.100</output></span>
+          <input id="flowSpeed" type="range" min="0" max="0.12" step="0.005" value="0.1" />
+        </label>
+
+        <label>
+          <span>Plot type</span>
+          <select id="plotType">
+            <option value="speed">Plot Speed</option>
+            <option value="vx">Plot vx</option>
+            <option value="vy">Plot vy</option>
+            <option value="curl" selected>Plot Curl</option>
+            <option value="density">Plot Density</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Contrast <output id="contrastOut">20</output></span>
+          <input id="contrast" type="range" min="1" max="100" step="1" value="20" />
+        </label>
+
+        <label class="checkbox-label"><input id="tracers" type="checkbox" /> Tracer particles</label>
+        <label class="checkbox-label"><input id="traceLines" type="checkbox" /> Trace lines</label>
+      </aside>
+    </section>
+
+    <section class="help">
+      <article class="card">
+        <h2>How to use it</h2>
+        <p><strong>NACA code</strong> uses the standard 4-digit format. The first digit is maximum camber as a percentage of chord, the second digit is the camber position in tenths of chord, and the final two digits are maximum thickness as a percentage of chord. Change the code, chord, angle, or vertical position, then use <strong>Update aerofoil</strong>.</p>
+      </article>
+      <article class="card">
+        <h2>Teaching focus</h2>
+        <p>Useful comparisons include symmetrical aerofoils such as 0012 against cambered aerofoils such as 2412 or 4415. Students can observe changes in separation, wake structure, vortex shedding, and the effect of angle of attack. Trace lines make the flow path easier to see.</p>
+      </article>
+      <article class="card">
+        <h2>Notes</h2>
+        <p>This is still a simplified lattice-Boltzmann teaching model, not a validated CFD solver. It is good for visual intuition, but it should not be used for real aerodynamic coefficients. Very low viscosity and high speed can become unstable.</p>
+      </article>
+    </section>
+
+    <section class="card credit">
+      <h2>Credit and licence</h2>
+      <p>This browser version is adapted from the Java source by Daniel V. Schroeder, Weber State University. The original notice is preserved below.</p>
+      <pre>Copyright 2011-2013, Daniel V. Schroeder (Weber State University)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated data and documentation (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of the author shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization.
+
+Credits from the original source:
+The "wind tunnel" entry/exit conditions are inspired by Graham Pullan's code. Additional inspiration from Thomas Pohl's applet. Other portions of code are based on Wagner and Gonsalves; code adapted from Succi.</pre>
+    </section>
+  </main>
+
+  <footer>
+    Adapted for classroom use as a self-contained HTML5 canvas NACA aerofoil simulation.
+  </footer>
+
+<script>
+(() => {
+  'use strict';
+
+  let xdim = 200;
+  let ydim = 80;
+  const pixelsPerSquare = 3;
+  let size = xdim * ydim;
+  const nColors = 600;
+
+  const four9ths = 4 / 9;
+  const one9th = 1 / 9;
+  const one36th = 1 / 36;
+
+  const canvas = document.getElementById('fluidCanvas');
+  const ctx = canvas.getContext('2d', { alpha: false });
+  const readout = document.getElementById('readout');
+
+  const runBtn = document.getElementById('runBtn');
+  const stepBtn = document.getElementById('stepBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const simulationSize = document.getElementById('simulationSize');
+  const sizeWarning = document.getElementById('sizeWarning');
+  const nacaCode = document.getElementById('nacaCode');
+  const chordLength = document.getElementById('chordLength');
+  const angleAttack = document.getElementById('angleAttack');
+  const verticalPosition = document.getElementById('verticalPosition');
+  const updateAerofoilBtn = document.getElementById('updateAerofoilBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const viscosity = document.getElementById('viscosity');
+  const flowSpeed = document.getElementById('flowSpeed');
+  const contrast = document.getElementById('contrast');
+  const plotType = document.getElementById('plotType');
+  const tracersCheck = document.getElementById('tracers');
+  const traceLinesCheck = document.getElementById('traceLines');
+
+  const chordOut = document.getElementById('chordOut');
+  const angleOut = document.getElementById('angleOut');
+  const verticalOut = document.getElementById('verticalOut');
+  const viscosityOut = document.getElementById('viscosityOut');
+  const speedOut = document.getElementById('speedOut');
+  const contrastOut = document.getElementById('contrastOut');
+
+  let n0, nN, nS, nE, nW, nNW, nNE, nSW, nSE;
+  let density, xvel, yvel, speed2, curl, barrier;
+  let image, data;
+  const palette = makePalette(nColors);
+
+  let running = false;
+  let time = 0;
+  let animationId = null;
+  let lastStepMs = 0;
+  let lastCollideMs = 0;
+  let lastStreamMs = 0;
+  let lastPaintMs = 0;
+  let mouseDrawBarrier = true;
+  let mouseIsDown = false;
+  let mouseInCanvas = false;
+  let mouseX = 0;
+  let mouseY = 0;
+
+  const tracerCountSide = 16;
+  const nTracers = tracerCountSide * tracerCountSide;
+  const tracerx = new Float64Array(nTracers);
+  const tracery = new Float64Array(nTracers);
+  const traceLength = 44;
+  const trailx = new Float64Array(nTracers * traceLength);
+  const traily = new Float64Array(nTracers * traceLength);
+  const trailIndex = new Uint16Array(nTracers);
+
+  function idx(x, y) { return x + y * xdim; }
+  function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+  function allocateSimulationArrays() {
+    size = xdim * ydim;
+    n0 = new Float64Array(size);
+    nN = new Float64Array(size);
+    nS = new Float64Array(size);
+    nE = new Float64Array(size);
+    nW = new Float64Array(size);
+    nNW = new Float64Array(size);
+    nNE = new Float64Array(size);
+    nSW = new Float64Array(size);
+    nSE = new Float64Array(size);
+    density = new Float64Array(size);
+    xvel = new Float64Array(size);
+    yvel = new Float64Array(size);
+    speed2 = new Float64Array(size);
+    curl = new Float64Array(size);
+    barrier = new Uint8Array(size);
+    image = ctx.createImageData(canvas.width, canvas.height);
+    data = image.data;
+  }
+
+  function hsbToRgb(h, s, b) {
+    let r = 0, g = 0, bl = 0;
+    const i = Math.floor(h * 6);
+    const f = h * 6 - i;
+    const p = b * (1 - s);
+    const q = b * (1 - f * s);
+    const t = b * (1 - (1 - f) * s);
+    switch (i % 6) {
+      case 0: r = b; g = t; bl = p; break;
+      case 1: r = q; g = b; bl = p; break;
+      case 2: r = p; g = b; bl = t; break;
+      case 3: r = p; g = q; bl = b; break;
+      case 4: r = t; g = p; bl = b; break;
+      case 5: r = b; g = p; bl = q; break;
+    }
+    return [Math.round(r * 255), Math.round(g * 255), Math.round(bl * 255)];
+  }
+
+  function makePalette(count) {
+    const out = new Array(count);
+    for (let c = 0; c < count; c++) {
+      let h = (2 / 3) * (1 - c / count);
+      h += 0.03 * Math.sin(6 * Math.PI * h);
+      out[c] = hsbToRgb(clamp(h, 0, 1), 1, 1);
+    }
+    return out;
+  }
+
+  function speedValue() { return Number(flowSpeed.value); }
+  function viscosityValue() { return Number(viscosity.value); }
+  function contrastValue() { return Number(contrast.value); }
+
+  function updateOutputs() {
+    chordOut.textContent = chordLength.value;
+    angleOut.textContent = angleAttack.value;
+    verticalOut.textContent = verticalPosition.value;
+    viscosityOut.textContent = Number(viscosity.value).toFixed(2);
+    speedOut.textContent = Number(flowSpeed.value).toFixed(3);
+    contrastOut.textContent = contrast.value;
+  }
+
+
+  function setSimulationSize(mode) {
+    running = false;
+    runBtn.textContent = 'Run';
+
+    if (mode === 'large') {
+      xdim = 320;
+      ydim = 120;
+      chordLength.max = '145';
+      chordLength.value = '95';
+      verticalPosition.min = '-40';
+      verticalPosition.max = '40';
+      sizeWarning.classList.add('show');
+    } else {
+      xdim = 200;
+      ydim = 80;
+      chordLength.max = '90';
+      chordLength.value = '58';
+      verticalPosition.min = '-25';
+      verticalPosition.max = '25';
+      sizeWarning.classList.remove('show');
+    }
+
+    canvas.width = xdim * pixelsPerSquare;
+    canvas.height = ydim * pixelsPerSquare;
+    allocateSimulationArrays();
+    updateOutputs();
+    initTracers();
+    initFluid();
+    clearBarriers(false);
+    makeNacaAerofoil();
+    paint();
+    updateReadout();
+  }
+
+  function zeroSite(x, y) {
+    const i = idx(x, y);
+    n0[i] = nE[i] = nW[i] = nN[i] = nS[i] = nNE[i] = nNW[i] = nSE[i] = nSW[i] = 0;
+    xvel[i] = yvel[i] = speed2[i] = density[i] = 0;
+  }
+
+  function initFluid() {
+    const v = speedValue();
+    for (let y = 0; y < ydim; y++) {
+      for (let x = 0; x < xdim; x++) {
+        const i = idx(x, y);
+        if (barrier[i]) {
+          zeroSite(x, y);
+        } else {
+          n0[i]  = four9ths * (1 - 1.5 * v * v);
+          nE[i]  = one9th * (1 + 3 * v + 3 * v * v);
+          nW[i]  = one9th * (1 - 3 * v + 3 * v * v);
+          nN[i]  = one9th * (1 - 1.5 * v * v);
+          nS[i]  = one9th * (1 - 1.5 * v * v);
+          nNE[i] = one36th * (1 + 3 * v + 3 * v * v);
+          nSE[i] = one36th * (1 + 3 * v + 3 * v * v);
+          nNW[i] = one36th * (1 - 3 * v + 3 * v * v);
+          nSW[i] = one36th * (1 - 3 * v + 3 * v * v);
+          density[i] = 1;
+          xvel[i] = v;
+          yvel[i] = 0;
+          speed2[i] = v * v;
+        }
+      }
+    }
+    time = 0;
+    initTracers();
+    paint();
+    updateReadout();
+  }
+
+  function clearBarriers(repaintAfter = true) {
+    for (let y = 1; y < ydim - 1; y++) {
+      for (let x = 1; x < xdim - 1; x++) {
+        const i = idx(x, y);
+        if (barrier[i]) {
+          barrier[i] = 0;
+          n0[i] = 1;
+          density[i] = 1;
+          speed2[i] = 0;
+        }
+      }
+    }
+    if (repaintAfter) paint();
+  }
+
+  function setBarrierCell(x, y, makeBarrier) {
+    if (x < 1 || x >= xdim - 1 || y < 1 || y >= ydim - 1) return;
+    const i = idx(x, y);
+    if (makeBarrier) {
+      barrier[i] = 1;
+      zeroSite(x, y);
+    } else if (barrier[i]) {
+      barrier[i] = 0;
+      n0[i] = 1;
+      density[i] = 1;
+      speed2[i] = 0;
+      xvel[i] = 0;
+      yvel[i] = 0;
+    }
+  }
+
+  function drawBarrier(x, y, repaintAfter = true) {
+    setBarrierCell(x, y, mouseDrawBarrier);
+    if (repaintAfter) paint();
+  }
+
+  function makeLine(length) {
+    mouseDrawBarrier = true;
+    const safeLength = clamp(Math.round(Number(length) || 1), 1, ydim - 4);
+    const x = Math.floor(ydim / 2 - 1);
+    const start = Math.floor(ydim / 2 - safeLength / 2 - 1);
+    const end = Math.floor(ydim / 2 - safeLength / 2 + safeLength - 1);
+    for (let y = start; y < end; y++) drawBarrier(x, y, false);
+    paint();
+  }
+
+  function makeCircle(diameter) {
+    mouseDrawBarrier = true;
+    const safeDiameter = clamp(Math.round(Number(diameter) || 1), 1, Math.min(xdim, ydim) - 4);
+    const radius = (safeDiameter - 1) / 2;
+    let centerY = ydim / 2 - 1;
+    if (safeDiameter % 2 === 0) centerY -= 0.5;
+    const centerX = centerY;
+
+    if (radius <= 0) {
+      drawBarrier(Math.round(centerX), Math.round(centerY), false);
+      paint();
+      return;
+    }
+
+    // Use a fixed angular resolution guard so very small circles cannot create
+    // an invalid loop and larger circles do not repaint hundreds of times.
+    const thetaStep = Math.max(0.01, 0.1 / radius);
+    for (let theta = 0; theta < 2 * Math.PI; theta += thetaStep) {
+      let x = Math.round(centerX + radius * Math.cos(theta));
+      let y = Math.round(centerY + radius * Math.sin(theta));
+      drawBarrier(x, y, false);
+      if (radius > 1) {
+        x = Math.round(centerX + (radius - 0.5) * Math.cos(theta));
+        y = Math.round(centerY + (radius - 0.5) * Math.sin(theta));
+        drawBarrier(x, y, false);
+      }
+    }
+    paint();
+  }
+
+  function pointInPolygon(px, py, points) {
+    let inside = false;
+    for (let i = 0, j = points.length - 1; i < points.length; j = i++) {
+      const xi = points[i][0], yi = points[i][1];
+      const xj = points[j][0], yj = points[j][1];
+      const intersects = ((yi > py) !== (yj > py)) &&
+        (px < ((xj - xi) * (py - yi)) / ((yj - yi) || 1e-9) + xi);
+      if (intersects) inside = !inside;
+    }
+    return inside;
+  }
+
+  function fillPolygonBarrier(points) {
+    mouseDrawBarrier = true;
+    const minX = clamp(Math.floor(Math.min(...points.map(p => p[0]))), 1, xdim - 2);
+    const maxX = clamp(Math.ceil(Math.max(...points.map(p => p[0]))), 1, xdim - 2);
+    const minY = clamp(Math.floor(Math.min(...points.map(p => p[1]))), 1, ydim - 2);
+    const maxY = clamp(Math.ceil(Math.max(...points.map(p => p[1]))), 1, ydim - 2);
+    for (let y = minY; y <= maxY; y++) {
+      for (let x = minX; x <= maxX; x++) {
+        if (pointInPolygon(x + 0.5, y + 0.5, points)) drawBarrier(x, y, false);
+      }
+    }
+  }
+
+  function makeSquare(sideLength) {
+    mouseDrawBarrier = true;
+    const side = clamp(Math.round(Number(sideLength) || 1), 2, Math.min(xdim, ydim) - 6);
+    const cx = Math.floor(ydim / 2 - 1);
+    const cy = Math.floor(ydim / 2 - 1);
+    const startX = Math.round(cx - side / 2);
+    const endX = Math.round(cx + side / 2);
+    const startY = Math.round(cy - side / 2);
+    const endY = Math.round(cy + side / 2);
+    for (let y = startY; y <= endY; y++) {
+      for (let x = startX; x <= endX; x++) drawBarrier(x, y, false);
+    }
+    paint();
+  }
+
+  function makeWedge(length) {
+    const safeLength = clamp(Math.round(Number(length) || 1), 6, 55);
+    const height = clamp(Math.round(safeLength * 0.75), 5, ydim - 8);
+    const noseX = Math.floor(ydim / 2 - 2);
+    const cy = Math.floor(ydim / 2 - 1);
+    const points = [
+      [noseX, cy],
+      [noseX + safeLength, cy + height / 2],
+      [noseX + safeLength, cy - height / 2]
+    ];
+    fillPolygonBarrier(points);
+    paint();
+  }
+
+  function validNacaCode() {
+    const raw = nacaCode.value.trim();
+    if (!/^\d{4}$/.test(raw)) {
+      nacaCode.setCustomValidity('Enter exactly four digits, for example 0012 or 2412.');
+      return null;
+    }
+    nacaCode.setCustomValidity('');
+    return raw;
+  }
+
+  function makeNacaAerofoil() {
+    const code = validNacaCode();
+    if (!code) return;
+
+    mouseDrawBarrier = true;
+    const m = Number(code[0]) / 100;
+    const p = Number(code[1]) / 10;
+    const t = Number(code.slice(2)) / 100;
+    const chord = clamp(Math.round(Number(chordLength.value) || 58), 24, xdim - 30);
+    const aoa = Number(angleAttack.value) * Math.PI / 180;
+    const yOffset = Number(verticalPosition.value) || 0;
+    const startX = Math.floor(xdim * 0.18);
+    const centreY = Math.floor(ydim / 2 + yOffset);
+    const pivot = 0.25 * chord;
+    const samples = 90;
+    const upper = [];
+    const lower = [];
+
+    for (let i = 0; i <= samples; i++) {
+      const xc = i / samples;
+      const xChord = xc * chord;
+      const yt = 5 * t * chord * (
+        0.2969 * Math.sqrt(Math.max(xc, 0))
+        - 0.1260 * xc
+        - 0.3516 * xc * xc
+        + 0.2843 * xc * xc * xc
+        - 0.1015 * xc * xc * xc * xc
+      );
+
+      let yc = 0;
+      let dycDx = 0;
+      if (m > 0 && p > 0 && p < 1) {
+        if (xc < p) {
+          yc = chord * (m / (p * p)) * (2 * p * xc - xc * xc);
+          dycDx = (2 * m / (p * p)) * (p - xc);
+        } else {
+          yc = chord * (m / ((1 - p) * (1 - p))) * ((1 - 2 * p) + 2 * p * xc - xc * xc);
+          dycDx = (2 * m / ((1 - p) * (1 - p))) * (p - xc);
+        }
+      }
+
+      const theta = Math.atan(dycDx);
+      const xu = xChord - yt * Math.sin(theta);
+      const yu = yc + yt * Math.cos(theta);
+      const xl = xChord + yt * Math.sin(theta);
+      const yl = yc - yt * Math.cos(theta);
+      upper.push(rotateAndPlace(xu, yu, startX, centreY, pivot, aoa));
+      lower.push(rotateAndPlace(xl, yl, startX, centreY, pivot, aoa));
+    }
+
+    const points = upper.concat(lower.reverse());
+    fillPolygonBarrier(points);
+    paint();
+  }
+
+  function rotateAndPlace(localX, localY, startX, centreY, pivot, angle) {
+    const xr = localX - pivot;
+    const yr = localY;
+    const xRot = pivot + xr * Math.cos(angle) - yr * Math.sin(angle);
+    const yRot = xr * Math.sin(angle) + yr * Math.cos(angle);
+    return [startX + xRot, centreY + yRot];
+  }
+
+  function updateAerofoil() {
+    updateOutputs();
+    clearBarriers(false);
+    makeNacaAerofoil();
+    initFluid();
+    initTracers();
+    paint();
+    updateReadout();
+  }
+
+  function resetTracerTrail(t) {
+    const base = t * traceLength;
+    for (let k = 0; k < traceLength; k++) {
+      trailx[base + k] = tracerx[t];
+      traily[base + k] = tracery[t];
+    }
+    trailIndex[t] = 0;
+  }
+
+  function recordTracerTrail(t) {
+    trailIndex[t] = (trailIndex[t] + 1) % traceLength;
+    const slot = t * traceLength + trailIndex[t];
+    trailx[slot] = tracerx[t];
+    traily[slot] = tracery[t];
+  }
+
+  function initTracers() {
+    const dx = xdim / tracerCountSide;
+    const dy = ydim / tracerCountSide;
+    let next = 0;
+    for (let x = 0; x < tracerCountSide; x++) {
+      for (let y = 0; y < tracerCountSide; y++) {
+        tracerx[next] = (x + 0.5) * dx;
+        tracery[next] = (y + 0.5) * dy;
+        resetTracerTrail(next);
+        next++;
+      }
+    }
+  }
+
+  function collide() {
+    const omega = 1 / (3 * viscosityValue() + 0.5);
+    for (let y = 0; y < ydim; y++) {
+      for (let x = 0; x < xdim; x++) {
+        const i = idx(x, y);
+        if (barrier[i]) continue;
+        const n = n0[i] + nN[i] + nS[i] + nE[i] + nW[i] + nNW[i] + nNE[i] + nSW[i] + nSE[i];
+        density[i] = n;
+        const one9thn = one9th * n;
+        const one36thn = one36th * n;
+        const vx = n > 0 ? (nE[i] + nNE[i] + nSE[i] - nW[i] - nNW[i] - nSW[i]) / n : 0;
+        const vy = n > 0 ? (nN[i] + nNE[i] + nNW[i] - nS[i] - nSE[i] - nSW[i]) / n : 0;
+        xvel[i] = vx;
+        yvel[i] = vy;
+        const vx3 = 3 * vx;
+        const vy3 = 3 * vy;
+        const vx2 = vx * vx;
+        const vy2 = vy * vy;
+        const vxvy2 = 2 * vx * vy;
+        const v2 = vx2 + vy2;
+        const v215 = 1.5 * v2;
+        speed2[i] = v2;
+        n0[i]  += omega * (four9ths * n * (1 - v215) - n0[i]);
+        nE[i]  += omega * (one9thn * (1 + vx3 + 4.5 * vx2 - v215) - nE[i]);
+        nW[i]  += omega * (one9thn * (1 - vx3 + 4.5 * vx2 - v215) - nW[i]);
+        nN[i]  += omega * (one9thn * (1 + vy3 + 4.5 * vy2 - v215) - nN[i]);
+        nS[i]  += omega * (one9thn * (1 - vy3 + 4.5 * vy2 - v215) - nS[i]);
+        nNE[i] += omega * (one36thn * (1 + vx3 + vy3 + 4.5 * (v2 + vxvy2) - v215) - nNE[i]);
+        nNW[i] += omega * (one36thn * (1 - vx3 + vy3 + 4.5 * (v2 - vxvy2) - v215) - nNW[i]);
+        nSE[i] += omega * (one36thn * (1 + vx3 - vy3 + 4.5 * (v2 - vxvy2) - v215) - nSE[i]);
+        nSW[i] += omega * (one36thn * (1 - vx3 - vy3 + 4.5 * (v2 + vxvy2) - v215) - nSW[i]);
+      }
+    }
+  }
+
+  function stream() {
+    for (let x = 0; x < xdim - 1; x++) {
+      for (let y = ydim - 1; y > 0; y--) {
+        nN[idx(x, y)] = nN[idx(x, y - 1)];
+        nNW[idx(x, y)] = nNW[idx(x + 1, y - 1)];
+      }
+    }
+    for (let x = xdim - 1; x > 0; x--) {
+      for (let y = ydim - 1; y > 0; y--) {
+        nE[idx(x, y)] = nE[idx(x - 1, y)];
+        nNE[idx(x, y)] = nNE[idx(x - 1, y - 1)];
+      }
+    }
+    for (let x = xdim - 1; x > 0; x--) {
+      for (let y = 0; y < ydim - 1; y++) {
+        nS[idx(x, y)] = nS[idx(x, y + 1)];
+        nSE[idx(x, y)] = nSE[idx(x - 1, y + 1)];
+      }
+    }
+    for (let x = 0; x < xdim - 1; x++) {
+      for (let y = 0; y < ydim - 1; y++) {
+        nW[idx(x, y)] = nW[idx(x + 1, y)];
+        nSW[idx(x, y)] = nSW[idx(x + 1, y + 1)];
+      }
+    }
+    for (let y = 0; y < ydim - 1; y++) nS[idx(0, y)] = nS[idx(0, y + 1)];
+    for (let y = ydim - 1; y > 0; y--) nN[idx(xdim - 1, y)] = nN[idx(xdim - 1, y - 1)];
+
+    const v = speedValue();
+    for (let y = 0; y < ydim; y++) {
+      if (!barrier[idx(0, y)]) {
+        nE[idx(0, y)] = one9th * (1 + 3 * v + 3 * v * v);
+        nNE[idx(0, y)] = one36th * (1 + 3 * v + 3 * v * v);
+        nSE[idx(0, y)] = one36th * (1 + 3 * v + 3 * v * v);
+      }
+      if (!barrier[idx(xdim - 1, y)]) {
+        nW[idx(xdim - 1, y)] = one9th * (1 - 3 * v + 3 * v * v);
+        nNW[idx(xdim - 1, y)] = one36th * (1 - 3 * v + 3 * v * v);
+        nSW[idx(xdim - 1, y)] = one36th * (1 - 3 * v + 3 * v * v);
+      }
+    }
+
+    for (let x = 0; x < xdim; x++) {
+      for (const y of [0, ydim - 1]) {
+        const i = idx(x, y);
+        n0[i]  = four9ths * (1 - 1.5 * v * v);
+        nE[i]  = one9th * (1 + 3 * v + 3 * v * v);
+        nW[i]  = one9th * (1 - 3 * v + 3 * v * v);
+        nN[i]  = one9th * (1 - 1.5 * v * v);
+        nS[i]  = one9th * (1 - 1.5 * v * v);
+        nNE[i] = one36th * (1 + 3 * v + 3 * v * v);
+        nSE[i] = one36th * (1 + 3 * v + 3 * v * v);
+        nNW[i] = one36th * (1 - 3 * v + 3 * v * v);
+        nSW[i] = one36th * (1 - 3 * v + 3 * v * v);
+      }
+    }
+  }
+
+  function bounce() {
+    for (let y = 1; y < ydim - 1; y++) {
+      for (let x = 1; x < xdim - 1; x++) {
+        const i = idx(x, y);
+        if (!barrier[i]) continue;
+        if (nN[i] > 0) { nS[idx(x, y - 1)] += nN[i]; nN[i] = 0; }
+        if (nS[i] > 0) { nN[idx(x, y + 1)] += nS[i]; nS[i] = 0; }
+        if (nE[i] > 0) { nW[idx(x - 1, y)] += nE[i]; nE[i] = 0; }
+        if (nW[i] > 0) { nE[idx(x + 1, y)] += nW[i]; nW[i] = 0; }
+        if (nNW[i] > 0) { nSE[idx(x + 1, y - 1)] += nNW[i]; nNW[i] = 0; }
+        if (nNE[i] > 0) { nSW[idx(x - 1, y - 1)] += nNE[i]; nNE[i] = 0; }
+        if (nSW[i] > 0) { nNE[idx(x + 1, y + 1)] += nSW[i]; nSW[i] = 0; }
+        if (nSE[i] > 0) { nNW[idx(x - 1, y + 1)] += nSE[i]; nSE[i] = 0; }
+      }
+    }
+  }
+
+  function moveTracers() {
+    for (let t = 0; t < nTracers; t++) {
+      const x = clamp(Math.floor(tracerx[t]), 0, xdim - 1);
+      const y = clamp(Math.floor(tracery[t]), 0, ydim - 1);
+      const i = idx(x, y);
+      tracerx[t] += xvel[i];
+      tracery[t] += yvel[i];
+
+      let recycled = false;
+      if (tracerx[t] < 0) { tracerx[t] = 0; recycled = true; }
+      if (tracerx[t] >= xdim) { tracerx[t] = 0; recycled = true; }
+      if (tracery[t] < 0) { tracery[t] = 0; recycled = true; }
+      if (tracery[t] >= ydim) { tracery[t] = ydim - 1; recycled = true; }
+
+      if (recycled) resetTracerTrail(t);
+      else recordTracerTrail(t);
+    }
+  }
+
+  function computeCurl() {
+    curl.fill(0);
+    for (let x = 1; x < xdim - 1; x++) {
+      for (let y = 1; y < ydim - 1; y++) {
+        curl[idx(x, y)] = (yvel[idx(x + 1, y)] - yvel[idx(x - 1, y)]) - (xvel[idx(x, y + 1)] - xvel[idx(x, y - 1)]);
+      }
+    }
+    for (let y = 1; y < ydim - 1; y++) {
+      curl[idx(0, y)] = 2 * (yvel[idx(1, y)] - yvel[idx(0, y)]) - (xvel[idx(0, y + 1)] - xvel[idx(0, y - 1)]);
+      curl[idx(xdim - 1, y)] = 2 * (yvel[idx(xdim - 1, y)] - yvel[idx(xdim - 2, y)]) - (xvel[idx(xdim - 1, y + 1)] - xvel[idx(xdim - 1, y - 1)]);
+    }
+  }
+
+  function doStep() {
+    const t0 = performance.now();
+    const c0 = performance.now();
+    collide();
+    const c1 = performance.now();
+    stream();
+    const s1 = performance.now();
+    bounce();
+    if (tracersCheck.checked || traceLinesCheck.checked) moveTracers();
+    time++;
+    lastCollideMs = c1 - c0;
+    lastStreamMs = s1 - c1;
+    lastStepMs = performance.now() - t0;
+    updateReadout();
+  }
+
+  function paint() {
+    const start = performance.now();
+    if (plotType.value === 'curl') computeCurl();
+    const con = contrastValue();
+    let p = 0;
+    for (let py = 0; py < canvas.height; py++) {
+      const y = ydim - 1 - Math.floor(py / pixelsPerSquare);
+      for (let px = 0; px < canvas.width; px++) {
+        const x = Math.floor(px / pixelsPerSquare);
+        const i = idx(x, y);
+        let r = 0, g = 0, b = 0;
+        if (!barrier[i]) {
+          let colorIndex;
+          if (plotType.value === 'speed') colorIndex = Math.floor(Math.sqrt(speed2[i]) * nColors * con * 0.2);
+          else if (plotType.value === 'vx') colorIndex = Math.floor(nColors * (0.5 + xvel[i] * con * 0.2));
+          else if (plotType.value === 'vy') colorIndex = Math.floor(nColors * (0.5 + yvel[i] * con * 0.2));
+          else if (plotType.value === 'curl') colorIndex = Math.floor(nColors * (0.5 + curl[i] * con * 0.3));
+          else colorIndex = Math.floor(nColors * (0.5 + (density[i] - 1) * con * 0.3));
+          const colour = palette[clamp(colorIndex, 0, nColors - 1)];
+          r = colour[0]; g = colour[1]; b = colour[2];
+        }
+        data[p++] = r;
+        data[p++] = g;
+        data[p++] = b;
+        data[p++] = 255;
+      }
+    }
+    ctx.putImageData(image, 0, 0);
+
+    if (traceLinesCheck.checked) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(120,0,0,0.65)';
+      ctx.lineWidth = 1;
+      for (let t = 0; t < nTracers; t++) {
+        ctx.beginPath();
+        for (let k = 0; k < traceLength; k++) {
+          const slot = (trailIndex[t] + 1 + k) % traceLength;
+          const tx = (trailx[t * traceLength + slot] + 0.5) * pixelsPerSquare;
+          const ty = (ydim - (traily[t * traceLength + slot] + 0.5)) * pixelsPerSquare;
+          if (k === 0) ctx.moveTo(tx, ty);
+          else ctx.lineTo(tx, ty);
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    if (tracersCheck.checked) {
+      ctx.fillStyle = 'rgb(120,0,0)';
+      for (let t = 0; t < nTracers; t++) {
+        const tx = Math.round((tracerx[t] + 0.5) * pixelsPerSquare);
+        const ty = Math.round((ydim - (tracery[t] + 0.5)) * pixelsPerSquare);
+        ctx.fillRect(tx - 1, ty - 2, 2, 4);
+        ctx.fillRect(tx - 2, ty - 1, 4, 2);
+      }
+    }
+    lastPaintMs = performance.now() - start;
+  }
+
+  function loop() {
+    if (running) {
+      for (let s = 0; s < 10; s++) doStep();
+      paint();
+    }
+    animationId = requestAnimationFrame(loop);
+  }
+
+  function canvasPoint(evt) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const px = (evt.clientX - rect.left) * scaleX;
+    const py = (evt.clientY - rect.top) * scaleY;
+    return {
+      x: clamp(Math.floor(px / pixelsPerSquare), 0, xdim - 1),
+      y: clamp(ydim - 1 - Math.floor(py / pixelsPerSquare), 0, ydim - 1)
+    };
+  }
+
+  function updateReadout() {
+    if (mouseInCanvas) {
+      const i = idx(mouseX, mouseY);
+      readout.textContent = `t = ${time}, x = ${mouseX}, y = ${mouseY}, density = ${density[i].toFixed(3)}, speed = ${Math.sqrt(speed2[i]).toFixed(3)}, vx = ${xvel[i].toFixed(3)}, vy = ${yvel[i].toFixed(3)}`;
+    } else {
+      readout.textContent = `t = ${time}; calculation: ${lastStepMs.toFixed(1)} ms; collision: ${lastCollideMs.toFixed(1)} ms; stream: ${lastStreamMs.toFixed(1)} ms; paint: ${lastPaintMs.toFixed(1)} ms`;
+    }
+  }
+
+  runBtn.addEventListener('click', () => {
+    running = !running;
+    runBtn.textContent = running ? 'Pause' : 'Run';
+  });
+
+  stepBtn.addEventListener('click', () => { doStep(); paint(); });
+  resetBtn.addEventListener('click', () => { initFluid(); initTracers(); paint(); });
+  simulationSize.addEventListener('change', () => setSimulationSize(simulationSize.value));
+  updateAerofoilBtn.addEventListener('click', updateAerofoil);
+  clearBtn.addEventListener('click', () => { clearBarriers(); });
+
+  for (const el of [chordLength, angleAttack, verticalPosition]) {
+    el.addEventListener('input', updateAerofoil);
+  }
+  nacaCode.addEventListener('change', updateAerofoil);
+  nacaCode.addEventListener('input', () => { validNacaCode(); });
+
+  for (const el of [viscosity, flowSpeed, contrast]) {
+    el.addEventListener('input', () => { updateOutputs(); paint(); updateReadout(); });
+  }
+  plotType.addEventListener('change', paint);
+  tracersCheck.addEventListener('change', () => { if (tracersCheck.checked) initTracers(); paint(); });
+  traceLinesCheck.addEventListener('change', () => { if (traceLinesCheck.checked) initTracers(); paint(); });
+
+  canvas.addEventListener('pointerdown', (evt) => {
+    canvas.setPointerCapture(evt.pointerId);
+    const p = canvasPoint(evt);
+    mouseIsDown = true;
+    mouseX = p.x;
+    mouseY = p.y;
+    const i = idx(mouseX, mouseY);
+    mouseDrawBarrier = !barrier[i];
+    drawBarrier(mouseX, mouseY);
+    updateReadout();
+  });
+
+  canvas.addEventListener('pointermove', (evt) => {
+    const p = canvasPoint(evt);
+    mouseX = p.x;
+    mouseY = p.y;
+    mouseInCanvas = true;
+    if (mouseIsDown) drawBarrier(mouseX, mouseY);
+    updateReadout();
+  });
+
+  canvas.addEventListener('pointerup', (evt) => {
+    mouseIsDown = false;
+    try { canvas.releasePointerCapture(evt.pointerId); } catch { /* pointer may already be released */ }
+  });
+
+  canvas.addEventListener('pointerleave', () => {
+    mouseInCanvas = false;
+    mouseIsDown = false;
+    updateReadout();
+  });
+
+  setSimulationSize('small');
+  loop();
+})();
+</script>
+</body>
+</html>
