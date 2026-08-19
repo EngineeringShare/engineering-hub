@@ -1,0 +1,3062 @@
+{
+  "siteTitle": "Engineering Share Schedule",
+  "academicYear": "2026/27",
+  "generatedFrom": "Scheme of Learning 2627(1).xlsx",
+  "classes": [
+    {
+      "id": "year-3-btec-apps-unit-19-plcs",
+      "name": "Year 3 BTEC Apps – Unit 19 - PLCS",
+      "day": "Monday",
+      "room": "1F009",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Wellbeing Day",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-26",
+          "title": "Half Term",
+          "lessons": [
+            {
+              "title": "Half Term",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-2-btec-apps-unit-31-electrical-machines",
+      "name": "Year 2 BTEC Apps – Unit 31 - Electrical Machines",
+      "day": "Monday",
+      "room": "1F009",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-1-htq-unit-4002-engineering-maths",
+      "name": "Year 1 HTQ – Unit 4002 - Engineering Maths",
+      "day": "Tuesday",
+      "room": "CC111",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-1-htq-unit-4019-electrical-principles",
+      "name": "Year 1 HTQ – Unit 4019 - Electrical Principles",
+      "day": "Tuesday",
+      "room": "CC111",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-1-t-level-x1-unit-5-8-9",
+      "name": "Year 1 T-Level X1 – Unit 5, 8, 9",
+      "day": "Tuesday",
+      "room": "1F009",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-1-aaq-unit-f130-electrical-devices-and-circuits",
+      "name": "Year 1 AAQ – Unit F130 - Electrical Devices and Circuits",
+      "day": "Tuesday",
+      "room": "1F008",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": [
+            {
+              "title": "Electronic theory basics",
+              "description": "Covers conventional and electron flow, charge, current, voltage, resistance, V=IR, Energy, Power",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Resistors",
+              "description": "Covers what resistors are, includes current limiting, potential dividers, current dividers, resistors in series and parallel",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Simulating circuits",
+              "description": "Covers use of circuit wizard, explaining how to use the software, how to measure and record values, taking circuit diagrams and putting them in the software. Should include an aspect of looking at dividers and total resistance",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Introduction to AC",
+              "description": "Covers the basic ideas behind",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-2-btec-ext-dip-unit-19-31-40",
+      "name": "Year 2 BTEC Ext Dip – Unit 19, 31, 40",
+      "day": "Wednesday",
+      "room": "1F009",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-1-t-level-x2-unit-5-8-9",
+      "name": "Year 1 T-Level X2 – Unit 5, 8, 9",
+      "day": "Wednesday",
+      "room": "1F009",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-1-aaq-session-1-unit-f130-electrical-devices-and-circuits",
+      "name": "Year 1 AAQ - Session 1 – Unit F130 - Electrical Devices and Circuits",
+      "day": "Thursday",
+      "room": "?",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": [
+            {
+              "title": "Training Days",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-1-aaq-session-2-unit-f130-principles-of-engineering",
+      "name": "Year 1 AAQ - Session 2 – Unit F130 - Principles of Engineering",
+      "day": "Thursday",
+      "room": "?",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-1-t-level-x1-unit-5-8-9",
+      "name": "Year 1 T-Level X1 – Unit 5, 8, 9",
+      "day": "Thursday",
+      "room": "1F031",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-2-htq-unit-4015-automation-robotics-and-plcs",
+      "name": "Year 2 HTQ – Unit 4015 - Automation, Robotics and PLCs",
+      "day": "Thursday",
+      "room": "1F009",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-1-t-level-x2-unit-5-8-9",
+      "name": "Year 1 T-Level X2 – Unit 5, 8, 9",
+      "day": "Thursday",
+      "room": "1F009",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-2-btec-ext-dip-unit-19-31-40",
+      "name": "Year 2 BTEC Ext Dip – Unit 19, 31, 40",
+      "day": "Friday",
+      "room": "1F009",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-1-aaq-engineering-skills",
+      "name": "Year 1 AAQ – Engineering Skills",
+      "day": "Friday",
+      "room": "1F009",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    },
+    {
+      "id": "year-2-btec-ext-dip-unit-19-31-40",
+      "name": "Year 2 BTEC Ext Dip – Unit 19, 31, 40",
+      "day": "Friday",
+      "room": "1F009",
+      "weeks": [
+        {
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": []
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": []
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": []
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": []
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": []
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Week 21",
+          "lessons": []
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": []
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Week 26",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-12",
+          "title": "Week 27",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-19",
+          "title": "Week 28",
+          "lessons": []
+        },
+        {
+          "start": "2027-04-26",
+          "title": "Week 29",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-03",
+          "title": "Week 30",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-10",
+          "title": "Week 31",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-17",
+          "title": "Week 32",
+          "lessons": []
+        },
+        {
+          "start": "2027-05-31",
+          "title": "Week 33",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-07",
+          "title": "Week 34",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-14",
+          "title": "Week 35",
+          "lessons": []
+        },
+        {
+          "start": "2027-06-21",
+          "title": "Week 36",
+          "lessons": []
+        }
+      ]
+    }
+  ]
+}

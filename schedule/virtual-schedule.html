@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineering Share Schedule</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --panel: #ffffff;
+      --text: #1f2933;
+      --muted: #667085;
+      --line: #d0d5dd;
+      --accent: #155eef;
+      --past: #98a2b3;
+      --current: #155eef;
+      --future: #7f56d9;
+      --danger: #b42318;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      background: #101828;
+      color: white;
+      padding: 28px 20px;
+    }
+
+    header .inner,
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    h1 { margin: 0 0 6px; font-size: 2rem; }
+    .subtitle { margin: 0; color: #d0d5dd; }
+
+    main { padding: 28px 20px 60px; }
+
+    .controls {
+      background: var(--panel);
+      border: 1px solid #e4e7ec;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(16,24,40,.04);
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      background: white;
+      font-size: 1rem;
+    }
+
+    .class-meta {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .status {
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      background: #fff;
+      border: 1px solid #e4e7ec;
+    }
+
+    .status.error {
+      color: var(--danger);
+      border-color: #fecdca;
+      background: #fef3f2;
+    }
+
+    .timeline {
+      position: relative;
+      margin-top: 12px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      left: 22px;
+      top: 8px;
+      bottom: 8px;
+      width: 3px;
+      background: var(--line);
+      border-radius: 2px;
+    }
+
+    .week {
+      position: relative;
+      padding-left: 64px;
+      margin-bottom: 24px;
+    }
+
+    .dot {
+      position: absolute;
+      left: 13px;
+      top: 18px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--past);
+      border: 4px solid var(--bg);
+      box-shadow: 0 0 0 2px var(--past);
+      z-index: 2;
+    }
+
+    .week.current .dot {
+      background: var(--current);
+      box-shadow: 0 0 0 3px var(--current);
+    }
+
+    .week.future .dot {
+      background: var(--future);
+      box-shadow: 0 0 0 2px var(--future);
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid #e4e7ec;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 2px 8px rgba(16,24,40,.04);
+    }
+
+    .week.current .card {
+      border: 2px solid var(--current);
+    }
+
+    .week-head {
+      display: flex;
+      gap: 14px;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .week-title {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .week-date {
+      color: var(--muted);
+      font-size: .9rem;
+      white-space: nowrap;
+    }
+
+    .badge {
+      display: inline-block;
+      margin-top: 5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: .76rem;
+      font-weight: 700;
+      background: #eaecf0;
+      color: #344054;
+    }
+
+    .week.current .badge {
+      background: #eff4ff;
+      color: #175cd3;
+    }
+
+    .lesson {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      border-top: 1px solid #eaecf0;
+      padding: 13px 0 2px;
+    }
+
+    .lesson.clickable:hover .lesson-title {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .lesson-title {
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .lesson-description {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .no-lesson {
+      color: var(--muted);
+      border-top: 1px solid #eaecf0;
+      padding-top: 12px;
+      font-style: italic;
+    }
+
+    @media (max-width: 650px) {
+      h1 { font-size: 1.55rem; }
+      .week { padding-left: 48px; }
+      .timeline::before { left: 16px; }
+      .dot { left: 7px; }
+      .week-head { flex-direction: column; gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="inner">
+    <h1>Engineering Share Schedule</h1>
+    <p class="subtitle">Select your class to see previous, current and upcoming lessons.</p>
+  </div>
+</header>
+
+<main>
+  <div class="controls">
+    <label for="classSelect">Your class</label>
+    <select id="classSelect" disabled>
+      <option>Loading schedule…</option>
+    </select>
+    <div id="classMeta" class="class-meta"></div>
+  </div>
+
+  <div id="status" class="status">Loading schedule…</div>
+  <div id="timeline" class="timeline"></div>
+</main>
+
+<script>
+const SCHEDULE_URL = "https://engineeringshare.co.uk/schedule/schedule.json";
+
+const select = document.getElementById("classSelect");
+const timeline = document.getElementById("timeline");
+const statusBox = document.getElementById("status");
+const classMeta = document.getElementById("classMeta");
+
+let scheduleData = null;
+
+function parseLocalDate(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function formatDate(iso) {
+  return parseLocalDate(iso).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
+}
+
+function mondayOf(date) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const day = d.getDay();
+  const diff = day === 0 ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function weekState(startIso) {
+  const currentMonday = mondayOf(new Date());
+  const start = parseLocalDate(startIso);
+  start.setHours(0,0,0,0);
+
+  if (start.getTime() === currentMonday.getTime()) return "current";
+  if (start < currentMonday) return "past";
+  return "future";
+}
+
+function createLesson(lesson) {
+  const hasLink = typeof lesson.link === "string" && lesson.link.trim() !== "";
+  const element = document.createElement(hasLink ? "a" : "div");
+
+  element.className = "lesson" + (hasLink ? " clickable" : "");
+  if (hasLink) {
+    element.href = lesson.link;
+  }
+
+  const title = document.createElement("div");
+  title.className = "lesson-title";
+  title.textContent = lesson.title || "Lesson";
+
+  const description = document.createElement("div");
+  description.className = "lesson-description";
+  description.textContent = lesson.description || "";
+
+  element.appendChild(title);
+  if (lesson.description) element.appendChild(description);
+
+  return element;
+}
+
+function renderClass(classId) {
+  const cls = scheduleData.classes.find(c => c.id === classId);
+  timeline.innerHTML = "";
+
+  if (!cls) return;
+
+  classMeta.textContent = [cls.day, cls.room].filter(Boolean).join(" • ");
+  const weeks = cls.weeks || [];
+
+  if (!weeks.length) {
+    statusBox.textContent = "This class is in the schedule, but no teaching weeks have been filled in yet.";
+    statusBox.className = "status";
+    return;
+  }
+
+  statusBox.textContent = `${weeks.length} schedule entries loaded for ${cls.name}.`;
+  statusBox.className = "status";
+
+  weeks.forEach(week => {
+    const state = weekState(week.start);
+
+    const item = document.createElement("section");
+    item.className = `week ${state}`;
+
+    const dot = document.createElement("div");
+    dot.className = "dot";
+
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const head = document.createElement("div");
+    head.className = "week-head";
+
+    const left = document.createElement("div");
+    const heading = document.createElement("h2");
+    heading.className = "week-title";
+    heading.textContent = week.title || "Scheduled Week";
+
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent =
+      state === "current" ? "This week" :
+      state === "past" ? "Previous" : "Upcoming";
+
+    left.appendChild(heading);
+    left.appendChild(badge);
+
+    const date = document.createElement("div");
+    date.className = "week-date";
+    date.textContent = `Week beginning ${formatDate(week.start)}`;
+
+    head.appendChild(left);
+    head.appendChild(date);
+    card.appendChild(head);
+
+    if (week.lessons && week.lessons.length) {
+      week.lessons.forEach(lesson => card.appendChild(createLesson(lesson)));
+    } else {
+      const empty = document.createElement("div");
+      empty.className = "no-lesson";
+      empty.textContent = "Lesson details have not been added yet.";
+      card.appendChild(empty);
+    }
+
+    item.appendChild(dot);
+    item.appendChild(card);
+    timeline.appendChild(item);
+  });
+
+  const current = timeline.querySelector(".week.current");
+  if (current) {
+    setTimeout(() => current.scrollIntoView({ behavior: "smooth", block: "center" }), 100);
+  }
+}
+
+async function loadSchedule() {
+  try {
+    const response = await fetch(SCHEDULE_URL, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    scheduleData = await response.json();
+
+    select.innerHTML = '<option value="">Select a class…</option>';
+
+    scheduleData.classes.forEach(cls => {
+      const option = document.createElement("option");
+      option.value = cls.id;
+      option.textContent = cls.name;
+      select.appendChild(option);
+    });
+
+    select.disabled = false;
+    statusBox.textContent = "Schedule loaded. Select your class above.";
+    statusBox.className = "status";
+  } catch (error) {
+    console.error(error);
+    select.innerHTML = '<option>Schedule unavailable</option>';
+    statusBox.className = "status error";
+    statusBox.textContent =
+      "The schedule could not be loaded from " + SCHEDULE_URL +
+      ". Check that schedule.json has been uploaded and is publicly accessible.";
+  }
+}
+
+select.addEventListener("change", () => {
+  if (select.value) {
+    renderClass(select.value);
+  } else {
+    timeline.innerHTML = "";
+    classMeta.textContent = "";
+    statusBox.textContent = "Select your class above.";
+    statusBox.className = "status";
+  }
+});
+
+loadSchedule();
+</script>
+</body>
+</html>
