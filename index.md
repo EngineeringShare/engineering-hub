@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 ---
 
-<div class="projects">
+<!-- <div class="projects">
   <a class="card-link" href="{{ '/schedule/virtual-schedule.html' | relative_url }}">
     <div class="card">
       <h3>Virtual Schedule</h3>
@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
   </a>
 </div>
 
----
+--- -->
 
 ## 🧠 Engineering Fun Fact
 
