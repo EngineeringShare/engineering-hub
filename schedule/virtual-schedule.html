@@ -295,6 +295,16 @@ function createLesson(lesson) {
   title.className = "lesson-title";
   title.textContent = lesson.title || "Lesson";
 
+  if (lesson.unit) {
+    const unit = document.createElement("div");
+    unit.style.fontSize = ".78rem";
+    unit.style.fontWeight = "700";
+    unit.style.color = "#667085";
+    unit.style.marginBottom = "3px";
+    unit.textContent = lesson.unit;
+    element.appendChild(unit);
+  }
+
   const description = document.createElement("div");
   description.className = "lesson-description";
   description.textContent = lesson.description || "";
@@ -359,6 +369,20 @@ function renderClass(classId) {
     head.appendChild(left);
     head.appendChild(date);
     card.appendChild(head);
+
+    if (week.special && week.special.length) {
+      week.special.forEach(note => {
+        const special = document.createElement("div");
+        special.style.margin = "8px 0";
+        special.style.padding = "9px 11px";
+        special.style.borderRadius = "8px";
+        special.style.background = "#fffaeb";
+        special.style.color = "#7a2e0e";
+        special.style.fontWeight = "700";
+        special.textContent = note;
+        card.appendChild(special);
+      });
+    }
 
     if (week.lessons && week.lessons.length) {
       week.lessons.forEach(lesson => card.appendChild(createLesson(lesson)));
