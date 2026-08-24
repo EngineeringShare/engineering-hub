@@ -1,4499 +1,1084 @@
 {
   "siteTitle": "Engineering Share Schedule",
   "academicYear": "2026/27",
-  "generatedFrom": "Scheme of Learning 2627(1).xlsx",
-  "notes": [
-    "Lesson sequences are taken from the individual unit sheets.",
-    "Overview is used for timetable/session information and explicit special-week entries.",
-    "Where a class has several unit sheets, multiple lessons may appear in the same week rather than guessing which timetable slot belongs to each unit.",
-    "All lesson page links have intentionally been left blank."
-  ],
+  "source": "Scheme of Learning 2627(2).xlsx - Overview week planning only",
   "classes": [
     {
-      "id": "year-3-btec-apps",
-      "name": "Year 3 BTEC Apps – Unit 19 PLCs",
+      "id": "btec-ext-dip-year-2",
+      "name": "BTEC Ext Dip Year 2",
       "sessions": [
         {
           "day": "Monday",
-          "room": "1F009",
-          "overviewRow": 2
+          "slot": "Theory Lesson"
+        },
+        {
+          "day": "Monday",
+          "slot": "Study Task Lesson"
+        },
+        {
+          "day": "Wednesday",
+          "slot": "Practical Lesson"
         }
       ],
       "weeks": [
         {
-          "start": "2026-08-31",
+          "start": "2026-09-02",
           "title": "Week 1",
-          "special": [],
           "lessons": [
             {
-              "sequence": "1",
-              "title": "Introduction to PLC programming",
-              "description": "Covers getting into TIA portal, basic inputs and outputs (NO and NC), output coils, logic gates, latches. Students are shown how each component/function works then they recreate it and add it to a word document explaining it.",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "Induction to second year and welcome to my classes",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-09-07",
           "title": "Week 2",
-          "special": [],
           "lessons": [
             {
-              "sequence": "2",
-              "title": "Advanced PLC functions",
-              "description": "Covers memory locations, timers (TON and TOF), counters (CTU, CTD, CTUD), comparators. Students are shown how each component/function works then they recreate it and add it to a word document explaining it.",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "Sensors & Actuators 1",
+              "unit": "Theory Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-09",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Introduction to PLC programming",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-09-14",
           "title": "Week 3",
-          "special": [],
           "lessons": [
             {
-              "sequence": "3",
-              "title": "Sequential programming",
-              "description": "Covers move functions, sequential programming methodology, both with boolean and integers. Students are shown how each component/function works then they recreate it and add it to a word document explaining it.",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "Sensors & Actuators 2",
+              "unit": "Theory Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-09-21",
+          "start": "2026-09-16",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Advanced PLC functions",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-23",
           "title": "Week 4",
-          "special": [],
           "lessons": [
             {
-              "sequence": "4",
-              "title": "PLC handout and connection",
-              "description": "Hand out the PLCs to students, a lot of admin around that process. Talk students through setting up siemens TIA to talk to PLC and how to plug it in correctly. Produce a couple of simple programs and have them run",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "Sequential Programming",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-09-28",
+          "start": "2026-09-30",
           "title": "Week 5",
-          "special": [],
           "lessons": [
             {
-              "sequence": "5",
-              "title": "First mini project",
-              "description": "A project to put together everything learnt so far, based on an industrial scenario with conveyors and sensors, should be using PLCs to make it more practical and visual",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "Connecting to a physical PLC",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-10-05",
           "title": "Week 6",
+          "lessons": [],
           "special": [
             "Wellbeing Day"
-          ],
+          ]
+        },
+        {
+          "start": "2026-10-07",
+          "title": "Week 6",
           "lessons": [
             {
-              "sequence": "6",
-              "title": "Second mini project",
-              "description": "A slightly harder project which again puts together everything learnt so far, again based on an industrial scenario but including branching decisions this time",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "Basics of making larger programs",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-10-12",
+          "start": "2026-10-14",
           "title": "Week 7",
-          "special": [],
           "lessons": [
             {
-              "sequence": "7",
-              "title": "Third mini project",
-              "description": "Again stepping up project difficulty, this time the students receive a paragraph they must split themselves to make a program. Along side this they receive a completed tag table. Again in an industrial scenario",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "Mini project 1",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-10-19",
+          "start": "2026-10-21",
           "title": "Week 8",
-          "special": [],
           "lessons": [
             {
-              "sequence": "8",
-              "title": "Fourth mini project",
-              "description": "Much like the 3rd mini project but expanded",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "Mini project 1",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-10-26",
-          "title": "Half Term",
+          "title": "",
+          "lessons": [],
           "special": [
             "Half Term"
-          ],
-          "lessons": []
+          ]
         },
         {
-          "start": "2026-11-02",
+          "start": "2026-11-04",
           "title": "Week 9",
-          "special": [],
           "lessons": [
             {
-              "sequence": "9",
-              "title": "Actuator/Sensor Notation",
-              "description": "Covers PLC notation including both pneumatic and electric notation. Students will program examples of each notation based on a worksheet",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "PLC Structure",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-11-09",
+          "start": "2026-11-11",
           "title": "Week 10",
-          "special": [],
           "lessons": [
             {
-              "sequence": "10",
-              "title": "Plug in components demonstration",
-              "description": "Split the class in groups, groups watch as tutor or LA shows them how to plug in components like pneumatic pistons, motors, sensors ect. Whilst the groups are watching the demonstration the rest are finishing the worksheet from the last lesson",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "Mini project 2",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-11-16",
+          "start": "2026-11-18",
           "title": "Week 11",
-          "special": [],
           "lessons": [
             {
-              "sequence": "11",
-              "title": "Plug in components",
-              "description": "Split the class in groups, each group has their own pneumatic bench to work on, they plug in all the components they learnt about in the previous lesson, if they have time they start on their first \"plug in\" project (see next lesson)",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "Mini project 2",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-11-23",
+          "start": "2026-11-25",
           "title": "Week 12",
-          "special": [],
           "lessons": [
             {
-              "sequence": "12 & 13",
-              "title": "Plug in components - project",
-              "description": "Students are split into the same groups as last lesson and given a project to create a program then plug in the components for that program to make a complete working system",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
+              "title": "Mini project 2",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-11-30",
+          "start": "2026-12-02",
           "title": "Week 13",
-          "special": [],
-          "lessons": []
+          "lessons": [
+            {
+              "title": "Types of PLCs",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
         },
         {
-          "start": "2026-12-07",
+          "start": "2026-12-09",
           "title": "Week 14",
-          "special": [],
-          "lessons": []
+          "lessons": [
+            {
+              "title": "Connecting components to PLCs",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
         },
         {
-          "start": "2026-12-14",
+          "start": "2026-12-16",
           "title": "Week 15",
-          "special": [],
-          "lessons": []
+          "lessons": [
+            {
+              "title": "Connecting components to PLCs",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
         },
         {
           "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
+          "title": "",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
         }
       ]
     },
     {
-      "id": "year-2-btec-apps",
-      "name": "Year 2 BTEC Apps – Unit 31 Electrical Machines",
+      "id": "year-3-apprentices",
+      "name": "Year 3 Apprentices",
       "sessions": [
         {
           "day": "Monday",
-          "room": "1F009",
-          "overviewRow": 3
+          "slot": "Unit 19 - PLCs"
         }
       ],
       "weeks": [
-        {
-          "start": "2026-08-31",
-          "title": "Week 1",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "1",
-              "title": "AC Motors",
-              "description": "Covers AC Motors, construction, operation, single phase, multi phase, synchronous, asynchronous, slip equation, speed equation",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-07",
-          "title": "Week 2",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "2",
-              "title": "AC motors - VFD and Shaded Pole",
-              "description": "Covers VFD, Shaded Pole Motors and Universal Motors",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
         {
           "start": "2026-09-14",
           "title": "Week 3",
-          "special": [],
           "lessons": [
             {
-              "sequence": "3 & 4",
-              "title": "AC motors - Practical",
-              "description": "Students do some further research tasks whilst pairs come up and wire a 3 phase and 1 phase AC motor based on a diagram then look at frequency, load, speed and torque characteristics",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-21",
-          "title": "Week 4",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "5",
-              "title": "AC Generators",
-              "description": "Covers AC Generators, single phase, multiphase, stator, rotor field, stator field",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-28",
-          "title": "Week 5",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "6",
-              "title": "Transformers",
-              "description": "Covers transformer types, step up, step down, isolation, construction",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-05",
-          "title": "Week 6",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "Assignment 1",
-              "title": "Assignment 1",
-              "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-12",
-          "title": "Week 7",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "7",
-              "title": "DC Generators",
-              "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-19",
-          "title": "Week 8",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "8",
-              "title": "DC Motors",
-              "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-26",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-02",
-          "title": "Week 9",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "9",
-              "title": "DC Motor Speed Control",
-              "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-09",
-          "title": "Week 10",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "Assignment 2",
-              "title": "Assignment 2",
-              "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-16",
-          "title": "Week 11",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "10",
-              "title": "Relays #1",
-              "description": "Discuss how relays function (their physical construction) then go on to discuss how to use fluid sim to wire up a basic circuit incluing NO, NC, Latch",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-23",
-          "title": "Week 12",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "11",
-              "title": "Relays #2",
-              "description": "Explore how we can construct boolean logic circuits from relays including timers. Again large focus on building in fluid sim",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-30",
-          "title": "Week 13",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "12",
-              "title": "Relays #3",
-              "description": "Explore how to setup sequential relay systems using latches and other components. Again large focus on building in fluid sim",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-12-07",
-          "title": "Week 14",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "13",
-              "title": "Relays #4",
-              "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-12-14",
-          "title": "Week 15",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
-        }
-      ]
-    },
-    {
-      "id": "year-1-htq-engineering-maths",
-      "name": "Year 1 HTQ – Unit 4002 Engineering Maths",
-      "sessions": [
-        {
-          "day": "Tuesday",
-          "room": "CC111",
-          "overviewRow": 4
-        }
-      ],
-      "weeks": [
-        {
-          "start": "2026-08-31",
-          "title": "Week 1",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-07",
-          "title": "Week 2",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-14",
-          "title": "Week 3",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-21",
-          "title": "Week 4",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-28",
-          "title": "Week 5",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-05",
-          "title": "Week 6",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-12",
-          "title": "Week 7",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-19",
-          "title": "Week 8",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-26",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-02",
-          "title": "Week 9",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-09",
-          "title": "Week 10",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-16",
-          "title": "Week 11",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-23",
-          "title": "Week 12",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-30",
-          "title": "Week 13",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-07",
-          "title": "Week 14",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-14",
-          "title": "Week 15",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
-        }
-      ]
-    },
-    {
-      "id": "year-1-htq-electrical-principles",
-      "name": "Year 1 HTQ – Unit 4019 Electrical Principles",
-      "sessions": [
-        {
-          "day": "Tuesday",
-          "room": "CC111",
-          "overviewRow": 5
-        }
-      ],
-      "weeks": [
-        {
-          "start": "2026-08-31",
-          "title": "Week 1",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-07",
-          "title": "Week 2",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-14",
-          "title": "Week 3",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-21",
-          "title": "Week 4",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-28",
-          "title": "Week 5",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-05",
-          "title": "Week 6",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-12",
-          "title": "Week 7",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-19",
-          "title": "Week 8",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-26",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-02",
-          "title": "Week 9",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-09",
-          "title": "Week 10",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-16",
-          "title": "Week 11",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-23",
-          "title": "Week 12",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-30",
-          "title": "Week 13",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-07",
-          "title": "Week 14",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-14",
-          "title": "Week 15",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
-        }
-      ]
-    },
-    {
-      "id": "year-1-tlevel-x1",
-      "name": "Year 1 T-Level X1 – Units 5, 8 & 9",
-      "sessions": [
-        {
-          "day": "Tuesday",
-          "room": "1F009",
-          "overviewRow": 6
-        },
-        {
-          "day": "Thursday",
-          "room": "1F031",
-          "overviewRow": 12
-        }
-      ],
-      "weeks": [
-        {
-          "start": "2026-08-31",
-          "title": "Week 1",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "1",
-              "title": "Units of measurement",
-              "description": "Covers imperial and metric measurements, SI units (Base and Derived), multipliers and submultipliers",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "1",
-              "title": "Electronic theory basics",
-              "description": "Covers atomic structure (conduction and valence bands), conventional and electron flow, charge, current, voltage, resistance, V=IR, Energy, Power, Electric Force",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "1",
-              "title": "Sensors, actuators and controllers",
-              "description": "Covers types of sensors,  electronic actuators, pneumatic actuators, hydraulic actuators, types of controllers (PLC, Microcontroller, Microcomputer), Microprocessors",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-07",
-          "title": "Week 2",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "2",
-              "title": "Vectors & coordinates",
-              "description": "Covers scalar and vector quantities, drawing vectors, vector notation, adding vectors, polar and cartesian notation",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "2",
-              "title": "Resistors",
-              "description": "Covers different types of resistors like carbon film, metal film, wire wound, potentiometers, rheostats, LDR, thermistor, varistor, current limiting, potential dividers",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "2",
-              "title": "Encoders",
-              "description": "Covers the different types of encoders, optical, resistive, mechanical, magnetic",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-14",
-          "title": "Week 3",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "3",
-              "title": "Vectors and SI units project",
-              "description": "A project where students are given a scenario of a drone in an emergency situation and have to complete many tasks to do with vectors and SI units - Solo project",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "3",
-              "title": "Resistors in series and parallel",
-              "description": "Covers the equations for resistors in series and parallel",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "4",
-              "title": "Gears and Cams",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-21",
-          "title": "Week 4",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "4",
-              "title": "Scientific method",
-              "description": "Covers the scientific method including observations, questioning, hypothesis, prediction, testing, conclusion and iteration",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "4",
-              "title": "Kirchoff's laws",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "5",
-              "title": "Belts and Chains",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-28",
-          "title": "Week 5",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "5",
-              "title": "Reliable data",
-              "description": "Covers different types of errors, uncertainty, repeatability, bias",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "4",
-              "title": "Capacitors",
-              "description": "Covers",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "6",
-              "title": "AC Motors",
-              "description": "Covers AC Motors, construction, operation, single phase, multi phase, synchronous, asynchronous, slip equation, speed equation",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-05",
-          "title": "Week 6",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "6",
-              "title": "Presenting results",
-              "description": "Covers the two types of data, Quantitative, Qualitative, presenting data, graphs, charts, labelling, units, accuracy and honesty",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "5",
-              "title": "Capacitors Practical",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "7",
-              "title": "AC motors - VFD and Shaded Pole",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-12",
-          "title": "Week 7",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "7",
-              "title": "Scientific method and data presentation project",
-              "description": "Class is split into teams and given large sets of data and a scenario. The students have to make a presentation explaining the experiment that happened, the data types produced and any problems in the data - Group project",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "",
-              "title": "Electromagnetism",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "8",
-              "title": "DC Motors",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-19",
-          "title": "Week 8",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "7",
-              "title": "Measuring principles",
-              "description": "Covers",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "",
-              "title": "Motor Effect",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "Mock",
-              "title": "Mock",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-26",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-02",
-          "title": "Week 9",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "8 & 9",
-              "title": "Measuring devices",
-              "description": "",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "Mock",
-              "title": "Mock",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "",
-              "title": "PLC Theory - Types",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-09",
-          "title": "Week 10",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "Mock",
-              "title": "Mock",
-              "description": "",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "",
-              "title": "Introduction to AC",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "",
-              "title": "PLC Theory - Architecture",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-16",
-          "title": "Week 11",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "10",
-              "title": "Atomic Structure",
-              "description": "",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-23",
-          "title": "Week 12",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "11",
-              "title": "Chemical Structure",
-              "description": "",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-30",
-          "title": "Week 13",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "12",
-              "title": "Periodic Table",
-              "description": "",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            }
-          ]
-        },
-        {
-          "start": "2026-12-07",
-          "title": "Week 14",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-14",
-          "title": "Week 15",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
-        }
-      ]
-    },
-    {
-      "id": "year-1-aaq-f130",
-      "name": "Year 1 AAQ – Electrical Devices and Circuits",
-      "sessions": [
-        {
-          "day": "Tuesday",
-          "room": "1F008",
-          "overviewRow": 7
-        }
-      ],
-      "weeks": [
-        {
-          "start": "2026-08-31",
-          "title": "Week 1",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "1",
-              "title": "Electronic theory basics",
-              "description": "Covers conventional and electron flow, charge, current, voltage, resistance, V=IR, Energy, Power",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-07",
-          "title": "Week 2",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "2",
-              "title": "Resistors",
-              "description": "Covers what resistors are, includes current limiting, potential dividers, current dividers, resistors in series and parallel",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-14",
-          "title": "Week 3",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "3",
-              "title": "Simulating circuits",
-              "description": "Covers use of circuit wizard, explaining how to use the software, how to measure and record values, taking circuit diagrams and putting them in the software. Should include an aspect of looking at dividers and total resistance",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-21",
-          "title": "Week 4",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "4",
-              "title": "Building circuits",
-              "description": "Students take the circuits they simulated in the last lesson and physically build them measuring values as they go, looking at current and voltage and checking it matches up with what the simulation gave them",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-28",
-          "title": "Week 5",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "F137 - Task 1",
-              "title": "F137 - Task 1",
-              "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-05",
-          "title": "Week 6",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "4",
-              "title": "Introduction to AC",
-              "description": "Covers the basic ideas behind",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-12",
-          "title": "Week 7",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "5",
-              "title": "Capacitors Practical",
-              "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-19",
-          "title": "Week 8",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "",
-              "title": "Electromagnetism",
-              "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-26",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-02",
-          "title": "Week 9",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "",
-              "title": "Motor Effect",
-              "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-09",
-          "title": "Week 10",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "Mock",
-              "title": "Mock",
-              "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-16",
-          "title": "Week 11",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "",
-              "title": "Introduction to AC",
-              "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-23",
-          "title": "Week 12",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-30",
-          "title": "Week 13",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-07",
-          "title": "Week 14",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-14",
-          "title": "Week 15",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
-        }
-      ]
-    },
-    {
-      "id": "year-2-btec-ext-dip",
-      "name": "Year 2 BTEC Ext Dip – Units 19, 31 & 40",
-      "sessions": [
-        {
-          "day": "Wednesday",
-          "room": "1F009",
-          "overviewRow": 8
-        },
-        {
-          "day": "Friday",
-          "room": "1F009",
-          "overviewRow": 15
-        },
-        {
-          "day": "Friday",
-          "room": "1F009",
-          "overviewRow": 17
-        }
-      ],
-      "weeks": [
-        {
-          "start": "2026-08-31",
-          "title": "Week 1",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "1",
               "title": "Introduction to PLC programming",
-              "description": "Covers getting into TIA portal, basic inputs and outputs (NO and NC), output coils, logic gates, latches. Students are shown how each component/function works then they recreate it and add it to a word document explaining it.",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "1",
-              "title": "AC Motors",
-              "description": "Covers AC Motors, construction, operation, single phase, multi phase, synchronous, asynchronous, slip equation, speed equation",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-09-07",
-          "title": "Week 2",
-          "special": [],
+          "start": "2026-09-21",
+          "title": "Week 4",
           "lessons": [
             {
-              "sequence": "2",
               "title": "Advanced PLC functions",
-              "description": "Covers memory locations, timers (TON and TOF), counters (CTU, CTD, CTUD), comparators. Students are shown how each component/function works then they recreate it and add it to a word document explaining it.",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "2",
-              "title": "AC motors - VFD and Shaded Pole",
-              "description": "Covers VFD, Shaded Pole Motors and Universal Motors",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-14",
-          "title": "Week 3",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "3",
-              "title": "Sequential programming",
-              "description": "Covers move functions, sequential programming methodology, both with boolean and integers. Students are shown how each component/function works then they recreate it and add it to a word document explaining it.",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "3 & 4",
-              "title": "AC motors - Practical",
-              "description": "Students do some further research tasks whilst pairs come up and wire a 3 phase and 1 phase AC motor based on a diagram then look at frequency, load, speed and torque characteristics",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-21",
-          "title": "Week 4",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "4",
-              "title": "PLC handout and connection",
-              "description": "Hand out the PLCs to students, a lot of admin around that process. Talk students through setting up siemens TIA to talk to PLC and how to plug it in correctly. Produce a couple of simple programs and have them run",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "5",
-              "title": "AC Generators",
-              "description": "Covers AC Generators, single phase, multiphase, stator, rotor field, stator field",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-09-28",
           "title": "Week 5",
-          "special": [],
           "lessons": [
             {
-              "sequence": "5",
-              "title": "First mini project",
-              "description": "A project to put together everything learnt so far, based on an industrial scenario with conveyors and sensors, should be using PLCs to make it more practical and visual",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "6",
-              "title": "Transformers",
-              "description": "Covers transformer types, step up, step down, isolation, construction",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-05",
-          "title": "Week 6",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "6",
-              "title": "Second mini project",
-              "description": "A slightly harder project which again puts together everything learnt so far, again based on an industrial scenario but including branching decisions this time",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "Assignment 1",
-              "title": "Assignment 1",
+              "title": "Sequential Programming",
+              "unit": "Unit 19 - PLCs",
               "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-10-12",
           "title": "Week 7",
-          "special": [],
           "lessons": [
             {
-              "sequence": "7",
-              "title": "Third mini project",
-              "description": "Again stepping up project difficulty, this time the students receive a paragraph they must split themselves to make a program. Along side this they receive a completed tag table. Again in an industrial scenario",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "7",
-              "title": "DC Generators",
+              "title": "Connecting to a physical PLC",
+              "unit": "Unit 19 - PLCs",
               "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-10-19",
           "title": "Week 8",
-          "special": [],
           "lessons": [
             {
-              "sequence": "8",
-              "title": "Fourth mini project",
-              "description": "Much like the 3rd mini project but expanded",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "8",
-              "title": "DC Motors",
+              "title": "Basics of making larger programs",
+              "unit": "Unit 19 - PLCs",
               "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-10-26",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
           "start": "2026-11-02",
           "title": "Week 9",
-          "special": [],
           "lessons": [
             {
-              "sequence": "9",
-              "title": "Actuator/Sensor Notation",
-              "description": "Covers PLC notation including both pneumatic and electric notation. Students will program examples of each notation based on a worksheet",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "9",
-              "title": "DC Motor Speed Control",
+              "title": "Mini project 1",
+              "unit": "Unit 19 - PLCs",
               "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-11-09",
           "title": "Week 10",
-          "special": [],
           "lessons": [
             {
-              "sequence": "10",
-              "title": "Plug in components demonstration",
-              "description": "Split the class in groups, groups watch as tutor or LA shows them how to plug in components like pneumatic pistons, motors, sensors ect. Whilst the groups are watching the demonstration the rest are finishing the worksheet from the last lesson",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "Assignment 2",
-              "title": "Assignment 2",
+              "title": "Mini project 1",
+              "unit": "Unit 19 - PLCs",
               "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-11-16",
           "title": "Week 11",
-          "special": [],
           "lessons": [
             {
-              "sequence": "11",
-              "title": "Plug in components",
-              "description": "Split the class in groups, each group has their own pneumatic bench to work on, they plug in all the components they learnt about in the previous lesson, if they have time they start on their first \"plug in\" project (see next lesson)",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "10",
-              "title": "Relays #1",
-              "description": "Discuss how relays function (their physical construction) then go on to discuss how to use fluid sim to wire up a basic circuit incluing NO, NC, Latch",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
+              "title": "PLC Structure",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-11-23",
           "title": "Week 12",
-          "special": [],
           "lessons": [
             {
-              "sequence": "12 & 13",
-              "title": "Plug in components - project",
-              "description": "Students are split into the same groups as last lesson and given a project to create a program then plug in the components for that program to make a complete working system",
-              "link": "",
-              "unit": "Unit 19 – PLCs",
-              "sourceSheet": "BTEC Unit 19"
-            },
-            {
-              "sequence": "11",
-              "title": "Relays #2",
-              "description": "Explore how we can construct boolean logic circuits from relays including timers. Again large focus on building in fluid sim",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
+              "title": "Mini project 2",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-11-30",
           "title": "Week 13",
-          "special": [],
           "lessons": [
             {
-              "sequence": "12",
-              "title": "Relays #3",
-              "description": "Explore how to setup sequential relay systems using latches and other components. Again large focus on building in fluid sim",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
+              "title": "Mini project 2",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-12-07",
           "title": "Week 14",
-          "special": [],
           "lessons": [
             {
-              "sequence": "13",
-              "title": "Relays #4",
+              "title": "Mini project 2",
+              "unit": "Unit 19 - PLCs",
               "description": "",
-              "link": "",
-              "unit": "Unit 31 – Electrical Machines",
-              "sourceSheet": "BTEC Unit 31"
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-12-14",
           "title": "Week 15",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
+          "lessons": [
+            {
+              "title": "Types of PLCs",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
         }
       ]
     },
     {
-      "id": "year-1-tlevel-x2",
-      "name": "Year 1 T-Level X2 – Units 5, 8 & 9",
+      "id": "year-2-apprentices",
+      "name": "Year 2 Apprentices",
       "sessions": [
         {
-          "day": "Wednesday",
-          "room": "1F009",
-          "overviewRow": 9
-        },
-        {
-          "day": "Thursday",
-          "room": "1F009",
-          "overviewRow": 14
+          "day": "Monday",
+          "slot": "Unit 31 - Electrical Machines"
         }
       ],
       "weeks": [
         {
-          "start": "2026-08-31",
-          "title": "Week 1",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "1",
-              "title": "Units of measurement",
-              "description": "Covers imperial and metric measurements, SI units (Base and Derived), multipliers and submultipliers",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "1",
-              "title": "Electronic theory basics",
-              "description": "Covers atomic structure (conduction and valence bands), conventional and electron flow, charge, current, voltage, resistance, V=IR, Energy, Power, Electric Force",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "1",
-              "title": "Sensors, actuators and controllers",
-              "description": "Covers types of sensors,  electronic actuators, pneumatic actuators, hydraulic actuators, types of controllers (PLC, Microcontroller, Microcomputer), Microprocessors",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-07",
-          "title": "Week 2",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "2",
-              "title": "Vectors & coordinates",
-              "description": "Covers scalar and vector quantities, drawing vectors, vector notation, adding vectors, polar and cartesian notation",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "2",
-              "title": "Resistors",
-              "description": "Covers different types of resistors like carbon film, metal film, wire wound, potentiometers, rheostats, LDR, thermistor, varistor, current limiting, potential dividers",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "2",
-              "title": "Encoders",
-              "description": "Covers the different types of encoders, optical, resistive, mechanical, magnetic",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
           "start": "2026-09-14",
           "title": "Week 3",
-          "special": [],
           "lessons": [
             {
-              "sequence": "3",
-              "title": "Vectors and SI units project",
-              "description": "A project where students are given a scenario of a drone in an emergency situation and have to complete many tasks to do with vectors and SI units - Solo project",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "3",
-              "title": "Resistors in series and parallel",
-              "description": "Covers the equations for resistors in series and parallel",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "4",
-              "title": "Gears and Cams",
+              "title": "Introduction to Electric machines",
+              "unit": "Unit 31 - Electrical Machines",
               "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
+              "link": ""
             }
           ]
         },
         {
           "start": "2026-09-21",
           "title": "Week 4",
-          "special": [],
           "lessons": [
             {
-              "sequence": "4",
-              "title": "Scientific method",
-              "description": "Covers the scientific method including observations, questioning, hypothesis, prediction, testing, conclusion and iteration",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "4",
-              "title": "Kirchoff's laws",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "5",
-              "title": "Belts and Chains",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-28",
-          "title": "Week 5",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "5",
-              "title": "Reliable data",
-              "description": "Covers different types of errors, uncertainty, repeatability, bias",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "4",
-              "title": "Capacitors",
-              "description": "Covers",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "6",
               "title": "AC Motors",
-              "description": "Covers AC Motors, construction, operation, single phase, multi phase, synchronous, asynchronous, slip equation, speed equation",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
+              "unit": "Unit 31 - Electrical Machines",
+              "description": "",
+              "link": ""
             }
           ]
-        },
-        {
-          "start": "2026-10-05",
-          "title": "Week 6",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "6",
-              "title": "Presenting results",
-              "description": "Covers the two types of data, Quantitative, Qualitative, presenting data, graphs, charts, labelling, units, accuracy and honesty",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "5",
-              "title": "Capacitors Practical",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "7",
-              "title": "AC motors - VFD and Shaded Pole",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-12",
-          "title": "Week 7",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "7",
-              "title": "Scientific method and data presentation project",
-              "description": "Class is split into teams and given large sets of data and a scenario. The students have to make a presentation explaining the experiment that happened, the data types produced and any problems in the data - Group project",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "",
-              "title": "Electromagnetism",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "8",
-              "title": "DC Motors",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-19",
-          "title": "Week 8",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "7",
-              "title": "Measuring principles",
-              "description": "Covers",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "",
-              "title": "Motor Effect",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "Mock",
-              "title": "Mock",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-26",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-02",
-          "title": "Week 9",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "8 & 9",
-              "title": "Measuring devices",
-              "description": "",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "Mock",
-              "title": "Mock",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "",
-              "title": "PLC Theory - Types",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-09",
-          "title": "Week 10",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "Mock",
-              "title": "Mock",
-              "description": "",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            },
-            {
-              "sequence": "",
-              "title": "Introduction to AC",
-              "description": "",
-              "link": "",
-              "unit": "Unit 8 – Electrical & Electronic Principles",
-              "sourceSheet": "T-Level Unit 8"
-            },
-            {
-              "sequence": "",
-              "title": "PLC Theory - Architecture",
-              "description": "",
-              "link": "",
-              "unit": "Unit 9 – Mechanical / Control Principles",
-              "sourceSheet": "T-Level Unit 9"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-16",
-          "title": "Week 11",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "10",
-              "title": "Atomic Structure",
-              "description": "",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-23",
-          "title": "Week 12",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "11",
-              "title": "Chemical Structure",
-              "description": "",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-30",
-          "title": "Week 13",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "12",
-              "title": "Periodic Table",
-              "description": "",
-              "link": "",
-              "unit": "Unit 5 – Engineering Science",
-              "sourceSheet": "T-Level Unit 5"
-            }
-          ]
-        },
-        {
-          "start": "2026-12-07",
-          "title": "Week 14",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-14",
-          "title": "Week 15",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
         }
       ]
     },
     {
-      "id": "year-1-aaq-session-1",
-      "name": "Year 1 AAQ – Session 1",
+      "id": "htq-year-1",
+      "name": "HTQ Year 1",
       "sessions": [
         {
-          "day": "Thursday",
-          "room": "TBC",
-          "overviewRow": 10
+          "day": "Tuesday",
+          "slot": "Unit 4002 - Maths"
+        },
+        {
+          "day": "Tuesday",
+          "slot": "Unit 4019 - Electrical Principles"
         }
       ],
       "weeks": [
         {
-          "start": "2026-08-31",
-          "title": "Week 1",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "1",
-              "title": "Electronic theory basics",
-              "description": "Covers conventional and electron flow, charge, current, voltage, resistance, V=IR, Energy, Power",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-07",
-          "title": "Week 2",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "2",
-              "title": "Resistors",
-              "description": "Covers what resistors are, includes current limiting, potential dividers, current dividers, resistors in series and parallel",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-09-14",
+          "start": "2026-09-15",
           "title": "Week 3",
-          "special": [],
           "lessons": [
             {
-              "sequence": "3",
-              "title": "Simulating circuits",
-              "description": "Covers use of circuit wizard, explaining how to use the software, how to measure and record values, taking circuit diagrams and putting them in the software. Should include an aspect of looking at dividers and total resistance",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
+              "title": "Induction to HE Engineering",
+              "unit": "Unit 4002 - Maths",
+              "description": "",
+              "link": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tlevel-year-1-x1",
+      "name": "T-Level Year 1 X1",
+      "sessions": [
+        {
+          "day": "Tuesday",
+          "slot": "Practical Slot"
+        },
+        {
+          "day": "Thursday",
+          "slot": "Theory Slot"
+        }
+      ],
+      "weeks": [
+        {
+          "start": "2026-09-03",
+          "title": "Week 1",
+          "lessons": [
+            {
+              "title": "Introduction to T-Level Science, Electronics and Mech",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-09-21",
+          "start": "2026-09-08",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Basic electrical principles",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-10",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Vectors and Coordinates",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-15",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Resistors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-17",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "3D Vectors and Coordinates",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-22",
           "title": "Week 4",
-          "special": [],
           "lessons": [
             {
-              "sequence": "4",
-              "title": "Building circuits",
-              "description": "Students take the circuits they simulated in the last lesson and physically build them measuring values as they go, looking at current and voltage and checking it matches up with what the simulation gave them",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
+              "title": "Series and Parallel Resistors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-09-28",
+          "start": "2026-09-24",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Vectors and coordinates project",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-29",
           "title": "Week 5",
-          "special": [],
           "lessons": [
             {
-              "sequence": "F137 - Task 1",
-              "title": "F137 - Task 1",
+              "title": "Making and measuring resistor circuits",
+              "unit": "Practical Slot",
               "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-10-05",
+          "start": "2026-10-01",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Units of measurement",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-08",
           "title": "Week 6",
-          "special": [],
           "lessons": [
             {
-              "sequence": "4",
-              "title": "Introduction to AC",
-              "description": "Covers the basic ideas behind",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-10-12",
-          "title": "Week 7",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "5",
-              "title": "Capacitors Practical",
+              "title": "Scientific Method",
+              "unit": "Theory Slot",
               "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
+              "link": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aaq-year-1",
+      "name": "AAQ Year 1",
+      "sessions": [
+        {
+          "day": "Tuesday",
+          "slot": "Practical Slot"
+        },
+        {
+          "day": "Thursday",
+          "slot": "Double Slot 1"
+        },
+        {
+          "day": "Thursday",
+          "slot": "Double Slot 2"
+        },
+        {
+          "day": "Friday",
+          "slot": "Combo Slot"
+        }
+      ],
+      "weeks": [
+        {
+          "start": "2026-09-03",
+          "title": "Week 1",
+          "lessons": [
+            {
+              "title": "Welcome to AAQ and discuss what course looks like",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "SI Units",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-10-19",
+          "start": "2026-09-04",
+          "title": "Week 1",
+          "lessons": [
+            {
+              "title": "Algebra for engineering",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-08",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Fusion basics - Basic Tools pt 2",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-10",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Summer Task - Analyse",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Mensuration",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-11",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Trigonometry foundations",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-15",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Fusion basics - Fidget",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-17",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Summer Task - Justify",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Basic Electrical Principles",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-18",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Resistors and Ohms Law",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-22",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Fusion basics - Fidget",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-24",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Summer Task - Explain",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "DC Circuit Networks",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-25",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Capacitors",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-29",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Building circuits (stripboard) (soldering skills)",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-01",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Simulating Circuits",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Inductors and Magnetism",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-02",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "AC Principles",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-06",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Mock Task 1 - Building",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-08",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Mock Task 1 - Simulation",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Electrical efficiency",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-09",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Digital logic 1",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-13",
+          "title": "Week 7",
+          "lessons": [
+            {
+              "title": "Mock Task 1 - Using Multimeter",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-15",
+          "title": "Week 7",
+          "lessons": [
+            {
+              "title": "Assignment Task 1 - Simulation",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Digital logic 2",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-16",
+          "title": "Week 7",
+          "lessons": [
+            {
+              "title": "Analogue circuits",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-20",
           "title": "Week 8",
+          "lessons": [
+            {
+              "title": "Assignment Task 1 - Building",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-22",
+          "title": "Week 8",
+          "lessons": [],
           "special": [
             "Training Days"
-          ],
-          "lessons": [
-            {
-              "sequence": "",
-              "title": "Electromagnetism",
-              "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
           ]
-        },
-        {
-          "start": "2026-10-26",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-02",
-          "title": "Week 9",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "",
-              "title": "Motor Effect",
-              "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-09",
-          "title": "Week 10",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "Mock",
-              "title": "Mock",
-              "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-16",
-          "title": "Week 11",
-          "special": [],
-          "lessons": [
-            {
-              "sequence": "",
-              "title": "Introduction to AC",
-              "description": "",
-              "link": "",
-              "unit": "AAQ F137",
-              "sourceSheet": "AAQ F137"
-            }
-          ]
-        },
-        {
-          "start": "2026-11-23",
-          "title": "Week 12",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-30",
-          "title": "Week 13",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-07",
-          "title": "Week 14",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-14",
-          "title": "Week 15",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
         }
       ]
     },
     {
-      "id": "year-1-aaq-session-2",
-      "name": "Year 1 AAQ – Session 2 (Principles of Engineering)",
+      "id": "tlevel-year-1-x2",
+      "name": "T-Level Year 1 X2",
+      "sessions": [
+        {
+          "day": "Wednesday",
+          "slot": "Practical Slot"
+        },
+        {
+          "day": "Thursday",
+          "slot": "Theory Slot"
+        }
+      ],
+      "weeks": [
+        {
+          "start": "2026-09-02",
+          "title": "Week 1",
+          "lessons": [
+            {
+              "title": "Introduction to T-Level Science, Electronics and Mech",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-03",
+          "title": "Week 1",
+          "lessons": [
+            {
+              "title": "Vectors and Coordinates",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-09",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Basic electrical principles",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-10",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "3D Vectors and Coordinates",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-16",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Resistors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-17",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Vectors and coordinates project",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-23",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Series and Parallel Resistors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-24",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Units of measurement",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-30",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Making and measuring resistor circuits",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-01",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Scientific Method",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "htq-year-2",
+      "name": "HTQ Year 2",
       "sessions": [
         {
           "day": "Thursday",
-          "room": "TBC",
-          "overviewRow": 11
+          "slot": "PLCs and Automation"
         }
       ],
-      "weeks": [
-        {
-          "start": "2026-08-31",
-          "title": "Week 1",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-07",
-          "title": "Week 2",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-14",
-          "title": "Week 3",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-21",
-          "title": "Week 4",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-28",
-          "title": "Week 5",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-05",
-          "title": "Week 6",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-12",
-          "title": "Week 7",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-19",
-          "title": "Week 8",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-26",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-02",
-          "title": "Week 9",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-09",
-          "title": "Week 10",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-16",
-          "title": "Week 11",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-23",
-          "title": "Week 12",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-30",
-          "title": "Week 13",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-07",
-          "title": "Week 14",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-14",
-          "title": "Week 15",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
-        }
-      ]
-    },
-    {
-      "id": "year-2-htq-4015",
-      "name": "Year 2 HTQ – Unit 4015 Automation, Robotics and PLCs",
-      "sessions": [
-        {
-          "day": "Thursday",
-          "room": "1F009",
-          "overviewRow": 13
-        }
-      ],
-      "weeks": [
-        {
-          "start": "2026-08-31",
-          "title": "Week 1",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-07",
-          "title": "Week 2",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-14",
-          "title": "Week 3",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-21",
-          "title": "Week 4",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-28",
-          "title": "Week 5",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-05",
-          "title": "Week 6",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-12",
-          "title": "Week 7",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-19",
-          "title": "Week 8",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-26",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-02",
-          "title": "Week 9",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-09",
-          "title": "Week 10",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-16",
-          "title": "Week 11",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-23",
-          "title": "Week 12",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-30",
-          "title": "Week 13",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-07",
-          "title": "Week 14",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-14",
-          "title": "Week 15",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
-        }
-      ]
-    },
-    {
-      "id": "year-1-aaq-engineering-skills",
-      "name": "Year 1 AAQ – Engineering Skills",
-      "sessions": [
-        {
-          "day": "Friday",
-          "room": "1F009",
-          "overviewRow": 16
-        }
-      ],
-      "weeks": [
-        {
-          "start": "2026-08-31",
-          "title": "Week 1",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-07",
-          "title": "Week 2",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-14",
-          "title": "Week 3",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-21",
-          "title": "Week 4",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-09-28",
-          "title": "Week 5",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-05",
-          "title": "Week 6",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-12",
-          "title": "Week 7",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-19",
-          "title": "Week 8",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-10-26",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-02",
-          "title": "Week 9",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-09",
-          "title": "Week 10",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-16",
-          "title": "Week 11",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-23",
-          "title": "Week 12",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-11-30",
-          "title": "Week 13",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-07",
-          "title": "Week 14",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-14",
-          "title": "Week 15",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-21",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2026-12-28",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-04",
-          "title": "Week 16",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-11",
-          "title": "Week 17",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-18",
-          "title": "Week 18",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-01-25",
-          "title": "Week 19",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-01",
-          "title": "Week 20",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-08",
-          "title": "Week 21",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-15",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-02-22",
-          "title": "Week 22",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-01",
-          "title": "Week 23",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-08",
-          "title": "Week 24",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-15",
-          "title": "Week 25",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-22",
-          "title": "Week 26",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-03-29",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-05",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-12",
-          "title": "Week 27",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-19",
-          "title": "Week 28",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-04-26",
-          "title": "Week 29",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-03",
-          "title": "Week 30",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-10",
-          "title": "Week 31",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-17",
-          "title": "Week 32",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-24",
-          "title": "Non-teaching week",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-05-31",
-          "title": "Week 33",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-07",
-          "title": "Week 34",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-14",
-          "title": "Week 35",
-          "special": [],
-          "lessons": []
-        },
-        {
-          "start": "2027-06-21",
-          "title": "Week 36",
-          "special": [],
-          "lessons": []
-        }
-      ]
+      "weeks": []
     }
   ]
 }
