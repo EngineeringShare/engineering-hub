@@ -1,5 +1,5 @@
 ---
-title: "Vectors and Coordinates"
+title: "Vectors and Coordinates #1"
 date: 2025-09-09
 tags: ["Vectors", "Coordinates", "Scalars", "2D", "Magnitude", "Direction", "Cartesian", "Polar"]
 subject: "Science"
@@ -14,19 +14,12 @@ units:
 
 Vectors and coordinates are fundamental concepts in physics and engineering that help us describe and analyze physical quantities and positions in space. A vector is a quantity that has both magnitude (size) and direction, such as velocity or force, while a scalar is a quantity that has only magnitude, like temperature or mass. This page will explore the basics of vectors and coordinates, including how to represent them in two-dimensional space using Cartesian and polar coordinate systems.
 
-## Audio:
-
-<audio controls>
-    <source src="https://engineeringshare.github.io/engineering-resources/audio/Vectors and Coordinates.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-</audio>
-
 ## Presentation:
 
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.github.io/engineering-resources/presentations/Vectors and Coordinates.pdf"
+        src="https://engineeringshare.github.io/engineering-resources/presentations/Vectors and Coordinates 1.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen
@@ -55,11 +48,7 @@ Vectors and coordinates are fundamental concepts in physics and engineering that
 </script>
 ## Interactive Tools:
 
-<a href="https://engineeringshare.co.uk/interactive/Units%20of%20Measurement%20Sort.html">🧩 Sort Game</a>
-
 ## Other Materials:
-
-* [PDF 26th CGPM](https://www.google.com/url?sa=i&url=https%3A%2F%2Freport.ndc.gov.tw%2FReportFront%2FPageSystem%2FreportFileDownload%2FC10702021%2F006&psig=AOvVaw2ZoN5QR6Uk7ORXwPdnrLQ5&ust=1756900711069000&source=images&cd=vfe&opi=89978449&ved=0CBkQjhxqFwoTCPCl4KiDuo8DFQAAAAAdAAAAABAE)
 
 ## ---
 
