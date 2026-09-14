@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+ <head><script>window["__codeletBootstrap__"]=JSON.parse('{"A":"A","B":"20260914-05-802a9e5","C":{"Abril Fatface":"YACgEZbkUVE,0","Alfa Slab One":"YACgEYS9sJU,0","Anton":"YACgEcYqQ-A,0","Archivo":"YAHO2-t-jNE,0","Arial":"YAGyDvJ_4Ts,0","Bebas Neue":"YACgESME5ew,0","Bricolage Grotesque":"YAFyMcdwzpc,0","Canva Sans":"YAFLd8sKbwc,2","Caveat":"YALBs2ploWQ,0","Comic Sans MS":"YAHO2VMiyZo,0","Cormorant Garamond":"YAFdJhX-538,0","Courier New":"YAGzXiGs0_8,0","DM Sans":"YAD1aU3sLnI,0","DM Serif Display":"YAD1aYG82rc,0","Forum":"YACgEcnnqB4,0","Fraunces":"YAEul-FRQw4,0","Georgia":"YAGzXkO0pEM,0","Helvetica Neue":"YAFcf6CtJfI,0","Impact":"YAFcfnjI7Vk,0","Inter":"YAFdJvSyp_k,3","Iowan Old Style":"YAGNIFa8j9o,0","Jacques Francois":"YAHO2a5g66Q,0","JetBrains Mono":"YAFdJksXcAk,0","Libre Baskerville":"YACgEUFdPdA,0","Manrope":"YAHO2b2feC4,0","Merriweather":"YACgEXvHxxs,0","Montserrat":"YADLjI9qxTA,0","Nunito":"YACgEX8C5Gg,0","Oleo Script":"YACgEQQ14jI,0","Phantom Sans":"YAHO2E8Pb88,0","Playfair Display":"YACgEYmuCJE,0","Poppins":"YAFdJjbTu24,1","Press Start 2P":"YAFyGr-8pmQ,0","Quicksand":"YADWjpfPmdk,0","Raleway":"YACgEVg3xZg,0","Segoe UI":"YAHNdRD1Klw,0","Source Sans 3":"YAG4lO1Mj10,0","Spectral":"YAHO2rVUHIM,0","Times New Roman":"YAGzXW3gftg,0","Times":"YAGzXW3gftg,0","Ubuntu":"YACgERDU--Q,0","Work Sans":"YAGXhLOKv44,0","Yellowtail":"YACgEYG4kG4,0","ui-monospace":"YADlN8CFZ8Q,0","ui-sans-serif":"YACkoN-xg4g,0"}}');</script><script src="/_sdk/c21197326e9a1154.telemetry_sdk.js" integrity="sha512-Aqwl+NmLtKBcMQM4HY+W9lmBHa+zP5MqSEuYfCjkzt4xeOSv2xNz81cCp7JyXBVrY+zojg5o94FHY/R31v2d3Q=="></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Group Generator</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.577.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,600;9..144,700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #15243a;
+      --paper: #fbf8f0;
+      --orange: #e86835;
+      --teal: #1d8a88;
+      --line: #d9d4c8;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
+      color: var(--ink);
+    }
+
+    .app-shell {
+      width: 100%;
+      min-height: calc(100 * min(var(--vh, 1vh), 1vh));
+      background:
+        radial-gradient(circle at 8% 12%, rgba(244, 180, 87, .16), transparent 26rem),
+        radial-gradient(circle at 92% 82%, rgba(41, 139, 136, .15), transparent 28rem),
+        #15243a;
+      overflow: hidden;
+    }
+
+    .paper-panel {
+      background: #fbf8f0 !important;
+      box-shadow: 0 22px 60px rgba(4, 14, 28, .22);
+    }
+
+    .scribble {
+      font-family: "Fraunces", serif;
+    }
+
+    .input-field {
+      border: 1px solid var(--line);
+      background: #fffdf8;
+      color: var(--ink);
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    .input-field:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 4px rgba(29, 138, 136, .14);
+    }
+
+    .generate-btn {
+      background: #e86835;
+      color: #ffffff;
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+      box-shadow: 0 8px 0 #b34d28;
+    }
+
+    .generate-btn:hover { filter: brightness(1.04); transform: translateY(-2px); }
+    .generate-btn:active { transform: translateY(4px); box-shadow: 0 3px 0 #b34d28; }
+
+    .copy-btn {
+      background: #1d8a88;
+      color: #ffffff;
+      transition: transform .18s ease, background .18s ease;
+    }
+
+    .copy-btn:hover { transform: translateY(-1px); }
+    .copy-btn:disabled { opacity: .55; cursor: not-allowed; }
+
+    .group-card {
+      border: 1px solid #e4ded2;
+      box-shadow: 0 5px 0 rgba(21, 36, 58, .07);
+      animation: lift-in .35s ease both;
+    }
+
+    .group-card:nth-child(2) { animation-delay: .05s; }
+    .group-card:nth-child(3) { animation-delay: .1s; }
+    .group-card:nth-child(4) { animation-delay: .15s; }
+    .group-card:nth-child(5) { animation-delay: .2s; }
+    .group-card:nth-child(6) { animation-delay: .25s; }
+
+    .name-row + .name-row { border-top: 1px dashed #ddd6c8; }
+
+    .status-message { min-height: 1.5rem; }
+
+    @keyframes lift-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      .generate-btn { box-shadow: 0 6px 0 #b34d28; }
+    }
+  </style>
+  <script src="/_sdk/efe904fe8a212716.data_sdk.js" type="text/javascript" integrity="sha512-oiO0pmn5llS1uDeB2l690YywxqOe/a0U1kzY6RGaLZXtyh9YjTk1CUoK/bJUugc1QbUaJMJ3IE1MtpNY5NBZCw=="></script>
+  <script src="/_sdk/2099ab88d396666e.resizing_sdk.js" type="text/javascript" integrity="sha512-kSUXG3yWRngnaymRBbHGHc798S5hBVjvLyKd0iZCVHaYqBaJhLAS8ROSbROVwO39DSZ0AypHrjep526fop7p7A=="></script>
+ </head>
+ <body data-template-id="__page-root">
+  <div class="app-shell">
+   <header class="relative z-10 w-full px-5 pt-8 pb-5 text-white sm:px-8 lg:px-12 lg:pt-10">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-5">
+     <div>
+      <p data-template-id="eyebrow-label" class="canva-text mb-2 text-xs font-bold uppercase tracking-[0.22em] text-white">CLASSROOM TOOLKIT</p>
+      <h1 data-template-id="page-title" class="canva-text scribble leading-none text-white">Group Maker</h1>
+     </div>
+     <div class="hidden items-center gap-2 rounded-full border border-white/15 px-4 py-2 text-sm text-white/80 sm:flex">
+      <i data-lucide="users-round" class="h-4 w-4"></i> <span data-template-id="header-note" class="canva-text">Fair groups, fast</span>
+     </div>
+    </div>
+   </header>
+   <main class="w-full px-5 pb-10 sm:px-8 lg:px-12">
+    <section class="paper-panel mx-auto max-w-6xl rounded-[2rem] p-5 sm:p-8 lg:p-10" data-template-id="generator-panel">
+     <div class="mb-8 max-w-2xl">
+      <h2 data-template-id="intro-title" class="canva-text scribble mb-3">Turn a class list into balanced teams.</h2>
+      <p data-template-id="intro-copy" class="canva-text leading-relaxed">Paste your student names, choose a rough group size, and create a fresh set of randomised groups in one click.</p>
+     </div>
+     <div class="grid gap-8 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)]">
+      <section aria-labelledby="student-list-heading">
+       <div class="mb-4 flex items-end justify-between gap-4">
+        <div>
+         <h2 id="student-list-heading" data-template-id="names-label" class="canva-text mb-1 font-bold">Student names</h2>
+         <p data-template-id="names-helper" class="canva-text text-sm leading-relaxed">One name per line works best. Commas and semicolons work too.</p>
+        </div>
+        <div class="rounded-full bg-[#f5e8d2] px-3 py-1 text-xs font-bold text-[#855338]">
+         <span id="name-count">0</span> names
+        </div>
+       </div><textarea id="names-input" class="input-field min-h-72 w-full resize-y rounded-2xl p-4 text-base leading-7" data-template-id="names-input" aria-describedby="names-helper-text"></textarea> <span id="names-helper-text" class="sr-only">Paste one student name per line, or separate names with commas.</span>
+       <div class="mt-5 grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+        <div>
+         <label for="group-size" data-template-id="size-label" class="canva-text mb-2 block font-bold">Rough group size</label>
+         <div class="relative max-w-48">
+          <input id="group-size" type="number" min="2" max="20" value="4" class="input-field w-full rounded-xl px-4 py-3 pr-12 font-semibold" aria-describedby="size-helper"> <i data-lucide="users" class="pointer-events-none absolute right-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#70808f]"></i>
+         </div>
+         <p id="size-helper" data-template-id="size-helper-copy" class="canva-text mt-2 text-sm">The final groups will be as even as possible.</p>
+        </div><label class="flex cursor-pointer items-center gap-3 rounded-xl border border-[#ddd6c8] bg-[#fffdf8] px-4 py-3"> <input id="shuffle-input" type="checkbox" checked class="h-4 w-4 accent-[#1d8a88]"> <span data-template-id="shuffle-label" class="canva-text text-sm font-semibold">Randomise names</span> </label>
+       </div><button id="generate-button" data-template-id="generate-button" type="button" class="canva-button generate-btn mt-6 inline-flex w-full items-center justify-center gap-2 rounded-xl px-5 py-4 font-bold focus:outline-none focus:ring-4 focus:ring-[#e86835]/30"> <i data-lucide="sparkles" class="h-5 w-5"></i> <span data-template-id="generate-button-text" class="canva-text">Generate groups</span> </button>
+      </section>
+      <section aria-labelledby="results-heading" class="rounded-[1.5rem] border border-[#ddd6c8] bg-[#f5f0e5] p-4 sm:p-6">
+       <div class="mb-5 flex flex-wrap items-start justify-between gap-4">
+        <div>
+         <h2 id="results-heading" data-template-id="results-title" class="canva-text scribble mb-1">Your groups</h2>
+         <p id="results-summary" class="text-sm font-medium text-[#66717e]" aria-live="polite"></p>
+        </div><button id="copy-button" data-template-id="copy-button" type="button" class="canva-button copy-btn inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold focus:outline-none focus:ring-4 focus:ring-[#1d8a88]/25" disabled> <i data-lucide="copy" class="h-4 w-4"></i> <span data-template-id="copy-button-text" class="canva-text">Copy groups</span> </button>
+       </div>
+       <div id="empty-state" class="rounded-2xl border border-dashed border-[#c9c1b2] bg-[#fffdf8] px-6 py-14 text-center">
+        <div class="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#e3f0ed] text-[#1d8a88]">
+         <i data-lucide="wand-sparkles" class="h-6 w-6"></i>
+        </div>
+        <p data-template-id="empty-title" class="canva-text mb-2 font-bold">Ready when you are</p>
+        <p data-template-id="empty-copy" class="canva-text mx-auto max-w-sm text-sm leading-relaxed">Your generated groups will appear here. Each group is balanced to keep team sizes close.</p>
+       </div>
+       <div id="groups-grid" class="grid gap-4 sm:grid-cols-2" aria-live="polite"></div>
+       <p id="status-message" class="status-message mt-4 text-sm font-semibold" aria-live="polite"></p>
+      </section>
+     </div>
+    </section>
+   </main>
+  </div>
+  <template id="group-card-template">
+   <article data-template-id="group-card" class="canva-card group-card overflow-hidden rounded-2xl">
+    <div data-template-id="group-card-header" class="canva-banner flex items-center justify-between px-4 py-3">
+     <h3 class="font-bold text-[#15243a]"></h3><span class="rounded-full bg-white/75 px-2.5 py-1 text-xs font-bold text-[#436361]"></span>
+    </div>
+    <ol class="bg-[#fffdf8] px-4 py-2"></ol>
+   </article>
+  </template>
+  <script src="/_sdk/d3b1f5fdf3d3ed7d.editing_sdk.js" integrity="sha512-1kN2li6Bi1y+hyASeQrjX3T1ejbJuofO7QFHYwSxVmnYpAQy3WUUNCT5CEfq3aK+7Vbwgt8v89WSm0fddrQpfw=="></script>
+  <script>
+    const namesInput = document.getElementById("names-input");
+    const groupSizeInput = document.getElementById("group-size");
+    const shuffleInput = document.getElementById("shuffle-input");
+    const generateButton = document.getElementById("generate-button");
+    const copyButton = document.getElementById("copy-button");
+    const groupsGrid = document.getElementById("groups-grid");
+    const emptyState = document.getElementById("empty-state");
+    const nameCount = document.getElementById("name-count");
+    const resultsSummary = document.getElementById("results-summary");
+    const statusMessage = document.getElementById("status-message");
+    let generatedGroups = [];
+
+    function updateNameCount() {
+      const names = extractNames(namesInput.value);
+      nameCount.textContent = names.length;
+    }
+
+    function extractNames(value) {
+      const seen = new Set();
+      return value
+        .split(/[\n,;]+/)
+        .map(name => name.trim().replace(/\s+/g, " "))
+        .filter(name => {
+          const key = name.toLocaleLowerCase();
+          if (!name || seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+    }
+
+    function shuffle(items) {
+      const copy = [...items];
+      for (let index = copy.length - 1; index > 0; index--) {
+        const randomIndex = Math.floor(Math.random() * (index + 1));
+        [copy[index], copy[randomIndex]] = [copy[randomIndex], copy[index]];
+      }
+      return copy;
+    }
+
+    function buildGroups(names, roughSize) {
+      const groupCount = Math.max(1, Math.ceil(names.length / roughSize));
+      const baseSize = Math.floor(names.length / groupCount);
+      const largerGroupCount = names.length % groupCount;
+      const groups = [];
+      let cursor = 0;
+
+      for (let index = 0; index < groupCount; index++) {
+        const size = baseSize + (index < largerGroupCount ? 1 : 0);
+        groups.push(names.slice(cursor, cursor + size));
+        cursor += size;
+      }
+      return groups;
+    }
+
+    function showStatus(message, tone) {
+      statusMessage.textContent = message;
+      statusMessage.className = "status-message mt-4 text-sm font-semibold " + (tone === "error" ? "text-[#b14435]" : "text-[#19736f]");
+    }
+
+    function renderGroups() {
+      groupsGrid.replaceChildren();
+
+      generatedGroups.forEach((group, index) => {
+        const fragment = document.getElementById("group-card-template").content.cloneNode(true);
+        const card = fragment.querySelector("article");
+        const heading = fragment.querySelector("h3");
+        const count = fragment.querySelector("span");
+        const list = fragment.querySelector("ol");
+
+        heading.textContent = "Group " + (index + 1);
+        count.textContent = group.length + (group.length === 1 ? " student" : " students");
+
+        group.forEach(name => {
+          const item = document.createElement("li");
+          item.className = "name-row flex items-center gap-2 py-2.5 text-sm font-medium text-[#304154]";
+          item.innerHTML = '<span class="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#e3f0ed] text-[10px] font-bold text-[#1d8a88]">' + (list.children.length + 1) + '</span><span></span>';
+          item.querySelector("span:last-child").textContent = name;
+          list.appendChild(item);
+        });
+
+        groupsGrid.appendChild(fragment);
+      });
+    }
+
+    function generateGroups() {
+      const names = extractNames(namesInput.value);
+      const roughSize = Number.parseInt(groupSizeInput.value, 10);
+
+      if (names.length < 2) {
+        generatedGroups = [];
+        groupsGrid.replaceChildren();
+        emptyState.classList.remove("hidden");
+        copyButton.disabled = true;
+        resultsSummary.textContent = "";
+        showStatus("Add at least two student names to make groups.", "error");
+        return;
+      }
+
+      if (!Number.isInteger(roughSize) || roughSize < 2 || roughSize > 20) {
+        showStatus("Choose a group size from 2 to 20 students.", "error");
+        groupSizeInput.focus();
+        return;
+      }
+
+      const orderedNames = shuffleInput.checked ? shuffle(names) : names;
+      generatedGroups = buildGroups(orderedNames, roughSize);
+      emptyState.classList.add("hidden");
+      copyButton.disabled = false;
+      resultsSummary.textContent = names.length + " students · " + generatedGroups.length + (generatedGroups.length === 1 ? " group" : " groups");
+      showStatus("Groups are ready to use.", "success");
+      renderGroups();
+    }
+
+    async function copyGroups() {
+      if (!generatedGroups.length) return;
+
+      const content = generatedGroups
+        .map((group, index) => "Group " + (index + 1) + " (" + group.length + ")\n" + group.map(name => "• " + name).join("\n"))
+        .join("\n\n");
+
+      try {
+        await navigator.clipboard.writeText(content);
+        showStatus("Copied groups to your clipboard.", "success");
+      } catch (error) {
+        const helper = document.createElement("textarea");
+        helper.value = content;
+        helper.style.position = "fixed";
+        helper.style.opacity = "0";
+        document.body.appendChild(helper);
+        helper.select();
+        document.execCommand("copy");
+        helper.remove();
+        showStatus("Copied groups to your clipboard.", "success");
+      }
+    }
+
+    namesInput.addEventListener("input", updateNameCount);
+    generateButton.addEventListener("click", generateGroups);
+    copyButton.addEventListener("click", copyGroups);
+
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      updateNameCount();
+    });
+  </script>
+ </body>
+</html>
