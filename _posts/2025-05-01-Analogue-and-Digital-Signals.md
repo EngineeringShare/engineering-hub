@@ -7,7 +7,7 @@ units:
   - unit: "HTQ Unit 4019"
     lo: "LO4 - Digital and Analogue Electronics"
   - unit: "T-Level Unit 08"
-    lo: "(8.1) Signals"
+    lo: "7 - (8.1) Signals"
   - unit: "T-Level Unit 10"
     lo: "(10.1) Control Systems"
   - unit: "BTEC Unit 19"

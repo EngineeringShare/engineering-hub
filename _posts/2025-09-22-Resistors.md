@@ -7,7 +7,7 @@ units:
   - unit: "HTQ Unit 4019"
     lo: "LO1 - DC Circuits"
   - unit: "T-Level Unit 08"
-    lo: "(8.1) Electronic Components"
+    lo: "1 - (8.1) Electronic Components"
   - unit: "BTEC Unit 56"
     lo: "LO1 - DC Circuits"
 ---
@@ -16,6 +16,9 @@ units:
 
 Resistors are fundamental components in electronic circuits, used to control the flow of electric current and divide voltages. They come in various types, each with specific characteristics and applications. Common types of resistors include carbon film, metal film, and wirewound resistors, each offering different levels of precision and power handling capabilities. Variable resistors, such as potentiometers and rheostats, allow for adjustable resistance, making them useful in applications like volume controls and light dimmers. Additionally, specialized resistors like Light Dependent Resistors (LDRs), thermistors, and varistors respond to environmental changes such as light intensity, temperature, and voltage spikes, respectively. Understanding resistor colour codes is essential for identifying their resistance values and tolerances. This page explores the various types of resistors, their functions, and how to read their colour codes.
 
+## Resistor Value Indicators:
+
+<img src="https://engineeringshare.co.uk/images/PLCTypeTree.png" alt="An identification tree for indetifying PLC types" />
 
 ## Presentation:
 

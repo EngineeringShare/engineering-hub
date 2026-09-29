@@ -7,7 +7,7 @@ units:
   - unit: "BTEC Unit 56"
     lo: "LO2 - Capacitors"
   - unit: "T-Level Unit 08"
-    lo: "(8.1) Electrical Components"
+    lo: "2 - (8.1) Electrical Components"
 ---
 
 ## Intro:
