@@ -1,7 +1,7 @@
 ---
 title: "Vectors and Coordinates #2"
 date: 2025-09-10
-tags: ["Vectors", "Coordinates", "Scalars", "2D", "Magnitude", "Direction", "Cartesian", "Polar"]
+tags: ["Vectors", "Coordinates", "Scalars", "2D", "Addition", "Subtraction", "Magnitude", "Direction", "Cartesian", "Polar"]
 subject: "Science"
 units:
   - unit: "HTQ Unit 4002"
@@ -12,7 +12,7 @@ units:
 
 ## Intro:
 
-Vectors and coordinates are fundamental concepts in physics and engineering that help us describe and analyze physical quantities and positions in space. A vector is a quantity that has both magnitude (size) and direction, such as velocity or force, while a scalar is a quantity that has only magnitude, like temperature or mass. This page will explore the basics of vectors and coordinates, including how to represent them in two-dimensional space using Cartesian and polar coordinate systems.
+This lesson builds upon the previous lesson on vectors and coordinates, introducing more advanced concepts such as vector addition and subtraction. By the end of this lesson, you will have a deeper understanding of how to manipulate vectors in 2D space and apply these concepts to real-world problems.
 
 ## Presentation:
 
