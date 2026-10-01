@@ -1,106 +1,2504 @@
 {
+  "siteTitle": "Engineering Share Schedule",
+  "academicYear": "2026/27",
+  "source": "Scheme of Learning 2627(4).xlsx - Overview week planning only",
   "classes": [
     {
-      "id": "htq4015",
-      "name": "HTQ Unit 4015 - Automation, Robotics and PLCs",
+      "id": "btec-ext-dip-year-2",
+      "name": "BTEC Ext Dip Year 2",
+      "sessions": [
+        {
+          "day": "Monday",
+          "slot": "Hybrid Lesson"
+        },
+        {
+          "day": "Monday",
+          "slot": "Theory Lesson"
+        },
+        {
+          "day": "Wednesday",
+          "slot": "Practical Lesson"
+        }
+      ],
       "weeks": [
         {
-          "start": "2026-08-03",
-          "title": "PLC Fundamentals",
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": [],
+          "special": [
+            "Students not yet in"
+          ]
+        },
+        {
+          "start": "2026-09-02",
+          "title": "Week 1",
           "lessons": [
             {
-              "title": "PLC Architecture and Scan Cycle",
-              "description": "CPU, memory, inputs, outputs and the PLC scan cycle.",
-              "link": "lessons/plc-architecture.html"
+              "title": "Induction to second year and welcome to my classes",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-08-10",
-          "title": "Ladder Logic",
+          "start": "2026-09-07",
+          "title": "Week 2",
           "lessons": [
             {
-              "title": "Basic Ladder Logic",
-              "description": "Normally-open contacts, normally-closed contacts and coils.",
-              "link": "lessons/basic-ladder.html"
+              "title": "Sensors & Actuators 1",
+              "unit": "Hybrid Lesson",
+              "description": "",
+              "link": ""
             },
             {
-              "title": "Stop / Start / Retain Circuits",
-              "description": "Building and testing a maintained control circuit.",
-              "link": "lessons/stop-start-retain.html"
+              "title": "AC Motors #1",
+              "unit": "Theory Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-08-17",
-          "title": "Human Machine Interfaces",
+          "start": "2026-09-09",
+          "title": "Week 2",
           "lessons": [
             {
-              "title": "Introduction to HMIs",
-              "description": "Using a Siemens KTP700 to monitor, control and diagnose a PLC system.",
-              "link": "lessons/hmi-introduction.html"
+              "title": "Introduction to PLC programming",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-08-24",
-          "title": "Sequential Control",
+          "start": "2026-09-14",
+          "title": "Week 3",
           "lessons": [
             {
-              "title": "Timers and Sequence Logic",
-              "description": "Using timers and memory bits to create multi-stage automated sequences.",
-              "link": "lessons/sequential-control.html"
+              "title": "Sensors & Actuators 2",
+              "unit": "Hybrid Lesson",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "AC Motors #2",
+              "unit": "Theory Lesson",
+              "description": "",
+              "link": ""
             }
           ]
         },
+        {
+          "start": "2026-09-16",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Advanced PLC functions",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Sensors & actuators 3",
+              "unit": "Hybrid Lesson",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "AC Motors -Types of AC motors",
+              "unit": "Theory Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-23",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Sequential Programming",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Sensors & actuators 4",
+              "unit": "Hybrid Lesson",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "AC Motors - Speed control",
+              "unit": "Theory Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-30",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Connecting to a physical PLC",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": [],
+          "special": [
+            "Wellbeing Day"
+          ]
+        },
+        {
+          "start": "2026-10-07",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Basics of making larger programs",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-14",
+          "title": "Week 7",
+          "lessons": [
+            {
+              "title": "Mini project 1",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-21",
+          "title": "Week 8",
+          "lessons": [
+            {
+              "title": "Mini project 1",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-26",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2026-11-04",
+          "title": "Week 9",
+          "lessons": [
+            {
+              "title": "PLC Structure",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-11",
+          "title": "Week 10",
+          "lessons": [
+            {
+              "title": "Mini project 2",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-18",
+          "title": "Week 11",
+          "lessons": [
+            {
+              "title": "Mini project 2",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-25",
+          "title": "Week 12",
+          "lessons": [
+            {
+              "title": "Mini project 2",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-02",
+          "title": "Week 13",
+          "lessons": [
+            {
+              "title": "Types of PLCs",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-09",
+          "title": "Week 14",
+          "lessons": [
+            {
+              "title": "Connecting components to PLCs",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": [
+            {
+              "title": "Network topologies",
+              "unit": "Hybrid Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-16",
+          "title": "Week 15",
+          "lessons": [
+            {
+              "title": "Connecting components to PLCs",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-21",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2026-12-28",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": [
+            {
+              "title": "Unit 19 PLC Assignment 1",
+              "unit": "Theory Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-06",
+          "title": "Week 16",
+          "lessons": [
+            {
+              "title": "Mini project 3",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": [
+            {
+              "title": "Unit 19 PLC Assignment 1",
+              "unit": "Theory Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-13",
+          "title": "Week 17",
+          "lessons": [
+            {
+              "title": "Mini project 3",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": [
+            {
+              "title": "Unit 19 PLC Assignment 1",
+              "unit": "Theory Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-20",
+          "title": "Week 18",
+          "lessons": [
+            {
+              "title": "Mini project 3",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": [
+            {
+              "title": "Unit 19 PLC Assignment 1",
+              "unit": "Theory Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-27",
+          "title": "Week 19",
+          "lessons": [
+            {
+              "title": "HMIs",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-02-03",
+          "title": "Week 20",
+          "lessons": [
+            {
+              "title": "Mini project 4",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2027-02-17",
+          "title": "Week 21",
+          "lessons": [
+            {
+              "title": "Mini project 4",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-02-24",
+          "title": "Week 22",
+          "lessons": [
+            {
+              "title": "Mini project 4",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-03-03",
+          "title": "Week 23",
+          "lessons": [
+            {
+              "title": "Mini project 5",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-03-10",
+          "title": "Week 24",
+          "lessons": [
+            {
+              "title": "Mini project 5",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-03-17",
+          "title": "Week 25",
+          "lessons": [
+            {
+              "title": "Mini project5",
+              "unit": "Practical Lesson",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        },
+        {
+          "start": "2027-03-29",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "year-3-apprentices",
+      "name": "Year 3 Apprentices",
+      "sessions": [
+        {
+          "day": "Monday",
+          "slot": "Unit 19 - PLCs"
+        }
+      ],
+      "weeks": [
         {
           "start": "2026-08-31",
-          "title": "PLC Mini Project",
+          "title": "Week 1",
+          "lessons": [],
+          "special": [
+            "Students not yet in"
+          ]
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": [],
+          "special": [
+            "HE & Apps not in"
+          ]
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
           "lessons": [
             {
-              "title": "Conveyor Sorting System",
-              "description": "Program, test and operate a conveyor sorting system with HMI control.",
-              "link": "lessons/conveyor-mini-project.html"
+              "title": "Introduction to PLC programming",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-21",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Advanced PLC functions",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-28",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Sequential Programming",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": [],
+          "special": [
+            "Wellbeing Day"
+          ]
+        },
+        {
+          "start": "2026-10-12",
+          "title": "Week 7",
+          "lessons": [
+            {
+              "title": "Connecting to a physical PLC",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-19",
+          "title": "Week 8",
+          "lessons": [
+            {
+              "title": "Basics of making larger programs",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-26",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2026-11-02",
+          "title": "Week 9",
+          "lessons": [
+            {
+              "title": "Mini project 1",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-09",
+          "title": "Week 10",
+          "lessons": [
+            {
+              "title": "Mini project 1",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-16",
+          "title": "Week 11",
+          "lessons": [
+            {
+              "title": "PLC Structure",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-23",
+          "title": "Week 12",
+          "lessons": [
+            {
+              "title": "Mini project 2",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-30",
+          "title": "Week 13",
+          "lessons": [
+            {
+              "title": "Mini project 2",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-07",
+          "title": "Week 14",
+          "lessons": [
+            {
+              "title": "Mini project 2",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-14",
+          "title": "Week 15",
+          "lessons": [
+            {
+              "title": "Types of PLCs",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-21",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2026-12-28",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2027-01-04",
+          "title": "Week 16",
+          "lessons": [
+            {
+              "title": "Mini project 3",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-11",
+          "title": "Week 17",
+          "lessons": [
+            {
+              "title": "Mini project 3",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-18",
+          "title": "Week 18",
+          "lessons": [
+            {
+              "title": "Mini project 3",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-25",
+          "title": "Week 19",
+          "lessons": [
+            {
+              "title": "Network topologies",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-02-01",
+          "title": "Week 20",
+          "lessons": [
+            {
+              "title": "HMIs",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2027-02-15",
+          "title": "Week 21",
+          "lessons": [
+            {
+              "title": "Mini project 4",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-02-22",
+          "title": "Week 22",
+          "lessons": [
+            {
+              "title": "Mini project 4",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-03-01",
+          "title": "Week 23",
+          "lessons": [
+            {
+              "title": "Mini project 4",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-03-08",
+          "title": "Week 24",
+          "lessons": [
+            {
+              "title": "Mini project 5",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-03-15",
+          "title": "Week 25",
+          "lessons": [
+            {
+              "title": "Mini project 5",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        },
+        {
+          "start": "2027-03-29",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        },
+        {
+          "start": "2027-04-05",
+          "title": "Week 26",
+          "lessons": [
+            {
+              "title": "Mini project5",
+              "unit": "Unit 19 - PLCs",
+              "description": "",
+              "link": ""
             }
           ]
         }
       ]
     },
     {
-      "id": "level3plc",
-      "name": "Level 3 - PLC Systems",
+      "id": "year-2-apprentices",
+      "name": "Year 2 Apprentices",
+      "sessions": [
+        {
+          "day": "Monday",
+          "slot": "Unit 31 - Elec Machines"
+        }
+      ],
       "weeks": [
         {
-          "start": "2026-08-10",
-          "title": "Introduction to PLCs",
+          "start": "2026-08-31",
+          "title": "Week 1",
+          "lessons": [],
+          "special": [
+            "Students not yet in"
+          ]
+        },
+        {
+          "start": "2026-09-07",
+          "title": "Week 2",
+          "lessons": [],
+          "special": [
+            "HE & Apps not in"
+          ]
+        },
+        {
+          "start": "2026-09-14",
+          "title": "Week 3",
           "lessons": [
             {
-              "title": "PLC Types and Applications",
-              "description": "Comparing unitary, modular and rack-mounted PLC systems.",
-              "link": "lessons/plc-types.html"
+              "title": "AC Motors",
+              "unit": "Unit 31 - Elec Machines",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-08-17",
-          "title": "PLC Programming",
+          "start": "2026-09-21",
+          "title": "Week 4",
           "lessons": [
             {
-              "title": "Ladder Logic Inputs and Outputs",
-              "description": "Creating simple PLC programs using contacts and coils.",
-              "link": "lessons/ladder-io.html"
+              "title": "AC Motors - Types of motors",
+              "unit": "Unit 31 - Elec Machines",
+              "description": "",
+              "link": ""
             }
           ]
         },
         {
-          "start": "2026-08-24",
-          "title": "Timers",
+          "start": "2026-09-28",
+          "title": "Week 5",
           "lessons": [
             {
-              "title": "PLC Timers",
-              "description": "Using on-delay timers in practical automation tasks.",
-              "link": "lessons/plc-timers.html"
+              "title": "AC Motors - Speed control",
+              "unit": "Unit 31 - Elec Machines",
+              "description": "",
+              "link": ""
             }
+          ]
+        },
+        {
+          "start": "2026-10-05",
+          "title": "Week 6",
+          "lessons": [],
+          "special": [
+            "Wellbeing Day"
+          ]
+        },
+        {
+          "start": "2026-10-26",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2026-12-21",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2026-12-28",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        },
+        {
+          "start": "2027-03-29",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "htq-year-1",
+      "name": "HTQ Year 1",
+      "sessions": [
+        {
+          "day": "Tuesday",
+          "slot": "Unit 4002 - Maths"
+        },
+        {
+          "day": "Tuesday",
+          "slot": "Unit 4019 - Elec Prin"
+        }
+      ],
+      "weeks": [
+        {
+          "start": "2026-09-01",
+          "title": "Week 1",
+          "lessons": [],
+          "special": [
+            "Students not yet in"
+          ]
+        },
+        {
+          "start": "2026-09-08",
+          "title": "Week 2",
+          "lessons": [],
+          "special": [
+            "HE & Apps not in"
+          ]
+        },
+        {
+          "start": "2026-09-15",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Induction to HE Engineering",
+              "unit": "Unit 4002 - Maths",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Maths intial assessment",
+              "unit": "Unit 4019 - Elec Prin",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-22",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Dimensional Analysis #1",
+              "unit": "Unit 4002 - Maths",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Electrics Basics - Recap",
+              "unit": "Unit 4019 - Elec Prin",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-29",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Dimensional Analysis #1",
+              "unit": "Unit 4002 - Maths",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Resistors",
+              "unit": "Unit 4019 - Elec Prin",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-26",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2026-12-21",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2026-12-28",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        },
+        {
+          "start": "2027-03-29",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tlevel-year-1-x1",
+      "name": "T-Level Year 1 X1",
+      "sessions": [
+        {
+          "day": "Tuesday",
+          "slot": "Practical Slot"
+        },
+        {
+          "day": "Thursday",
+          "slot": "Theory Slot"
+        }
+      ],
+      "weeks": [
+        {
+          "start": "2026-09-01",
+          "title": "Week 1",
+          "lessons": [],
+          "special": [
+            "Students not yet in"
+          ]
+        },
+        {
+          "start": "2026-09-03",
+          "title": "Week 1",
+          "lessons": [
+            {
+              "title": "Introduction to T-Level Science, Electronics and Mech",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-08",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Basic electrical principles",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-10",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Adding vectors and 3D Vectors & Coordinates",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-15",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Resistors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-17",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Normalising vectors and dot prouct",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-22",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Series and Parallel Resistors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-24",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Angle between vectors and cross product",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-29",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Making and measuring resistor circuits (soldering skills)",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-01",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Vectors and coordinates project",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-06",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Kirchoff's Current Laws",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-08",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Vectors and coordinates project",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-13",
+          "title": "Week 7",
+          "lessons": [
+            {
+              "title": "Kirchoff's Voltage Laws",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-15",
+          "title": "Week 7",
+          "lessons": [
+            {
+              "title": "Units of measurement",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-20",
+          "title": "Week 8",
+          "lessons": [
+            {
+              "title": "Capacitors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-22",
+          "title": "Week 8",
+          "lessons": [],
+          "special": [
+            "Training Days"
+          ]
+        },
+        {
+          "start": "2026-10-26",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2026-11-03",
+          "title": "Week 9",
+          "lessons": [
+            {
+              "title": "Series and Parallel Capacitors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-05",
+          "title": "Week 9",
+          "lessons": [
+            {
+              "title": "Scientific Method",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-10",
+          "title": "Week 10",
+          "lessons": [
+            {
+              "title": "DC Circuits project",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-12",
+          "title": "Week 10",
+          "lessons": [
+            {
+              "title": "Reliable Data",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-17",
+          "title": "Week 11",
+          "lessons": [
+            {
+              "title": "Electromagnetic Principles",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-19",
+          "title": "Week 11",
+          "lessons": [
+            {
+              "title": "Presenting Results",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-24",
+          "title": "Week 12",
+          "lessons": [
+            {
+              "title": "Semiconductor Materials",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-26",
+          "title": "Week 12",
+          "lessons": [
+            {
+              "title": "Scientific method and data presentation project",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-01",
+          "title": "Week 13",
+          "lessons": [
+            {
+              "title": "Semiconductor Devices",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-03",
+          "title": "Week 13",
+          "lessons": [
+            {
+              "title": "Scientific method and data presentation project",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-08",
+          "title": "Week 14",
+          "lessons": [
+            {
+              "title": "AC Principles",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-10",
+          "title": "Week 14",
+          "lessons": [
+            {
+              "title": "Measuring principles",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-15",
+          "title": "Week 15",
+          "lessons": [
+            {
+              "title": "AC Circuits",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-17",
+          "title": "Week 15",
+          "lessons": [
+            {
+              "title": "Measuring devices",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-21",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2026-12-28",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2027-01-05",
+          "title": "Week 16",
+          "lessons": [
+            {
+              "title": "Power generation",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-12",
+          "title": "Week 17",
+          "lessons": [
+            {
+              "title": "Power generation project",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-19",
+          "title": "Week 18",
+          "lessons": [
+            {
+              "title": "AC Machines",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        },
+        {
+          "start": "2027-03-29",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "aaq-year-1",
+      "name": "AAQ Year 1",
+      "sessions": [
+        {
+          "day": "Tuesday",
+          "slot": "Practical Slot"
+        },
+        {
+          "day": "Thursday",
+          "slot": "Double Slot 1"
+        },
+        {
+          "day": "Thursday",
+          "slot": "Double Slot 2"
+        },
+        {
+          "day": "Friday",
+          "slot": "Combo Slot"
+        }
+      ],
+      "weeks": [
+        {
+          "start": "2026-09-01",
+          "title": "Week 1",
+          "lessons": [],
+          "special": [
+            "Students not yet in"
+          ]
+        },
+        {
+          "start": "2026-09-03",
+          "title": "Week 1",
+          "lessons": [
+            {
+              "title": "Welcome to AAQ (whole college induction) and discuss what course looks like",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Welcome to AAQ (whole college induction) and discuss what course looks like",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-04",
+          "title": "Week 1",
+          "lessons": [
+            {
+              "title": "SI Units",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-08",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Fusion basics - Basic Tools pt 2",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-10",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Summer Task - Analyse",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Algebra for engineering",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-11",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Simultaneous and",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-15",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Fusion basics - Fidget",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-17",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Summer Task - Justify",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Straight line equations/ Mesuration",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-18",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Trigonometric Principles",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-22",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Fusion basics - Fidget",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-24",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Summer Task - Explain",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Electrics Basics - Theory",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-25",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Electrics Basics - Practical (Locktronics)",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-29",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Building circuits (stripboard) (soldering skills)",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-01",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Simulating Circuits",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "DC Circuit Networks",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-02",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "DC Circuit Networks",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-06",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Mock Task 1 - Building",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-08",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Mock Task 1 - Simulation",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "Capacitors",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-09",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Inductors and magnetism",
+              "unit": "Combo Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-13",
+          "title": "Week 7",
+          "lessons": [
+            {
+              "title": "Mock Task 1 - Using Multimeter",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-15",
+          "title": "Week 7",
+          "lessons": [
+            {
+              "title": "Assignment Task 1 - Simulation",
+              "unit": "Double Slot 1",
+              "description": "",
+              "link": ""
+            },
+            {
+              "title": "AC Principles",
+              "unit": "Double Slot 2",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-20",
+          "title": "Week 8",
+          "lessons": [
+            {
+              "title": "Assignment Task 1 - Building",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-22",
+          "title": "Week 8",
+          "lessons": [],
+          "special": [
+            "Training Days"
+          ]
+        },
+        {
+          "start": "2026-10-23",
+          "title": "Week 8",
+          "lessons": [],
+          "special": [
+            "Training Days"
+          ]
+        },
+        {
+          "start": "2026-10-26",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2026-12-21",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2026-12-28",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        },
+        {
+          "start": "2027-03-29",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tlevel-year-1-x2",
+      "name": "T-Level Year 1 X2",
+      "sessions": [
+        {
+          "day": "Wednesday",
+          "slot": "Practical Slot"
+        },
+        {
+          "day": "Thursday",
+          "slot": "Theory Slot"
+        }
+      ],
+      "weeks": [
+        {
+          "start": "2026-09-02",
+          "title": "Week 1",
+          "lessons": [
+            {
+              "title": "Introduction to T-Level Science, Electronics and Mech",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-03",
+          "title": "Week 1",
+          "lessons": [
+            {
+              "title": "Vectors and Coordinates",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-09",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Basic electrical principles",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-10",
+          "title": "Week 2",
+          "lessons": [
+            {
+              "title": "Adding vectors and 3D Vectors & Coordinates",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-16",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Resistors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-17",
+          "title": "Week 3",
+          "lessons": [
+            {
+              "title": "Normalising vectors and dot prouct",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-23",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Series and Parallel Resistors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-24",
+          "title": "Week 4",
+          "lessons": [
+            {
+              "title": "Angle between vectors and cross product",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-09-30",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Making and measuring resistor circuits (soldering skills)",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-01",
+          "title": "Week 5",
+          "lessons": [
+            {
+              "title": "Vectors and coordinates project",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-07",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Kirchoff's Current Laws",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-08",
+          "title": "Week 6",
+          "lessons": [
+            {
+              "title": "Vectors and coordinates project",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-14",
+          "title": "Week 7",
+          "lessons": [
+            {
+              "title": "Kirchoff's Voltage Laws",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-15",
+          "title": "Week 7",
+          "lessons": [
+            {
+              "title": "Units of measurement",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-21",
+          "title": "Week 8",
+          "lessons": [
+            {
+              "title": "Capacitors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-10-22",
+          "title": "Week 8",
+          "lessons": [],
+          "special": [
+            "Training Days"
+          ]
+        },
+        {
+          "start": "2026-10-26",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2026-11-04",
+          "title": "Week 9",
+          "lessons": [
+            {
+              "title": "Series and Parallel Capacitors",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-05",
+          "title": "Week 9",
+          "lessons": [
+            {
+              "title": "Scientific Method",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-11",
+          "title": "Week 10",
+          "lessons": [
+            {
+              "title": "DC Circuits project",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-12",
+          "title": "Week 10",
+          "lessons": [
+            {
+              "title": "Reliable Data",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-18",
+          "title": "Week 11",
+          "lessons": [
+            {
+              "title": "Electromagnetic Principles",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-19",
+          "title": "Week 11",
+          "lessons": [
+            {
+              "title": "Presenting Results",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-25",
+          "title": "Week 12",
+          "lessons": [
+            {
+              "title": "Semiconductor Materials",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-11-26",
+          "title": "Week 12",
+          "lessons": [
+            {
+              "title": "Scientific method and data presentation project",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-02",
+          "title": "Week 13",
+          "lessons": [
+            {
+              "title": "Semiconductor Devices",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-03",
+          "title": "Week 13",
+          "lessons": [
+            {
+              "title": "Scientific method and data presentation project",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-09",
+          "title": "Week 14",
+          "lessons": [
+            {
+              "title": "AC Principles",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-10",
+          "title": "Week 14",
+          "lessons": [
+            {
+              "title": "Measuring devices",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-16",
+          "title": "Week 15",
+          "lessons": [
+            {
+              "title": "AC Circuits",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-17",
+          "title": "Week 15",
+          "lessons": [
+            {
+              "title": "Measuring devices",
+              "unit": "Theory Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2026-12-21",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2026-12-28",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2027-01-06",
+          "title": "Week 16",
+          "lessons": [
+            {
+              "title": "Power generation",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-13",
+          "title": "Week 17",
+          "lessons": [
+            {
+              "title": "Power generation project",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-01-20",
+          "title": "Week 18",
+          "lessons": [
+            {
+              "title": "AC Machines",
+              "unit": "Practical Slot",
+              "description": "",
+              "link": ""
+            }
+          ]
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        },
+        {
+          "start": "2027-03-29",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "htq-year-2",
+      "name": "HTQ Year 2",
+      "sessions": [
+        {
+          "day": "Thursday",
+          "slot": "PLCs and Automation"
+        }
+      ],
+      "weeks": [
+        {
+          "start": "2026-09-03",
+          "title": "Week 1",
+          "lessons": [],
+          "special": [
+            "HE & Apps not in"
+          ]
+        },
+        {
+          "start": "2026-09-10",
+          "title": "Week 2",
+          "lessons": [],
+          "special": [
+            "HE & Apps not in"
+          ]
+        },
+        {
+          "start": "2026-10-22",
+          "title": "Week 8",
+          "lessons": [],
+          "special": [
+            "Training Days"
+          ]
+        },
+        {
+          "start": "2026-10-26",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2026-12-21",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2026-12-28",
+          "title": "Christmas Break",
+          "lessons": [],
+          "special": [
+            "Christmas Break"
+          ]
+        },
+        {
+          "start": "2027-02-08",
+          "title": "Half Term",
+          "lessons": [],
+          "special": [
+            "Half Term"
+          ]
+        },
+        {
+          "start": "2027-03-22",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
+          ]
+        },
+        {
+          "start": "2027-03-29",
+          "title": "Easter Break",
+          "lessons": [],
+          "special": [
+            "Easter Break"
           ]
         }
       ]
