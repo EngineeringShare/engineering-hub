@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Electronics workbench</title><style>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Electronics workbench · V1.0</title><style>
 
 :root { --cream:#f4f2e8; --muted:#91a7a3; --cyan:#8ce5cf; --yellow:#ffe18b; --success:#a7ebad; --surface:#182524; --copper:#bf754c; --ink:#10201c; }
 * { box-sizing:border-box; }
@@ -41,10 +41,10 @@ button { color:inherit; } h2,h3,p { margin:0; } h2 { font-size:18px; font-weight
 .board-column { min-width:0; }.board-toolbar { display:flex;justify-content:space-between;align-items:center;margin:2px 1px 15px;gap:12px; }.board-toolbar h2 { margin-top:3px;font-size:22px; }.board-chips { display:flex;gap:6px;font-size:10px;color:#a2b9aa; }.board-chips span { padding:6px 9px;border:1px solid #374f41;border-radius:7px;background:#1e3026;white-space:nowrap; }.board-chips strong { color:#dbeed5;margin-right:2px;font-weight:550; }
 .board-surface { padding:16px;border:1px solid #3c5144;border-radius:16px;background:#192921;box-shadow:0 18px 45px #0003; }.board-instruction { display:flex;align-items:center;gap:8px;min-height:32px;margin-bottom:13px;color:#a7bfa9;font-size:11px;line-height:1.5; }.instruction-dot { width:5px;height:5px;border-radius:50%;background:#aec986;flex:none; }
 .sim-board { position:relative;overflow:hidden;border:1px solid #ddad7950;border-radius:11px;padding:0;background:linear-gradient(90deg,#ffffff05 1px,transparent 1px),linear-gradient(#ffffff05 1px,transparent 1px),#b76c43;background-size:31px 31px;box-shadow:inset 0 0 0 7px #945233,inset 0 0 45px #66331866;--board-scale:1;--flow-speed:1; }
-.board-stage { position:relative;width:100%;height:calc(412px * var(--board-scale)); }.board-inner { position:absolute;left:50%;top:0;width:642px;height:412px;transform:translateX(-50%) scale(var(--board-scale));transform-origin:top center;padding:58px 42px 44px; }
+.board-stage { position:relative;width:100%;height:calc(var(--board-height,412px) * var(--board-scale)); }.board-inner { position:absolute;left:50%;top:0;width:var(--board-width,642px);height:var(--board-height,412px);transform:translateX(-50%) scale(var(--board-scale));transform-origin:top center;padding:58px 42px 44px; }
 .board-print { position:absolute;color:#482912;font:10px ui-monospace,monospace;letter-spacing:.14em;user-select:none; }
 #board-grid { position:relative;display:grid;grid-template-columns:repeat(18,31px);grid-template-rows:repeat(10,31px);width:558px;height:310px; }
-.track { position:absolute;left:0;width:558px;height:12px;border-top:1px solid #ffe8bf88;border-radius:7px;background:linear-gradient(#ed9b5c,#b95730);box-shadow:0 2px 2px #4a170855;pointer-events:none; }
+.track { position:absolute;left:0;width:100%;height:12px;border-top:1px solid #ffe8bf88;border-radius:7px;background:linear-gradient(#ed9b5c,#b95730);box-shadow:0 2px 2px #4a170855;pointer-events:none; }
 .hole { position:relative;z-index:4;width:17px;height:17px;align-self:center;justify-self:center;border:3px solid #743316;border-radius:50%;padding:0;background:#25160e;box-shadow:inset 0 1px 2px #000,0 0 0 1px #fbbe8160; }
 .hole:hover,.hole.selected { border-color:#fff2d5;box-shadow:0 0 0 4px #a8f5d760; }.hole.power-plus { border-color:#d4f6d4;box-shadow:0 0 0 4px #82f19d66; }.hole.power-minus { border-color:#d8f4ff;box-shadow:0 0 0 4px #82d2f166; }.hole.drilled { border-color:#eee7dc;box-shadow:inset 0 1px 2px #000; }
 .cut-gap { position:absolute;z-index:2;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px #eadfd2,inset 0 1px 3px #ccc;pointer-events:none; }
@@ -86,16 +86,16 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
 .sim-board[data-board="breadboard"] .hole.power-plus { border-color:#e47b6a;box-shadow:0 0 0 3px #db776f50,inset 0 2px 2px #10180f; }
 .sim-board[data-board="breadboard"] .hole.power-minus { border-color:#669dca;box-shadow:0 0 0 3px #5b99cc50,inset 0 2px 2px #10180f; }
 .sim-board[data-board="breadboard"] .board-print,.sim-board[data-board="breadboard"] .axis-label { color:#81897b; }
-.breadboard-rail-zone { position:absolute;left:-8px;width:574px;height:31px;border-radius:5px;background:#f5d5d1;border:1px solid #d8857760;pointer-events:none; }.breadboard-rail-zone.ground { background:#cfdfec;border-color:#729abc60; }
-.breadboard-rail-line { position:absolute;left:0;width:558px;height:3px;background:#d86762;border-radius:3px;pointer-events:none;z-index:1; }.breadboard-rail-line.ground { background:#5c91bc; }
-.breadboard-centre-break { position:absolute;z-index:2;left:-8px;top:146px;width:574px;height:18px;background:linear-gradient(180deg,#d5d7cd,#bfc4b8 45%,#c7ccbf 55%,#e1e3d8);box-shadow:inset 0 1px 2px #fff,inset 0 -1px 3px #999;pointer-events:none;border-radius:3px; }
+.breadboard-rail-zone { position:absolute;left:-8px;width:calc(100% + 16px);height:31px;border-radius:5px;background:#f5d5d1;border:1px solid #d8857760;pointer-events:none; }.breadboard-rail-zone.ground { background:#cfdfec;border-color:#729abc60; }
+.breadboard-rail-line { position:absolute;left:0;width:100%;height:3px;background:#d86762;border-radius:3px;pointer-events:none;z-index:1; }.breadboard-rail-line.ground { background:#5c91bc; }
+.breadboard-centre-break { position:absolute;z-index:2;left:-8px;top:146px;width:calc(100% + 16px);height:18px;background:linear-gradient(180deg,#d5d7cd,#bfc4b8 45%,#c7ccbf 55%,#e1e3d8);box-shadow:inset 0 1px 2px #fff,inset 0 -1px 3px #999;pointer-events:none;border-radius:3px; }
 .sim-board[data-board="breadboard"] .resistor-lead { background:#aeb8b0; }.sim-board[data-board="breadboard"] .meter-lead { border-color:#b59f43; }.sim-board[data-board="breadboard"] .wire-lead { background:#498ccf;box-shadow:0 0 3px #4d8fcf60; }
 .sim-board[data-board="breadboard"] .flow-arrow { border-color:#bb7235;filter:drop-shadow(0 0 2px #fff5); }
 .sim-board[data-board="breadboard"] .supply-pin-label { background:#a63f36;color:#fff2eb;border-color:#dfb9a9; }.sim-board[data-board="breadboard"] .supply-pin-label.negative-pin { background:#416f98;color:#eef6ff;border-color:#a5bac9; }
 
-.breadboard-terminal-area { position:absolute;left:-8px;top:35px;width:574px;height:240px;border:1px solid #c1c8b7;border-radius:6px;background:#e9ece4;pointer-events:none; }
+.breadboard-terminal-area { position:absolute;left:-8px;top:35px;width:calc(100% + 16px);height:240px;border:1px solid #c1c8b7;border-radius:6px;background:#e9ece4;pointer-events:none; }
 .breadboard-contact-group { position:absolute;width:23px;z-index:1;border:1px solid #b7c3ab;border-radius:5px;background:linear-gradient(90deg,#dce3d2,#edf1e8 50%,#dce3d2);box-shadow:inset 0 1px 1px #fff;pointer-events:none; }
-.breadboard-rail-separator { position:absolute;left:-8px;width:574px;height:8px;background:#f6f7f0;border-top:1px solid #c3c8b9;border-bottom:1px solid #fff;z-index:1;pointer-events:none; }
+.breadboard-rail-separator { position:absolute;left:-8px;width:calc(100% + 16px);height:8px;background:#f6f7f0;border-top:1px solid #c3c8b9;border-bottom:1px solid #fff;z-index:1;pointer-events:none; }
 .sim-board[data-board="breadboard"] .hole.rail-positive { border-color:#c57868; }
 .sim-board[data-board="breadboard"] .hole.rail-ground { border-color:#6f94b4; }
 
@@ -108,6 +108,20 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
 .led-body::after { content:"";position:absolute;right:1px;top:5px;width:3px;height:12px;border-radius:2px;background:#292b3380; }
 .led-body.lit { background:var(--led-colour);box-shadow:0 0 calc(7px + 18px * var(--led-level)) var(--led-colour),0 0 calc(14px + 32px * var(--led-level)) color-mix(in srgb,var(--led-colour) 65%,transparent),inset -3px -3px 4px #0004;filter:brightness(calc(.65 + .8 * var(--led-level))); }
 .led-body.overdriven { outline:2px dashed #ffe08c;outline-offset:4px; }.led-pin-mark { position:absolute;font:8px ui-monospace,monospace;color:#fff0ce;background:#2b3227d9;border-radius:3px;padding:1px 3px;transform:translateX(-50%);pointer-events:none; }
+
+.dip-package { position:absolute;pointer-events:none;z-index:9; }.ic-body { position:absolute;left:13px;top:-13px;width:67px;height:212px;border:1px solid #555b62;border-radius:8px;background:linear-gradient(100deg,#303237,#101113 30%,#202125);box-shadow:3px 3px 5px #0008;color:#e4e5dc;padding:0; }.ic-body.wiring-view { opacity:.28; }.ic-body::before { content:"";position:absolute;left:23px;top:-1px;width:20px;height:10px;border:1px solid #53565c;border-top:0;border-radius:0 0 12px 12px;background:#0a0c0e; }.ic-body-label { position:absolute;inset:35% 0;display:grid;place-content:center;text-align:center;white-space:pre-line;font:9px/1.8 ui-monospace,monospace;letter-spacing:.04em;pointer-events:none; }.ic-pin-one { position:absolute;left:7px;top:12px;width:5px;height:5px;border-radius:50%;background:#79818b;pointer-events:none; }.ic-leg { position:absolute;background:linear-gradient(#eef0ef,#879296);border:1px solid #525e65;border-radius:2px;z-index:-1;pointer-events:none; }.ic-pin-number { position:absolute;font:7px ui-monospace,monospace;color:#bec3c5;pointer-events:none; }.dip-package.horizontal .ic-body { left:-13px;top:13px;width:212px;height:67px; }.dip-package.horizontal .ic-body::before { left:-1px;top:23px;width:10px;height:20px;border-top:1px solid #53565c;border-left:0;border-radius:0 12px 12px 0; }.dip-package.horizontal .ic-pin-one { left:12px;top:auto;bottom:7px; }.dip-package.horizontal .ic-body-label { inset:20% 0; }.placement-preview { opacity:.35;pointer-events:none; }.placement-preview * { pointer-events:none !important; }.placement-preview .ic-body { border:2px dashed #b1edc2; }.placement-preview.invalid .ic-body { border-color:#ff7567;background:#69312f; }.connection-preview { position:absolute;left:0;top:0; }.hole.ic-selected-pin { outline:2px solid #c5ddf0;outline-offset:3px; }.ic-pin-table { margin-top:12px;border:1px solid #395247;border-radius:7px;overflow:hidden; }.ic-pin-row { display:grid;grid-template-columns:24px 37px 35px minmax(0,1fr);gap:4px;padding:5px 6px;border-top:1px solid #31463b;color:#c7d7cc;font:9px/1.4 ui-monospace,monospace; }.ic-pin-header { border-top:0;color:#91b69d;background:#112119; }.ic-gate-reading { margin-top:7px !important;font:10px ui-monospace,monospace; }.ic-fields select,#dip-placement-orientation { width:100%;margin:6px 0 10px;padding:8px 4px;border:1px solid #516a57;border-radius:7px;background:#0d1b15;color:#dae9d3;font-size:11px; }.ic-link { color:var(--cyan); }
+
+body[data-mode="build"][data-active-tool="select"] [data-component],body[data-mode="build"][data-active-tool="select"] .hole.ic-contact { cursor:grab;touch-action:none; }
+body[data-mode="build"][data-active-tool="select"] .meter-lead,body[data-mode="build"][data-active-tool="select"] .meter-probe { pointer-events:auto; }
+body.moving-component,body.moving-component * { cursor:grabbing !important;user-select:none !important; }
+.drag-origin { opacity:.22; }
+.move-preview { position:absolute;left:0;top:0;z-index:30;opacity:.8;pointer-events:none;--move-colour:#a8efc5; }
+.move-preview,.move-preview * { pointer-events:none !important; }
+.move-preview.invalid { --move-colour:#ff7869; }
+.move-preview .inspected,.move-preview .ic-body { outline:2px dashed var(--move-colour);outline-offset:3px; }
+.move-pin { position:absolute;width:23px;height:23px;border:2px solid var(--move-colour);border-radius:50%;background:#a8efc52b;transform:translate(-50%,-50%);box-shadow:0 0 0 2px #12271a55; }
+.move-preview.invalid .move-pin { background:#ff786933; }
+.board-size-fields { display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px; }.board-size-fields label { font-size:11px;color:#b5cbb9; }.board-size-fields input { width:100%;margin-top:5px;padding:8px;border:1px solid #516a57;border-radius:7px;color:#efffdd;background:#0d1b15;font:13px ui-monospace,monospace; }
 </style></head>
 <body data-mode="build">
 <header class="app-header">
@@ -130,9 +144,11 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         <button class="tool-button" data-tool="led" aria-pressed="false"><span class="tool-symbol">◉</span>LED</button>
         <button class="tool-button" data-tool="diode" aria-pressed="false"><span class="tool-symbol">▸│</span>Diode</button>
         <button class="tool-button" data-tool="switch" aria-pressed="false"><span class="tool-symbol">⏼</span>Switch</button>
+        <button class="tool-button" data-tool="ic" aria-pressed="false"><span class="tool-symbol">▤</span>IC</button>
       </div>
+      <div id="dip-placement-controls" hidden><label class="field-label" for="dip-placement-orientation">Package orientation</label><select id="dip-placement-orientation"><option value="vertical">Vertical · notch at top</option><option value="horizontal">Horizontal · notch at left</option></select><p class="fine-print">Hover to preview. Click once at the top-left pin position to place every leg. Start with a DIP-14 outline. Choose a chip model or unassigned DIP-16 in Properties to set its size.</p></div>
       <div class="small-actions"><button id="undo-button" class="action-button">↶ Undo</button><button id="clear-button" class="action-button danger-subtle">Clear board</button></div>
-      <p class="fine-print">Select any component to edit it. For LEDs, click the anode (+) hole first.</p>
+      <p class="fine-print">Select to edit or drag a part. Moves snap to holes. For LEDs, place the anode (+) first.</p>
     </section>
     <section class="panel" data-view="simulation">
       <div class="section-head"><span class="eyebrow">SIMULATE</span><span class="quiet-label">01</span></div>
@@ -154,9 +170,9 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     <section class="panel project-panel">
       <div class="section-head"><span class="eyebrow">PROJECT</span><span class="quiet-label">JSON</span></div>
       <div class="small-actions"><button id="save-project" class="action-button">↓ Save circuit</button><button id="load-project" class="action-button">↑ Load circuit</button></div>
-      <input id="project-file" type="file" accept=".json,application/json" hidden>
+      <button id="export-board-png" class="action-button full-width">↓ Export board PNG</button><input id="project-file" type="file" accept=".json,application/json" hidden>
       <p class="fine-print" id="autosave-note">Saved automatically in this browser.</p>
-      <details class="project-details"><summary>Examples &amp; export</summary><div class="small-actions"><button id="series-example" class="action-button">Series + cuts</button><button id="parallel-example" class="action-button">Parallel</button></div><button id="led-example" class="action-button full-width">LED + resistor example</button><button id="diode-example" class="action-button full-width">Diode + resistor example</button><button id="switch-example" class="action-button full-width">Switch + LED example</button><button id="export-netlist" class="action-button full-width">Export DC SPICE netlist</button></details>
+      <details class="project-details"><summary>Examples &amp; export</summary><p class="fine-print">Examples use an 18 × 10 board. Undo returns to your board.</p><div class="small-actions"><button id="series-example" class="action-button">Series + cuts</button><button id="parallel-example" class="action-button">Parallel</button></div><button id="led-example" class="action-button full-width">LED + resistor example</button><button id="diode-example" class="action-button full-width">Diode + resistor example</button><button id="switch-example" class="action-button full-width">Switch + LED example</button><button id="ic-example" class="action-button full-width">74x08 AND gate example</button><button id="dff-example" class="action-button full-width">D flip-flop example</button><button id="jk-example" class="action-button full-width">JK toggle example</button><button id="counter-example" class="action-button full-width">Decade counter example</button><button id="export-netlist" class="action-button full-width">Export DC SPICE netlist</button></details>
     </section>
   </aside>
   <section class="board-column" aria-labelledby="board-heading">
@@ -166,7 +182,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       <div id="sim-board" class="sim-board" aria-label="Interactive stripboard">
         <div id="board-stage" class="board-stage"><div class="board-inner"><span id="board-face-label" class="board-print" style="top:19px;left:42px">18 × 10 / COPPER SIDE</span><span class="board-print" style="bottom:16px;right:42px">2.54 mm PITCH</span><div id="board-grid" aria-label="Stripboard grid"></div><div id="component-layer" class="component-layer" aria-label="Placed components"></div></div></div>
       </div>
-      <div class="board-footer"><div class="legend"><span><i class="legend-dot positive"></i> Supply +</span><span><i class="legend-dot negative"></i> 0 V</span><span id="board-feature-legend"><i class="legend-dot cut"></i> Track cut</span></div><span class="quiet-label">18 × 10 holes</span></div>
+      <div class="board-footer"><div class="legend"><span><i class="legend-dot positive"></i> Supply +</span><span><i class="legend-dot negative"></i> 0 V</span><span id="board-feature-legend"><i class="legend-dot cut"></i> Track cut</span></div><span id="board-size-label" class="quiet-label">18 × 10 holes</span></div>
     </div>
     <div class="workspace-footnote" data-view="build"><span><span id="board-wiring-footnote">Two clicks connect leads. Crossing lines do not join.</span></span><span>Esc: deselect · Ctrl / ⌘ Z: undo</span></div>
     <div class="workspace-footnote" data-view="simulation"><span>Live DC operating point · click switches to open or close.</span><span>First lead → second lead</span></div>
@@ -174,7 +190,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
   <aside class="right-column side-column" aria-label="Properties and readings">
     <section id="properties-panel" class="panel properties-panel" data-view="build">
       <div class="section-head"><span class="eyebrow">PROPERTIES</span><button id="deselect-button" class="text-button">Deselect</button></div>
-      <div class="board-configuration"><label class="field-label" for="board-type-select">Board type</label><select id="board-type-select"><option value="stripboard">Stripboard</option><option value="breadboard">Breadboard</option></select><label id="breadboard-break-row" class="toggle-row" hidden><span>Centre break</span><input id="breadboard-break-input" type="checkbox"></label><p id="board-connection-note" class="fine-print">Horizontal copper rows. Supply terminals can be moved.</p></div>
+      <div class="board-configuration"><label class="field-label" for="board-type-select">Board type</label><select id="board-type-select"><option value="stripboard">Stripboard</option><option value="breadboard">Breadboard</option></select><div class="board-size-fields"><label for="board-rows-input">Rows<input id="board-rows-input" type="number" min="4" max="30" step="1" value="10"></label><label for="board-cols-input">Columns<input id="board-cols-input" type="number" min="4" max="50" step="1" value="18"></label></div><button id="resize-board" class="action-button full-width">Apply board size</button><p class="fine-print">Size in holes · 4–30 rows, 4–50 columns. Move parts clear before shrinking. Breadboard parts follow the centre split; rail leads follow their rails. Undo restores a resize.</p><label id="breadboard-break-row" class="toggle-row" hidden><span>Centre break</span><input id="breadboard-break-input" type="checkbox"></label><p id="board-connection-note" class="fine-print">Horizontal copper rows. Supply terminals can be moved.</p></div>
       <div class="property-identity"><span id="property-symbol" class="property-symbol">⎓</span><div><span id="property-type" class="quiet-label">BENCH SUPPLY</span><h2 id="property-title">Power supply</h2></div></div>
       <p id="property-description" class="panel-caption">Select a component on the board to edit its properties.</p>
       <div id="supply-properties">
@@ -188,7 +204,8 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         <div id="led-properties" hidden><label class="field-label" for="led-colour-select">LED colour</label><select id="led-colour-select"><option value="red">Red</option><option value="green">Green</option><option value="yellow">Yellow</option><option value="blue">Blue</option><option value="white">White</option></select><label class="field-label" for="led-forward-input">Forward threshold</label><div class="unit-field"><input id="led-forward-input" type="number" min="0.1" max="10" step="any" value="2"><span>V</span></div><button id="reverse-led" class="action-button full-width">⇄ Reverse polarity</button><p id="led-operating-state" class="fine-print"></p></div>
         <div id="diode-properties" hidden><label class="field-label" for="diode-forward-input">Forward threshold</label><div class="unit-field"><input id="diode-forward-input" type="number" min="0.1" max="10" step="any" value="0.7"><span>V</span></div><button id="reverse-diode" class="action-button full-width">⇄ Reverse polarity</button><p id="diode-operating-state" class="fine-print"></p></div>
         <div id="switch-properties" hidden><label class="field-label">Switch state</label><button id="toggle-selected-switch" class="action-button full-width" aria-pressed="false">Open · click to close</button><p class="fine-print">Click the switch on the board or use its readings card in Simulate mode.</p></div>
-        <div class="terminal-cards"><div><span id="component-a-label">FIRST LEAD</span><strong id="component-a-location">—</strong></div><div><span id="component-b-label">SECOND LEAD</span><strong id="component-b-location">—</strong></div></div>
+        <div id="ic-properties" class="ic-fields" hidden><label class="field-label" for="ic-model-select">Chip model</label><select id="ic-model-select"><option value="">Unassigned package</option></select><label class="field-label" for="ic-orientation-select">Package orientation</label><select id="ic-orientation-select"><option value="vertical">Vertical · notch at top</option><option value="horizontal">Horizontal · notch at left</option></select><p id="ic-power-state" class="fine-print"></p><p id="ic-function-note" class="fine-print"></p><a id="ic-datasheet-link" class="ic-link fine-print" target="_blank" rel="noopener">Model reference datasheet ↗</a><div id="ic-pin-properties"></div></div>
+        <div id="component-terminal-cards" class="terminal-cards"><div><span id="component-a-label">FIRST LEAD</span><strong id="component-a-location">—</strong></div><div><span id="component-b-label">SECOND LEAD</span><strong id="component-b-location">—</strong></div></div>
         <p id="component-model-note" class="fine-print"></p>
         <button id="delete-selected" class="action-button danger-subtle full-width">Remove component</button>
       </div>
@@ -205,14 +222,14 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       <div class="meter-heading"><h3>Component readings</h3></div><div id="component-readings"></div>
       <p class="fine-print">Signed readings follow first lead → second lead. Component power is shown in mW.</p>
     </section>
-    <details class="panel model-details" data-view="simulation"><summary>About the simulation</summary><p class="fine-print">DC resistors, LEDs, diodes, ideal switches, copper, wire links and meters. Open switches disconnect their leads; closed switches have zero resistance. Ammeters close a circuit in series; voltmeters draw no current. Ideal parallel conductors can have indeterminate current splits. LEDs and diodes use approximate forward thresholds with 20 Ω and 1 Ω slope resistance respectively; reverse current is blocked. Diodes default to 0.7 V. No reverse breakdown, AC, transient, damage or thermal models.</p></details>
+    <details class="panel model-details" data-view="simulation"><summary>About the simulation</summary><p class="fine-print">DC resistors, LEDs, diodes, ideal switches, copper, wire links and meters. Open switches disconnect their leads; closed switches have zero resistance. Ammeters close a circuit in series; voltmeters draw no current. Ideal parallel conductors can have indeterminate current splits. LEDs and diodes use approximate forward thresholds with 20 Ω and 1 Ω slope resistance respectively; reverse current is blocked. Diodes default to 0.7 V. The gate and flip-flop ICs use an HC-style electrical approximation: high-impedance inputs, 2–6 V supply, approximate LOW/HIGH thresholds at 30%/70% of VCC (25%/75% near 2 V), and 50 Ω output drivers. Floating inputs read X; undefined or unpowered outputs are undriven. The 74x90 uses LS-style input thresholds (LOW ≤0.8 V, HIGH ≥2 V) and a 4.75–5.25 V supply; its output drivers are approximate. Flip-flops and counters respond to wired clock edges in Simulate mode and store their state. Reset/preset inputs act immediately in either mode. Power loss clears stored state to X. No propagation delay, setup/hold timing, switch bounce, input clamp diodes, quiescent IC current, reverse breakdown, AC, transient, damage or thermal models. <a class="ic-link" href="https://www.ti.com/lit/ds/symlink/sn74hc08.pdf" target="_blank" rel="noopener">74HC08 datasheet</a>.</p></details>
   </aside>
 </main>
-<footer class="status-bar"><span id="mode-status" class="mode-status">BUILD</span><p id="tool-message" aria-live="polite">Select a component or choose a building tool.</p><span class="quiet-label">LOCAL WORKBENCH</span></footer>
+<footer class="status-bar"><span id="mode-status" class="mode-status">BUILD</span><p id="tool-message" aria-live="polite">Select a component or choose a building tool.</p><span class="quiet-label">V1.0 / LOCAL WORKBENCH</span></footer>
 <script>
 
-    const ROWS = 10;
-    const COLS = 18;
+    let ROWS = 10;
+    let COLS = 18;
     const PITCH = 31;
     const HOLE_OFFSET = PITCH / 2;
     let SUPPLY_VOLTAGE = 9;
@@ -251,11 +268,381 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     const DIODE_SLOPE_RESISTANCE = 1;
     const STORAGE_KEY = 'stripboard-workbench-v2';
 
+    const BOARD_LIMITS={minRows:4,maxRows:30,minCols:4,maxCols:50};
+    const boardWidth=()=>COLS*PITCH+84,boardHeight=()=>ROWS*PITCH+102;
+    const breadboardSplit=()=>Math.floor(ROWS/2);
+    const breadboardBanks=()=>breadboardBreak?[[1,breadboardSplit()-1],[breadboardSplit(),ROWS-2]]:[[1,ROWS-2]];
+    function signalRowLabel(row){let n=row,label='';while(n>0){n--;label=String.fromCharCode(97+n%26)+label;n=Math.floor(n/26);}return label;}
+    function updateBoardGeometry(){
+      const board=document.getElementById('sim-board');board.style.setProperty('--board-width',`${boardWidth()}px`);board.style.setProperty('--board-height',`${boardHeight()}px`);
+      grid.style.width=`${COLS*PITCH}px`;grid.style.height=`${ROWS*PITCH}px`;
+      grid.style.gridTemplateColumns=`repeat(${COLS},${PITCH}px)`;grid.style.gridTemplateRows=`repeat(${ROWS},${PITCH}px)`;
+      layer.style.width=`${COLS*PITCH}px`;layer.style.height=`${ROWS*PITCH}px`;
+    }
+    function resizeBoard(rows,cols){
+      if(workbenchMode!=='build')return;
+      rows=Number(rows);cols=Number(cols);
+      const resetInputs=()=>{document.getElementById('board-rows-input').value=ROWS;document.getElementById('board-cols-input').value=COLS;};
+      if(!Number.isInteger(rows)||!Number.isInteger(cols)||rows<BOARD_LIMITS.minRows||rows>BOARD_LIMITS.maxRows||cols<BOARD_LIMITS.minCols||cols>BOARD_LIMITS.maxCols){resetInputs();showMessage('Use 4–30 rows and 4–50 columns, in whole holes.');return;}
+      if(rows===ROWS&&cols===COLS){resetInputs();return;}
+      finishComponentDrag(null,true);
+      const before=boardData(),data={...before,rows,columns:cols};
+      const bread=boardType==='breadboard',oldGround=ROWS-1,shift=bread?Math.floor(rows/2)-breadboardSplit():0;
+      if(bread&&rows!==ROWS&&components.some(c=>isIC(c)&&dipPins(c).some(p=>[0,oldGround].includes(pointFromId(p.point).row)))){resetInputs();showMessage('Move IC legs off the power rails before changing breadboard rows.');return;}
+      const newRow=p=>!bread?p.row:p.row===0?0:p.row===oldGround?rows-1:p.row+shift;
+      // Keep signal contacts on the same side of the centre split. ICs move
+      // intact; ordinary leads on supply rails follow their fixed rails.
+      for(const c of [...components,...meters]){
+        const points=isIC(c)?dipPins(c).map(p=>p.point):[c.a,c.b];
+        if(points.some(id=>{const p=pointFromId(id),row=newRow(p),signal=bread&&p.row>0&&p.row<oldGround;return row<0||row>=rows||p.col>=cols||signal&&(row===0||row===rows-1);})){resetInputs();showMessage(`${componentLabel(c)} would be outside that size. Move or remove it first.`);return;}
+      }
+      const mapPoint=id=>{const p=pointFromId(id);return pointId(newRow(p),p.col);};
+      data.components=before.components.map(c=>({...c,a:mapPoint(c.a),b:mapPoint(c.b)}));
+      data.meters=before.meters.map(c=>({...c,a:mapPoint(c.a),b:mapPoint(c.b)}));
+      const fits=id=>{const p=pointFromId(id);return p.row<rows&&p.col<cols;};
+      data.cuts=before.cuts.filter(fits);
+      const clamp=id=>{const p=pointFromId(id);return pointId(Math.min(p.row,rows-1),Math.min(p.col,cols-1));};
+      const terminals=t=>{const positiveTerminal=clamp(t.positiveTerminal);let negativeTerminal=clamp(t.negativeTerminal);const a=pointFromId(positiveTerminal),b=pointFromId(negativeTerminal);if(negativeTerminal===positiveTerminal||a.row===b.row&&pointFromId(t.positiveTerminal).row!==pointFromId(t.negativeTerminal).row)negativeTerminal=pointId(a.row===0?rows-1:0,b.col);return {positiveTerminal,negativeTerminal};};
+      data.stripboardTerminals=terminals(before.stripboardTerminals);
+      const supply=bread?{positiveTerminal:'0-0',negativeTerminal:pointId(rows-1,0)}:terminals(before);
+      Object.assign(data,supply);
+      try{validateBoard(data);}catch(err){resetInputs();showMessage(`Cannot resize: ${err.message}`);return;}
+      actionHistory.push({type:'snapshot',board:before});const selection=selectedComponent;restoreBoard(data);
+      selectedComponent=selection;renderProperties();
+      showMessage(`${cols} × ${rows} board ready. Undo restores the previous size.${bread&&rows!==before.rows?' Signal contacts followed the centre split; ground connections followed the bottom rail.':''}`);
+    }
+
     const grid = document.getElementById("board-grid");
     const layer = document.getElementById("component-layer");
     const message = document.getElementById("tool-message");
 
     const pointId = (row, col) => `${row}-${col}`;
+
+    // Package geometry is independent of the selected IC model.
+    const IC_MODELS = {
+      '74x00': {name:'74x00',description:'Quad 2-input NAND',op:'NAND',pins:['1A','1B','1Y','2A','2B','2Y','GND','3Y','3A','3B','4Y','4A','4B','VCC'],gates:[{a:1,b:2,y:3},{a:4,b:5,y:6},{a:9,b:10,y:8},{a:12,b:13,y:11}]},
+      '74x02': {name:'74x02',description:'Quad 2-input NOR',op:'NOR',pins:['1Y','1A','1B','2Y','2A','2B','GND','3A','3B','3Y','4A','4B','4Y','VCC'],gates:[{a:2,b:3,y:1},{a:5,b:6,y:4},{a:8,b:9,y:10},{a:11,b:12,y:13}]},
+      '74x04': {name:'74x04',description:'Hex inverter',op:'NOT',pins:['1A','1Y','2A','2Y','3A','3Y','GND','4Y','4A','5Y','5A','6Y','6A','VCC'],gates:[{a:1,y:2},{a:3,y:4},{a:5,y:6},{a:9,y:8},{a:11,y:10},{a:13,y:12}]},
+      '74x08': {name:'74x08',description:'Quad 2-input AND',op:'AND',pins:['1A','1B','1Y','2A','2B','2Y','GND','3Y','3A','3B','4Y','4A','4B','VCC'],gates:[{a:1,b:2,y:3},{a:4,b:5,y:6},{a:9,b:10,y:8},{a:12,b:13,y:11}]},
+      '74x10': {name:'74x10',description:'Triple 3-input NAND',op:'NAND',pins:['1A','1B','2A','2B','2C','2Y','GND','3Y','3A','3B','3C','1Y','1C','VCC'],gates:[{a:1,b:2,c:13,y:12},{a:3,b:4,c:5,y:6},{a:9,b:10,c:11,y:8}]},
+      '74x32': {name:'74x32',description:'Quad 2-input OR',op:'OR',pins:['1A','1B','1Y','2A','2B','2Y','GND','3Y','3A','3B','4Y','4A','4B','VCC'],gates:[{a:1,b:2,y:3},{a:4,b:5,y:6},{a:9,b:10,y:8},{a:12,b:13,y:11}]},
+      '74x74': {name:'74x74',description:'Dual D flip-flop · rising edge',kind:'dff',pins:['1/CLR','1D','1CLK','1/PRE','1Q','1Q̅','GND','2Q̅','2Q','2/PRE','2CLK','2D','2/CLR','VCC'],units:[{clear:1,d:2,clock:3,pre:4,q:5,qb:6},{clear:13,d:12,clock:11,pre:10,q:9,qb:8}],notes:'Capture D on a LOW→HIGH clock edge. /PRE and /CLR act immediately when LOW. Both LOW forces Q and Q̅ HIGH; simultaneous release is undefined. Use a wired reset or preset to initialise.'},
+      '74HC76': {name:'74HC76',description:'Dual JK flip-flop · falling edge · DIP-16',kind:'jkff',vcc:5,gnd:13,pins:['1CLK','1/PRE','1/CLR','1J','VCC','2CLK','2/PRE','2/CLR','2J','2Q̅','2Q','2K','GND','1Q̅','1Q','1K'],units:[{clock:1,pre:2,clear:3,j:4,q:15,qb:14,k:16},{clock:6,pre:7,clear:8,j:9,q:11,qb:10,k:12}],notes:'ST M74HC76-style logic. On HIGH→LOW: JK=00 hold, 01 reset, 10 set, 11 toggle. /PRE and /CLR are asynchronous and active LOW. Both LOW forces both outputs HIGH; simultaneous release is undefined.'},
+      '74x86': {name:'74x86',description:'Quad 2-input XOR',op:'XOR',pins:['1A','1B','1Y','2A','2B','2Y','GND','3Y','3A','3B','4Y','4A','4B','VCC'],gates:[{a:1,b:2,y:3},{a:4,b:5,y:6},{a:9,b:10,y:8},{a:12,b:13,y:11}]},
+      '74x90': {name:'74x90',description:'Decade counter · LS-style inputs',kind:'counter90',family:'LS',vcc:5,gnd:10,minV:4.75,maxV:5.25,pins:['CKB','R0(1)','R0(2)','NC','VCC','R9(1)','R9(2)','QC','QB','GND','QD','QA','NC','CKA'],outputPins:[12,9,8,11],inputPins:[1,2,3,6,7,14],notes:'Falling-edge divide-by-2 (CKA) and divide-by-5 (CKB) sections. Wire QA pin 12 to CKB pin 1 for BCD 0–9 counting. R0(1) AND R0(2) HIGH clears to 0; R9(1) AND R9(2) HIGH sets to 9 and takes priority. VCC=pin 5, GND=pin 10; NC pins stay isolated.'}
+    };
+    for(const m of Object.values(IC_MODELS)){
+      m.kind=m.kind||'gates';m.family=m.family||'HC';m.vcc=m.vcc||14;m.gnd=m.gnd||7;m.minV=m.minV||2;m.maxV=m.maxV||6;m.packagePins=m.pins.length;
+      if(m.gates){m.gates=m.gates.map(g=>({...g,inputs:[g.a,g.b,g.c].filter(Boolean)}));m.inputPins=m.gates.flatMap(g=>g.inputs);m.outputPins=m.gates.map(g=>g.y);}
+      if(m.units){m.inputPins=m.units.flatMap(u=>[u.pre,u.clear,u.clock,u.d,u.j,u.k].filter(Boolean));m.outputPins=m.units.flatMap(u=>[u.q,u.qb]);}
+      m.datasheet=m.kind==='jkff'?'https://media.digikey.com/pdf/Data%20Sheets/ST%20Microelectronics%20PDFS/M74HC76.pdf':`https://www.ti.com/lit/ds/symlink/sn74${m.family.toLowerCase()}${m.name.slice(-2)}.pdf`;
+    }
+    function isIC(c){return c?.type==='dip14'||c?.type==='dip16';}
+    function packagePins(c){return c.type==='dip16'?16:14;}
+    function packageName(c){return `DIP-${packagePins(c)}`;}
+    function cloneLogic(value){return value?JSON.parse(JSON.stringify(value)):null;}
+    function logicSnapshot(){return components.filter(isIC).map(c=>({id:c.id,memory:cloneLogic(c.memory)}));}
+    function restoreLogicSnapshot(snapshot){for(const saved of snapshot||[]){const c=components.find(c=>c.id===saved.id);if(c){if(saved.memory)c.memory=cloneLogic(saved.memory);else delete c.memory;}}}
+    function blankMemory(model){return {version:1,model, powered:false,q:['X','X'],qb:['X','X'],clocks:[null,null],illegal:[false,false],qa:'X',divide5:null};}
+    function gateValue(op,inputs){
+      let result;
+      if(op==='NOT')return inputs[0]==='X'?'X':inputs[0]==='1'?'0':'1';
+      if(op==='AND'||op==='NAND')result=inputs.includes('0')?'0':inputs.includes('X')?'X':'1';
+      else if(op==='OR'||op==='NOR')result=inputs.includes('1')?'1':inputs.includes('X')?'X':'0';
+      else result=inputs.includes('X')?'X':String(inputs.filter(v=>v==='1').length%2);
+      return op==='NAND'||op==='NOR'?(result==='X'?'X':result==='1'?'0':'1'):result;
+    }
+
+    const IC_OUTPUT_RESISTANCE = 50; // Educational DC output-driver approximation.
+    let dipOrientation = 'vertical', hoverPoint = null;
+    function dipPins(c) {
+      const p=pointFromId(c.a),horizontal=c.orientation==='horizontal';
+      return Array.from({length:packagePins(c)},(_,i)=>{
+        const number=i+1,left=number<=packagePins(c)/2,along=left?number-1:packagePins(c)-number;
+        return {number,point:pointId(p.row+(horizontal?(left?3:0):along),p.col+(horizontal?along:(left?0:3)))};
+      });
+    }
+    function dipBounds(c) {const p=pointFromId(c.a);return {row:p.row,col:p.col,rows:c.orientation==='horizontal'?4:packagePins(c)/2,cols:c.orientation==='horizontal'?packagePins(c)/2:4};}
+    function dipPlacementProblem(c,list=components,rows=ROWS,cols=COLS) {
+      const b=dipBounds(c);
+      if(b.row<0||b.col<0||b.row+b.rows>rows||b.col+b.cols>cols)return `The whole ${packageName(c)} must fit on the board.`;
+      for(const other of list.filter(o=>isIC(o)&&o.id!==c.id)){
+        const d=dipBounds(other);
+        if(b.row<d.row+d.rows&&b.row+b.rows>d.row&&b.col<d.col+d.cols&&b.col+b.cols>d.col)return 'This package overlaps another IC package.';
+      }
+      return '';
+    }
+    function placeDIP(id) {
+      const c={id:`${Date.now()}-${Math.random().toString(16).slice(2)}`,type:'dip14',a:id,orientation:dipOrientation,model:''};
+      const problem=dipPlacementProblem(c);if(problem){showMessage(problem);return;}
+      c.b=dipPins(c)[packagePins(c)/2-1].point;components.push(c);actionHistory.push({type:'component',id:c.id});
+      selectedComponent=c.id;firstPoint=null;hoverPoint=null;setActiveTool('select');render();
+      showMessage(`${packageName(c)} placed. Choose its model on the right, then wire its labelled power pins.`);
+    }
+    function drawDIP(c,preview=false,valid=true) {
+      const root=document.createElement('div'),p=pointFromId(c.a),horizontal=c.orientation==='horizontal';
+      if(!preview)root.dataset.component=c.id;
+      root.className=`dip-package ${horizontal?'horizontal':''} ${preview?'placement-preview':''} ${valid?'':'invalid'}`;
+      root.style.left=`${p.col*PITCH+HOLE_OFFSET}px`;root.style.top=`${p.row*PITCH+HOLE_OFFSET}px`;
+      if(preview)root.setAttribute('aria-hidden','true');
+      const body=document.createElement('button');body.type='button';body.className='ic-body';
+      body.classList.toggle('inspected',!preview&&selectedComponent===c.id);
+      body.classList.toggle('wiring-view',!preview&&workbenchMode==='build'&&activeTool!=='select');
+      body.style.pointerEvents=preview||workbenchMode==='build'&&activeTool!=='select'?'none':'auto';
+      body.disabled=preview;body.tabIndex=preview?-1:0;
+      body.title=preview?`${packageName(c)} placement preview`:`${componentLabel(c)} · ${c.model||`Unassigned ${packageName(c)}`} · click to inspect`;
+      body.setAttribute('aria-label',body.title);
+      const length=(packagePins(c)/2-1)*PITCH+26;body.style[horizontal?'width':'height']=`${length}px`;
+      const label=document.createElement('span');label.className='ic-body-label';label.textContent=`${preview?packageName(c):componentLabel(c)}\n${c.model||packageName(c)}`;body.appendChild(label);
+      const dot=document.createElement('span');dot.className='ic-pin-one';body.appendChild(dot);
+      body.addEventListener('click',()=>{if(!preview)selectComponent(c.id);});root.appendChild(body);
+      for(const pin of dipPins(c)){
+        const q=pointFromId(pin.point),x=(q.col-p.col)*PITCH,y=(q.row-p.row)*PITCH;
+        const leg=document.createElement('span');leg.className='ic-leg';
+        const number=document.createElement('span');number.className='ic-pin-number';number.textContent=pin.number;
+        if(horizontal){leg.style.left=`${x-3}px`;leg.style.top=`${y===0?0:y-13}px`;leg.style.width='6px';leg.style.height='13px';number.style.left=`${x-4}px`;number.style.top=`${y===0?19:y-26}px`;}
+        else{leg.style.left=`${x===0?0:x-13}px`;leg.style.top=`${y-3}px`;leg.style.width='13px';leg.style.height='6px';number.style.left=`${x===0?19:x-26}px`;number.style.top=`${y-5}px`;}
+        root.append(leg,number);
+      }
+      return root;
+    }
+    function renderPlacementPreview() {
+      layer.querySelectorAll('.placement-preview').forEach(e=>e.remove());
+      if(workbenchMode!=='build'||!hoverPoint)return;
+      if(activeTool==='ic'){
+        const c={type:'dip14',id:'preview',a:hoverPoint,orientation:dipOrientation,model:''},problem=dipPlacementProblem(c);
+        layer.appendChild(drawDIP(c,true,!problem));
+        document.getElementById('board-hint').textContent=problem||`${packageName(c)} preview · top-left anchor ${locationLabel(hoverPoint)} · click once to place.`;
+      }else if(firstPoint&&firstPoint!==hoverPoint&&['wire','resistor','led','diode','switch','ammeter','voltmeter'].includes(activeTool)){
+        const preview=document.createElement('div');preview.className='placement-preview connection-preview';
+        const drawn=drawLine(firstPoint,hoverPoint,'wire-lead');drawn.line.style.pointerEvents='none';preview.appendChild(drawn.line);layer.appendChild(preview);
+      }
+    }
+    function editIC(changes) {
+      const c=components.find(c=>c.id===selectedComponent&&isIC(c));if(!c||workbenchMode!=='build')return;
+      const next={...c,...changes};if(changes.model&&IC_MODELS[changes.model])next.type=IC_MODELS[changes.model].packagePins===16?'dip16':'dip14';const problem=dipPlacementProblem(next);if(problem){showMessage(problem);renderProperties();return;}
+      actionHistory.push({type:'ic-edit',id:c.id,previous:{type:c.type,model:c.model,orientation:c.orientation,b:c.b,memory:cloneLogic(c.memory)}});
+      if(changes.model!==undefined&&changes.model!==c.model)delete c.memory;Object.assign(c,{type:next.type},changes);c.b=dipPins(c)[packagePins(c)/2-1].point;render();
+    }
+    function icPinVoltage(c,number) {return solution.status==='short'||solution.status==='error'?null:getVoltage(dipPins(c)[number-1].point,latestNodes);}
+    function logicLevel(voltage,ground,supply,model={family:'HC',minV:2,maxV:6}) {
+      if(!Number.isFinite(voltage)||!Number.isFinite(ground)||!Number.isFinite(supply)||supply<model.minV-1e-8||supply>model.maxV+1e-8)return 'X';
+      const v=voltage-ground;
+      if(v<-.001||v>supply+.001)return 'X';
+      if(model.family==='LS')return v<=.8+1e-8?'0':v>=2-1e-8?'1':'X';
+      const low=supply<=2.01?.25:.30,high=supply<=2.01?.75:.70;
+      return v<=low*supply+1e-8?'0':v>=high*supply-1e-8?'1':'X';
+    }
+    function evaluateIC(c) {
+      const model=IC_MODELS[c.model];
+      if(!model)return {powered:false,state:'Unassigned package',supply:null,gates:[],units:[],count:null,pins:dipPins(c).map(p=>({...p,name:`Pin ${p.number}`,voltage:icPinVoltage(c,p.number),logic:'—'}))};
+      const vcc=icPinVoltage(c,model.vcc),ground=icPinVoltage(c,model.gnd),supply=vcc!==null&&ground!==null?vcc-ground:null;
+      const powered=supply!==null&&supply>=model.minV-1e-8&&supply<=model.maxV+1e-8;
+      const state=solution.status==='short'?'Undefined · supply short':solution.status==='error'?'Undefined · circuit error':powered?'Powered':supply===null?'Power pins floating':supply<0?'Reversed supply':supply<model.minV?'Unpowered / supply too low':'Supply too high';
+      const pins=dipPins(c).map(p=>({...p,name:model.pins[p.number-1],voltage:icPinVoltage(c,p.number),logic:powered?logicLevel(icPinVoltage(c,p.number),ground,supply,model):'X'}));
+      const level=n=>pins[n-1].logic,mem=c.memory||blankMemory(c.model);
+      let gates=[],units=[],count=null;
+      if(model.kind==='gates')gates=model.gates.map((g,i)=>{
+        const inputs=g.inputs.map(level);return {...g,number:i+1,inputs,inputA:inputs[0],inputB:inputs[1],op:model.op,output:powered?gateValue(model.op,inputs):'X'};
+      });
+      else if(model.units){
+        units=model.units.map((u,i)=>({...u,number:i+1,clockValue:level(u.clock),preValue:level(u.pre),clearValue:level(u.clear),data:u.d?level(u.d):undefined,jValue:u.j?level(u.j):undefined,kValue:u.k?level(u.k):undefined,qValue:powered?mem.q[i]:'X',qbValue:powered?mem.qb[i]:'X',illegal:mem.illegal[i]}));
+        gates=units.flatMap(u=>[{y:u.q,number:u.number,label:`FF${u.number} Q`,output:u.qValue},{y:u.qb,number:u.number,label:`FF${u.number} Q̅`,output:u.qbValue}]);
+      }else{
+        const qa=powered?mem.qa:'X',b=powered?mem.divide5:null;
+        gates=model.outputPins.map((y,i)=>({y,number:i+1,label:model.pins[y-1],output:i===0?qa:b===null?'X':String((b>>(i-1))&1)}));
+        count=qa!=='X'&&b!==null?Number(qa)+2*b:null;
+      }
+      return {powered,state,supply,gates,pins,units,count};
+    }
+    function icDriverDevices(chips,states) {
+      const result=[];
+      chips.forEach((c,i)=>{
+        const model=IC_MODELS[c.model],s=states[i];if(!model||!s.powered)return;
+        const pins=dipPins(c);
+        for(const g of s.gates)if(g.output!=='X')result.push({id:`ic:${c.id}:${g.y}`,type:'resistor',a:pins[g.y-1].point,b:pins[(g.output==='1'?model.vcc:model.gnd)-1].point,resistance:IC_OUTPUT_RESISTANCE,owner:c.id,outputPin:g.y,logic:g.output,model:c.model,label:`${componentLabel(c)} pin ${g.y}`,netlistName:`R_${componentLabel(c)}_Y${g.y}`});
+      });
+      return result;
+    }
+    function mergeBit(values){return values.every(v=>v===values[0])?values[0]:'X';}
+    function possibleBit(v){return v==='X'?[0,1]:[Number(v)];}
+    function stepMemory(c,state) {
+      const model=IC_MODELS[c.model],old=c.memory||blankMemory(c.model),next=cloneLogic(old);
+      if(!state.powered)return blankMemory(c.model);
+      next.powered=true;const level=n=>state.pins[n-1].logic,allowEdge=workbenchMode==='simulation';
+      if(model.units){
+        model.units.forEach((u,i)=>{
+          const pre=level(u.pre),clear=level(u.clear),clock=level(u.clock),previous=old.powered?old.clocks[i]:null;
+          const edge=allowEdge&&(model.kind==='dff'?previous==='0'&&clock==='1':previous==='1'&&clock==='0');
+          let q=old.powered?old.q[i]:'X',qb=old.powered?old.qb[i]:'X';
+          if(old.illegal[i]){q='X';qb='X';}
+          if(clock==='X'){q='X';qb='X';}
+          else if(edge){
+            if(model.kind==='dff')q=level(u.d);
+            else{
+              const values=[];for(const j of possibleBit(level(u.j)))for(const k of possibleBit(level(u.k)))for(const v of possibleBit(q))values.push(String(j===0&&k===0?v:j===1&&k===0?1:j===0&&k===1?0:1-v));
+              q=mergeBit(values);
+            }
+            qb=q==='X'?'X':q==='1'?'0':'1';
+          }
+          const qs=[],qbs=[];let illegal=false;
+          for(const p of possibleBit(pre))for(const r of possibleBit(clear)){
+            if(!p&&!r){qs.push('1');qbs.push('1');illegal=true;}
+            else if(!p){qs.push('1');qbs.push('0');}
+            else if(!r){qs.push('0');qbs.push('1');}
+            else{qs.push(q);qbs.push(qb);}
+          }
+          next.q[i]=mergeBit(qs);next.qb[i]=mergeBit(qbs);next.illegal[i]=illegal;next.clocks[i]=clock;
+        });
+      }else{
+        const clocks=[level(14),level(1)];let qa=old.powered?old.qa:'X',b=old.powered?old.divide5:null;
+        if(clocks[0]==='X')qa='X';else if(allowEdge&&old.powered&&old.clocks[0]==='1'&&clocks[0]==='0')qa=qa==='X'?'X':qa==='1'?'0':'1';
+        if(clocks[1]==='X')b=null;else if(allowEdge&&old.powered&&old.clocks[1]==='1'&&clocks[1]==='0')b=b===null?null:(b+1)%5;
+        const options=[];
+        for(const r1 of possibleBit(level(2)))for(const r2 of possibleBit(level(3)))for(const s1 of possibleBit(level(6)))for(const s2 of possibleBit(level(7)))options.push(s1&&s2?{qa:'1',b:4}:r1&&r2?{qa:'0',b:0}:{qa,b});
+        next.qa=mergeBit(options.map(o=>o.qa));next.divide5=options.every(o=>o.b===options[0].b)?options[0].b:null;next.clocks=clocks;
+      }
+      return next;
+    }
+    function memoryOutputKey(m){return JSON.stringify([m.powered,m.q,m.qb,m.qa,m.divide5]);}
+    function solveCircuit() {
+      const chips=components.filter(isIC);
+      if(!chips.length){solveAnalogueCircuit();solution.chips={};solution.icDrivers=[];return;}
+      for(const c of chips)if(IC_MODELS[c.model]?.kind!=='gates'&&IC_MODELS[c.model]&&(!c.memory||c.memory.model!==c.model))c.memory=blankMemory(c.model);
+      const prior=solution.icDrivers||[];
+      let drivers=prior.flatMap(d=>{
+        const c=chips.find(c=>c.id===d.owner&&c.model===d.model);if(!c)return [];
+        const m=IC_MODELS[c.model],pins=dipPins(c);if(!m?.outputPins.includes(d.outputPin))return [];
+        return [{...d,a:pins[d.outputPin-1].point,b:pins[(d.logic==='1'?m.vcc:m.gnd)-1].point}];
+      }),states=[],stable=false,failed=false;
+      // First settle analogue levels and combinational logic, then sample all
+      // sequential inputs together. Repeat only for real output/clock changes.
+      // This avoids sampling glitches created solely by numerical iterations.
+      for(let event=0;event<128;event++){
+        let settled=false;const seen=new Set();
+        for(let pass=0;pass<Math.min(256,chips.length*8+16);pass++){
+          solveAnalogueCircuit(drivers);
+          if(solution.status==='short'||solution.status==='error'){failed=true;break;}
+          states=chips.map(evaluateIC);const next=icDriverDevices(chips,states);
+          const signature=list=>list.map(d=>`${d.id}:${d.logic}:${d.a}:${d.b}:${d.resistance}`).join('|'),key=signature(next);
+          if(key===signature(drivers)){settled=true;break;}
+          if(seen.has(key)){failed=true;break;}seen.add(key);drivers=next;
+        }
+        if(failed||!settled){failed=true;break;}
+        const proposals=chips.map((c,i)=>IC_MODELS[c.model]&&IC_MODELS[c.model].kind!=='gates'?stepMemory(c,states[i]):null);
+        let changed=false;
+        chips.forEach((c,i)=>{if(proposals[i]){if(memoryOutputKey(proposals[i])!==memoryOutputKey(c.memory))changed=true;c.memory=proposals[i];}});
+        if(!changed){stable=true;states=chips.map(evaluateIC);break;}
+      }
+      if(!stable)failed=true;
+      if(failed){
+        for(const c of chips)if(c.memory)c.memory=blankMemory(c.model);
+        if(solution.status!=='short'&&solution.status!=='error'){
+          solveAnalogueCircuit();solution.status='error';solution.currents={};solution.drops={};solution.power={};nodeVoltages={};totalCurrent=null;
+          solution.warnings.push('IC logic has no stable state. Check feedback, floating inputs, supply loading or outputs connected together. Zero-delay oscillators are not simulated.');
+        }
+        states=chips.map(evaluateIC);drivers=[];
+      }
+      solution.chips=Object.fromEntries(chips.map((c,i)=>[c.id,states[i]||evaluateIC(c)]));solution.icDrivers=drivers;
+      for(const c of chips){
+        const state=solution.chips[c.id],model=IC_MODELS[c.model];state.pinCurrents=Array(packagePins(c)).fill(0);state.dissipation=0;if(!model)continue;
+        for(const d of drivers.filter(d=>d.owner===c.id)){
+          const current=solution.currents[d.id];if(!Number.isFinite(current))continue;
+          state.pinCurrents[d.outputPin-1]+=current;state.pinCurrents[(d.logic==='1'?model.vcc:model.gnd)-1]-=current;state.dissipation+=current*current*d.resistance;
+          const limit=model.family==='LS'?(d.logic==='1'?.0004:.008):.004;
+          if(Math.abs(current)>limit+1e-8)solution.warnings.push(`${componentLabel(c)} pin ${d.outputPin}: output load exceeds the ${formatCurrent(limit)} guide. Increase the load resistance. Output drive is approximate.`);
+          if(state.pins[d.outputPin-1].logic!==d.logic)solution.warnings.push(`${componentLabel(c)} pin ${d.outputPin}: output voltage does not match the intended ${d.logic==='1'?'HIGH':'LOW'} level. Check overloads or connected outputs.`);
+        }
+        if(!state.powered)solution.warnings.push(`${componentLabel(c)}: ${state.state}. VCC is pin ${model.vcc}, GND is pin ${model.gnd}; this model uses ${model.minV}–${model.maxV} V.`);
+        if(state.powered&&model.inputPins.some(n=>state.pins[n-1].logic==='X'))solution.warnings.push(`${componentLabel(c)} has floating or undefined inputs. Use pull-up/pull-down resistors; a floating input is not LOW.`);
+        if(state.units.some(u=>u.preValue==='0'&&u.clearValue==='0'))solution.warnings.push(`${componentLabel(c)}: /PRE and /CLR are both asserted. Both outputs are HIGH; simultaneous release leaves an undefined stored state.`);
+        if(state.powered&&model.kind!=='gates'&&state.gates.some(g=>g.output==='X'))solution.warnings.push(`${componentLabel(c)} has unknown stored state. Initialise with its wired reset or preset inputs.`);
+        solution.currents[c.id]=failed?null:state.pinCurrents[model.vcc-1];solution.drops[c.id]=state.supply;solution.power[c.id]=state.dissipation;
+      }
+    }
+
+    function renderICPinTable(c,readings=false) {
+      const table=document.createElement('div');table.className='ic-pin-table';
+      const state=solution.chips?.[c.id]||evaluateIC(c);
+      const header=document.createElement('div');header.className='ic-pin-row ic-pin-header';
+      for(const t of ['PIN','NAME','HOLE',readings?'V / LOGIC':'ROLE']){const e=document.createElement('span');e.textContent=t;header.appendChild(e);}table.appendChild(header);
+      for(const p of state.pins){
+        const row=document.createElement('div');row.className='ic-pin-row';
+        const m=IC_MODELS[c.model],role=p.name==='VCC'||p.name==='GND'?'Power':p.name==='NC'?'NC':m?.outputPins.includes(p.number)?'Output':c.model?'Input':'—';
+        const value=readings?`${p.voltage===null?'—':formatNumber(p.voltage)} V · ${p.logic}`:role;
+        for(const t of [p.number,p.name,locationLabel(p.point),value]){const e=document.createElement('span');e.textContent=t;row.appendChild(e);}table.appendChild(row);
+      }
+      return table;
+    }
+    function renderICReadings(c) {
+      const item=document.createElement('div');item.className=`component-item ${selectedComponent===c.id?'selected-item':''}`;
+      const button=document.createElement('button');button.className='inspect-button';button.textContent=`${componentLabel(c)} · ${c.model||packageName(c)}`;button.addEventListener('click',()=>selectComponent(c.id));item.appendChild(button);
+      const state=solution.chips?.[c.id]||evaluateIC(c),text=document.createElement('p');
+      text.textContent=`${state.state}${state.supply===null?'':` · ${formatNumber(state.supply)} V VCC–GND`}${state.powered?` · ${formatCurrent(solution.currents[c.id])} VCC current`:''}`;item.appendChild(text);
+      const model=IC_MODELS[c.model];
+      if(model?.kind==='gates')for(const gate of state.gates){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`Gate ${gate.number}: ${gate.op==='NOT'?'NOT '+gate.inputs[0]:gate.inputs.join(' '+gate.op+' ')} → ${gate.output}${gate.output==='X'?' (undriven)':''}`;item.appendChild(row);}
+      for(const u of state.units||[]){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`FF${u.number}: ${model.kind==='dff'?'D='+u.data:'J='+u.jValue+' K='+u.kValue} CLK=${u.clockValue} · Q=${u.qValue} Q̅=${u.qbValue}`;item.appendChild(row);}
+      if(model?.kind==='counter90'){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`Count: ${state.count===null?'X':state.count} · QD QC QB QA: ${[...state.gates].reverse().map(g=>g.output).join(' ')}`;item.appendChild(row);}
+      const detail=document.createElement('details'),summary=document.createElement('summary');summary.textContent=`All ${packagePins(c)} pins`;detail.append(summary,renderICPinTable(c,true));item.appendChild(detail);return item;
+    }
+    function validICMemory(c){
+      const m=c.memory;if(m==null)return true;
+      const bits=a=>Array.isArray(a)&&a.length===2&&a.every(v=>['0','1','X'].includes(v));
+      return !!IC_MODELS[c.model]&&IC_MODELS[c.model].kind!=='gates'&&m.version===1&&m.model===c.model&&typeof m.powered==='boolean'&&bits(m.q)&&bits(m.qb)&&Array.isArray(m.clocks)&&m.clocks.length===2&&m.clocks.every(v=>v===null||['0','1','X'].includes(v))&&Array.isArray(m.illegal)&&m.illegal.length===2&&m.illegal.every(v=>typeof v==='boolean')&&['0','1','X'].includes(m.qa)&&(m.divide5===null||Number.isInteger(m.divide5)&&m.divide5>=0&&m.divide5<=4);
+    }
+    function loadSequentialExample(modelId){
+      actionHistory.push({type:'snapshot',board:boardData()});const model=IC_MODELS[modelId],bread=boardType==='breadboard';
+      const board={...boardData(),rows:10,columns:18,stripboardTerminals:{positiveTerminal:'1-0',negativeTerminal:'8-0'},voltage:5,breadboardBreak:bread,positiveTerminal:'0-0',negativeTerminal:'9-0',cuts:[],components:[],meters:[]};
+      const c={id:'seq-demo',type:model.packagePins===16?'dip16':'dip14',a:bread?'3-4':'1-5',orientation:bread?'horizontal':'vertical',model:modelId};
+      const pins=dipPins(c);c.b=pins[packagePins(c)/2-1].point;board.components.push(c);
+      const add=(id,type,a,b,extra={})=>board.components.push({id,type,a,b,...extra}),pin=n=>pins[n-1].point;
+      const wire=(id,a,b)=>add(id,'wire',a,b,{resistance:0});wire('seq-power',pin(model.vcc),'0-0');wire('seq-ground',pin(model.gnd),'9-0');
+      if(!bread)for(let row=1;row<=packagePins(c)/2;row++)board.cuts.push(`${row}-6`);
+      const fixed=(n,high)=>wire(`seq-fixed-${n}`,pin(n),high?'0-0':'9-0');
+      const switched=(id,n,pullHigh,closed)=>{add(id+'-pull','resistor',pin(n),pullHigh?'0-0':'9-0',{resistance:10000});add(id,'switch',pin(n),pullHigh?'9-0':'0-0',{closed});};
+      if(model.units){
+        const u=model.units[0],unused=model.units[1];fixed(u.pre,true);switched('seq-reset',u.clear,true,true);switched('seq-clock',u.clock,false,false);
+        if(u.d)switched('seq-data',u.d,false,false);else{fixed(u.j,true);fixed(u.k,true);}
+        fixed(unused.pre,true);fixed(unused.clear,false);fixed(unused.clock,false);if(unused.d)fixed(unused.d,false);else{fixed(unused.j,false);fixed(unused.k,false);}
+      }else{
+        switched('seq-reset',2,false,true);wire('seq-reset-pair',pin(2),pin(3));fixed(6,false);fixed(7,false);switched('seq-clock',14,false,true);wire('seq-decade-link',pin(12),pin(1));
+      }
+      const outputs=model.kind==='counter90'?model.outputPins:[model.units[0].q];
+      outputs.forEach((n,i)=>{
+        const end=bread?`8-${14+i}`:`9-${13+i}`;if(!bread)board.cuts.push(end);
+        add(`seq-led-${i}`,'led',pin(n),end,{colour:'red',forwardVoltage:2});add(`seq-led-r-${i}`,'resistor',end,'9-0',{resistance:model.family==='LS'?10000:1000});
+      });
+      restoreBoard(board);selectComponent(c.id);
+      showMessage(model.kind==='dff'?'D flip-flop: release RESET, choose DATA, then close CLOCK to capture on the rising edge.':model.kind==='jkff'?'JK toggle: release RESET, close then open CLOCK. Each falling edge toggles Q.':'Decade counter: release RESET, then open CLOCK to count. Close/open again for each subsequent count.');
+    }
+
+    function initializeICControls() {
+      const select=document.getElementById('ic-model-select');select.replaceChildren();
+      for(const [value,label]of [['unassigned14','Unassigned DIP-14'],['unassigned16','Unassigned DIP-16'],...Object.entries(IC_MODELS).map(([id,m])=>[id,`${m.name} · ${m.description}`])]){const option=document.createElement('option');option.value=value;option.textContent=label;select.appendChild(option);}
+      document.getElementById('dip-placement-orientation').addEventListener('change',e=>{dipOrientation=e.target.value;renderVisuals();updateModeUI();renderPlacementPreview();});
+      document.getElementById('ic-model-select').addEventListener('change',e=>{const value=e.target.value;if(['unassigned14','unassigned16'].includes(value))editIC({model:'',type:value==='unassigned16'?'dip16':'dip14'});else if(Object.hasOwn(IC_MODELS,value))editIC({model:value});});
+      document.getElementById('ic-orientation-select').addEventListener('change',e=>{if(['horizontal','vertical'].includes(e.target.value))editIC({orientation:e.target.value});});
+      grid.addEventListener('mouseleave',()=>{hoverPoint=null;renderPlacementPreview();updateModeUI();});
+      document.getElementById('ic-example').addEventListener('click',loadICExample);
+      for(const [id,model]of [['dff-example','74x74'],['jk-example','74HC76'],['counter-example','74x90']])document.getElementById(id).addEventListener('click',()=>loadSequentialExample(model));
+    }
+    function loadICExample() {
+      actionHistory.push({type:'snapshot',board:boardData()});const bread=boardType==='breadboard';
+      const board={...boardData(),rows:10,columns:18,stripboardTerminals:{positiveTerminal:'1-0',negativeTerminal:'8-0'},voltage:5,breadboardBreak:bread,positiveTerminal:'0-0',negativeTerminal:'9-0',cuts:[],components:[],meters:[]};
+      const chip={id:'ic-demo',type:'dip14',a:bread?'3-5':'1-5',orientation:bread?'horizontal':'vertical',model:'74x08'};
+      const pins=dipPins(chip);chip.b=pins[6].point;board.components.push(chip);
+      const add=(id,type,a,b,extra={})=>board.components.push({id,type,a,b,...extra});
+      const wire=(id,a,b)=>add(id,'wire',a,b,{resistance:0});
+      wire('ic-vcc',pins[13].point,'0-5');wire('ic-gnd',pins[6].point,'9-11');
+      for(const n of [4,5,9,10,12,13])wire(`ic-unused-${n}`,pins[n-1].point,'9-0');
+      for(const n of [1,2]){add(`ic-switch-${n}`,'switch','0-'+n,pins[n-1].point,{closed:false});add(`ic-pull-${n}`,'resistor',pins[n-1].point,'9-'+n,{resistance:10000});}
+      const ledEnd=bread?'8-14':'8-5';
+      add('ic-led','led',pins[2].point,ledEnd,{colour:'red',forwardVoltage:2});add('ic-led-r','resistor',ledEnd,'9-14',{resistance:1000});
+      if(!bread)for(let row=1;row<=7;row++)board.cuts.push(`${row}-6`);
+      board.meters=[{id:'ic-output-v',type:'voltmeter',a:pins[2].point,b:'9-0'}];
+      restoreBoard(board);selectComponent(chip.id);showMessage('74x08 example: 5 V, two input switches and an output LED. In Simulate, close both switches to light the LED.');
+    }
+
 
     function pointFromId(id) {
       const [row, col] = id.split("-").map(Number);
@@ -267,14 +654,15 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     }
 
     function buildBoard() {
+      updateBoardGeometry();
       grid.replaceChildren();
       if (boardType === 'breadboard') {
-        const contacts = document.createElement('div'); contacts.className = 'breadboard-terminal-area'; grid.appendChild(contacts);
+        const contacts = document.createElement('div'); contacts.className = 'breadboard-terminal-area';contacts.style.height=`${(ROWS-2)*PITCH-8}px`;grid.appendChild(contacts);
         for (const row of [1, ROWS - 1]) {
           const separator = document.createElement('div'); separator.className = 'breadboard-rail-separator';
           separator.style.top = `${row * PITCH - 4}px`; grid.appendChild(separator);
         }
-        for (const [row, type] of [[0, 'positive'], [9, 'ground']]) {
+        for (const [row, type] of [[0, 'positive'], [ROWS-1, 'ground']]) {
           const rail = document.createElement('div'); rail.className = `breadboard-rail-zone ${type}`;
           rail.style.top = `${row * PITCH}px`; grid.appendChild(rail);
           const line = document.createElement('div'); line.className = `breadboard-rail-line ${type}`;
@@ -296,13 +684,14 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
           hole.dataset.point = pointId(row, col);
           hole.setAttribute("aria-label", `Row ${row + 1}, column ${col + 1}`);
           hole.addEventListener("click", () => handleHoleClick(hole.dataset.point));
+          hole.addEventListener('mouseenter',()=>{hoverPoint=hole.dataset.point;renderPlacementPreview();});
           grid.appendChild(hole);
         }
       }
       for (let row = 0; row < ROWS; row++) {
         const label = document.createElement('span'); label.className = 'axis-label';
-        label.textContent = boardType === 'breadboard' ? (row === 0 ? '+' : row === 9 ? '−' : String.fromCharCode(96 + row)) : row + 1;
-        if (boardType === 'breadboard' && (row === 0 || row === 9)) { label.style.color = row === 0 ? '#bd4f43' : '#427ca6'; label.style.fontWeight = '700'; }
+        label.textContent = boardType === 'breadboard' ? (row === 0 ? '+' : row === ROWS-1 ? '−' : signalRowLabel(row)) : row + 1;
+        if (boardType === 'breadboard' && (row === 0 || row === ROWS-1)) { label.style.color = row === 0 ? '#bd4f43' : '#427ca6'; label.style.fontWeight = '700'; }
         label.style.left = '-24px'; label.style.top = `${row * PITCH + HOLE_OFFSET - 6}px`; grid.appendChild(label);
       }
       for (let col = 0; col < COLS; col++) {
@@ -326,11 +715,14 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     }
 
     function setActiveTool(tool) {
+      finishComponentDrag(null,true);
       if (workbenchMode !== 'build') setWorkbenchMode('build');
       if (boardType === 'breadboard' && ['drill','move-plus','move-minus'].includes(tool)) {
         selectedComponent = 'supply'; render(); showMessage('Breadboard rails are fixed. Use Centre break in Properties to split the rows.'); return;
       }
       activeTool = tool;
+      if(tool==='ic')dipOrientation=boardType==='breadboard'?'horizontal':'vertical';
+      hoverPoint=null;
       firstPoint = null;
       if (tool === 'move-plus' || tool === 'move-minus') selectedComponent = 'supply';
 
@@ -341,7 +733,8 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       });
 
       const instructions = {
-        select: "Select a component to edit. Click a supply terminal or empty board space for supply settings.",
+        select: "Click a component to edit; drag its body or lead to move it between holes. Click empty board space for supply settings.",
+        ic: "Hover to preview an IC. Click once to place; choose its chip model or unassigned package size in Properties.",
         resistor: "Click two holes to place a resistor.",
         led: "Click the anode (+) hole first, then the cathode (−). Add a resistor in series to limit current.",
         diode: "Click the anode hole first, then the cathode (banded end). Forward current flows from anode to cathode.",
@@ -355,6 +748,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       };
 
       showMessage(instructions[tool]);
+      renderVisuals();
       refreshSelection();
       renderProperties();
       updateModeUI();
@@ -369,7 +763,10 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         else showMessage(document.querySelector(`[data-point="${id}"]`)?.title || 'Switch to Build to change the board.');
         return;
       }
+      if(activeTool==='ic'){placeDIP(id);return;}
       if (activeTool === 'select') {
+        const chip=components.find(c=>isIC(c)&&dipPins(c).some(p=>p.point===id));
+        if(chip){selectComponent(chip.id);return;}
         selectedComponent = id === positiveTerminal || id === negativeTerminal ? 'supply' : null;
         render();
     updateBoardScale();
@@ -420,6 +817,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         firstPoint = id;
         showMessage("Now choose the second connection hole.");
         refreshSelection();
+        renderPlacementPreview();
         return;
       }
 
@@ -483,6 +881,84 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       return { line, x1, y1, x2, y2, angle };
     }
 
+    let componentDrag = null, suppressDragClick = false;
+    function movedComponent(c, rows, cols) {
+      const points=isIC(c)?dipPins(c).map(p=>p.point):[c.a,c.b];
+      if(points.some(id=>{const p=pointFromId(id);return p.row+rows<0||p.row+rows>=ROWS||p.col+cols<0||p.col+cols>=COLS;}))return {part:null,problem:'Keep every connection hole on the board.'};
+      const shift=id=>{const p=pointFromId(id);return pointId(p.row+rows,p.col+cols);};
+      const part={...c,a:shift(c.a),b:shift(c.b)};
+      return {part,problem:isIC(c)?dipPlacementProblem(part):''};
+    }
+    function beginComponentDrag(e) {
+      if(componentDrag||workbenchMode!=='build'||activeTool!=='select'||e.button!==0||e.isPrimary===false)return;
+      const surface=e.target.closest('[data-component]'),hole=e.target.closest('.hole');
+      const c=surface?[...components,...meters].find(c=>c.id===surface.dataset.component):hole?components.find(c=>isIC(c)&&dipPins(c).some(p=>p.point===hole.dataset.point)):null;
+      if(!c)return;
+      const scale=layer.getBoundingClientRect().width/(COLS*PITCH);
+      if(!Number.isFinite(scale)||scale<=0)return;
+      componentDrag={id:c.id,pointer:e.pointerId,startX:e.clientX,startY:e.clientY,scale,rows:0,cols:0,active:false,preview:null,problem:''};
+    }
+    function updateComponentDrag(e) {
+      const d=componentDrag;if(!d||e.pointerId!==d.pointer)return;
+      const c=[...components,...meters].find(c=>c.id===d.id);
+      if(!c||workbenchMode!=='build'||activeTool!=='select'){finishComponentDrag(null,true);return;}
+      const dx=e.clientX-d.startX,dy=e.clientY-d.startY;
+      if(!d.active&&Math.hypot(dx,dy)<5)return;
+      e.preventDefault();
+      if(!d.active){
+        d.active=true;selectedComponent=c.id;firstPoint=null;hoverPoint=null;
+        refreshSelection();renderVisuals();renderProperties();updateModeUI();
+        const ghost=document.createElement('div');ghost.className='move-preview';ghost.setAttribute('aria-hidden','true');
+        for(const node of [...layer.children].filter(node=>node.dataset.component===c.id)){
+          ghost.appendChild(node.cloneNode(true));node.classList.add('drag-origin');
+        }
+        for(const id of isIC(c)?dipPins(c).map(p=>p.point):[c.a,c.b]){
+          const p=pointFromId(id),mark=document.createElement('span');mark.className='move-pin';
+          mark.style.left=`${p.col*PITCH+HOLE_OFFSET}px`;mark.style.top=`${p.row*PITCH+HOLE_OFFSET}px`;ghost.appendChild(mark);
+        }
+        d.preview=ghost;layer.appendChild(ghost);document.body.classList.add('moving-component');
+        const board=document.getElementById('sim-board');try{board.setPointerCapture(e.pointerId);}catch{}
+      }
+      d.cols=Math.round(dx/(PITCH*d.scale));d.rows=Math.round(dy/(PITCH*d.scale));
+      const candidate=movedComponent(c,d.rows,d.cols);d.problem=candidate.problem;
+      d.preview.style.transform=`translate(${d.cols*PITCH}px,${d.rows*PITCH}px)`;
+      d.preview.classList.toggle('invalid',!!d.problem);
+      document.getElementById('board-hint').textContent=d.problem||`${componentLabel(c)} → ${locationLabel(candidate.part.a)}${isIC(c)?'':` / ${locationLabel(candidate.part.b)}`} · release to move · Esc cancels.`;
+    }
+    function finishComponentDrag(e,cancelled=false) {
+      const d=componentDrag;if(!d||e&&e.pointerId!==d.pointer)return;
+      if(e&&!cancelled)updateComponentDrag(e);
+      if(componentDrag!==d)return;
+      componentDrag=null;
+      const board=document.getElementById('sim-board');try{if(board.hasPointerCapture(d.pointer))board.releasePointerCapture(d.pointer);}catch{}
+      document.body.classList.remove('moving-component');
+      if(!d.active)return; // A normal click still selects or operates the part.
+      suppressDragClick=true;if(e)e.preventDefault();
+      const c=[...components,...meters].find(c=>c.id===d.id),candidate=c?movedComponent(c,d.rows,d.cols):null;
+      if(!cancelled&&workbenchMode==='build'&&c&&candidate&&!candidate.problem&&(d.rows||d.cols)){
+        actionHistory.push({type:'component-move',id:c.id,previous:{a:c.a,b:c.b},logicBefore:logicSnapshot()});
+        c.a=candidate.part.a;c.b=candidate.part.b;selectedComponent=c.id;render();
+        showMessage(`${componentLabel(c)} moved. Undo restores its previous holes.`);
+      }else{
+        renderVisuals();updateModeUI();
+        showMessage(cancelled?'Move cancelled.':candidate?.problem||'Component kept in its original holes.');
+      }
+    }
+    function initializeComponentDragging() {
+      const board=document.getElementById('sim-board');
+      document.addEventListener('pointerdown',()=>{suppressDragClick=false;},true);
+      board.addEventListener('pointerdown',beginComponentDrag);
+      document.addEventListener('pointermove',updateComponentDrag,{passive:false});
+      document.addEventListener('pointerup',e=>finishComponentDrag(e),{passive:false});
+      document.addEventListener('pointercancel',e=>finishComponentDrag(e,true));
+      board.addEventListener('lostpointercapture',e=>finishComponentDrag(e,true));
+      board.addEventListener('click',e=>{
+        if(suppressDragClick&&e.detail!==0){suppressDragClick=false;e.preventDefault();e.stopImmediatePropagation();}
+      },true);
+      board.addEventListener('dragstart',e=>{if(e.target.closest('[data-component]'))e.preventDefault();});
+      if(typeof window!=='undefined')window.addEventListener('blur',()=>finishComponentDrag(null,true));
+    }
+
     function addFlow(a, b, current, index = 0, copper = false) {
       if (workbenchMode !== 'simulation' || (copper ? !showCopperFlow : !showComponentFlow) || !currentFlowRunning || !Number.isFinite(current) || Math.abs(current) < 1e-12 || solution.status === 'short') return;
       if (current < 0) [a, b] = [b, a];
@@ -503,7 +979,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       layer.innerHTML = '';
       grid.querySelectorAll('.cut-gap,.breadboard-centre-break,.breadboard-contact-group').forEach(cut => cut.remove());
       if (boardType === 'breadboard') {
-        const banks = breadboardBreak ? [[1,4],[5,8]] : [[1,8]];
+        const banks = breadboardBanks();
         for (let col = 0; col < COLS; col++) {
           for (const [start,end] of banks) {
             const group = document.createElement('div'); group.className = 'breadboard-contact-group';
@@ -514,7 +990,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         }
       }
       if (boardType === 'breadboard' && breadboardBreak) {
-        const slot = document.createElement('div'); slot.className = 'breadboard-centre-break'; grid.appendChild(slot);
+        const slot = document.createElement('div'); slot.className = 'breadboard-centre-break';slot.style.top=`${breadboardSplit()*PITCH-9}px`;grid.appendChild(slot);
       }
       (boardType === 'stripboard' ? cuts : new Set()).forEach(cutId => {
         const p = pointFromId(cutId);
@@ -528,18 +1004,26 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         const id = hole.dataset.point;
         hole.classList.toggle('drilled', boardType === 'stripboard' && cuts.has(id));
         hole.classList.toggle('rail-positive', boardType === 'breadboard' && pointFromId(id).row === 0);
-        hole.classList.toggle('rail-ground', boardType === 'breadboard' && pointFromId(id).row === 9);
+        hole.classList.toggle('rail-ground', boardType === 'breadboard' && pointFromId(id).row === ROWS-1);
         const v = getVoltage(id, latestNodes);
         const p = pointFromId(id);
         const reading = v === null ? 'floating / undefined voltage' : `${formatNumber(v)} V`;
-        hole.title = `${boardType === 'breadboard' ? `${locationLabel(id)} · ${p.row === 0 ? 'horizontal positive rail' : p.row === ROWS - 1 ? 'horizontal ground rail' : `vertical contacts in column ${p.col + 1}${breadboardBreak ? (p.row < 5 ? ', upper bank a–d' : ', lower bank e–h') : ''}`}` : `Row ${p.row + 1}, column ${p.col + 1}`}: ${reading}${boardType === 'stripboard' && cuts.has(id) ? ' · drilled, isolated from copper' : ''}`;
+        hole.title = `${boardType === 'breadboard' ? `${locationLabel(id)} · ${p.row === 0 ? 'horizontal positive rail' : p.row === ROWS - 1 ? 'horizontal ground rail' : `vertical contacts in column ${p.col + 1}${breadboardBreak ? (p.row < breadboardSplit() ? ', upper signal bank' : ', lower signal bank') : ''}`}` : `Row ${p.row + 1}, column ${p.col + 1}`}: ${reading}${boardType === 'stripboard' && cuts.has(id) ? ' · drilled, isolated from copper' : ''}`;
         hole.setAttribute('aria-label', hole.title);
       });
+      const pinsOnBoard=new Map();
+      components.filter(c=>isIC(c)).forEach(c=>dipPins(c).forEach(p=>pinsOnBoard.set(p.point,{c,p})));
+      document.querySelectorAll('.hole').forEach(hole=>{
+        const pin=pinsOnBoard.get(hole.dataset.point);hole.classList.toggle('ic-contact',!!pin);hole.classList.toggle('ic-selected-pin',!!pin&&selectedComponent===pin.c.id);
+        if(pin)hole.title+=` · ${componentLabel(pin.c)} pin ${pin.p.number} ${IC_MODELS[pin.c.model]?.pins[pin.p.number-1]||''}`;
+        hole.setAttribute('aria-label',hole.title);
+      });
       components.forEach((component, index) => {
+        if(isIC(component)){layer.appendChild(drawDIP(component));return;}
         const drawn = drawLine(component.a, component.b, component.type === 'wire' ? 'wire-lead' : 'resistor-lead');
         drawn.line.dataset.component = component.id;
         drawn.line.classList.toggle('inspected', selectedComponent === component.id);
-        drawn.line.title = 'Click to inspect or remove';
+        drawn.line.title = 'Click to inspect; drag with Select in Build mode to move';
         drawn.line.addEventListener('click', () => {
           if(component.type === 'switch' && workbenchMode === 'simulation') operateSwitch(component.id);
           else selectComponent(component.id);
@@ -548,7 +1032,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         if (component.type === 'resistor') {
           const body = document.createElement('button');
           body.type = 'button';
-          body.className = 'resistor-body';
+          body.dataset.component=component.id;body.className = 'resistor-body';
           body.textContent = formatResistance(component.resistance);
           body.style.left = `${(drawn.x1 + drawn.x2) / 2 - 25.5}px`;
           body.style.top = `${(drawn.y1 + drawn.y2) / 2 - 9}px`;
@@ -560,6 +1044,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         }
         if (component.type === 'led') {
           const body = document.createElement('button'); body.type = 'button';
+          body.dataset.component=component.id;
           const brightness = ledBrightness(component);
           body.className = `led-body ${brightness > 0 ? 'lit' : ''} ${selectedComponent === component.id ? 'inspected' : ''} ${solution.currents[component.id] > .02 ? 'overdriven' : ''}`;
           body.style.setProperty('--led-colour', LED_COLOURS[component.colour || 'red'].hex);
@@ -570,7 +1055,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
           body.setAttribute('aria-label', body.title); body.addEventListener('click', () => selectComponent(component.id)); layer.appendChild(body);
         }
         if (component.type === 'diode') {
-          const body = document.createElement('button'); body.type = 'button'; body.className = 'diode-body';
+          const body = document.createElement('button'); body.type = 'button'; body.dataset.component=component.id;body.className = 'diode-body';
           body.classList.toggle('inspected', selectedComponent === component.id);
           body.style.left = `${(drawn.x1 + drawn.x2) / 2 - 17}px`; body.style.top = `${(drawn.y1 + drawn.y2) / 2 - 8.5}px`;
           body.style.transform = `rotate(${drawn.angle}deg)`;
@@ -586,7 +1071,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
           }
         }
         if (component.type === 'switch') {
-          const body = document.createElement('button'); body.type = 'button'; body.className = 'switch-body';
+          const body = document.createElement('button'); body.type = 'button'; body.dataset.component=component.id;body.className = 'switch-body';
           body.classList.toggle('closed', component.closed); body.classList.toggle('inspected', selectedComponent === component.id);
           body.style.left = `${(drawn.x1 + drawn.x2) / 2 - 20}px`; body.style.top = `${(drawn.y1 + drawn.y2) / 2 - 16}px`;
           body.style.transform = `rotate(${drawn.angle}deg)`;
@@ -599,11 +1084,12 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       });
       meters.forEach((meter, index) => {
         const drawn = drawLine(meter.a, meter.b, 'meter-lead');
+        drawn.line.dataset.component=meter.id;drawn.line.addEventListener('click',()=>selectComponent(meter.id));
         layer.appendChild(drawn.line);
         [meter.a, meter.b].forEach((point, i) => {
           const p = pointFromId(point);
           const probe = document.createElement('div');
-          probe.className = 'meter-probe';
+          probe.className = 'meter-probe';probe.dataset.component=meter.id;probe.addEventListener('click',()=>selectComponent(meter.id));
           probe.style.left = `${p.col * PITCH + HOLE_OFFSET - 6.5}px`;
           probe.style.top = `${p.row * PITCH + HOLE_OFFSET - 6.5}px`;
           probe.style.background = i ? '#292929' : '#f07e66';
@@ -611,7 +1097,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         });
         const tag = document.createElement('button');
         tag.type = 'button';
-        tag.className = 'meter-tag';
+        tag.className = 'meter-tag';tag.dataset.component=meter.id;
         tag.textContent = componentLabel(meter);
         tag.style.left = `${(drawn.x1 + drawn.x2) / 2}px`;
         tag.style.top = `${(drawn.y1 + drawn.y2) / 2 - 14}px`;
@@ -640,6 +1126,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       document.getElementById('sim-board').style.setProperty('--flow-speed', String(flowSpeed));
       layer.classList.toggle('flow-running', workbenchMode === 'simulation' && currentFlowRunning);
       document.getElementById('flow-button').textContent = currentFlowRunning ? 'Pause current flow' : 'Play current flow';
+      renderPlacementPreview();
     }
 
     function formatNumber(value) {
@@ -659,7 +1146,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     }
     function locationLabel(id) {
       const p = pointFromId(id);
-      return boardType === 'breadboard' ? `${p.row === 0 ? '+' : p.row === 9 ? 'GND ' : String.fromCharCode(96 + p.row)}${p.col + 1}` : `${p.row + 1}:${p.col + 1}`;
+      return boardType === 'breadboard' ? `${p.row === 0 ? '+' : p.row === ROWS-1 ? 'GND ' : signalRowLabel(p.row)}${p.col + 1}` : `${p.row + 1}:${p.col + 1}`;
     }
 
     // Ideal copper, wire links, closed switches and ammeters form equipotential nets.
@@ -688,7 +1175,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         // disconnects a-d from e-h within every column, leaving rails intact.
         for (let col = 0; col < COLS; col++) {
           for (let row = 1; row < ROWS - 2; row++) {
-            if (breadboardBreak && row === ROWS / 2 - 1) continue;
+            if (breadboardBreak && row === breadboardSplit() - 1) continue;
             const a = pointId(row, col), b = pointId(row + 1, col);
             edges.push({id:`contact:${a}`,a,b,type:'copper'});
           }
@@ -870,7 +1357,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     function loadLEDExample(type='led') {
       actionHistory.push({type:'snapshot',board:boardData()});
       const bread=boardType==='breadboard';
-      const board={format:'stripboard-dc',version:3,rows:ROWS,columns:COLS,voltage:9,boardType,breadboardBreak:bread,breadboardTopology:'vertical-signal-columns',stripboardTerminals:{...stripboardTerminals},positiveTerminal:bread?'0-0':'1-0',negativeTerminal:bread?'9-0':'8-0',cuts:[],components:[],meters:[]};
+      const board={format:'stripboard-dc',version:3,rows:10,columns:18,voltage:9,boardType,breadboardBreak:bread,breadboardTopology:'vertical-signal-columns',stripboardTerminals:{positiveTerminal:'1-0',negativeTerminal:'8-0'},positiveTerminal:bread?'0-0':'1-0',negativeTerminal:bread?'9-0':'8-0',cuts:[],components:[],meters:[]};
       board.components=bread ? [
         {id:'led-demo-r',type:'resistor',a:'0-4',b:'1-4',resistance:1000},
         {id:'led-demo-led',type:'led',a:'3-4',b:'6-4',colour:'red',forwardVoltage:2},
@@ -885,14 +1372,14 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       restoreBoard(board);selectComponent(led.id);showMessage(`${type==='diode'?'Diode':'LED'} example: 9 V with a 1 kΩ series resistor. Try reversing polarity or changing the resistance.`);
     }
 
-    function solveCircuit() {
+    function solveAnalogueCircuit(extraDevices=[]) {
       solution = { status: 'open', currents: {}, drops: {}, power: {}, islands: {}, relativeVoltages: {}, warnings: [] };
       nodeVoltages = {};
       totalCurrent = 0;
       const nodes = buildElectricalNodes();
       latestNodes = nodes;
       const plus = nodes[positiveTerminal], minus = nodes[negativeTerminal];
-      const resistors = components.filter(c => c.type === 'resistor' || isDiode(c));
+      const resistors = [...components.filter(c => c.type === 'resistor' || isDiode(c)),...extraDevices];
       if (plus === minus) {
         solution.status = 'short';
         solution.warnings.push('Supply terminals are joined by ideal copper, wires, a closed switch or an ammeter. An ideal 9 V source cannot satisfy this short circuit.'.replace('9 V', `${SUPPLY_VOLTAGE} V`));
@@ -904,7 +1391,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       resistors.forEach(r => {
         const a = nodes[r.a], b = nodes[r.b];
         if (a !== b) { graph[a].push(b); graph[b].push(a); }
-        else solution.warnings.push(`${componentLabel(r)} is bypassed by an ideal contact/wire/ammeter path.`);
+        else solution.warnings.push(`${r.label||componentLabel(r)} is bypassed by an ideal contact/wire/ammeter path.`);
       });
       const seen = new Set();
       const nonlinearNets = new Set();
@@ -1024,7 +1511,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
 
     function componentLabel(c) {
       const list = c.type === 'ammeter' || c.type === 'voltmeter' ? meters : components;
-      return `${({ resistor: 'R', led: 'LED', diode: 'D', switch: 'S', wire: 'W', ammeter: 'A', voltmeter: 'V' })[c.type]}${list.filter(item => item.type === c.type).indexOf(c) + 1}`;
+      return `${({ resistor: 'R', dip14: 'U', dip16: 'U', led: 'LED', diode: 'D', switch: 'S', wire: 'W', ammeter: 'A', voltmeter: 'V' })[c.type]}${list.filter(item => isIC(c)?isIC(item):item.type === c.type).indexOf(c) + 1}`;
     }
     function meterVoltage(m) {
       if (solution.status === 'short' || solution.status === 'error') return null;
@@ -1037,7 +1524,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     function updateReadings() {
       const good = solution.status === 'complete';
       document.getElementById('status-dot').className = `status-dot ${good ? 'good' : components.length || solution.status === 'short' ? 'warn' : ''}`;
-      document.getElementById('status-value').textContent = ({ complete: 'Complete DC circuit', short: 'Supply short circuit', open: 'Open / no load current', error: 'Cannot solve circuit' })[solution.status];
+      document.getElementById('status-value').textContent = solution.status==='open'&&Object.values(solution.chips||{}).some(c=>c.powered)?'Powered / no load current':({ complete: 'Complete DC circuit', short: 'Supply short circuit', open: 'Open / no load current', error: 'Cannot solve circuit' })[solution.status];
       document.getElementById('current-reading').textContent = solution.status === 'short' ? 'Undefined' : formatCurrent(totalCurrent);
       document.getElementById('supply-reading').textContent = `${formatNumber(SUPPLY_VOLTAGE)} V`;
       document.getElementById('supply-label').textContent = `${formatNumber(SUPPLY_VOLTAGE)} V DC`;
@@ -1062,6 +1549,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     function renderInspector() {
       const list = document.getElementById('component-readings'); list.replaceChildren();
       [...components, ...meters].forEach(c => {
+        if(isIC(c)){list.appendChild(renderICReadings(c));return;}
         const item = document.createElement('div'); item.className = `component-item ${selectedComponent === c.id ? 'selected-item' : ''}`;
         const heading = document.createElement('div'); heading.className = 'component-heading';
         const name = document.createElement('button'); name.className = 'inspect-button'; name.textContent = `${componentLabel(c)} · ${c.type === 'resistor' ? formatResistance(c.resistance) : c.type}`;
@@ -1090,6 +1578,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       if (!components.length && !meters.length) { const p = document.createElement('p'); p.className = 'panel-caption'; p.textContent = 'Place components to see voltage, branch current and power.'; list.appendChild(p); }
     }
     function removeComponent(id) {
+      finishComponentDrag(null,true);
       const component = [...components, ...meters].find(c => c.id === id);
       if (!component) return;
       const isMeter = component.type === 'ammeter' || component.type === 'voltmeter';
@@ -1110,6 +1599,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     }
 
     function undoLastAction() {
+      if(componentDrag){finishComponentDrag(null,true);showMessage('Move cancelled.');return;}
       const action = actionHistory.pop();
 
       if (!action) {
@@ -1118,6 +1608,9 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       }
 
       if (action.type === 'snapshot') { restoreBoard(action.board); showMessage('Previous board restored.'); return; }
+      if(action.logicBefore)restoreLogicSnapshot(action.logicBefore);
+      if(action.type==='component-move'){const c=[...components,...meters].find(c=>c.id===action.id);if(c)Object.assign(c,action.previous);}
+      if(action.type==='ic-edit'){const c=components.find(c=>c.id===action.id);if(c)Object.assign(c,action.previous);}
       if (action.type === 'led-edit' || action.type === 'diode-edit') { const c = components.find(c=>c.id===action.id); if(c) Object.assign(c,action.previous); }
       if (action.type === 'value') { const c = components.find(c => c.id === action.id); if (c) c.resistance = action.previous; }
       if (action.type === 'switch-state') { const c=components.find(c=>c.id===action.id&&c.type==='switch');if(c)c.closed=action.previous; }
@@ -1143,6 +1636,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     }
 
     function clearBoard() {
+      finishComponentDrag(null,true);
       actionHistory.push({ type: 'snapshot', board: boardData() });
       components = [];
       meters = [];
@@ -1150,10 +1644,10 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       selectedComponent = null;
       firstPoint = null;
       currentFlowRunning = false;
-      stripboardTerminals = {positiveTerminal:'1-0',negativeTerminal:'8-0'};
+      stripboardTerminals = {positiveTerminal:'1-0',negativeTerminal:pointId(Math.min(8,ROWS-1),0)};
       breadboardBreak = false;
       positiveTerminal = boardType === 'breadboard' ? '0-0' : '1-0';
-      negativeTerminal = boardType === 'breadboard' ? '9-0' : '8-0';
+      negativeTerminal = boardType === 'breadboard' ? pointId(ROWS-1,0) : pointId(Math.min(8,ROWS-1),0);
 
       document.getElementById("flow-button").classList.remove("playing");
       refreshTerminalMarkers();
@@ -1180,43 +1674,46 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       return { format: 'stripboard-dc', version: 3, rows: ROWS, columns: COLS, voltage: SUPPLY_VOLTAGE, boardType, breadboardBreak,
         ...(boardType === 'breadboard' ? {breadboardTopology:'vertical-signal-columns'} : {}),
         stripboardTerminals: boardType === 'stripboard' ? { positiveTerminal, negativeTerminal } : { ...stripboardTerminals },
-        positiveTerminal, negativeTerminal, cuts: [...cuts], components: components.map(c => ({ ...c })), meters: meters.map(m => ({ ...m })) };
+        positiveTerminal, negativeTerminal, cuts: [...cuts], components: components.map(c => ({ ...c,...(c.memory?{memory:cloneLogic(c.memory)}:{}) })), meters: meters.map(m => ({ ...m })) };
     }
     function validateBoard(data) {
-      if (!data || data.format !== 'stripboard-dc' || ![2,3].includes(data.version) || data.rows !== ROWS || data.columns !== COLS) throw new Error('Choose a Workbench circuit JSON file (version 2 or 3).');
-      const validPoint = p => typeof p === 'string' && /^(\d+)-(\d+)$/.test(p) && (() => { const q = pointFromId(p); return q.row >= 0 && q.row < ROWS && q.col >= 0 && q.col < COLS; })();
+      if (!data || data.format !== 'stripboard-dc' || ![2,3].includes(data.version)) throw new Error('Choose a Workbench circuit JSON file (version 2 or 3).');
+      if(!Number.isInteger(data.rows)||!Number.isInteger(data.columns)||data.rows<BOARD_LIMITS.minRows||data.rows>BOARD_LIMITS.maxRows||data.columns<BOARD_LIMITS.minCols||data.columns>BOARD_LIMITS.maxCols)throw new Error('Board dimensions must be 4–30 rows and 4–50 columns.');
+      const validPoint = p => typeof p === 'string' && /^(\d+)-(\d+)$/.test(p) && (() => { const q = pointFromId(p); return q.row >= 0 && q.row < data.rows && q.col >= 0 && q.col < data.columns; })();
       if (!Number.isFinite(data.voltage) || data.voltage <= 0 || data.voltage > 1000) throw new Error('Supply voltage must be between 0 and 1000 V.');
       if (!validPoint(data.positiveTerminal) || !validPoint(data.negativeTerminal) || data.positiveTerminal === data.negativeTerminal) throw new Error('Invalid supply terminals.');
       if (data.boardType !== undefined && !['stripboard','breadboard'].includes(data.boardType)) throw new Error('Invalid board type.');
       if (data.breadboardBreak !== undefined && typeof data.breadboardBreak !== 'boolean') throw new Error('Invalid breadboard break setting.');
-      if (data.boardType === 'breadboard' && (data.positiveTerminal !== '0-0' || data.negativeTerminal !== '9-0')) throw new Error('Breadboard supply terminals must be on the fixed rails.');
+      if (data.boardType === 'breadboard' && (data.positiveTerminal !== '0-0' || data.negativeTerminal !== pointId(data.rows-1,0))) throw new Error('Breadboard supply terminals must be on the fixed rails.');
       if (data.stripboardTerminals && (!validPoint(data.stripboardTerminals.positiveTerminal) || !validPoint(data.stripboardTerminals.negativeTerminal) || data.stripboardTerminals.positiveTerminal === data.stripboardTerminals.negativeTerminal)) throw new Error('Invalid saved stripboard terminals.');
-      if (!Array.isArray(data.cuts) || data.cuts.length > ROWS * COLS || !data.cuts.every(validPoint)) throw new Error('Invalid track cuts.');
+      if (!Array.isArray(data.cuts) || data.cuts.length > data.rows * data.columns || !data.cuts.every(validPoint)) throw new Error('Invalid track cuts.');
       if (!Array.isArray(data.components) || !Array.isArray(data.meters) || data.components.length + data.meters.length > 500) throw new Error('Invalid component list (maximum 500).');
       const ids = new Set();
-      for (const [list, types] of [[data.components, ['wire', 'resistor', 'led', 'diode', 'switch']], [data.meters, ['ammeter', 'voltmeter']]]) {
+      for (const [list, types] of [[data.components, ['wire', 'resistor', 'led', 'diode', 'switch', 'dip14', 'dip16']], [data.meters, ['ammeter', 'voltmeter']]]) {
         for (const c of list) {
-          if (!c || typeof c.id !== 'string' || !c.id.length || ['__proto__', 'constructor', 'prototype'].includes(c.id) || c.id.startsWith('track:') || c.id.startsWith('contact:') || ids.has(c.id) || !types.includes(c.type) || !validPoint(c.a) || !validPoint(c.b) || c.a === c.b) throw new Error('Invalid or duplicate component.');
+          if (!c || typeof c.id !== 'string' || !c.id.length || ['__proto__', 'constructor', 'prototype'].includes(c.id) || c.id.startsWith('ic:') || c.id.startsWith('track:') || c.id.startsWith('contact:') || ids.has(c.id) || !types.includes(c.type) || !validPoint(c.a) || !validPoint(c.b) || c.a === c.b) throw new Error('Invalid or duplicate component.');
           if (c.type === 'resistor' && (!Number.isFinite(c.resistance) || c.resistance <= 0 || c.resistance > 1e12)) throw new Error('Invalid resistor value.');
           if (c.type === 'led' && (!Object.hasOwn(LED_COLOURS,c.colour || 'red') || (c.forwardVoltage !== undefined && (!Number.isFinite(c.forwardVoltage) || c.forwardVoltage < .1 || c.forwardVoltage > 10)))) throw new Error('Invalid LED colour or forward threshold.');
           if (c.type === 'diode' && c.forwardVoltage !== undefined && (!Number.isFinite(c.forwardVoltage) || c.forwardVoltage < .1 || c.forwardVoltage > 10)) throw new Error('Invalid diode forward threshold.');
           if(c.type === 'switch' && c.closed !== undefined && typeof c.closed !== 'boolean') throw new Error('Invalid switch state.');
+          if(isIC(c)&&(!['horizontal','vertical'].includes(c.orientation)||!(c.model===''||Object.hasOwn(IC_MODELS,c.model))||dipPlacementProblem(c,data.components,data.rows,data.columns)||c.b!==dipPins(c)[packagePins(c)/2-1].point||(c.model&&IC_MODELS[c.model].packagePins!==packagePins(c))||!validICMemory(c)))throw new Error('Invalid IC placement, chip model or stored state.');
           ids.add(c.id);
         }
       }
       return data;
     }
     function restoreBoard(data) {
-      validateBoard(data);
+      validateBoard(data);finishComponentDrag(null,true);
+      ROWS=data.rows;COLS=data.columns;
       SUPPLY_VOLTAGE = data.voltage;
       boardType = data.boardType || 'stripboard'; breadboardBreak = data.breadboardBreak || false;
-      stripboardTerminals = data.stripboardTerminals ? { ...data.stripboardTerminals } : boardType === 'stripboard' ? { positiveTerminal:data.positiveTerminal,negativeTerminal:data.negativeTerminal } : {positiveTerminal:'1-0',negativeTerminal:'8-0'};
+      stripboardTerminals = data.stripboardTerminals ? { ...data.stripboardTerminals } : boardType === 'stripboard' ? { positiveTerminal:data.positiveTerminal,negativeTerminal:data.negativeTerminal } : {positiveTerminal:'1-0',negativeTerminal:pointId(Math.min(8,ROWS-1),0)};
       if (boardType === 'breadboard' && ['drill','move-plus','move-minus'].includes(activeTool)) activeTool = 'select';
       positiveTerminal = data.positiveTerminal; negativeTerminal = data.negativeTerminal;
       cuts = new Set(data.cuts);
-      components = data.components.map(c => c.type === 'led' ? ({id:c.id,type:'led',a:c.a,b:c.b,colour:c.colour || 'red',forwardVoltage:c.forwardVoltage ?? LED_COLOURS[c.colour || 'red'].forwardVoltage}) : c.type === 'diode' ? ({id:c.id,type:'diode',a:c.a,b:c.b,forwardVoltage:c.forwardVoltage ?? .7}) : c.type === 'switch' ? ({id:c.id,type:'switch',a:c.a,b:c.b,closed:c.closed ?? false}) : ({ id:c.id, type:c.type, a:c.a, b:c.b, resistance:c.type === 'wire' ? 0 : c.resistance }));
+      components = data.components.map(c => c.type === 'led' ? ({id:c.id,type:'led',a:c.a,b:c.b,colour:c.colour || 'red',forwardVoltage:c.forwardVoltage ?? LED_COLOURS[c.colour || 'red'].forwardVoltage}) : c.type === 'diode' ? ({id:c.id,type:'diode',a:c.a,b:c.b,forwardVoltage:c.forwardVoltage ?? .7}) : c.type === 'switch' ? ({id:c.id,type:'switch',a:c.a,b:c.b,closed:c.closed ?? false}) : isIC(c)?({id:c.id,type:c.type,a:c.a,b:c.b,orientation:c.orientation,model:c.model,...(c.memory?{memory:cloneLogic(c.memory)}:{})}) : ({ id:c.id, type:c.type, a:c.a, b:c.b, resistance:c.type === 'wire' ? 0 : c.resistance }));
       meters = data.meters.map(c => ({ id:c.id, type:c.type, a:c.a, b:c.b }));
-      firstPoint = null; selectedComponent = null; currentFlowRunning = false;
+      firstPoint = null; hoverPoint=null; selectedComponent = null; currentFlowRunning = false;
       document.getElementById('supply-input').value = SUPPLY_VOLTAGE;
       document.getElementById('flow-button').classList.remove('playing');
       buildBoard(); refreshTerminalMarkers(); refreshSelection(); render(); updateBoardScale();
@@ -1233,7 +1730,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     }
     function loadExample(kind) {
       actionHistory.push({ type:'snapshot', board:boardData() });
-      const board = { format:'stripboard-dc', version:2, rows:ROWS, columns:COLS, voltage:9, positiveTerminal:'1-0', negativeTerminal:'8-0', cuts:[], components:[], meters:[] };
+      const board = { format:'stripboard-dc', version:2, rows:10, columns:18, voltage:9, positiveTerminal:'1-0', negativeTerminal:'8-0', cuts:[], components:[], meters:[] };
       if (kind === 'series') {
         board.negativeTerminal = '1-17';
         board.cuts = ['1-5','1-11','1-15'];
@@ -1250,7 +1747,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         board.meters = [{ id:'example-a1',type:'ammeter',a:'3-4',b:'8-4' },{ id:'example-a2',type:'ammeter',a:'5-13',b:'8-13' },{ id:'example-v1',type:'voltmeter',a:'1-7',b:'8-7' }];
       }
       if (boardType === 'breadboard') {
-        board.version = 3; board.boardType = 'breadboard'; board.breadboardBreak = kind === 'series'; board.stripboardTerminals = {...stripboardTerminals};
+        board.version = 3; board.boardType = 'breadboard'; board.breadboardBreak = kind === 'series'; board.stripboardTerminals = {positiveTerminal:'1-0',negativeTerminal:'8-0'};
         board.positiveTerminal = '0-0'; board.negativeTerminal = '9-0'; board.cuts = [...cuts];
         if (kind === 'series') {
           board.components = [
@@ -1270,6 +1767,100 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       restoreBoard(board);
       showMessage(kind === 'series' ? 'Series example: 3 mA through both resistors and A1, with 6 V across R2. Undo returns to your board.' : 'Parallel example: 9 mA and 4.5 mA in the two branches; total 13.5 mA. Undo returns to your board.');
     }
+    // Draw the actual board geometry at print resolution. No external images or
+    // HTML-to-image dependencies: the PNG also works from an offline HTML file.
+    function drawBoardPicture(canvas,scale=2){
+      const width=boardWidth(),height=boardHeight(),ctx=canvas.getContext('2d');
+      if(!ctx)throw new Error('This browser could not create a drawing canvas.');
+      canvas.width=width*scale;canvas.height=height*scale;ctx.scale(scale,scale);
+      const bread=boardType==='breadboard',gx=42,gy=58,w=COLS*PITCH,h=ROWS*PITCH;
+      const xy=id=>{const p=pointFromId(id);return {x:gx+p.col*PITCH+HOLE_OFFSET,y:gy+p.row*PITCH+HOLE_OFFSET};};
+      const rounded=(x,y,w,h,r,fill,stroke)=>{ctx.beginPath();ctx.roundRect(x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke();}};
+      const circle=(x,y,r,fill,stroke,line=1)=>{ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=line;ctx.stroke();}};
+      const text=(value,x,y,size=10,colour='#482912',align='left')=>{ctx.fillStyle=colour;ctx.font=`${size}px monospace`;ctx.textAlign=align;ctx.textBaseline='middle';ctx.fillText(String(value),x,y);};
+      const line=(a,b,colour,thickness=4,dashed=false)=>{ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=colour;ctx.lineWidth=thickness;ctx.lineCap='round';ctx.setLineDash(dashed?[5,4]:[]);ctx.stroke();ctx.setLineDash([]);};
+      const background=ctx.createLinearGradient(0,0,width,height);background.addColorStop(0,bread?'#f8f8f2':'#be754c');background.addColorStop(1,bread?'#dfe3d9':'#a45b37');
+      ctx.fillStyle=background;ctx.fillRect(0,0,width,height);rounded(4,4,width-8,height-8,11,null,bread?'#bbc2b1':'#794324');
+      text(`${bread?'BREADBOARD':'STRIPBOARD'} · ${COLS} × ${ROWS}`,gx,24,10,bread?'#66745e':'#482912');text('2.54 mm PITCH',width-42,height-20,10,bread?'#66745e':'#482912','right');
+      if(bread){
+        rounded(gx-8,gy+35,w+16,(ROWS-2)*PITCH-8,6,'#e9ece4','#c1c8b7');
+        for(const [row,colour]of [[0,'#f5d5d1'],[ROWS-1,'#cfdfec']])rounded(gx-8,gy+row*PITCH,w+16,PITCH,5,colour,row===0?'#d88577':'#729abc');
+        for(const row of [1,ROWS-1])rounded(gx-8,gy+row*PITCH-4,w+16,8,0,'#f6f7f0');
+        for(const [start,end]of breadboardBanks())for(let col=0;col<COLS;col++)rounded(gx+col*PITCH+4,gy+start*PITCH+5,23,(end-start+1)*PITCH-10,5,'#e2e9da','#b7c3ab');
+        if(breadboardBreak)rounded(gx-8,gy+breadboardSplit()*PITCH-9,w+16,18,3,'#bfc4b8','#d0d5c6');
+        line({x:gx,y:gy},{x:gx+w,y:gy},'#d86762',3);line({x:gx,y:gy+h-3},{x:gx+w,y:gy+h-3},'#5c91bc',3);
+      }else{
+        for(let row=0;row<ROWS;row++){const copper=ctx.createLinearGradient(0,gy+row*PITCH+9,0,gy+row*PITCH+22);copper.addColorStop(0,'#ed9b5c');copper.addColorStop(1,'#b95730');rounded(gx,gy+row*PITCH+9.5,w,12,6,copper,'#efb277');}
+        for(const id of cuts){const p=xy(id);circle(p.x,p.y,13,'#fff','#eadfd2');}
+      }
+      for(let row=0;row<ROWS;row++){
+        text(bread?(row===0?'+':row===ROWS-1?'−':signalRowLabel(row)):row+1,gx-18,gy+row*PITCH+HOLE_OFFSET,10,bread?(row===0?'#bd4f43':row===ROWS-1?'#427ca6':'#81897b'):'#4c2816','center');
+        for(let col=0;col<COLS;col++){
+          const id=pointId(row,col),p=xy(id),rail=bread&&row===0?'#c57868':bread&&row===ROWS-1?'#6f94b4':bread?'#bbbfb4':cuts.has(id)?'#eee7dc':'#743316';
+          if(bread){rounded(p.x-7,p.y-7,14,14,2,rail);rounded(p.x-4,p.y-4,8,8,0,'#343933');}
+          else circle(p.x,p.y,7,'#25160e',rail,3);
+          if(id===positiveTerminal||id===negativeTerminal)circle(p.x,p.y,11,null,id===positiveTerminal?'#82c997':'#82c2df',2);
+        }
+      }
+      for(let col=0;col<COLS;col++)text(col+1,gx+col*PITCH+HOLE_OFFSET,gy-15,10,bread?'#81897b':'#4c2816','center');
+      const drawIC=c=>{
+        const anchor=xy(c.a),horizontal=c.orientation==='horizontal',length=(packagePins(c)/2-1)*PITCH+26;
+        // Leads sit underneath the opaque package, exactly at its hole positions.
+        for(const pin of dipPins(c)){
+          const p=xy(pin.point),left=pin.number<=packagePins(c)/2;
+          if(horizontal)rounded(p.x-3,p.y+(left?-13:0),6,13,2,'#b7c1c5','#525e65');
+          else rounded(p.x+(left?0:-13),p.y-3,13,6,2,'#b7c1c5','#525e65');
+        }
+        const bx=anchor.x+(horizontal?-13:13),by=anchor.y+(horizontal?13:-13),bw=horizontal?length:67,bh=horizontal?67:length;
+        const plastic=ctx.createLinearGradient(bx,by,bx+bw,by+bh);plastic.addColorStop(0,'#303237');plastic.addColorStop(.4,'#101113');plastic.addColorStop(1,'#202125');rounded(bx,by,bw,bh,8,plastic,'#555b62');
+        if(horizontal){ctx.beginPath();ctx.arc(bx,by+bh/2,10,-Math.PI/2,Math.PI/2);ctx.fillStyle='#080a0b';ctx.fill();circle(bx+12,by+bh-9,2.5,'#79818b');}
+        else{ctx.beginPath();ctx.arc(bx+bw/2,by,10,0,Math.PI);ctx.fillStyle='#080a0b';ctx.fill();circle(bx+9,by+12,2.5,'#79818b');}
+        text(componentLabel(c),bx+bw/2,by+bh/2-8,9,'#e4e5dc','center');text(c.model||packageName(c),bx+bw/2,by+bh/2+8,9,'#e4e5dc','center');
+        for(const pin of dipPins(c)){const p=xy(pin.point),left=pin.number<=packagePins(c)/2;text(pin.number,p.x+(horizontal?0:left?22:-22),p.y+(horizontal?(left?-22:22):0),7,'#bec3c5','center');}
+      };
+      for(const c of components){
+        if(isIC(c))continue;
+        const a=xy(c.a),b=xy(c.b),mx=(a.x+b.x)/2,my=(a.y+b.y)/2,angle=Math.atan2(b.y-a.y,b.x-a.x);
+        line(a,b,c.type==='wire'?(bread?'#498ccf':'#79d2e5'):(bread?'#aeb8b0':'#e7ddc5'),c.type==='wire'?5:4);
+        ctx.save();ctx.translate(mx,my);ctx.rotate(angle);
+        if(c.type==='resistor'){rounded(-25.5,-9,51,18,7,'#e7c18a','#552e14');text(formatResistance(c.resistance),0,0,8,'#4a2815','center');}
+        else if(c.type==='led'){
+          const colour=LED_COLOURS[c.colour||'red'].hex,brightness=ledBrightness(c);if(brightness>0){ctx.shadowColor=colour;ctx.shadowBlur=10+16*brightness;}const off='#'+[0,1,2].map(i=>Math.round(parseInt(colour.slice(1+i*2,3+i*2),16)*.3+[40,39,39][i]*.7).toString(16).padStart(2,'0')).join('');circle(0,0,12,brightness>0?colour:off,'#604b3c',2);ctx.shadowBlur=0;circle(-4,-5,3,'#ffffff60');rounded(9,-7,2,12,1,'#202a22');
+        }else if(c.type==='diode'){rounded(-17,-8.5,34,17,5,'#30363f','#697079');rounded(7,-8,5,16,0,'#d3dce4');}
+        else if(c.type==='switch'){rounded(-20,-16,40,26,6,'#15241e','#607064');const colour=c.closed?'#b1eac0':'#f1cc88';circle(-12,-1,2.5,colour);circle(12,-1,2.5,colour);line({x:-12,y:0},{x:12,y:c.closed?0:-11},colour,3);}
+        ctx.restore();
+      }
+      for(const m of meters){
+        const a=xy(m.a),b=xy(m.b);line(a,b,bread?'#b59f43':'#e2c277',3,true);circle(a.x,a.y,6,'#f07e66','#fff3b7',2);circle(b.x,b.y,6,'#292929','#fff3b7',2);
+        const label=componentLabel(m),mx=(a.x+b.x)/2,my=(a.y+b.y)/2-14;rounded(mx-13,my-7,26,14,7,'#273031','#e2c277');text(label,mx,my,9,'#fff0a7','center');
+      }
+      for(const c of components.filter(isIC))drawIC(c);
+      // Capture a still frame of enabled current arrows and voltage labels.
+      if(workbenchMode==='simulation'&&currentFlowRunning){
+        const arrow=(a,b,current)=>{if(!Number.isFinite(current)||Math.abs(current)<1e-12||solution.status==='short')return;if(current<0)[a,b]=[b,a];const p=xy(a),q=xy(b),angle=Math.atan2(q.y-p.y,q.x-p.x);ctx.save();ctx.translate((p.x+q.x)/2,(p.y+q.y)/2);ctx.rotate(angle);line({x:-5,y:-4},{x:0,y:0},bread?'#bb7235':'#ffe17d',2);line({x:-5,y:4},{x:0,y:0},bread?'#bb7235':'#ffe17d',2);ctx.restore();};
+        if(showCopperFlow)for(const e of solution.idealEdges||[])if(e.type==='copper')arrow(e.a,e.b,solution.currents[e.id]);
+        if(showComponentFlow)for(const c of [...components.filter(c=>!isIC(c)),...meters.filter(m=>m.type==='ammeter')])arrow(c.a,c.b,solution.currents[c.id]);
+      }
+      if(workbenchMode==='simulation'&&showNodeVoltage)for(let row=0;row<ROWS;row++)for(let col=0;col<COLS;col++){
+        const id=pointId(row,col),p=xy(id),voltage=getVoltage(id,latestNodes),label=voltage===null?'—':`${formatNumber(voltage)}V`;ctx.font='7px monospace';const tw=ctx.measureText(label).width;rounded(p.x-tw/2-2,p.y+11,tw+4,10,2,'#15231de8');text(label,p.x,p.y+16,7,'#dceccc','center');
+      }
+      for(const [id,i]of [[positiveTerminal,0],[negativeTerminal,1]]){
+        const p=xy(id),label=i?(bread?'GND / 0 V':'0 V'):`+${formatNumber(SUPPLY_VOLTAGE)} V`;ctx.font='9px monospace';const tw=ctx.measureText(label).width;rounded(p.x-tw/2-5,p.y-32,tw+10,17,5,bread?(i?'#416f98':'#a63f36'):(i?'#203745':'#203b28'),i?'#90c9e9':'#c7eacc');text(label,p.x,p.y-23,9,bread?(i?'#eef6ff':'#fff2eb'):(i?'#d0edff':'#c7f3c6'),'center');
+      }
+      return {width:canvas.width,height:canvas.height};
+    }
+    async function exportBoardPNG(){
+      const button=document.getElementById('export-board-png');if(button.disabled)return;
+      finishComponentDrag(null,true);button.disabled=true;button.textContent='Preparing PNG…';
+      try{
+        const filename=`${boardType}-${COLS}x${ROWS}.png`,canvas=document.createElement('canvas'),size=drawBoardPicture(canvas,2);
+        const blob=await new Promise((resolve,reject)=>canvas.toBlob(blob=>blob?resolve(blob):reject(new Error('PNG encoding failed.')),'image/png'));
+        const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+        showMessage(`Board PNG exported · ${size.width} × ${size.height} pixels.`);
+      }catch(err){showMessage(`Could not export PNG: ${err.message}`);}
+      finally{button.disabled=false;button.textContent='↓ Export board PNG';}
+    }
+
     function exportNetlist() {
       if (solution.status === 'short' || solution.status === 'error') { showMessage('Resolve the supply short or solver error before exporting.'); return; }
       const names = { [latestNodes[negativeTerminal]]:'0' };
@@ -1277,12 +1868,14 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       const net = root => { if (names[root] === undefined) names[root] = `n${next++}`; return names[root]; };
       const lines = [`${boardType === 'breadboard' ? 'Breadboard' : 'Stripboard'} DC operating point`, '* Ideal conductors, wires, closed switches and ammeters collapsed into nets.', '* DC only. LEDs and diodes use piecewise-linear behavioural current sources. Floating islands are omitted.'];
       lines.push(`Vbench ${net(latestNodes[positiveTerminal])} 0 DC ${SUPPLY_VOLTAGE}`);
-      components.filter(c => c.type === 'resistor' || isDiode(c)).forEach(c => {
+      if(components.some(c=>isIC(c)))lines.push('* IC outputs below are the solved DC logic-state snapshot, not a dynamic SPICE logic model.');
+      [...components.filter(c => c.type === 'resistor' || isDiode(c)),...(solution.icDrivers||[])].forEach(c => {
         const a = latestNodes[c.a], b = latestNodes[c.b];
         if (getVoltage(c.a, latestNodes) === null || a === b) { lines.push(`* ${componentLabel(c)} omitted: ${a === b ? 'bypassed' : 'floating island'}`); return; }
         if(isDiode(c)) lines.push(`B${componentLabel(c)} ${net(a)} ${net(b)} I={max((V(${net(a)},${net(b)})-${diodeForwardVoltage(c)})/${diodeSlopeResistance(c)},0)}`);
-        else lines.push(`${componentLabel(c)} ${net(a)} ${net(b)} ${c.resistance}`);
+        else lines.push(`${c.netlistName||componentLabel(c)} ${net(a)} ${net(b)} ${c.resistance}`);
       });
+      components.filter(c=>isIC(c)).forEach(c=>lines.push(`* ${componentLabel(c)} ${c.model||`unassigned ${packageName(c)}`}: ${solution.chips[c.id].state}; gates ${solution.chips[c.id].gates.map(g=>g.output).join(',')}`));
       components.filter(c => c.type === 'switch').forEach(c => lines.push(`* ${componentLabel(c)}: ${c.closed ? 'closed (ideal conductor collapsed)' : 'open (disconnected)'}; ${locationLabel(c.a)} -> ${locationLabel(c.b)}`));
       Object.entries(latestNodes).forEach(([point, root]) => { if (names[root] !== undefined) lines.push(`* Hole ${locationLabel(point)} = ${names[root]}`); });
       meters.forEach(m => lines.push(`* ${componentLabel(m)}: ${locationLabel(m.a)} -> ${locationLabel(m.b)}; browser ${m.type === 'ammeter' ? formatCurrent(solution.currents[m.id]) : `${formatNumber(meterVoltage(m))} V`}`));
@@ -1296,7 +1889,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       actionHistory.push({type:'snapshot',board:boardData()});
       if (boardType === 'stripboard') stripboardTerminals = {positiveTerminal,negativeTerminal};
       boardType = type;
-      if (type === 'breadboard') { positiveTerminal = '0-0'; negativeTerminal = '9-0'; }
+      if (type === 'breadboard') { positiveTerminal = '0-0'; negativeTerminal = pointId(ROWS-1,0); }
       else { positiveTerminal = stripboardTerminals.positiveTerminal; negativeTerminal = stripboardTerminals.negativeTerminal; }
       firstPoint = null; activeTool = 'select'; currentFlowRunning = false;
       document.getElementById('flow-button').classList.remove('playing');
@@ -1313,14 +1906,16 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     }
     function renderBoardSettings() {
       const breadboard = boardType === 'breadboard';
+      document.getElementById('board-size-label').textContent=`${COLS} × ${ROWS} holes`;
+      for(const [id,value]of [['board-rows-input',ROWS],['board-cols-input',COLS]])if(document.activeElement!==document.getElementById(id))document.getElementById(id).value=value;
       document.getElementById('sim-board').dataset.board = boardType;
       document.getElementById('board-type-select').value = boardType;
       document.getElementById('breadboard-break-row').hidden = !breadboard;
       document.getElementById('breadboard-break-input').checked = breadboardBreak;
       document.getElementById('supply-terminal-actions').hidden = breadboard;
       document.getElementById('board-heading').textContent = breadboard ? 'Breadboard' : 'Stripboard';
-      document.getElementById('board-face-label').textContent = breadboard ? 'SOLDERLESS / VERTICAL CONTACT GROUPS' : '18 × 10 / COPPER SIDE';
-      document.getElementById('board-connection-note').textContent = breadboard ? (breadboardBreak ? 'Vertical signal columns, split into upper a–d and lower e–h banks. The horizontal power and ground rails stay continuous.' : 'Vertical signal columns. Coloured + and GND rails connect horizontally and are separate from the signal contacts.') : 'Horizontal copper rows. Supply terminals can be moved.';
+      document.getElementById('board-face-label').textContent = breadboard ? 'SOLDERLESS / VERTICAL CONTACT GROUPS' : `${COLS} × ${ROWS} / COPPER SIDE`;
+      document.getElementById('board-connection-note').textContent = breadboard ? (breadboardBreak ? `Vertical signal columns: upper ${signalRowLabel(1)}–${signalRowLabel(breadboardSplit()-1)}, lower ${signalRowLabel(breadboardSplit())}–${signalRowLabel(ROWS-2)}. Power and ground rails stay continuous.` : 'Vertical signal columns. Coloured + and GND rails connect horizontally and are separate from the signal contacts.') : 'Horizontal copper rows. Supply terminals can be moved.';
       document.getElementById('board-wiring-footnote').textContent = breadboard ? 'Signal contacts: ↕ vertical. Coloured supply rails: ↔ horizontal.' : 'Two clicks connect leads. Crossing lines do not join.';
       document.getElementById('conductor-flow-label').textContent = breadboard ? 'Contact / rail arrows' : 'Copper track arrows';
       document.getElementById('sim-supply-note').textContent = breadboard ? 'Fixed horizontal + and GND rails. Both remain continuous when the signal area is split.' : 'Ideal DC supply · 0 V reference at the blue terminal.';
@@ -1340,15 +1935,18 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
     function setWorkbenchMode(mode) {
       if (mode !== 'build' && mode !== 'simulation') return;
       if (workbenchMode === mode) return;
+      finishComponentDrag(null,true);
       workbenchMode = mode;
       firstPoint = null;
       currentFlowRunning = mode === 'simulation' && solution.status === 'complete';
       document.getElementById('flow-button').classList.toggle('playing', currentFlowRunning);
       refreshSelection(); render(); updateBoardScale();
-      showMessage(mode === 'simulation' ? 'Simulation is live. Use the controls on the left; readings are on the right.' : 'Choose a tool to build, or select a component to edit it.');
+      showMessage(mode === 'simulation' ? 'Simulation is live. Use the controls on the left; readings are on the right.' : 'Choose a tool to build, or use Select to inspect and drag components.');
     }
     function updateModeUI() {
-      document.body.dataset.mode = workbenchMode;
+      document.body.dataset.mode = workbenchMode;document.body.dataset.activeTool=activeTool;
+      document.getElementById('dip-placement-controls').hidden=workbenchMode!=='build'||activeTool!=='ic';
+      document.getElementById('dip-placement-orientation').value=dipOrientation;
       document.querySelectorAll('[data-view]').forEach(el => { el.hidden = el.dataset.view !== workbenchMode; });
       for (const [id, mode] of [['build-mode','build'],['simulation-mode','simulation']]) {
         const button = document.getElementById(id); const active = mode === workbenchMode;
@@ -1357,7 +1955,8 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       document.getElementById('mode-status').textContent = workbenchMode === 'build' ? 'BUILD' : 'SIMULATE';
       document.getElementById('board-mode-label').textContent = `${workbenchMode === 'build' ? 'LAYOUT' : 'LIVE DC'} / ${boardType === 'breadboard' ? 'BREADBOARD' : 'COPPER SIDE'}`;
       const hints = {
-        select: 'Select a component to edit it. Click empty board space for the supply.',
+        select: 'Click to select; drag a part to move it. Connections snap to holes. Esc cancels a move.',
+        ic: 'Hover to preview. Click once to place an IC; its model sets the package size in Properties.',
         resistor: 'Click two holes to place a resistor, then set its value on the right.',
         led: 'Click anode (+) first, then cathode (−). Place a resistor in series to limit LED current.',
         diode: 'Click anode first, then cathode (banded end). Current flows toward the band.',
@@ -1393,13 +1992,15 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       document.getElementById('led-properties').hidden = !c || c.type !== 'led';
       document.getElementById('diode-properties').hidden = !c || c.type !== 'diode';
       document.getElementById('switch-properties').hidden = !c || c.type !== 'switch';
+      document.getElementById('ic-properties').hidden=!c||!isIC(c);
+      document.getElementById('component-terminal-cards').hidden=!!c&&isIC(c);
       document.getElementById('component-a-label').textContent = isDiode(c) ? 'ANODE (+)' : 'FIRST LEAD';
       document.getElementById('component-b-label').textContent = isDiode(c) ? 'CATHODE (−)' : 'SECOND LEAD';
       document.getElementById('deselect-button').disabled = !selectedComponent;
-      document.getElementById('property-symbol').textContent = c ? ({resistor:'Ω',led:'◉',diode:'▸│',switch:'⏼',wire:'⌁',ammeter:'A',voltmeter:'V'})[c.type] : '⎓';
+      document.getElementById('property-symbol').textContent = c ? ({resistor:'Ω',dip14:'▤',dip16:'▤',led:'◉',diode:'▸│',switch:'⏼',wire:'⌁',ammeter:'A',voltmeter:'V'})[c.type] : '⎓';
       document.getElementById('property-type').textContent = c ? c.type.toUpperCase() : 'BENCH SUPPLY';
-      document.getElementById('property-title').textContent = c ? `${componentLabel(c)} · ${({resistor:'Resistor',led:'LED',diode:'Diode',switch:'Switch',wire:'Wire link',ammeter:'Ammeter',voltmeter:'Voltmeter'})[c.type]}` : 'Power supply';
-      document.getElementById('property-description').textContent = c ? ({resistor:'Set the resistance of this component.',led:'Set colour, threshold and polarity. Glow follows forward current.',diode:'Set the forward threshold and polarity. The silver band marks the cathode.',switch:'Set its starting state here. In Simulate mode, click the switch to operate it.',wire:'An ideal connection between the two lead holes.',ammeter:'An ideal meter inserted in series with a branch.',voltmeter:'A voltage measurement between two lead holes.'})[c.type] : 'Click a component to edit it, or adjust the supply here.';
+      document.getElementById('property-title').textContent = c ? `${componentLabel(c)} · ${({resistor:'Resistor',dip14:'DIP-14',dip16:'DIP-16',led:'LED',diode:'Diode',switch:'Switch',wire:'Wire link',ammeter:'Ammeter',voltmeter:'Voltmeter'})[c.type]}` : 'Power supply';
+      document.getElementById('property-description').textContent = c ? ({resistor:'Set the resistance of this component.',dip14:'Choose the chip inside this package. Pin 1 is marked by the dot; the notch sets its orientation.',dip16:'Choose the chip inside this package. Pin 1 is marked by the dot; the notch sets its orientation.',led:'Set colour, threshold and polarity. Glow follows forward current.',diode:'Set the forward threshold and polarity. The silver band marks the cathode.',switch:'Set its starting state here. In Simulate mode, click the switch to operate it.',wire:'An ideal connection between the two lead holes.',ammeter:'An ideal meter inserted in series with a branch.',voltmeter:'A voltage measurement between two lead holes.'})[c.type] : 'Click a component to edit it, or adjust the supply here.';
       document.getElementById('supply-positive-location').textContent = boardType === 'breadboard' ? 'Top + rail' : `Row ${pointFromId(positiveTerminal).row + 1} · Col ${pointFromId(positiveTerminal).col + 1}`;
       document.getElementById('supply-negative-location').textContent = boardType === 'breadboard' ? 'Bottom GND rail' : `Row ${pointFromId(negativeTerminal).row + 1} · Col ${pointFromId(negativeTerminal).col + 1}`;
       for (const id of ['supply-input','sim-supply-input']) {
@@ -1407,6 +2008,13 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         if (document.activeElement !== field) field.value = SUPPLY_VOLTAGE;
       }
       if (c) {
+        if(isIC(c)){
+          document.getElementById('ic-model-select').value=c.model||(c.type==='dip16'?'unassigned16':'unassigned14');document.getElementById('ic-orientation-select').value=c.orientation;
+          const state=solution.chips?.[c.id];document.getElementById('ic-power-state').textContent=c.model?`${state?.state||'—'} · ${IC_MODELS[c.model].family}-style electrical approximation · use 5 V for examples.`:'No chip selected. All pins are independent and undriven.';
+          const m=IC_MODELS[c.model];document.getElementById('ic-function-note').textContent=m?(m.notes||`${m.description}. X is floating or undefined. Outputs have approximate 50 Ω drive.`):'Choose a model to assign pin functions. Package size changes automatically if needed.';
+          const link=document.getElementById('ic-datasheet-link');link.hidden=!m;if(m)link.href=m.datasheet;
+          const pins=document.getElementById('ic-pin-properties');pins.replaceChildren(renderICPinTable(c));
+        }
         if(c.type === 'led') {
           document.getElementById('led-colour-select').value = c.colour || 'red';
           const field = document.getElementById('led-forward-input'); if(document.activeElement !== field) field.value = ledForwardVoltage(c);
@@ -1423,7 +2031,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         document.getElementById('component-b-location').textContent = locationLabel(c.b);
         const field = document.getElementById('component-value-input');
         if (c.type === 'resistor' && document.activeElement !== field) field.value = c.resistance;
-        document.getElementById('component-model-note').textContent = ({resistor:boardType === 'breadboard' ? 'Signal contacts connect vertically within each column. Contacts in the same connected group bypass this resistor. Bridge the horizontal split or use separate columns.' : 'Terminals connect only at the two lead holes. Uncut copper under the resistor can bypass it.',led:'Approximate diode model: forward threshold + 20 Ω slope resistance. Anode (+) is the first lead; cathode (−) is second. Use a series resistor. Overcurrent and reverse voltage warn without simulating damage.',diode:'Approximate silicon diode: default 0.7 V threshold + 1 Ω slope resistance. First lead is anode; second is the banded cathode. Reverse current is blocked. Reverse breakdown and damage are not simulated.',switch:'Ideal SPST switch: open disconnects the leads; closed connects them with 0 Ω. Copper or wires joining the same leads can bypass the switch. Contacts connect only at the lead holes.',wire:'Wire resistance is 0 Ω. Crossings connect only when they share a lead hole.',ammeter:'Meter resistance is 0 Ω. Connect across a circuit break; parallel ideal paths have an indeterminate current split.',voltmeter:'Ideal infinite input resistance. This meter does not conduct current.'})[c.type];
+        document.getElementById('component-model-note').textContent = isIC(c)?(boardType==='breadboard'?'Straddle the centre break horizontally and turn Centre break on.':'Cut copper between opposing pin columns to keep the IC pins separate.')+(c.model?` VCC: pin ${IC_MODELS[c.model].vcc}; GND: pin ${IC_MODELS[c.model].gnd}. Inputs require defined levels.`:' Select a model to see its power and signal pins.'):({resistor:boardType === 'breadboard' ? 'Signal contacts connect vertically within each column. Contacts in the same connected group bypass this resistor. Bridge the horizontal split or use separate columns.' : 'Terminals connect only at the two lead holes. Uncut copper under the resistor can bypass it.',led:'Approximate diode model: forward threshold + 20 Ω slope resistance. Anode (+) is the first lead; cathode (−) is second. Use a series resistor. Overcurrent and reverse voltage warn without simulating damage.',diode:'Approximate silicon diode: default 0.7 V threshold + 1 Ω slope resistance. First lead is anode; second is the banded cathode. Reverse current is blocked. Reverse breakdown and damage are not simulated.',switch:'Ideal SPST switch: open disconnects the leads; closed connects them with 0 Ω. Copper or wires joining the same leads can bypass the switch. Contacts connect only at the lead holes.',wire:'Wire resistance is 0 Ω. Crossings connect only when they share a lead hole.',ammeter:'Meter resistance is 0 Ω. Connect across a circuit break; parallel ideal paths have an indeterminate current split.',voltmeter:'Ideal infinite input resistance. This meter does not conduct current.'})[c.type];
       }
       const list = document.getElementById('build-component-list'); list.replaceChildren();
       const all = [...components,...meters];
@@ -1431,7 +2039,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       all.forEach(c => {
         const row = document.createElement('button'); row.type = 'button'; row.className = `part-row ${c.id === selectedComponent ? 'selected-item' : ''}`;
         const name = document.createElement('span'); name.textContent = `${componentLabel(c)} · ${c.type}`;
-        const value = document.createElement('span'); value.textContent = c.type === 'resistor' ? formatResistance(c.resistance) : c.type === 'led' ? LED_COLOURS[c.colour || 'red'].name : c.type === 'diode' ? `${formatNumber(diodeForwardVoltage(c))} V` : c.type === 'switch' ? (c.closed ? 'Closed' : 'Open') : `${locationLabel(c.a)} → ${locationLabel(c.b)}`;
+        const value = document.createElement('span'); value.textContent = c.type === 'resistor' ? formatResistance(c.resistance) : isIC(c)?(c.model||'Unassigned'): c.type === 'led' ? LED_COLOURS[c.colour || 'red'].name : c.type === 'diode' ? `${formatNumber(diodeForwardVoltage(c))} V` : c.type === 'switch' ? (c.closed ? 'Closed' : 'Open') : `${locationLabel(c.a)} → ${locationLabel(c.b)}`;
         row.append(name,value); row.addEventListener('click', () => selectComponent(c.id)); list.appendChild(row);
       });
       if (!all.length) {
@@ -1457,7 +2065,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         field.value = SUPPLY_VOLTAGE; showMessage('Enter a supply voltage greater than 0 V and at most 1000 V.'); return;
       }
       if (n === SUPPLY_VOLTAGE) return;
-      actionHistory.push({type:'voltage',previous:SUPPLY_VOLTAGE}); SUPPLY_VOLTAGE = n;
+      actionHistory.push({type:'voltage',previous:SUPPLY_VOLTAGE,logicBefore:logicSnapshot()}); SUPPLY_VOLTAGE = n;
       document.getElementById('supply-input').value = n; document.getElementById('sim-supply-input').value = n;
       render(); showMessage(`Supply set to ${formatNumber(n)} V DC.`);
     }
@@ -1467,14 +2075,14 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       if (!width) return;
       let fitHeight = Infinity;
       if (typeof window !== 'undefined' && window.innerWidth > 850) {
-        fitHeight = Math.max(190, window.innerHeight - stage.getBoundingClientRect().top - 112) / 412;
+        fitHeight = Math.max(190, window.innerHeight - stage.getBoundingClientRect().top - 112) / boardHeight();
       }
-      const scale = Math.max(.25, Math.min(1.25, width / 642, fitHeight));
+      const scale = Math.max(.05, Math.min(1.25, width / boardWidth(), fitHeight));
       document.getElementById('sim-board').style.setProperty('--board-scale', String(scale));
     }
     function operateSwitch(id) {
       const c=components.find(c=>c.id===id&&c.type==='switch');if(!c)return;
-      actionHistory.push({type:'switch-state',id:c.id,previous:c.closed});c.closed=!c.closed;
+      actionHistory.push({type:'switch-state',id:c.id,previous:c.closed,logicBefore:logicSnapshot()});c.closed=!c.closed;
       selectedComponent=c.id;firstPoint=null;refreshSelection();render();
       showMessage(`${componentLabel(c)} ${c.closed ? 'closed' : 'opened'}. Readings updated.`);
     }
@@ -1491,6 +2099,10 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
       showMessage('Switch + LED example: enter Simulate and click the switch to light the LED.');
     }
     function initializeModes() {
+      initializeComponentDragging();
+      document.getElementById('resize-board').addEventListener('click',()=>resizeBoard(document.getElementById('board-rows-input').value,document.getElementById('board-cols-input').value));
+      for(const id of ['board-rows-input','board-cols-input'])document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();resizeBoard(document.getElementById('board-rows-input').value,document.getElementById('board-cols-input').value);}});
+      initializeICControls();
       initializeLEDControls();
       initializeDiodeControls();
       document.getElementById('toggle-selected-switch').addEventListener('click',()=>operateSwitch(selectedComponent));
@@ -1524,7 +2136,7 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         });
       }
       document.getElementById('sim-board').addEventListener('click', e => {
-        if (workbenchMode === 'build' && !e.target.closest('.hole,.lead,.resistor-body,.led-body,.diode-body,.switch-body,.meter-tag,.supply-pin-label')) {
+        if (workbenchMode === 'build' && !e.target.closest('.hole,.lead,.resistor-body,.led-body,.diode-body,.switch-body,.ic-body,.meter-tag,.supply-pin-label')) {
           selectedComponent = null; firstPoint = null; refreshSelection(); render();
         }
       });
@@ -1549,8 +2161,10 @@ body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [d
         e.target.value = '';
       });
       document.getElementById('export-netlist').addEventListener('click', exportNetlist);
+      document.getElementById('export-board-png').addEventListener('click',exportBoardPNG);
       document.addEventListener('keydown', e => {
         if (e.target.matches('input,select,textarea')) return;
+        if(e.key==='Escape'&&componentDrag){e.preventDefault();finishComponentDrag(null,true);return;}
         if (e.key === 'Escape') { firstPoint = null; selectedComponent = null; refreshSelection(); render(); }
         if (workbenchMode === 'build' && (e.key === 'Delete' || e.key === 'Backspace') && selectedComponent && selectedComponent !== 'supply') { e.preventDefault(); removeComponent(selectedComponent); }
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); undoLastAction(); }
