@@ -1,0 +1,1117 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Electronics workbench</title><style>
+
+:root { --cream:#f4f2e8; --muted:#91a7a3; --cyan:#8ce5cf; --yellow:#ffe18b; --success:#a7ebad; --surface:#182524; --copper:#bf754c; --ink:#10201c; }
+* { box-sizing:border-box; }
+[hidden] { display:none !important; }
+body { margin:0; color:var(--cream); background:radial-gradient(ellipse at 48% -40%,#30463e,transparent 75%),#0e1817; font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+button,input,select { font:inherit; } button { cursor:pointer; } button:focus-visible,input:focus-visible,summary:focus-visible { outline:2px solid var(--cyan); outline-offset:3px; }
+button { color:inherit; } h2,h3,p { margin:0; } h2 { font-size:18px; font-weight:620; letter-spacing:-.035em; } h3 { font-size:12px; font-weight:620; }
+.app-header { height:76px; padding:0 26px; display:flex; align-items:center; justify-content:space-between; gap:18px; border-bottom:1px solid #31443d; background:#101c1be6; }
+.brand { display:flex; align-items:center; gap:11px; font-weight:650; font-size:16px; letter-spacing:-.025em; white-space:nowrap; }
+.brand-mark { width:34px;height:34px;display:grid;place-items:center;border:1px solid #48665a;border-radius:10px;background:#243b31;color:var(--cyan); }
+.brand svg { width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.4; }
+.mode-switch { display:flex; gap:4px; padding:4px; background:#091311; border:1px solid #34463e; border-radius:12px; }
+.mode-button { display:flex; align-items:center; justify-content:center; gap:9px; min-width:116px; border:0; border-radius:8px; background:transparent; color:#93a9a2; padding:9px 15px; font-size:13px; font-weight:650; }
+.mode-button.active { color:#173d2b; background:#aee3be; box-shadow:0 2px 9px #0004; }
+.mode-button span { font-size:19px;line-height:1; }
+.supply-badge { display:flex;align-items:center;gap:9px;background:#1b2b25;border:1px solid #385648;border-radius:9px;padding:9px 12px;color:#c9e4d0;font:12px ui-monospace,monospace; }
+.supply-dot,.legend-dot { width:7px;height:7px;border-radius:50%;background:#ace9ac;display:inline-block; }
+.workspace { width:100%;max-width:1760px;margin:auto;padding:22px 24px 24px;display:grid;grid-template-columns:220px minmax(0,1fr) 280px;gap:18px;align-items:start; }
+.side-column { display:flex; flex-direction:column; gap:14px; max-height:calc(100dvh - 148px); overflow:auto; scrollbar-width:thin; scrollbar-color:#3e5750 transparent; }
+.panel { padding:17px; border:1px solid #34473f; border-radius:14px; background:linear-gradient(145deg,#1c2a26,#16231f); box-shadow:0 6px 20px #0002; }
+.section-head { display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:11px; }
+.eyebrow { font:600 10px ui-monospace,monospace;letter-spacing:.12em;color:#acd0b7; }
+.quiet-label { font:10px ui-monospace,monospace; color:#849f93; }
+.panel-caption { margin-top:7px; color:#9eb4aa; font-size:12px;line-height:1.55; }
+.tool-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:15px; }
+.tool-button { min-height:66px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1px solid #3b5147;border-radius:9px;background:#21342b;color:#cddbcf;font-size:11px;transition:background .15s,border-color .15s; }
+.tool-symbol { color:#98dcb5;font:21px/1.2 ui-monospace,monospace; }
+.tool-button:hover { border-color:#8ebfa0;background:#2d4537; }.tool-button.active { border-color:#b4dfbc;background:#354d37;color:#f2ffee; }.tool-button.active .tool-symbol { color:#d3efaa; }
+.small-actions { display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px; }
+.action-button { border:1px solid #40574b;border-radius:8px;padding:9px 6px;background:#253a2e;color:#dbe7da;font-size:11px;font-weight:550; }
+.action-button:hover { background:#34513c;border-color:#88b894; }.danger-subtle { color:#e3b2a5;border-color:#67483d;background:#342922; }.danger-subtle:hover { background:#55342a;border-color:#b98169; }
+.primary-button { width:100%;margin:15px 0 4px;padding:12px;color:#13351c;background:#b9dea7;border-color:#b9dea7;font-size:12px;font-weight:700; }.primary-button:hover { background:#cfeaba; }.primary-button.playing { background:#f4d58d;border-color:#f4d58d;color:#403618; }
+.full-width { width:100%;margin-top:12px; }.fine-print { margin-top:11px;color:#8ca496;font-size:11px;line-height:1.65; }
+.field-label { display:block;margin-top:17px;color:#c7d8ca;font-size:12px;font-weight:550; }.unit-field { display:flex;align-items:center;border:1px solid #516a57;border-radius:9px;background:#0d1b15;margin-top:7px; }.unit-field input { min-width:0;flex:1;width:100%;padding:12px 10px;color:#efffdd;background:transparent;border:0;border-radius:9px;font:18px ui-monospace,monospace; }.unit-field span { padding:0 13px 0 0;color:#819888;font:12px ui-monospace,monospace; }
+.range-label { display:flex;justify-content:space-between;align-items:center;font-weight:400; }.range-label output { font:12px ui-monospace,monospace;color:var(--cyan); } input[type="range"] { width:100%;accent-color:#b5dca6;margin:12px 0;cursor:pointer; }
+.toggle-row { display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:14px;color:#c6d6c9;font-size:12px;cursor:pointer; }.toggle-row input { accent-color:#b5dca6;width:15px;height:15px;cursor:pointer; }
+.project-panel .small-actions { margin-top:0; } .project-details { border-top:1px solid #344c3c;margin-top:13px;padding-top:10px; } summary { font-size:11px;color:#bfd3c1;cursor:pointer; } .project-details .small-actions { margin-top:12px; }
+.board-column { min-width:0; }.board-toolbar { display:flex;justify-content:space-between;align-items:center;margin:2px 1px 15px;gap:12px; }.board-toolbar h2 { margin-top:3px;font-size:22px; }.board-chips { display:flex;gap:6px;font-size:10px;color:#a2b9aa; }.board-chips span { padding:6px 9px;border:1px solid #374f41;border-radius:7px;background:#1e3026;white-space:nowrap; }.board-chips strong { color:#dbeed5;margin-right:2px;font-weight:550; }
+.board-surface { padding:16px;border:1px solid #3c5144;border-radius:16px;background:#192921;box-shadow:0 18px 45px #0003; }.board-instruction { display:flex;align-items:center;gap:8px;min-height:32px;margin-bottom:13px;color:#a7bfa9;font-size:11px;line-height:1.5; }.instruction-dot { width:5px;height:5px;border-radius:50%;background:#aec986;flex:none; }
+.sim-board { position:relative;overflow:hidden;border:1px solid #ddad7950;border-radius:11px;padding:0;background:linear-gradient(90deg,#ffffff05 1px,transparent 1px),linear-gradient(#ffffff05 1px,transparent 1px),#b76c43;background-size:31px 31px;box-shadow:inset 0 0 0 7px #945233,inset 0 0 45px #66331866;--board-scale:1;--flow-speed:1; }
+.board-stage { position:relative;width:100%;height:calc(412px * var(--board-scale)); }.board-inner { position:absolute;left:50%;top:0;width:642px;height:412px;transform:translateX(-50%) scale(var(--board-scale));transform-origin:top center;padding:58px 42px 44px; }
+.board-print { position:absolute;color:#482912;font:10px ui-monospace,monospace;letter-spacing:.14em;user-select:none; }
+#board-grid { position:relative;display:grid;grid-template-columns:repeat(18,31px);grid-template-rows:repeat(10,31px);width:558px;height:310px; }
+.track { position:absolute;left:0;width:558px;height:12px;border-top:1px solid #ffe8bf88;border-radius:7px;background:linear-gradient(#ed9b5c,#b95730);box-shadow:0 2px 2px #4a170855;pointer-events:none; }
+.hole { position:relative;z-index:4;width:17px;height:17px;align-self:center;justify-self:center;border:3px solid #743316;border-radius:50%;padding:0;background:#25160e;box-shadow:inset 0 1px 2px #000,0 0 0 1px #fbbe8160; }
+.hole:hover,.hole.selected { border-color:#fff2d5;box-shadow:0 0 0 4px #a8f5d760; }.hole.power-plus { border-color:#d4f6d4;box-shadow:0 0 0 4px #82f19d66; }.hole.power-minus { border-color:#d8f4ff;box-shadow:0 0 0 4px #82d2f166; }.hole.drilled { border-color:#eee7dc;box-shadow:inset 0 1px 2px #000; }
+.cut-gap { position:absolute;z-index:2;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px #eadfd2,inset 0 1px 3px #ccc;pointer-events:none; }
+.axis-label { position:absolute;font:10px monospace;color:#4c2816;pointer-events:none; }.component-layer { position:absolute;left:42px;top:58px;width:558px;height:310px;z-index:7;pointer-events:none; }
+.lead { position:absolute;height:4px;border-radius:99px;transform-origin:left center;pointer-events:auto;cursor:pointer; }.resistor-lead { background:#e7ddc5;box-shadow:0 1px 2px #0007; }.wire-lead { height:5px;background:#79d2e5;box-shadow:0 0 7px #8fd2e55c; }.meter-lead { height:3px;border-top:3px dashed var(--yellow);pointer-events:none; }
+.resistor-body { position:absolute;display:flex;align-items:center;justify-content:center;width:51px;height:18px;border:2px solid #552e14;border-radius:7px;background:#e7c18a;color:#4a2815;box-shadow:0 2px 3px #0005;font:700 8px monospace;transform-origin:center;pointer-events:auto;padding:0; }.inspected { outline:2px solid var(--yellow);outline-offset:3px; }
+.meter-probe { position:absolute;width:13px;height:13px;border:2px solid #fff3b7;border-radius:50%;box-shadow:0 0 0 3px #f1ad373f; }.meter-tag { position:absolute;border:1px solid var(--yellow);border-radius:99px;padding:2px 5px;background:#273031;color:#fff0a7;font:700 9px monospace;transform:translate(-50%,-50%);white-space:nowrap;pointer-events:auto; }
+.flow-arrow { position:absolute;z-index:12;display:none;width:10px;height:10px;border-top:3px solid var(--yellow);border-right:3px solid var(--yellow);filter:drop-shadow(0 0 3px #ffe17d);transform-origin:center;pointer-events:none; }.flow-running .flow-arrow { display:block;animation:flow-travel calc(var(--duration,1.8s) / var(--flow-speed)) linear infinite;animation-delay:var(--delay); }
+@keyframes flow-travel { 0% { left:var(--x1);top:var(--y1);opacity:0; } 8%,92% { opacity:1; } 100% { left:var(--x2);top:var(--y2);opacity:0; } }
+.node-voltage { position:absolute;z-index:15;pointer-events:none;background:#15231de8;color:#dceccc;border-radius:3px;padding:1px 3px;font:7px ui-monospace,monospace;transform:translate(-50%,-50%); }
+.supply-pin-label { position:absolute;z-index:16;pointer-events:auto;border:1px solid #c7eacc80;border-radius:5px;padding:3px 5px;background:#203b28;color:#c7f3c6;font:9px ui-monospace,monospace;transform:translate(-50%,-100%);white-space:nowrap; }.supply-pin-label.negative-pin { color:#d0edff;background:#203745;border-color:#90c9e980; }
+.board-footer { display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin:15px 1px 0; }.legend { display:flex;gap:14px;color:#9ab39c;font-size:10px; }.legend span { display:flex;align-items:center;gap:6px; }.legend-dot { width:6px;height:6px; }.legend-dot.negative { background:#a9d8ee; }.legend-dot.cut { background:#fff; }
+.workspace-footnote { display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin:15px 3px;color:#859e8d;font-size:10px;line-height:1.6; }
+.text-button { padding:0;border:0;background:none;color:#9dc9a6;font-size:10px; }.property-identity { display:flex;align-items:center;gap:12px;margin:16px 0 10px; }.property-identity h2 { margin-top:3px; }.property-symbol { width:46px;height:46px;display:grid;place-items:center;color:#d8eaa7;background:#334432;border:1px solid #5b6c43;border-radius:11px;font:26px ui-monospace,monospace; }
+.terminal-cards { display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:17px; }.terminal-cards div { padding:10px;background:#102219;border:1px solid #344c39;border-radius:8px; }.terminal-cards span { display:block;color:#849e88;font:9px ui-monospace,monospace; }.terminal-cards strong { display:block;margin-top:5px;font:13px ui-monospace,monospace;color:#d7e8cf; }.terminal-cards .positive-text { color:#b7ddad; }.terminal-cards .negative-text { color:#a9cfe7; }
+.preset-values { display:flex;gap:6px;margin-top:12px; }.preset-values button { padding:5px 8px;border:1px solid #415a42;border-radius:5px;background:#243b29;color:#b8d4b2;font-size:10px; }
+.parts-list { max-height:200px;overflow:auto;scrollbar-width:thin; }.part-row { width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;text-align:left;border:0;border-radius:6px;padding:8px;background:transparent;color:#b5c9b5;font-size:11px; }.part-row:hover,.part-row.selected-item { background:#314a32;color:#e5f4d9; }.part-row span:last-child { font:10px ui-monospace,monospace;color:#87a188; }
+.status-value { margin-top:8px;font-size:12px;color:#b5cdb7; }.status-dot { width:7px;height:7px;border-radius:50%;background:#90a490; }.status-dot.good { background:#afe28d;box-shadow:0 0 9px #afe28d55; }.status-dot.warn { background:#ffca81; }
+.hero-readout { margin:17px 0 15px;padding:14px 12px;background:#0d1e13;border:1px solid #395437;border-radius:10px;display:flex;flex-direction:column;gap:9px; }.hero-readout .readout { color:#c2eaa2;font:600 27px ui-monospace,monospace;letter-spacing:-.05em;overflow-wrap:anywhere; }
+.reading-line { display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;font-size:11px;color:#8da891; }.reading-line output { color:#d5e5ce;font:11px ui-monospace,monospace;text-align:right; }.meter-heading { display:flex;justify-content:space-between;align-items:center;gap:8px;margin:22px 0 7px; }.reading-row { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:7px;padding:10px 0;border-bottom:1px solid #304a34;color:#9db99f;font-size:10px; }.reading-row strong { color:#e4e5b1;font:11px ui-monospace,monospace; }.meter-empty { color:#819d87;font-size:11px;line-height:1.7;padding:6px 0; }
+.component-item { padding:9px 0;border-bottom:1px solid #304a34; }.component-heading { display:flex;justify-content:space-between;align-items:center;gap:8px; }.inspect-button { text-align:left;background:none;color:#cee1c6;border:0;padding:0;font-size:11px; }.remove-button { display:none; }.component-item p { margin-top:5px;color:#9bb798;font:10px/1.7 ui-monospace,monospace;overflow-wrap:anywhere; } .selected-item { border-left:2px solid #dbe99c;padding-left:8px; }#component-readings { max-height:350px;overflow:auto;scrollbar-width:thin; }.circuit-notes p { margin-top:12px;color:#eac68f;font-size:11px;line-height:1.6; }
+.status-bar { position:fixed;left:0;right:0;bottom:0;min-height:39px;display:flex;align-items:center;gap:14px;padding:8px 24px;background:#101d15f2;border-top:1px solid #2f4734;z-index:20; }.mode-status { flex:none;color:#b3d4a1;letter-spacing:.1em;font:9px ui-monospace,monospace; }.status-bar p { flex:1;color:#9bb594;font-size:11px; }.status-bar .quiet-label { flex:none; }.model-details { padding:12px 16px; }
+body[data-mode="build"] [data-view="simulation"],body[data-mode="simulation"] [data-view="build"] { display:none !important; }
+@media(min-width:1450px) { .workspace { grid-template-columns:230px minmax(0,1fr) 300px;gap:22px; } }
+@media(max-width:1080px) { .workspace { grid-template-columns:190px minmax(0,1fr) 250px;gap:12px;padding:18px 16px 64px; }.app-header { padding:0 18px; }.panel { padding:13px; }.board-surface { padding:11px; } }
+@media(max-width:850px) { .workspace { grid-template-columns:190px minmax(0,1fr); }.right-column { grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;max-height:none; }.side-column { max-height:none; }.app-header { gap:10px; }.brand { font-size:13px; }.mode-button { min-width:85px;padding:9px; }.supply-badge { font-size:10px;padding:8px; }.legend { gap:8px; } }
+@media(max-width:590px) { .app-header { height:auto;min-height:110px;padding:12px;flex-wrap:wrap;gap:10px; }.brand { order:0; }.supply-badge { order:1; }.mode-switch { order:2;width:100%; }.mode-button { flex:1; }.workspace { display:flex;flex-direction:column;padding:16px 12px 85px;gap:16px; }.left-column { width:100%;display:contents; }.left-column>.panel { width:100%; }.board-column { width:100%;order:2; }.project-panel { order:4; }.right-column { width:100%;display:flex;order:3; }.tool-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }.tool-button { min-height:57px; }.board-footer .quiet-label,.workspace-footnote span:last-child,.status-bar>.quiet-label { display:none; }.status-bar { padding:9px 12px; }.board-toolbar h2 { font-size:20px; } }
+@media(prefers-reduced-motion:reduce) { .flow-running .flow-arrow { animation:none; } * { transition:none !important; } }
+
+</style></head>
+<body data-mode="build">
+<header class="app-header">
+  <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M7 8h10M7 12h10M7 16h10"/><circle cx="9" cy="8" r="1"/><circle cx="15" cy="12" r="1"/></svg></span><span>Electronics workbench</span></div>
+  <nav class="mode-switch" aria-label="Workbench screen"><button id="build-mode" class="mode-button active" aria-pressed="true"><span aria-hidden="true">⌁</span> Build</button><button id="simulation-mode" class="mode-button" aria-pressed="false"><span aria-hidden="true">▷</span> Simulate</button></nav>
+  <button id="supply-badge" class="supply-badge" title="Edit the power supply"><span class="supply-dot"></span><span id="supply-label">9 V DC</span><span aria-hidden="true">↗</span></button>
+</header>
+<main class="workspace">
+  <aside class="left-column side-column" aria-label="Tools and settings">
+    <section class="panel" data-view="build">
+      <div class="section-head"><span class="eyebrow">BUILD</span><span class="quiet-label">01</span></div>
+      <h2>Building tools</h2><p class="panel-caption">Pick a tool, then click the board.</p>
+      <div class="tool-grid">
+        <button class="tool-button active" data-tool="select" aria-pressed="true"><span class="tool-symbol">↖</span>Select / edit</button>
+        <button class="tool-button" data-tool="resistor" aria-pressed="false"><span class="tool-symbol">Ω</span>Resistor</button>
+        <button class="tool-button" data-tool="wire" aria-pressed="false"><span class="tool-symbol">⌁</span>Wire link</button>
+        <button class="tool-button" data-tool="drill" aria-pressed="false"><span class="tool-symbol">⊗</span>Track cut</button>
+        <button class="tool-button" data-tool="ammeter" aria-pressed="false"><span class="tool-symbol">A</span>Ammeter</button>
+        <button class="tool-button" data-tool="voltmeter" aria-pressed="false"><span class="tool-symbol">V</span>Voltmeter</button>
+      </div>
+      <div class="small-actions"><button id="undo-button" class="action-button">↶ Undo</button><button id="clear-button" class="action-button danger-subtle">Clear board</button></div>
+      <p class="fine-print">New resistors start at 1 kΩ. Select one to change its value.</p>
+    </section>
+    <section class="panel" data-view="simulation">
+      <div class="section-head"><span class="eyebrow">SIMULATE</span><span class="quiet-label">01</span></div>
+      <h2>Current flow</h2><p class="panel-caption">Follow conventional current through the circuit.</p>
+      <button id="flow-button" class="action-button primary-button">Play current flow</button>
+      <label class="field-label range-label" for="flow-speed">Animation speed <output id="speed-reading">1×</output></label>
+      <input id="flow-speed" type="range" min="0.25" max="3" step="0.25" value="1">
+      <label class="toggle-row"><span>Copper track arrows</span><input id="show-copper-flow" type="checkbox" checked></label>
+      <label class="toggle-row"><span>Component arrows</span><input id="show-component-flow" type="checkbox" checked></label>
+      <label class="toggle-row"><span>Hole voltage labels</span><input id="show-node-voltage" type="checkbox"></label>
+      <p class="fine-print">Animation speed changes the display only.</p>
+    </section>
+    <section class="panel" data-view="simulation">
+      <div class="section-head"><span class="eyebrow">SUPPLY</span><span class="quiet-label">DC</span></div>
+      <h2>Power supply</h2>
+      <label class="field-label" for="sim-supply-input">Voltage</label><div class="unit-field"><input id="sim-supply-input" type="number" min="0.001" max="1000" step="any" value="9"><span>V</span></div>
+      <p class="fine-print">Ideal DC supply · 0 V reference at the blue terminal.</p>
+    </section>
+    <section class="panel project-panel">
+      <div class="section-head"><span class="eyebrow">PROJECT</span><span class="quiet-label">JSON</span></div>
+      <div class="small-actions"><button id="save-project" class="action-button">↓ Save circuit</button><button id="load-project" class="action-button">↑ Load circuit</button></div>
+      <input id="project-file" type="file" accept=".json,application/json" hidden>
+      <p class="fine-print" id="autosave-note">Saved automatically in this browser.</p>
+      <details class="project-details"><summary>Examples &amp; export</summary><div class="small-actions"><button id="series-example" class="action-button">Series + cuts</button><button id="parallel-example" class="action-button">Parallel</button></div><button id="export-netlist" class="action-button full-width">Export DC SPICE netlist</button></details>
+    </section>
+  </aside>
+  <section class="board-column" aria-labelledby="board-heading">
+    <div class="board-toolbar"><div><span class="eyebrow" id="board-mode-label">LAYOUT / COPPER SIDE</span><h2 id="board-heading">Stripboard</h2></div><div class="board-chips"><span><strong id="component-count">0</strong> parts</span><span><strong id="cuts-count">0</strong> cuts</span></div></div>
+    <div class="board-surface">
+      <div class="board-instruction"><span class="instruction-dot"></span><span id="board-hint">Select a component to edit it. Click empty board space for the supply.</span></div>
+      <div id="sim-board" class="sim-board" aria-label="Interactive stripboard">
+        <div id="board-stage" class="board-stage"><div class="board-inner"><span class="board-print" style="top:19px;left:42px">18 × 10 / COPPER SIDE</span><span class="board-print" style="bottom:16px;right:42px">2.54 mm PITCH</span><div id="board-grid" aria-label="Stripboard grid"></div><div id="component-layer" class="component-layer" aria-label="Placed components"></div></div></div>
+      </div>
+      <div class="board-footer"><div class="legend"><span><i class="legend-dot positive"></i> Supply +</span><span><i class="legend-dot negative"></i> 0 V</span><span><i class="legend-dot cut"></i> Track cut</span></div><span class="quiet-label">18 × 10 holes</span></div>
+    </div>
+    <div class="workspace-footnote" data-view="build"><span>Two clicks connect leads. Crossing lines do not join.</span><span>Esc: deselect · Ctrl / ⌘ Z: undo</span></div>
+    <div class="workspace-footnote" data-view="simulation"><span>Live DC operating point · all readings update automatically.</span><span>First lead → second lead</span></div>
+  </section>
+  <aside class="right-column side-column" aria-label="Properties and readings">
+    <section id="properties-panel" class="panel properties-panel" data-view="build">
+      <div class="section-head"><span class="eyebrow">PROPERTIES</span><button id="deselect-button" class="text-button">Deselect</button></div>
+      <div class="property-identity"><span id="property-symbol" class="property-symbol">⎓</span><div><span id="property-type" class="quiet-label">BENCH SUPPLY</span><h2 id="property-title">Power supply</h2></div></div>
+      <p id="property-description" class="panel-caption">Select a component on the board to edit its properties.</p>
+      <div id="supply-properties">
+        <label class="field-label" for="supply-input">Supply voltage</label><div class="unit-field"><input id="supply-input" type="number" min="0.001" max="1000" step="any" value="9"><span>V</span></div>
+        <p class="fine-print">Type a value, then press Enter or click outside to apply.</p>
+        <div class="terminal-cards"><div><span class="positive-text">SUPPLY +</span><strong id="supply-positive-location">2:1</strong></div><div><span class="negative-text">0 V</span><strong id="supply-negative-location">9:1</strong></div></div>
+        <div class="small-actions"><button class="action-button" data-tool="move-plus">Move + terminal</button><button class="action-button" data-tool="move-minus">Move 0 V terminal</button></div>
+      </div>
+      <div id="component-properties" hidden>
+        <div id="resistor-properties" hidden><label class="field-label" for="component-value-input">Resistance</label><div class="unit-field"><input id="component-value-input" type="number" min="0.001" max="1000000000000" step="any" value="1000"><span>Ω</span></div><p class="fine-print">Type the resistance in ohms. Press Enter or click outside to apply.</p><div class="preset-values"><button data-resistance="220">220 Ω</button><button data-resistance="1000">1 kΩ</button><button data-resistance="10000">10 kΩ</button></div></div>
+        <div class="terminal-cards"><div><span>FIRST LEAD</span><strong id="component-a-location">—</strong></div><div><span>SECOND LEAD</span><strong id="component-b-location">—</strong></div></div>
+        <p id="component-model-note" class="fine-print"></p>
+        <button id="delete-selected" class="action-button danger-subtle full-width">Remove component</button>
+      </div>
+    </section>
+    <section class="panel parts-panel" data-view="build"><div class="section-head"><span class="eyebrow">ON THE BOARD</span><span id="parts-total" class="quiet-label">0 parts</span></div><div id="build-component-list" class="parts-list"></div></section>
+    <section class="panel" data-view="simulation">
+      <div class="section-head"><span class="eyebrow">LIVE ANALYSIS</span><span id="status-dot" class="status-dot"></span></div>
+      <h2>Readings</h2><div id="status-value" class="status-value">Open / no load current</div>
+      <div class="hero-readout"><span class="quiet-label">SUPPLY CURRENT</span><output id="current-reading" class="readout">0 mA</output></div>
+      <div class="reading-line"><span>Supply voltage</span><output id="supply-reading">9 V</output></div><div class="reading-line"><span>Load resistance</span><output id="equivalent-reading">Open circuit</output></div>
+      <div id="circuit-notes" class="circuit-notes" aria-live="polite"></div>
+      <div class="meter-heading"><h3>Meter readings</h3><span class="quiet-label"><span id="ammeter-count">0</span> A · <span id="voltmeter-count">0</span> V</span></div>
+      <div id="meter-readings"><p id="meter-empty" class="meter-empty">Add meters in Build mode to measure individual branches.</p></div>
+      <div class="meter-heading"><h3>Component readings</h3></div><div id="component-readings"></div>
+      <p class="fine-print">Signed readings follow first lead → second lead. Resistor power is shown in mW.</p>
+    </section>
+    <details class="panel model-details" data-view="simulation"><summary>About the simulation</summary><p class="fine-print">DC resistors, ideal copper, wire links and meters. Ammeters close a circuit in series; voltmeters draw no current. Ideal parallel conductors can have indeterminate current splits. No AC, transient, semiconductor or thermal models.</p></details>
+  </aside>
+</main>
+<footer class="status-bar"><span id="mode-status" class="mode-status">BUILD</span><p id="tool-message" aria-live="polite">Select a component or choose a building tool.</p><span class="quiet-label">LOCAL WORKBENCH</span></footer>
+<script>
+
+    const ROWS = 10;
+    const COLS = 18;
+    const PITCH = 31;
+    const HOLE_OFFSET = PITCH / 2;
+    let SUPPLY_VOLTAGE = 9;
+
+    let positiveTerminal = "1-0";
+    let negativeTerminal = "8-0";
+    let activeTool = "select";
+    let firstPoint = null;
+    let components = [];
+    let meters = [];
+    let cuts = new Set();
+    let actionHistory = [];
+    let nodeVoltages = {};
+    let latestNodes = null;
+    let totalCurrent = 0;
+    let currentFlowRunning = false;
+    let solution = { status: 'empty', currents: {}, drops: {}, trackCurrents: {} };
+    let selectedComponent = null;
+    let restoring = false;
+    let workbenchMode = 'build';
+    let flowSpeed = 1;
+    let showCopperFlow = true;
+    let showComponentFlow = true;
+    let showNodeVoltage = false;
+    const STORAGE_KEY = 'stripboard-workbench-v2';
+
+    const grid = document.getElementById("board-grid");
+    const layer = document.getElementById("component-layer");
+    const message = document.getElementById("tool-message");
+
+    const pointId = (row, col) => `${row}-${col}`;
+
+    function pointFromId(id) {
+      const [row, col] = id.split("-").map(Number);
+      return { row, col, id };
+    }
+
+    function showMessage(text) {
+      message.textContent = text;
+    }
+
+    function buildBoard() {
+      for (let row = 0; row < ROWS; row++) {
+        const track = document.createElement("div");
+        track.className = "track";
+        track.style.top = `${row * PITCH + 9.5}px`;
+        grid.appendChild(track);
+      }
+
+      for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
+          const hole = document.createElement("button");
+          hole.type = "button";
+          hole.className = "hole";
+          hole.dataset.point = pointId(row, col);
+          hole.setAttribute("aria-label", `Row ${row + 1}, column ${col + 1}`);
+          hole.addEventListener("click", () => handleHoleClick(hole.dataset.point));
+          grid.appendChild(hole);
+        }
+      }
+      for (let row = 0; row < ROWS; row++) {
+        const label = document.createElement('span'); label.className = 'axis-label';
+        label.textContent = row + 1; label.style.left = '-24px'; label.style.top = `${row * PITCH + HOLE_OFFSET - 6}px`; grid.appendChild(label);
+      }
+      for (let col = 0; col < COLS; col++) {
+        const label = document.createElement('span'); label.className = 'axis-label';
+        label.textContent = col + 1; label.style.left = `${col * PITCH + HOLE_OFFSET - 7}px`; label.style.top = '-20px'; grid.appendChild(label);
+      }
+      refreshTerminalMarkers();
+    }
+
+    function refreshTerminalMarkers() {
+      document.querySelectorAll(".hole").forEach(hole => {
+        hole.classList.toggle("power-plus", hole.dataset.point === positiveTerminal);
+        hole.classList.toggle("power-minus", hole.dataset.point === negativeTerminal);
+      });
+    }
+
+    function refreshSelection() {
+      document.querySelectorAll(".hole").forEach(hole => {
+        hole.classList.toggle("selected", hole.dataset.point === firstPoint);
+      });
+    }
+
+    function setActiveTool(tool) {
+      if (workbenchMode !== 'build') setWorkbenchMode('build');
+      activeTool = tool;
+      firstPoint = null;
+      if (tool === 'move-plus' || tool === 'move-minus') selectedComponent = 'supply';
+
+      document.querySelectorAll("[data-tool]").forEach(button => {
+        const selected = button.dataset.tool === tool;
+        button.classList.toggle("active", selected);
+        button.setAttribute("aria-pressed", String(selected));
+      });
+
+      const instructions = {
+        select: "Select a component to edit. Click a supply terminal or empty board space for supply settings.",
+        resistor: "Click two holes to place a resistor.",
+        wire: "Click two holes to place a wire link.",
+        drill: "Click a hole to remove copper around it, breaking the track on both sides. Click again to restore.",
+        ammeter: "Connect an ammeter across a break in the circuit. It is an ideal series connection.",
+        voltmeter: "Click two holes to add a voltmeter probe pair.",
+        "move-plus": "Click a hole to move the supply + terminal.",
+        "move-minus": "Click a hole to move the 0 V terminal."
+      };
+
+      showMessage(instructions[tool]);
+      refreshSelection();
+      renderProperties();
+      updateModeUI();
+    }
+
+    function handleHoleClick(id) {
+      if (workbenchMode === 'simulation') {
+        if (id === positiveTerminal || id === negativeTerminal) selectSupply();
+        else showMessage(document.querySelector(`[data-point="${id}"]`)?.title || 'Switch to Build to change the board.');
+        return;
+      }
+      if (activeTool === 'select') {
+        selectedComponent = id === positiveTerminal || id === negativeTerminal ? 'supply' : null;
+        render();
+    updateBoardScale();
+        showMessage('Power supply settings are shown on the right. Choose a building tool to connect components.');
+        return;
+      }
+      if (activeTool === "move-plus" || activeTool === "move-minus") {
+        const movingPositive = activeTool === "move-plus";
+        const otherTerminal = movingPositive ? negativeTerminal : positiveTerminal;
+
+        if (id === otherTerminal) {
+          showMessage("Choose a different hole for each supply terminal.");
+          return;
+        }
+
+        const previous = movingPositive ? positiveTerminal : negativeTerminal;
+        if (movingPositive) positiveTerminal = id;
+        else negativeTerminal = id;
+
+        actionHistory.push({ type: "terminal", movingPositive, previous });
+        refreshTerminalMarkers();
+        render();
+    updateBoardScale();
+        showMessage(movingPositive ? "Supply + terminal moved." : "0 V terminal moved.");
+        return;
+      }
+
+      if (activeTool === "drill") {
+        const point = pointFromId(id);
+
+        const cutId = `${point.row}-${point.col}`;
+        if (cuts.has(cutId)) {
+          cuts.delete(cutId);
+          actionHistory.push({ type: "restore-cut", id: cutId });
+          showMessage("Copper track restored.");
+        } else {
+          cuts.add(cutId);
+          actionHistory.push({ type: "cut", id: cutId });
+          showMessage("Copper track cut drilled.");
+        }
+
+        render();
+    updateBoardScale();
+        return;
+      }
+
+      if (!firstPoint) {
+        firstPoint = id;
+        showMessage("Now choose the second connection hole.");
+        refreshSelection();
+        return;
+      }
+
+      if (firstPoint === id) {
+        firstPoint = null;
+        showMessage("Connection cancelled. Choose a first hole.");
+        refreshSelection();
+        return;
+      }
+
+      const requestedResistance = 1000;
+      if (activeTool === 'resistor' && (!Number.isFinite(requestedResistance) || requestedResistance <= 0 || requestedResistance > 1e12)) {
+        showMessage('Enter a resistance greater than 0 Ω and at most 1 TΩ.');
+        return;
+      }
+      const connection = {
+        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+        type: activeTool,
+        a: firstPoint,
+        b: id
+      };
+
+      if (activeTool === "ammeter" || activeTool === "voltmeter") {
+        meters.push(connection);
+        actionHistory.push({ type: "meter", id: connection.id });
+        showMessage(`${activeTool === "ammeter" ? "Ammeter" : "Voltmeter"} added.`);
+      } else {
+        connection.resistance = activeTool === "wire" ? 0 : requestedResistance;
+        components.push(connection);
+        actionHistory.push({ type: "component", id: connection.id });
+        showMessage(`${activeTool === "wire" ? "Wire link" : "Resistor"} placed.`);
+      }
+
+      selectedComponent = connection.id;
+      firstPoint = null;
+      refreshSelection();
+      render();
+    updateBoardScale();
+    }
+
+    function drawLine(a, b, className) {
+      const pa = pointFromId(a);
+      const pb = pointFromId(b);
+      const x1 = pa.col * PITCH + HOLE_OFFSET;
+      const y1 = pa.row * PITCH + HOLE_OFFSET;
+      const x2 = pb.col * PITCH + HOLE_OFFSET;
+      const y2 = pb.row * PITCH + HOLE_OFFSET;
+      const distance = Math.hypot(x2 - x1, y2 - y1);
+      const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+
+      const line = document.createElement("div");
+      line.className = `lead ${className}`;
+      line.style.width = `${distance}px`;
+      line.style.left = `${x1}px`;
+      line.style.top = `${y1 - (className === "wire-lead" ? 2.5 : className === "meter-lead" ? 1.5 : 2)}px`;
+      line.style.transform = `rotate(${angle}deg)`;
+
+      return { line, x1, y1, x2, y2, angle };
+    }
+
+    function addFlow(a, b, current, index = 0, copper = false) {
+      if (workbenchMode !== 'simulation' || (copper ? !showCopperFlow : !showComponentFlow) || !currentFlowRunning || !Number.isFinite(current) || Math.abs(current) < 1e-12 || solution.status === 'short') return;
+      if (current < 0) [a, b] = [b, a];
+      const drawn = drawLine(a, b, '');
+      const arrow = document.createElement('div');
+      arrow.className = 'flow-arrow';
+      arrow.style.setProperty('--x1', `${drawn.x1 - 5}px`);
+      arrow.style.setProperty('--y1', `${drawn.y1 - 5}px`);
+      arrow.style.setProperty('--x2', `${drawn.x2 - 5}px`);
+      arrow.style.setProperty('--y2', `${drawn.y2 - 5}px`);
+      arrow.style.setProperty('--delay', `${(index % 5) * -.27}s`);
+      arrow.style.setProperty('--duration', copper ? '.8s' : '1.8s');
+      arrow.style.transform = `rotate(${drawn.angle + 45}deg)`;
+      layer.appendChild(arrow);
+    }
+
+    function renderVisuals() {
+      layer.innerHTML = '';
+      grid.querySelectorAll('.cut-gap').forEach(cut => cut.remove());
+      cuts.forEach(cutId => {
+        const p = pointFromId(cutId);
+        const gap = document.createElement('div');
+        gap.className = 'cut-gap';
+        gap.style.left = `${p.col * PITCH + HOLE_OFFSET - 13}px`;
+        gap.style.top = `${p.row * PITCH + HOLE_OFFSET - 13}px`;
+        grid.appendChild(gap);
+      });
+      document.querySelectorAll('.hole').forEach(hole => {
+        const id = hole.dataset.point;
+        hole.classList.toggle('drilled', cuts.has(id));
+        const v = getVoltage(id, latestNodes);
+        const p = pointFromId(id);
+        const reading = v === null ? 'floating / undefined voltage' : `${formatNumber(v)} V`;
+        hole.title = `Row ${p.row + 1}, column ${p.col + 1}: ${reading}${cuts.has(id) ? ' · drilled, isolated from copper' : ''}`;
+        hole.setAttribute('aria-label', hole.title);
+      });
+      components.forEach((component, index) => {
+        const drawn = drawLine(component.a, component.b, component.type === 'wire' ? 'wire-lead' : 'resistor-lead');
+        drawn.line.dataset.component = component.id;
+        drawn.line.classList.toggle('inspected', selectedComponent === component.id);
+        drawn.line.title = 'Click to inspect or remove';
+        drawn.line.addEventListener('click', () => { selectComponent(component.id); });
+        layer.appendChild(drawn.line);
+        if (component.type === 'resistor') {
+          const body = document.createElement('button');
+          body.type = 'button';
+          body.className = 'resistor-body';
+          body.textContent = formatResistance(component.resistance);
+          body.style.left = `${(drawn.x1 + drawn.x2) / 2 - 25.5}px`;
+          body.style.top = `${(drawn.y1 + drawn.y2) / 2 - 9}px`;
+          body.style.transform = `rotate(${drawn.angle}deg)`;
+          body.classList.toggle('inspected', selectedComponent === component.id);
+          body.title = `R${index + 1} · ${formatResistance(component.resistance)} · click to inspect`;
+          body.addEventListener('click', () => { selectComponent(component.id); });
+          layer.appendChild(body);
+        }
+        addFlow(component.a, component.b, solution.currents[component.id], index);
+      });
+      meters.forEach((meter, index) => {
+        const drawn = drawLine(meter.a, meter.b, 'meter-lead');
+        layer.appendChild(drawn.line);
+        [meter.a, meter.b].forEach((point, i) => {
+          const p = pointFromId(point);
+          const probe = document.createElement('div');
+          probe.className = 'meter-probe';
+          probe.style.left = `${p.col * PITCH + HOLE_OFFSET - 6.5}px`;
+          probe.style.top = `${p.row * PITCH + HOLE_OFFSET - 6.5}px`;
+          probe.style.background = i ? '#292929' : '#f07e66';
+          layer.appendChild(probe);
+        });
+        const tag = document.createElement('button');
+        tag.type = 'button';
+        tag.className = 'meter-tag';
+        tag.textContent = `${meter.type === 'ammeter' ? 'A' : 'V'}${index + 1}`;
+        tag.style.left = `${(drawn.x1 + drawn.x2) / 2}px`;
+        tag.style.top = `${(drawn.y1 + drawn.y2) / 2 - 14}px`;
+        tag.addEventListener('click', () => { selectComponent(meter.id); });
+        layer.appendChild(tag);
+        if (meter.type === 'ammeter') addFlow(meter.a, meter.b, solution.currents[meter.id], index);
+      });
+      solution.idealEdges?.filter(e => e.type === 'copper').forEach((e, i) => addFlow(e.a, e.b, solution.currents[e.id], i, true));
+      [positiveTerminal, negativeTerminal].forEach((id, i) => {
+        const p = pointFromId(id); const label = document.createElement('button');
+        label.className = `supply-pin-label ${i ? 'negative-pin' : ''}`;
+        label.textContent = i ? '0 V' : `+${formatNumber(SUPPLY_VOLTAGE)} V`;
+        label.title = 'Edit power supply'; label.type = 'button';
+        label.style.left = `${p.col * PITCH + HOLE_OFFSET}px`; label.style.top = `${p.row * PITCH + HOLE_OFFSET - 13}px`;
+        label.addEventListener('click', selectSupply); layer.appendChild(label);
+      });
+      if (workbenchMode === 'simulation' && showNodeVoltage) {
+        Object.keys(latestNodes || {}).forEach(id => {
+          const v = getVoltage(id, latestNodes); const p = pointFromId(id);
+          const label = document.createElement('span'); label.className = 'node-voltage';
+          label.textContent = v === null ? '—' : `${formatNumber(v)}V`;
+          label.style.left = `${p.col * PITCH + HOLE_OFFSET}px`; label.style.top = `${p.row * PITCH + HOLE_OFFSET + 12}px`;
+          layer.appendChild(label);
+        });
+      }
+      document.getElementById('sim-board').style.setProperty('--flow-speed', String(flowSpeed));
+      layer.classList.toggle('flow-running', workbenchMode === 'simulation' && currentFlowRunning);
+      document.getElementById('flow-button').textContent = currentFlowRunning ? 'Pause current flow' : 'Play current flow';
+    }
+
+    function formatNumber(value) {
+      if (!Number.isFinite(value)) return '—';
+      if (Math.abs(value) < 1e-12) return '0';
+      return Number(value.toPrecision(5)).toString();
+    }
+    function formatResistance(value) {
+      return value >= 1e6 ? `${formatNumber(value / 1e6)} MΩ` : value >= 1000 ? `${formatNumber(value / 1000)} kΩ` : `${formatNumber(value)} Ω`;
+    }
+    function formatCurrent(value) {
+      if (!Number.isFinite(value)) return 'Indeterminate';
+      if (Math.abs(value) < 1e-12) return '0 mA';
+      if (Math.abs(value) < 1e-3) return `${formatNumber(value * 1e6)} µA`;
+      if (Math.abs(value) < 1) return `${formatNumber(value * 1000)} mA`;
+      return `${formatNumber(value)} A`;
+    }
+    function locationLabel(id) {
+      const p = pointFromId(id);
+      return `${p.row + 1}:${p.col + 1}`;
+    }
+
+    // Ideal copper, wire links and ammeters form equipotential nets.
+    // A hole-centred drill removes BOTH adjacent copper connections.
+    function buildElectricalNodes() {
+      const parent = {};
+      const find = id => {
+        if (parent[id] === undefined) parent[id] = id;
+        if (parent[id] !== id) parent[id] = find(parent[id]);
+        return parent[id];
+      };
+      const join = (a, b) => { const ra = find(a), rb = find(b); if (ra !== rb) parent[rb] = ra; };
+      const edges = [];
+      for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) find(pointId(row, col));
+        for (let col = 0; col < COLS - 1; col++) {
+          const a = pointId(row, col), b = pointId(row, col + 1);
+          if (!cuts.has(a) && !cuts.has(b)) edges.push({ id: `track:${a}`, a, b, type: 'copper' });
+        }
+      }
+      components.filter(c => c.type === 'wire').forEach(c => edges.push(c));
+      meters.filter(c => c.type === 'ammeter').forEach(c => edges.push(c));
+      edges.forEach(e => join(e.a, e.b));
+      const nodes = Object.fromEntries(Object.keys(parent).map(id => [id, find(id)]));
+      solution.idealEdges = edges;
+      return nodes;
+    }
+
+    // Pivoted Gaussian elimination. A singular system is an error, never a voltage.
+    function gaussianSolve(matrix, vector) {
+      const n = vector.length;
+      const a = matrix.map((row, i) => [...row, vector[i]]);
+      for (let col = 0; col < n; col++) {
+        let pivot = col;
+        for (let row = col + 1; row < n; row++) if (Math.abs(a[row][col]) > Math.abs(a[pivot][col])) pivot = row;
+        if (!Number.isFinite(a[pivot][col]) || Math.abs(a[pivot][col]) < 1e-20) throw new Error('Circuit matrix is singular.');
+        [a[col], a[pivot]] = [a[pivot], a[col]];
+        for (let row = col + 1; row < n; row++) {
+          const factor = a[row][col] / a[col][col];
+          a[row][col] = 0;
+          for (let k = col + 1; k <= n; k++) a[row][k] -= factor * a[col][k];
+        }
+      }
+      const x = Array(n).fill(0);
+      for (let i = n - 1; i >= 0; i--) {
+        let sum = a[i][n];
+        for (let j = i + 1; j < n; j++) sum -= a[i][j] * x[j];
+        x[i] = sum / a[i][i];
+        if (!Number.isFinite(x[i])) throw new Error('Circuit result is not finite.');
+      }
+      return x;
+    }
+    function getVoltage(point, nodes) {
+      const voltage = nodes && nodeVoltages[nodes[point]];
+      return Number.isFinite(voltage) ? voltage : null;
+    }
+
+    function solveCircuit() {
+      solution = { status: 'open', currents: {}, drops: {}, power: {}, islands: {}, relativeVoltages: {}, warnings: [] };
+      nodeVoltages = {};
+      totalCurrent = 0;
+      const nodes = buildElectricalNodes();
+      latestNodes = nodes;
+      const plus = nodes[positiveTerminal], minus = nodes[negativeTerminal];
+      const resistors = components.filter(c => c.type === 'resistor');
+      if (plus === minus) {
+        solution.status = 'short';
+        solution.warnings.push('Supply terminals are joined by ideal copper, wires or an ammeter. An ideal 9 V source cannot satisfy this short circuit.'.replace('9 V', `${SUPPLY_VOLTAGE} V`));
+        totalCurrent = null;
+        return;
+      }
+      const nets = [...new Set(Object.values(nodes))];
+      const graph = Object.fromEntries(nets.map(n => [n, []]));
+      resistors.forEach(r => {
+        const a = nodes[r.a], b = nodes[r.b];
+        if (a !== b) { graph[a].push(b); graph[b].push(a); }
+        else solution.warnings.push(`${componentLabel(r)} is bypassed by an ideal copper/wire/ammeter path.`);
+      });
+      const seen = new Set();
+      let island = 0;
+      for (const start of nets) {
+        if (seen.has(start)) continue;
+        const members = [], queue = [start]; seen.add(start);
+        for (let i = 0; i < queue.length; i++) {
+          const n = queue[i]; members.push(n); solution.islands[n] = island;
+          graph[n].forEach(m => { if (!seen.has(m)) { seen.add(m); queue.push(m); } });
+        }
+        const referenced = members.includes(plus) || members.includes(minus);
+        const fixed = {};
+        if (members.includes(plus)) fixed[plus] = SUPPLY_VOLTAGE;
+        if (members.includes(minus)) fixed[minus] = 0;
+        if (!referenced) fixed[start] = 0; // Arbitrary gauge only for relative floating-island voltages.
+        const unknowns = members.filter(n => fixed[n] === undefined);
+        const index = Object.fromEntries(unknowns.map((n, i) => [n, i]));
+        const matrix = unknowns.map(() => Array(unknowns.length).fill(0));
+        const vector = Array(unknowns.length).fill(0);
+        for (const r of resistors) {
+          const a = nodes[r.a], b = nodes[r.b];
+          if (a === b || solution.islands[a] !== island) continue;
+          const g = 1 / r.resistance;
+          for (const [n, m] of [[a, b], [b, a]]) {
+            const i = index[n], j = index[m];
+            if (i === undefined) continue;
+            matrix[i][i] += g;
+            if (j !== undefined) matrix[i][j] -= g;
+            else vector[i] += g * fixed[m];
+          }
+        }
+        let result;
+        try { result = gaussianSolve(matrix, vector); }
+        catch (err) { solution.status = 'error'; solution.warnings.push(err.message); totalCurrent = null; return; }
+        members.forEach(n => {
+          const v = fixed[n] !== undefined ? fixed[n] : result[index[n]];
+          solution.relativeVoltages[n] = v;
+          nodeVoltages[n] = referenced ? v : null;
+        });
+        island++;
+      }
+      const injection = Object.fromEntries(Object.keys(nodes).map(p => [p, 0]));
+      for (const r of resistors) {
+        const a = nodes[r.a], b = nodes[r.b];
+        const drop = solution.relativeVoltages[a] - solution.relativeVoltages[b];
+        const current = drop / r.resistance;
+        solution.drops[r.id] = drop;
+        solution.currents[r.id] = current;
+        solution.power[r.id] = drop * current;
+        injection[r.a] -= current;
+        injection[r.b] += current;
+        if (a === plus) totalCurrent += current;
+        if (b === plus) totalCurrent -= current;
+      }
+      if (Math.abs(totalCurrent) < 1e-12) totalCurrent = 0;
+      injection[positiveTerminal] += totalCurrent;
+      injection[negativeTerminal] -= totalCurrent;
+      solution.status = totalCurrent > 0 ? 'complete' : 'open';
+      solution.resistance = totalCurrent > 0 ? SUPPLY_VOLTAGE / totalCurrent : Infinity;
+      // KCL on the ideal conductor graph gives exact currents on bridges. On an
+      // ideal zero-ohm loop the split is not determined; never invent a value.
+      computeIdealCurrents(solution.idealEdges, injection);
+      const ambiguousMeters = meters.filter(m => m.type === 'ammeter' && !Number.isFinite(solution.currents[m.id]));
+      if (ambiguousMeters.length) solution.warnings.push('An ammeter has a parallel ideal conductor path. Its current split is indeterminate; insert it across a track break.');
+      if (solution.resistance < 1 && totalCurrent > 0) solution.warnings.push('Very low load resistance: the ideal supply model has no current limit.');
+    }
+
+    function computeIdealCurrents(edges, injection) {
+      const adjacency = Object.fromEntries(Object.keys(injection).map(p => [p, []]));
+      edges.forEach((e, i) => { adjacency[e.a].push({ to: e.b, i }); adjacency[e.b].push({ to: e.a, i }); });
+      const discovery = {}, low = {};
+      let clock = 0;
+      function walk(p, parentEdge = -1) {
+        discovery[p] = low[p] = ++clock;
+        let sum = injection[p];
+        for (const { to, i } of adjacency[p]) {
+          if (i === parentEdge) continue;
+          if (!discovery[to]) {
+            const childSum = walk(to, i);
+            sum += childSum;
+            low[p] = Math.min(low[p], low[to]);
+            if (low[to] > discovery[p]) {
+              // childSum is current injected into the far side; outward flow is its negative.
+              solution.currents[edges[i].id] = edges[i].a === p ? -childSum : childSum;
+            }
+          } else low[p] = Math.min(low[p], discovery[to]);
+        }
+        return sum;
+      }
+      Object.keys(adjacency).forEach(p => { if (!discovery[p]) walk(p); });
+      edges.forEach(e => {
+        if (solution.currents[e.id] === undefined) solution.currents[e.id] = null;
+        solution.drops[e.id] = 0;
+      });
+    }
+
+    function componentLabel(c) {
+      const list = c.type === 'ammeter' || c.type === 'voltmeter' ? meters : components;
+      return `${({ resistor: 'R', wire: 'W', ammeter: 'A', voltmeter: 'V' })[c.type]}${list.indexOf(c) + 1}`;
+    }
+    function meterVoltage(m) {
+      if (solution.status === 'short' || solution.status === 'error') return null;
+      const a = latestNodes[m.a], b = latestNodes[m.b];
+      const va = getVoltage(m.a, latestNodes), vb = getVoltage(m.b, latestNodes);
+      if (va !== null && vb !== null) return va - vb;
+      if (solution.islands[a] === solution.islands[b]) return solution.relativeVoltages[a] - solution.relativeVoltages[b];
+      return null;
+    }
+    function updateReadings() {
+      const good = solution.status === 'complete';
+      document.getElementById('status-dot').className = `status-dot ${good ? 'good' : components.length || solution.status === 'short' ? 'warn' : ''}`;
+      document.getElementById('status-value').textContent = ({ complete: 'Complete DC circuit', short: 'Supply short circuit', open: 'Open / no load current', error: 'Cannot solve circuit' })[solution.status];
+      document.getElementById('current-reading').textContent = solution.status === 'short' ? 'Undefined' : formatCurrent(totalCurrent);
+      document.getElementById('supply-reading').textContent = `${formatNumber(SUPPLY_VOLTAGE)} V`;
+      document.getElementById('supply-label').textContent = `${formatNumber(SUPPLY_VOLTAGE)} V DC`;
+      document.getElementById('equivalent-reading').textContent = solution.status === 'short' ? '0 Ω · short' : Number.isFinite(solution.resistance) ? formatResistance(solution.resistance) : 'Open circuit';
+      const warnings = document.getElementById('circuit-notes');
+      warnings.replaceChildren();
+      solution.warnings.forEach(text => { const p = document.createElement('p'); p.textContent = text; warnings.appendChild(p); });
+      const list = document.getElementById('meter-readings');
+      list.querySelectorAll('.reading-row').forEach(row => row.remove());
+      document.getElementById('meter-empty').style.display = meters.length ? 'none' : 'block';
+      meters.forEach(m => {
+        const row = document.createElement('div'); row.className = 'reading-row';
+        const label = document.createElement('span'); label.textContent = `${componentLabel(m)} · ${locationLabel(m.a)} → ${locationLabel(m.b)}`;
+        const value = document.createElement('strong');
+        const v = meterVoltage(m);
+        value.textContent = m.type === 'ammeter' ? (solution.status === 'short' ? 'Undefined' : formatCurrent(solution.currents[m.id])) : v === null ? 'Floating / undefined' : `${formatNumber(v)} V`;
+        row.append(label, value); list.appendChild(row);
+      });
+      renderInspector();
+      renderProperties();
+    }
+    function renderInspector() {
+      const list = document.getElementById('component-readings'); list.replaceChildren();
+      [...components, ...meters].forEach(c => {
+        const item = document.createElement('div'); item.className = `component-item ${selectedComponent === c.id ? 'selected-item' : ''}`;
+        const heading = document.createElement('div'); heading.className = 'component-heading';
+        const name = document.createElement('button'); name.className = 'inspect-button'; name.textContent = `${componentLabel(c)} · ${c.type === 'resistor' ? formatResistance(c.resistance) : c.type}`;
+        name.addEventListener('click', () => { selectComponent(c.id); });
+        const remove = document.createElement('button'); remove.className = 'remove-button'; remove.textContent = '×'; remove.title = `Remove ${componentLabel(c)}`;
+        remove.setAttribute('aria-label', remove.title); remove.addEventListener('click', () => removeComponent(c.id));
+        heading.append(name, remove);
+        const detail = document.createElement('p');
+        const current = solution.currents[c.id];
+        const voltage = c.type === 'voltmeter' ? meterVoltage(c) : solution.drops[c.id];
+        let reading = solution.status === 'short' || solution.status === 'error' ? 'Undefined' : `${voltage === null || voltage === undefined ? '—' : formatNumber(voltage)} V`;
+        if (c.type !== 'voltmeter' && solution.status !== 'short' && solution.status !== 'error') reading += ` · ${formatCurrent(current)}`;
+        if (c.type === 'resistor' && Number.isFinite(solution.power[c.id])) reading += ` · ${formatNumber(solution.power[c.id] * 1000)} mW`;
+        detail.textContent = `${locationLabel(c.a)} → ${locationLabel(c.b)} · ${reading}`;
+        item.append(heading, detail); list.appendChild(item);
+      });
+      if (!components.length && !meters.length) { const p = document.createElement('p'); p.className = 'panel-caption'; p.textContent = 'Place components to see voltage, branch current and resistor power.'; list.appendChild(p); }
+    }
+    function removeComponent(id) {
+      const component = [...components, ...meters].find(c => c.id === id);
+      if (!component) return;
+      const isMeter = component.type === 'ammeter' || component.type === 'voltmeter';
+      actionHistory.push({ type: 'remove', component: { ...component }, index: (isMeter ? meters : components).indexOf(component), isMeter });
+      components = components.filter(c => c.id !== id); meters = meters.filter(c => c.id !== id);
+      selectedComponent = null; render(); showMessage('Component removed. Undo restores it.');
+    }
+    function render() {
+      solveCircuit(); // Solve before drawing; arrows always use the current board.
+      renderVisuals();
+      updateReadings();
+      document.getElementById('component-count').textContent = components.length;
+      document.getElementById('cuts-count').textContent = cuts.size;
+      document.getElementById('ammeter-count').textContent = meters.filter(m => m.type === 'ammeter').length;
+      document.getElementById('voltmeter-count').textContent = meters.filter(m => m.type === 'voltmeter').length;
+      updateModeUI();
+      persistBoard();
+    }
+
+    function undoLastAction() {
+      const action = actionHistory.pop();
+
+      if (!action) {
+        showMessage("Nothing to undo yet.");
+        return;
+      }
+
+      if (action.type === 'snapshot') { restoreBoard(action.board); showMessage('Previous board restored.'); return; }
+      if (action.type === 'value') { const c = components.find(c => c.id === action.id); if (c) c.resistance = action.previous; }
+      if (action.type === 'voltage') SUPPLY_VOLTAGE = action.previous;
+      if (action.type === 'remove') (action.isMeter ? meters : components).splice(action.index, 0, action.component);
+      if (action.type === "component") components = components.filter(item => item.id !== action.id);
+      if (action.type === "meter") meters = meters.filter(item => item.id !== action.id);
+      if (action.type === "cut") cuts.delete(action.id);
+      if (action.type === "restore-cut") cuts.add(action.id);
+
+      if (action.type === "terminal") {
+        if (action.movingPositive) positiveTerminal = action.previous;
+        else negativeTerminal = action.previous;
+        refreshTerminalMarkers();
+      }
+
+      if (selectedComponent && selectedComponent !== 'supply' && ![...components,...meters].some(c => c.id === selectedComponent)) selectedComponent = null;
+      firstPoint = null;
+      refreshSelection();
+      render();
+    updateBoardScale();
+      showMessage("Last action undone.");
+    }
+
+    function clearBoard() {
+      actionHistory.push({ type: 'snapshot', board: boardData() });
+      components = [];
+      meters = [];
+      cuts = new Set();
+      selectedComponent = null;
+      firstPoint = null;
+      currentFlowRunning = false;
+      positiveTerminal = "1-0";
+      negativeTerminal = "8-0";
+
+      document.getElementById("flow-button").classList.remove("playing");
+      refreshTerminalMarkers();
+      refreshSelection();
+      render();
+    updateBoardScale();
+      showMessage("Board cleared. Supply terminals reset.");
+    }
+
+    function toggleCurrentFlow() {
+      if ((solution.status !== 'complete' || totalCurrent <= 0) && !currentFlowRunning) {
+        showMessage("Build a complete circuit first, then start current flow.");
+        return;
+      }
+
+      currentFlowRunning = !currentFlowRunning;
+      document.getElementById("flow-button").classList.toggle("playing", currentFlowRunning);
+      render();
+    updateBoardScale();
+      showMessage(currentFlowRunning ? "Current-flow arrows are playing." : "Current-flow arrows paused.");
+    }
+
+    function boardData() {
+      return { format: 'stripboard-dc', version: 2, rows: ROWS, columns: COLS, voltage: SUPPLY_VOLTAGE,
+        positiveTerminal, negativeTerminal, cuts: [...cuts], components: components.map(c => ({ ...c })), meters: meters.map(m => ({ ...m })) };
+    }
+    function validateBoard(data) {
+      if (!data || data.format !== 'stripboard-dc' || data.version !== 2 || data.rows !== ROWS || data.columns !== COLS) throw new Error('Choose a version 2 Stripboard circuit JSON file.');
+      const validPoint = p => typeof p === 'string' && /^(\d+)-(\d+)$/.test(p) && (() => { const q = pointFromId(p); return q.row >= 0 && q.row < ROWS && q.col >= 0 && q.col < COLS; })();
+      if (!Number.isFinite(data.voltage) || data.voltage <= 0 || data.voltage > 1000) throw new Error('Supply voltage must be between 0 and 1000 V.');
+      if (!validPoint(data.positiveTerminal) || !validPoint(data.negativeTerminal) || data.positiveTerminal === data.negativeTerminal) throw new Error('Invalid supply terminals.');
+      if (!Array.isArray(data.cuts) || data.cuts.length > ROWS * COLS || !data.cuts.every(validPoint)) throw new Error('Invalid track cuts.');
+      if (!Array.isArray(data.components) || !Array.isArray(data.meters) || data.components.length + data.meters.length > 500) throw new Error('Invalid component list (maximum 500).');
+      const ids = new Set();
+      for (const [list, types] of [[data.components, ['wire', 'resistor']], [data.meters, ['ammeter', 'voltmeter']]]) {
+        for (const c of list) {
+          if (!c || typeof c.id !== 'string' || !c.id.length || ['__proto__', 'constructor', 'prototype'].includes(c.id) || c.id.startsWith('track:') || ids.has(c.id) || !types.includes(c.type) || !validPoint(c.a) || !validPoint(c.b) || c.a === c.b) throw new Error('Invalid or duplicate component.');
+          if (c.type === 'resistor' && (!Number.isFinite(c.resistance) || c.resistance <= 0 || c.resistance > 1e12)) throw new Error('Invalid resistor value.');
+          ids.add(c.id);
+        }
+      }
+      return data;
+    }
+    function restoreBoard(data) {
+      validateBoard(data);
+      SUPPLY_VOLTAGE = data.voltage;
+      positiveTerminal = data.positiveTerminal; negativeTerminal = data.negativeTerminal;
+      cuts = new Set(data.cuts);
+      components = data.components.map(c => ({ id:c.id, type:c.type, a:c.a, b:c.b, resistance:c.type === 'wire' ? 0 : c.resistance }));
+      meters = data.meters.map(c => ({ id:c.id, type:c.type, a:c.a, b:c.b }));
+      firstPoint = null; selectedComponent = null; currentFlowRunning = false;
+      document.getElementById('supply-input').value = SUPPLY_VOLTAGE;
+      document.getElementById('flow-button').classList.remove('playing');
+      refreshTerminalMarkers(); refreshSelection(); render();
+    }
+    function persistBoard() {
+      if (restoring) return;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(boardData())); }
+      catch { document.getElementById('autosave-note').textContent = 'Automatic saving is unavailable here. Use Save circuit to keep your work.'; }
+    }
+    function downloadText(name, content, type) {
+      const url = URL.createObjectURL(new Blob([content], { type }));
+      const link = document.createElement('a'); link.href = url; link.download = name; link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+    function loadExample(kind) {
+      actionHistory.push({ type:'snapshot', board:boardData() });
+      const board = { format:'stripboard-dc', version:2, rows:ROWS, columns:COLS, voltage:9, positiveTerminal:'1-0', negativeTerminal:'8-0', cuts:[], components:[], meters:[] };
+      if (kind === 'series') {
+        board.negativeTerminal = '1-17';
+        board.cuts = ['1-5','1-11','1-15'];
+        board.components = [
+          { id:'example-r1',type:'resistor',a:'1-3',b:'1-7',resistance:1000 },
+          { id:'example-r2',type:'resistor',a:'1-9',b:'1-13',resistance:2000 }
+        ];
+        board.meters = [{ id:'example-a1',type:'ammeter',a:'1-14',b:'1-16' },{ id:'example-v1',type:'voltmeter',a:'1-8',b:'1-17' }];
+      } else {
+        board.components = [
+          { id:'example-r1',type:'resistor',a:'1-3',b:'3-3',resistance:1000 },
+          { id:'example-r2',type:'resistor',a:'1-12',b:'5-12',resistance:2000 }
+        ];
+        board.meters = [{ id:'example-a1',type:'ammeter',a:'3-4',b:'8-4' },{ id:'example-a2',type:'ammeter',a:'5-13',b:'8-13' },{ id:'example-v1',type:'voltmeter',a:'1-7',b:'8-7' }];
+      }
+      restoreBoard(board);
+      showMessage(kind === 'series' ? 'Series example: 3 mA through both resistors and A1, with 6 V across R2. Undo returns to your board.' : 'Parallel example: 9 mA and 4.5 mA in the two branches; total 13.5 mA. Undo returns to your board.');
+    }
+    function exportNetlist() {
+      if (solution.status === 'short' || solution.status === 'error') { showMessage('Resolve the supply short or solver error before exporting.'); return; }
+      const names = { [latestNodes[negativeTerminal]]:'0' };
+      let next = 1;
+      const net = root => { if (names[root] === undefined) names[root] = `n${next++}`; return names[root]; };
+      const lines = ['Stripboard DC operating point', '* Ideal copper, wires and ammeters collapsed into nets.', '* No transient or device models. Floating islands are omitted.'];
+      lines.push(`Vbench ${net(latestNodes[positiveTerminal])} 0 DC ${SUPPLY_VOLTAGE}`);
+      components.filter(c => c.type === 'resistor').forEach(c => {
+        const a = latestNodes[c.a], b = latestNodes[c.b];
+        if (getVoltage(c.a, latestNodes) === null || a === b) { lines.push(`* ${componentLabel(c)} omitted: ${a === b ? 'bypassed' : 'floating island'}`); return; }
+        lines.push(`${componentLabel(c)} ${net(a)} ${net(b)} ${c.resistance}`);
+      });
+      Object.entries(latestNodes).forEach(([point, root]) => { if (names[root] !== undefined) lines.push(`* Hole ${locationLabel(point)} = ${names[root]}`); });
+      meters.forEach(m => lines.push(`* ${componentLabel(m)}: ${locationLabel(m.a)} -> ${locationLabel(m.b)}; browser ${m.type === 'ammeter' ? formatCurrent(solution.currents[m.id]) : `${formatNumber(meterVoltage(m))} V`}`));
+      lines.push('.op', '.print op v(*) i(Vbench)', '.end', '');
+      downloadText('stripboard-dc.cir', lines.join('\n'), 'text/plain');
+      showMessage('DC netlist exported. Ideal links are collapsed; meter results are included as comments.');
+    }
+    function setWorkbenchMode(mode) {
+      if (mode !== 'build' && mode !== 'simulation') return;
+      if (workbenchMode === mode) return;
+      workbenchMode = mode;
+      firstPoint = null;
+      currentFlowRunning = mode === 'simulation' && solution.status === 'complete';
+      document.getElementById('flow-button').classList.toggle('playing', currentFlowRunning);
+      refreshSelection(); render(); updateBoardScale();
+      showMessage(mode === 'simulation' ? 'Simulation is live. Use the controls on the left; readings are on the right.' : 'Choose a tool to build, or select a component to edit it.');
+    }
+    function updateModeUI() {
+      document.body.dataset.mode = workbenchMode;
+      document.querySelectorAll('[data-view]').forEach(el => { el.hidden = el.dataset.view !== workbenchMode; });
+      for (const [id, mode] of [['build-mode','build'],['simulation-mode','simulation']]) {
+        const button = document.getElementById(id); const active = mode === workbenchMode;
+        button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
+      }
+      document.getElementById('mode-status').textContent = workbenchMode === 'build' ? 'BUILD' : 'SIMULATE';
+      document.getElementById('board-mode-label').textContent = workbenchMode === 'build' ? 'LAYOUT / COPPER SIDE' : 'LIVE DC / COPPER SIDE';
+      const hints = {
+        select: 'Select a component to edit it. Click empty board space for the supply.',
+        resistor: 'Click two holes to place a resistor, then set its value on the right.',
+        wire: 'Click two holes to place a wire link.',
+        drill: 'Click a hole to cut the copper around it. Click again to restore.',
+        ammeter: 'Click two holes to insert an ammeter in series across a circuit break.',
+        voltmeter: 'Click two holes to connect voltage probes. First lead is positive.',
+        'move-plus': 'Click a new hole for the positive supply terminal.',
+        'move-minus': 'Click a new hole for the 0 V reference terminal.'
+      };
+      document.getElementById('board-hint').textContent = workbenchMode === 'simulation' ? (currentFlowRunning ? 'Conventional current is flowing. Click a part to highlight its readings.' : 'Live readings are ready. Press Play current flow to animate the circuit.') : firstPoint ? 'First lead placed. Click the second connection hole.' : hints[activeTool] || hints.select;
+    }
+    function selectComponent(id) {
+      if (![...components,...meters].some(c => c.id === id)) return;
+      selectedComponent = id;
+      if (workbenchMode === 'build') setActiveTool('select');
+      firstPoint = null; refreshSelection(); render();
+    }
+    function selectSupply() {
+      setWorkbenchMode('build');
+      selectedComponent = 'supply'; setActiveTool('select'); render();
+      showMessage('Edit the DC supply voltage on the right, or move either terminal.');
+    }
+    function renderProperties() {
+      const c = [...components,...meters].find(c => c.id === selectedComponent);
+      if (selectedComponent && selectedComponent !== 'supply' && !c) selectedComponent = null;
+      const componentPanel = document.getElementById('component-properties');
+      const supplyPanel = document.getElementById('supply-properties');
+      componentPanel.hidden = !c; supplyPanel.hidden = !!c;
+      document.getElementById('resistor-properties').hidden = !c || c.type !== 'resistor';
+      document.getElementById('deselect-button').disabled = !selectedComponent;
+      document.getElementById('property-symbol').textContent = c ? ({resistor:'Ω',wire:'⌁',ammeter:'A',voltmeter:'V'})[c.type] : '⎓';
+      document.getElementById('property-type').textContent = c ? c.type.toUpperCase() : 'BENCH SUPPLY';
+      document.getElementById('property-title').textContent = c ? `${componentLabel(c)} · ${({resistor:'Resistor',wire:'Wire link',ammeter:'Ammeter',voltmeter:'Voltmeter'})[c.type]}` : 'Power supply';
+      document.getElementById('property-description').textContent = c ? ({resistor:'Set the resistance of this component.',wire:'An ideal connection between the two lead holes.',ammeter:'An ideal meter inserted in series with a branch.',voltmeter:'A voltage measurement between two lead holes.'})[c.type] : 'Click a component to edit it, or adjust the supply here.';
+      document.getElementById('supply-positive-location').textContent = `Row ${locationLabel(positiveTerminal).split(':')[0]} · Col ${locationLabel(positiveTerminal).split(':')[1]}`;
+      document.getElementById('supply-negative-location').textContent = `Row ${locationLabel(negativeTerminal).split(':')[0]} · Col ${locationLabel(negativeTerminal).split(':')[1]}`;
+      for (const id of ['supply-input','sim-supply-input']) {
+        const field = document.getElementById(id);
+        if (document.activeElement !== field) field.value = SUPPLY_VOLTAGE;
+      }
+      if (c) {
+        document.getElementById('component-a-location').textContent = locationLabel(c.a);
+        document.getElementById('component-b-location').textContent = locationLabel(c.b);
+        const field = document.getElementById('component-value-input');
+        if (c.type === 'resistor' && document.activeElement !== field) field.value = c.resistance;
+        document.getElementById('component-model-note').textContent = ({resistor:'Terminals connect only at the two lead holes. Uncut copper under the resistor can bypass it.',wire:'Wire resistance is 0 Ω. Crossings connect only when they share a lead hole.',ammeter:'Meter resistance is 0 Ω. Connect across a circuit break; parallel ideal paths have an indeterminate current split.',voltmeter:'Ideal infinite input resistance. This meter does not conduct current.'})[c.type];
+      }
+      const list = document.getElementById('build-component-list'); list.replaceChildren();
+      const all = [...components,...meters];
+      document.getElementById('parts-total').textContent = `${all.length} ${all.length === 1 ? 'part' : 'parts'}`;
+      all.forEach(c => {
+        const row = document.createElement('button'); row.type = 'button'; row.className = `part-row ${c.id === selectedComponent ? 'selected-item' : ''}`;
+        const name = document.createElement('span'); name.textContent = `${componentLabel(c)} · ${c.type}`;
+        const value = document.createElement('span'); value.textContent = c.type === 'resistor' ? formatResistance(c.resistance) : `${locationLabel(c.a)} → ${locationLabel(c.b)}`;
+        row.append(name,value); row.addEventListener('click', () => selectComponent(c.id)); list.appendChild(row);
+      });
+      if (!all.length) {
+        const empty = document.createElement('p'); empty.className = 'fine-print'; empty.textContent = 'Your component list will appear here.'; list.appendChild(empty);
+      }
+    }
+    function applyResistance(value) {
+      const c = components.find(c => c.id === selectedComponent && c.type === 'resistor');
+      if (!c || workbenchMode !== 'build') return;
+      const n = Number(value);
+      if (!Number.isFinite(n) || n <= 0 || n > 1e12) {
+        document.getElementById('component-value-input').value = c.resistance;
+        showMessage('Enter a resistance greater than 0 Ω and at most 1 TΩ.'); return;
+      }
+      if (n === c.resistance) return;
+      actionHistory.push({type:'value',id:c.id,previous:c.resistance}); c.resistance = n;
+      document.getElementById('component-value-input').value = n;
+      render(); showMessage(`${componentLabel(c)} set to ${formatResistance(n)}.`);
+    }
+    function applySupplyVoltage(value, field) {
+      const n = Number(value);
+      if (!Number.isFinite(n) || n <= 0 || n > 1000) {
+        field.value = SUPPLY_VOLTAGE; showMessage('Enter a supply voltage greater than 0 V and at most 1000 V.'); return;
+      }
+      if (n === SUPPLY_VOLTAGE) return;
+      actionHistory.push({type:'voltage',previous:SUPPLY_VOLTAGE}); SUPPLY_VOLTAGE = n;
+      document.getElementById('supply-input').value = n; document.getElementById('sim-supply-input').value = n;
+      render(); showMessage(`Supply set to ${formatNumber(n)} V DC.`);
+    }
+    function updateBoardScale() {
+      const stage = document.getElementById('board-stage');
+      const width = stage.clientWidth;
+      if (!width) return;
+      let fitHeight = Infinity;
+      if (typeof window !== 'undefined' && window.innerWidth > 850) {
+        fitHeight = Math.max(190, window.innerHeight - stage.getBoundingClientRect().top - 112) / 412;
+      }
+      const scale = Math.max(.25, Math.min(1.25, width / 642, fitHeight));
+      document.getElementById('sim-board').style.setProperty('--board-scale', String(scale));
+    }
+    function initializeModes() {
+      document.getElementById('build-mode').addEventListener('click', () => setWorkbenchMode('build'));
+      document.getElementById('simulation-mode').addEventListener('click', () => setWorkbenchMode('simulation'));
+      document.getElementById('supply-badge').addEventListener('click', selectSupply);
+      document.getElementById('deselect-button').addEventListener('click', () => { selectedComponent = null; firstPoint = null; refreshSelection(); render(); });
+      document.getElementById('delete-selected').addEventListener('click', () => { if (workbenchMode === 'build' && selectedComponent !== 'supply') removeComponent(selectedComponent); });
+      const field = document.getElementById('component-value-input');
+      field.addEventListener('change', () => applyResistance(field.value));
+      field.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); applyResistance(field.value); } });
+      document.querySelectorAll('[data-resistance]').forEach(button => button.addEventListener('click', () => applyResistance(button.dataset.resistance)));
+      for (const id of ['supply-input','sim-supply-input']) {
+        const field = document.getElementById(id);
+        field.addEventListener('change', () => applySupplyVoltage(field.value, field));
+        field.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); applySupplyVoltage(field.value, field); } });
+      }
+      document.getElementById('flow-speed').addEventListener('input', e => {
+        const speed = Number(e.target.value); if (!Number.isFinite(speed) || speed < .25 || speed > 3) return;
+        flowSpeed = speed; document.getElementById('speed-reading').textContent = `${formatNumber(flowSpeed)}×`; renderVisuals();
+      });
+      for (const id of ['show-copper-flow','show-component-flow','show-node-voltage']) {
+        document.getElementById(id).addEventListener('change', e => {
+          if (id === 'show-copper-flow') showCopperFlow = e.target.checked;
+          if (id === 'show-component-flow') showComponentFlow = e.target.checked;
+          if (id === 'show-node-voltage') showNodeVoltage = e.target.checked;
+          renderVisuals();
+        });
+      }
+      document.getElementById('sim-board').addEventListener('click', e => {
+        if (workbenchMode === 'build' && !e.target.closest('.hole,.lead,.resistor-body,.meter-tag,.supply-pin-label')) {
+          selectedComponent = null; firstPoint = null; refreshSelection(); render();
+        }
+      });
+      if (typeof ResizeObserver !== 'undefined') new ResizeObserver(updateBoardScale).observe(document.getElementById('board-stage'));
+      if (typeof window !== 'undefined') window.addEventListener('resize', updateBoardScale);
+    }
+
+    function initializeWorkbench() {
+      initializeModes();
+      document.getElementById('series-example').textContent = 'Series + cuts';
+      document.getElementById('series-example').addEventListener('click', () => loadExample('series'));
+      document.getElementById('parallel-example').addEventListener('click', () => loadExample('parallel'));
+      document.getElementById('save-project').addEventListener('click', () => { downloadText('stripboard-circuit.json', JSON.stringify(boardData(),null,2), 'application/json'); showMessage('Circuit saved as JSON.'); });
+      document.getElementById('load-project').addEventListener('click', () => document.getElementById('project-file').click());
+      document.getElementById('project-file').addEventListener('change', async e => {
+        const file = e.target.files[0]; if (!file) return;
+        try {
+          if (file.size > 2e6) throw new Error('Circuit file is too large.');
+          const data = validateBoard(JSON.parse(await file.text()));
+          actionHistory.push({ type:'snapshot', board:boardData() }); restoreBoard(data); showMessage('Circuit loaded. Undo restores your previous board.');
+        } catch (err) { showMessage(`Could not load circuit: ${err.message}`); }
+        e.target.value = '';
+      });
+      document.getElementById('export-netlist').addEventListener('click', exportNetlist);
+      document.addEventListener('keydown', e => {
+        if (e.target.matches('input,select,textarea')) return;
+        if (e.key === 'Escape') { firstPoint = null; selectedComponent = null; refreshSelection(); render(); }
+        if (workbenchMode === 'build' && (e.key === 'Delete' || e.key === 'Backspace') && selectedComponent && selectedComponent !== 'supply') { e.preventDefault(); removeComponent(selectedComponent); }
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); undoLastAction(); }
+      });
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) { restoring = true; restoreBoard(validateBoard(JSON.parse(saved))); restoring = false; showMessage('Your previous board was restored.'); }
+      } catch { restoring = false; showMessage('Starting a new board. Use Save circuit to keep a copy.'); }
+    }
+
+    document.querySelectorAll("[data-tool]").forEach(button => {
+      button.addEventListener("click", () => setActiveTool(button.dataset.tool));
+    });
+
+    document.getElementById("undo-button").addEventListener("click", undoLastAction);
+    document.getElementById("clear-button").addEventListener("click", clearBoard);
+    document.getElementById("flow-button").addEventListener("click", toggleCurrentFlow);
+
+    buildBoard();
+    initializeWorkbench();
+    render();
+    updateBoardScale();
+    updateBoardScale();
+  
+</script>
+</body>
+</html>
