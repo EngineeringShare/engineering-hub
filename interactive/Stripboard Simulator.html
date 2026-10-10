@@ -122,6 +122,11 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
 .move-pin { position:absolute;width:23px;height:23px;border:2px solid var(--move-colour);border-radius:50%;background:#a8efc52b;transform:translate(-50%,-50%);box-shadow:0 0 0 2px #12271a55; }
 .move-preview.invalid .move-pin { background:#ff786933; }
 .board-size-fields { display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px; }.board-size-fields label { font-size:11px;color:#b5cbb9; }.board-size-fields input { width:100%;margin-top:5px;padding:8px;border:1px solid #516a57;border-radius:7px;color:#efffdd;background:#0d1b15;font:13px ui-monospace,monospace; }
+.analog-leads{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:visible;}.analog-leads path{fill:none;stroke:#d7dbcd;stroke-width:4;stroke-linecap:round;pointer-events:stroke;cursor:grab;}.analog-leads.inspected path{stroke:#d6c092;}.analog-body {position:absolute;z-index:6;pointer-events:auto;cursor:grab;border:2px solid #73c8c9;background:#163436;color:#c7eeeb;box-shadow:0 2px 5px #0006;font:600 10px ui-monospace,monospace;display:grid;place-items:center;padding:0;}
+.capacitor-body{width:32px;height:28px;border-radius:5px;font-size:17px;}.source-body{width:34px;height:34px;border-radius:50%;font-size:20px;}.analog-body.inspected{outline:2px solid #dbbf85;outline-offset:3px;}.analog-value{position:absolute;top:-17px;font-size:9px;white-space:nowrap;background:#152c29dd;padding:2px 4px;border-radius:3px;}.scope-plot svg{display:block;width:100%;height:auto;min-height:150px;}.scope-reading{font:12px ui-monospace,monospace;line-height:1.7;color:#a6dacf;}.scope-panel{min-width:0;}.scope-legend{display:flex;gap:14px;font-size:11px;margin-bottom:10px;color:#7bd4da;}.scope-legend span:last-child{color:#e9b878;}#analog-properties input,#time-settings input,#frequency-settings input{width:100%;box-sizing:border-box;}#run-analysis{margin-top:14px;}
+.context-nav{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;}.editor-context-nav{grid-template-columns:repeat(2,1fr);}.context-nav button{padding:7px 4px;font-size:10px;}.active-context{border-color:#9cbd9d;background:#344b36;}.scope-tag{border-color:#adabf0;border-radius:5px;background:#20263a;color:#cfcbff;padding:7px 8px;font-size:11px;box-shadow:0 2px 6px #0006;}.ac-flow-indicator{position:absolute;z-index:12;pointer-events:none;color:#80e0e4;font:700 22px monospace;width:32px;height:24px;}.ac-flow-indicator span{position:absolute;inset:0;line-height:24px;}.ac-reverse{opacity:.25;}.flow-running .ac-forward{animation:ac-drive calc(1.8s / var(--flow-speed)) steps(1) infinite;}.flow-running .ac-reverse{animation:ac-drive calc(1.8s / var(--flow-speed)) steps(1) infinite reverse;}@keyframes ac-drive{0%,49%{opacity:1;}50%,100%{opacity:.15;}}@media(prefers-reduced-motion:reduce){.flow-running .ac-forward,.flow-running .ac-reverse{animation:none;opacity:.8;}}.preset-values{flex-wrap:wrap;}
+.control-label{position:absolute;pointer-events:auto;cursor:pointer;z-index:9;font:8px ui-monospace,monospace;color:#d0ecd3;background:#183d2ddb;padding:2px 4px;border-radius:3px;white-space:nowrap;}.meter-probe{pointer-events:auto;}
+@media(max-width:850px) and (min-width:591px){.right-column>#editor-context-nav,.right-column>#properties-panel,.right-column>#board-parts-panel,.right-column>#project-panel{grid-column:1/-1;}}
 </style></head>
 <body data-mode="build">
 <header class="app-header">
@@ -130,8 +135,8 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
   <button id="supply-badge" class="supply-badge" title="Edit the power supply"><span class="supply-dot"></span><span id="supply-label">9 V DC</span><span aria-hidden="true">↗</span></button>
 </header>
 <main class="workspace">
-  <aside class="left-column side-column" aria-label="Tools and settings">
-    <section class="panel" data-view="build">
+  <aside class="left-column side-column" aria-label="Toolkit"><section id="build-context-nav" class="panel" data-view="build"><div class="context-nav"><button id="show-tools" class="action-button">Tools</button><button id="show-board-properties" class="action-button">Board</button><button id="show-supply-properties" class="action-button">Supply</button></div></section>
+    <section id="building-tools-panel" class="panel" data-view="build">
       <div class="section-head"><span class="eyebrow">BUILD</span><span class="quiet-label">01</span></div>
       <h2>Building tools</h2><p class="panel-caption">Pick a tool, then click the board.</p>
       <div class="tool-grid">
@@ -140,16 +145,30 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         <button class="tool-button" data-tool="wire" aria-pressed="false"><span class="tool-symbol">⌁</span>Wire link</button>
         <button class="tool-button" data-tool="drill" aria-pressed="false"><span class="tool-symbol">⊗</span>Track cut</button>
         <button class="tool-button" data-tool="ammeter" aria-pressed="false"><span class="tool-symbol">A</span>Ammeter</button>
-        <button class="tool-button" data-tool="voltmeter" aria-pressed="false"><span class="tool-symbol">V</span>Voltmeter</button>
+        <button class="tool-button" data-tool="scope" aria-pressed="false"><span class="tool-symbol">⌁</span>Scope</button><button class="tool-button" data-tool="voltmeter" aria-pressed="false"><span class="tool-symbol">V</span>Voltmeter</button>
         <button class="tool-button" data-tool="led" aria-pressed="false"><span class="tool-symbol">◉</span>LED</button>
         <button class="tool-button" data-tool="diode" aria-pressed="false"><span class="tool-symbol">▸│</span>Diode</button>
         <button class="tool-button" data-tool="switch" aria-pressed="false"><span class="tool-symbol">⏼</span>Switch</button>
+        <button class="tool-button" data-tool="capacitor" aria-pressed="false"><span class="tool-symbol">Ⅱ</span>Capacitor</button>
+        <button class="tool-button" data-tool="source" aria-pressed="false"><span class="tool-symbol">∿</span>Signal source</button>
         <button class="tool-button" data-tool="ic" aria-pressed="false"><span class="tool-symbol">▤</span>IC</button>
       </div>
-      <div id="dip-placement-controls" hidden><label class="field-label" for="dip-placement-orientation">Package orientation</label><select id="dip-placement-orientation"><option value="vertical">Vertical · notch at top</option><option value="horizontal">Horizontal · notch at left</option></select><p class="fine-print">Hover to preview. Click once at the top-left pin position to place every leg. Start with a DIP-14 outline. Choose a chip model or unassigned DIP-16 in Properties to set its size.</p></div>
+      <div id="dip-placement-controls" hidden><label class="field-label" for="dip-placement-size">Package outline</label><select id="dip-placement-size"><option value="8">DIP-8</option><option value="14" selected>DIP-14</option><option value="16">DIP-16</option></select><label class="field-label" for="dip-placement-orientation">Package orientation</label><select id="dip-placement-orientation"><option value="vertical">Vertical · notch at top</option><option value="horizontal">Horizontal · notch at left</option></select><p class="fine-print">Hover to preview. Click once at the top-left pin position to place every leg. Choose an outline to check the footprint. Choose a chip model or unassigned DIP-8, DIP-14 or DIP-16 in Properties to set its size.</p></div>
       <div class="small-actions"><button id="undo-button" class="action-button">↶ Undo</button><button id="clear-button" class="action-button danger-subtle">Clear board</button></div>
       <p class="fine-print">Select to edit or drag a part. Moves snap to holes. For LEDs, place the anode (+) first.</p>
     </section>
+    <section id="toolkit-board-panel" class="panel" data-view="build" hidden><div class="section-head"><span class="eyebrow">TOOLKIT / BOARD</span></div><h2>Board properties</h2>
+      <div id="board-properties" class="board-configuration"><label class="field-label" for="board-type-select">Board type</label><select id="board-type-select"><option value="stripboard">Stripboard</option><option value="breadboard">Breadboard</option></select><div class="board-size-fields"><label for="board-rows-input">Rows<input id="board-rows-input" type="number" min="4" max="30" step="1" value="10"></label><label for="board-cols-input">Columns<input id="board-cols-input" type="number" min="4" max="50" step="1" value="18"></label></div><button id="resize-board" class="action-button full-width">Apply board size</button><p class="fine-print">Size in holes · 4–30 rows, 4–50 columns. Move parts clear before shrinking. Breadboard parts follow the centre split; rail leads follow their rails. Undo restores a resize.</p><label id="breadboard-break-row" class="toggle-row" hidden><span>Centre break</span><input id="breadboard-break-input" type="checkbox"></label><p id="board-connection-note" class="fine-print">Horizontal copper rows. Supply terminals can be moved.</p></div>
+    </section>
+    <section id="toolkit-supply-panel" class="panel" data-view="build" hidden><div class="section-head"><span class="eyebrow">TOOLKIT / SUPPLY</span></div><h2>Power supply</h2>
+      <div id="supply-properties">
+        <label class="field-label" for="supply-input">Supply voltage</label><div class="unit-field"><input id="supply-input" type="number" min="0.001" max="1000" step="any" value="9"><span>V</span></div>
+        <p class="fine-print">Type a value, then press Enter or click outside to apply.</p>
+        <div class="terminal-cards"><div><span class="positive-text">SUPPLY +</span><strong id="supply-positive-location">2:1</strong></div><div><span class="negative-text">0 V</span><strong id="supply-negative-location">9:1</strong></div></div>
+        <div id="supply-terminal-actions" class="small-actions"><button class="action-button" data-tool="move-plus">Move + terminal</button><button class="action-button" data-tool="move-minus">Move 0 V terminal</button></div>
+      </div>
+    </section>
+    <section id="sim-scope-controls" class="panel" data-view="simulation"><div class="section-head"><span class="eyebrow">INSTRUMENT</span><span class="quiet-label">SCOPE</span></div><h2>Oscilloscope</h2><label class="field-label" for="analysis-scope">Choose scope</label><select id="analysis-scope"></select><button id="run-analysis" class="action-button primary-button full-width">Refresh scope</button><p id="scope-selection-note" class="fine-print">Place a Scope in Build mode. Its first lead measures the signal; its second is the reference.</p></section>
     <section class="panel" data-view="simulation">
       <div class="section-head"><span class="eyebrow">SIMULATE</span><span class="quiet-label">01</span></div>
       <h2>Current flow</h2><p class="panel-caption">Follow conventional current through the circuit.</p>
@@ -158,7 +177,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       <input id="flow-speed" type="range" min="0.25" max="3" step="0.25" value="1">
       <label class="toggle-row"><span><span id="conductor-flow-label">Copper track arrows</span></span><input id="show-copper-flow" type="checkbox" checked></label>
       <label class="toggle-row"><span>Component arrows</span><input id="show-component-flow" type="checkbox" checked></label>
-      <label class="toggle-row"><span>Hole voltage labels</span><input id="show-node-voltage" type="checkbox"></label>
+      <label class="toggle-row"><span>AC source direction</span><input id="show-ac-flow" type="checkbox" checked></label><p class="fine-print">AC chevrons alternate to mark sine/square source drive. They are an AC indicator; branch readings remain DC.</p><label class="toggle-row"><span>Hole voltage labels</span><input id="show-node-voltage" type="checkbox"></label>
       <p class="fine-print">Animation speed changes the display only.</p>
     </section>
     <section class="panel" data-view="simulation">
@@ -167,18 +186,13 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       <label class="field-label" for="sim-supply-input">Voltage</label><div class="unit-field"><input id="sim-supply-input" type="number" min="0.001" max="1000" step="any" value="9"><span>V</span></div>
       <p id="sim-supply-note" class="fine-print">Ideal DC supply · 0 V reference at the blue terminal.</p>
     </section>
-    <section class="panel project-panel">
-      <div class="section-head"><span class="eyebrow">PROJECT</span><span class="quiet-label">JSON</span></div>
-      <div class="small-actions"><button id="save-project" class="action-button">↓ Save circuit</button><button id="load-project" class="action-button">↑ Load circuit</button></div>
-      <button id="export-board-png" class="action-button full-width">↓ Export board PNG</button><input id="project-file" type="file" accept=".json,application/json" hidden>
-      <p class="fine-print" id="autosave-note">Saved automatically in this browser.</p>
-      <details class="project-details"><summary>Examples &amp; export</summary><p class="fine-print">Examples use an 18 × 10 board. Undo returns to your board.</p><div class="small-actions"><button id="series-example" class="action-button">Series + cuts</button><button id="parallel-example" class="action-button">Parallel</button></div><button id="led-example" class="action-button full-width">LED + resistor example</button><button id="diode-example" class="action-button full-width">Diode + resistor example</button><button id="switch-example" class="action-button full-width">Switch + LED example</button><button id="ic-example" class="action-button full-width">74x08 AND gate example</button><button id="dff-example" class="action-button full-width">D flip-flop example</button><button id="jk-example" class="action-button full-width">JK toggle example</button><button id="counter-example" class="action-button full-width">Decade counter example</button><button id="export-netlist" class="action-button full-width">Export DC SPICE netlist</button></details>
-    </section>
+
+    
   </aside>
   <section class="board-column" aria-labelledby="board-heading">
     <div class="board-toolbar"><div><span class="eyebrow" id="board-mode-label">LAYOUT / COPPER SIDE</span><h2 id="board-heading">Stripboard</h2></div><div class="board-chips"><span><strong id="component-count">0</strong> parts</span><span><strong id="cuts-count">0</strong> cuts</span></div></div>
     <div class="board-surface">
-      <div class="board-instruction"><span class="instruction-dot"></span><span id="board-hint">Select a component to edit it. Click empty board space for the supply.</span></div>
+      <div class="board-instruction"><span class="instruction-dot"></span><span id="board-hint">Select a component to edit it. Click empty board space to see the component list.</span></div>
       <div id="sim-board" class="sim-board" aria-label="Interactive stripboard">
         <div id="board-stage" class="board-stage"><div class="board-inner"><span id="board-face-label" class="board-print" style="top:19px;left:42px">18 × 10 / COPPER SIDE</span><span class="board-print" style="bottom:16px;right:42px">2.54 mm PITCH</span><div id="board-grid" aria-label="Stripboard grid"></div><div id="component-layer" class="component-layer" aria-label="Placed components"></div></div></div>
       </div>
@@ -187,30 +201,34 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     <div class="workspace-footnote" data-view="build"><span><span id="board-wiring-footnote">Two clicks connect leads. Crossing lines do not join.</span></span><span>Esc: deselect · Ctrl / ⌘ Z: undo</span></div>
     <div class="workspace-footnote" data-view="simulation"><span>Live DC operating point · click switches to open or close.</span><span>First lead → second lead</span></div>
   </section>
-  <aside class="right-column side-column" aria-label="Properties and readings">
-    <section id="properties-panel" class="panel properties-panel" data-view="build">
+  <aside class="right-column side-column" aria-label="Component editor, project and readings">
+    <section id="editor-context-nav" class="panel" data-view="build"><div class="context-nav editor-context-nav"><button id="show-board-editor" class="action-button" aria-pressed="true">Board</button><button id="show-project" class="action-button" aria-pressed="false">Project</button></div></section>
+    <section id="properties-panel" class="panel properties-panel" data-view="build" hidden>
       <div class="section-head"><span class="eyebrow">PROPERTIES</span><button id="deselect-button" class="text-button">Deselect</button></div>
-      <div class="board-configuration"><label class="field-label" for="board-type-select">Board type</label><select id="board-type-select"><option value="stripboard">Stripboard</option><option value="breadboard">Breadboard</option></select><div class="board-size-fields"><label for="board-rows-input">Rows<input id="board-rows-input" type="number" min="4" max="30" step="1" value="10"></label><label for="board-cols-input">Columns<input id="board-cols-input" type="number" min="4" max="50" step="1" value="18"></label></div><button id="resize-board" class="action-button full-width">Apply board size</button><p class="fine-print">Size in holes · 4–30 rows, 4–50 columns. Move parts clear before shrinking. Breadboard parts follow the centre split; rail leads follow their rails. Undo restores a resize.</p><label id="breadboard-break-row" class="toggle-row" hidden><span>Centre break</span><input id="breadboard-break-input" type="checkbox"></label><p id="board-connection-note" class="fine-print">Horizontal copper rows. Supply terminals can be moved.</p></div>
       <div class="property-identity"><span id="property-symbol" class="property-symbol">⎓</span><div><span id="property-type" class="quiet-label">BENCH SUPPLY</span><h2 id="property-title">Power supply</h2></div></div>
       <p id="property-description" class="panel-caption">Select a component on the board to edit its properties.</p>
-      <div id="supply-properties">
-        <label class="field-label" for="supply-input">Supply voltage</label><div class="unit-field"><input id="supply-input" type="number" min="0.001" max="1000" step="any" value="9"><span>V</span></div>
-        <p class="fine-print">Type a value, then press Enter or click outside to apply.</p>
-        <div class="terminal-cards"><div><span class="positive-text">SUPPLY +</span><strong id="supply-positive-location">2:1</strong></div><div><span class="negative-text">0 V</span><strong id="supply-negative-location">9:1</strong></div></div>
-        <div id="supply-terminal-actions" class="small-actions"><button class="action-button" data-tool="move-plus">Move + terminal</button><button class="action-button" data-tool="move-minus">Move 0 V terminal</button></div>
-      </div>
       <div id="component-properties" hidden>
+        <div id="scope-properties" hidden><p class="fine-print">Probe + is the signal; probe − is its reference. The instrument draws no current. Set up this scope here, then select it in Simulate.</p><label class="field-label" for="analysis-mode">Analysis</label><select id="analysis-mode"><option value="auto">Automatic</option><option value="dc">DC operating point</option><option value="transient">Time / waveform</option><option value="ac">Frequency response</option></select><label class="field-label" for="analysis-source">Input source</label><select id="analysis-source"></select><div id="time-settings"><label class="field-label" for="analysis-duration">Duration (ms)</label><input id="analysis-duration" type="number" min="0.001" max="10000" step="any" value="40"><label class="field-label" for="analysis-steps">Samples</label><input id="analysis-steps" type="number" min="100" max="4000" step="100" value="1600"><label class="toggle-row"><span>Start capacitors at initial voltage</span><input id="analysis-zero" type="checkbox" checked></label></div><div id="frequency-settings" hidden><label class="field-label" for="analysis-fmin">Start frequency (Hz)</label><input id="analysis-fmin" type="number" min="0.001" max="10000000" value="1" step="any"><label class="field-label" for="analysis-fmax">End frequency (Hz)</label><input id="analysis-fmax" type="number" min="0.001" max="10000000" value="100000" step="any"></div><p class="fine-print">Automatic shows a waveform when a signal source is present; otherwise it shows the live DC voltage. Frequency response uses the selected source as its input.</p></div><div id="analog-properties" hidden></div>
         <div id="resistor-properties" hidden><label class="field-label" for="component-value-input">Resistance</label><div class="unit-field"><input id="component-value-input" type="number" min="0.001" max="1000000000000" step="any" value="1000"><span>Ω</span></div><p class="fine-print">Type the resistance in ohms. Press Enter or click outside to apply.</p><div class="preset-values"><button data-resistance="220">220 Ω</button><button data-resistance="1000">1 kΩ</button><button data-resistance="10000">10 kΩ</button></div></div>
         <div id="led-properties" hidden><label class="field-label" for="led-colour-select">LED colour</label><select id="led-colour-select"><option value="red">Red</option><option value="green">Green</option><option value="yellow">Yellow</option><option value="blue">Blue</option><option value="white">White</option></select><label class="field-label" for="led-forward-input">Forward threshold</label><div class="unit-field"><input id="led-forward-input" type="number" min="0.1" max="10" step="any" value="2"><span>V</span></div><button id="reverse-led" class="action-button full-width">⇄ Reverse polarity</button><p id="led-operating-state" class="fine-print"></p></div>
         <div id="diode-properties" hidden><label class="field-label" for="diode-forward-input">Forward threshold</label><div class="unit-field"><input id="diode-forward-input" type="number" min="0.1" max="10" step="any" value="0.7"><span>V</span></div><button id="reverse-diode" class="action-button full-width">⇄ Reverse polarity</button><p id="diode-operating-state" class="fine-print"></p></div>
         <div id="switch-properties" hidden><label class="field-label">Switch state</label><button id="toggle-selected-switch" class="action-button full-width" aria-pressed="false">Open · click to close</button><p class="fine-print">Click the switch on the board or use its readings card in Simulate mode.</p></div>
-        <div id="ic-properties" class="ic-fields" hidden><label class="field-label" for="ic-model-select">Chip model</label><select id="ic-model-select"><option value="">Unassigned package</option></select><label class="field-label" for="ic-orientation-select">Package orientation</label><select id="ic-orientation-select"><option value="vertical">Vertical · notch at top</option><option value="horizontal">Horizontal · notch at left</option></select><p id="ic-power-state" class="fine-print"></p><p id="ic-function-note" class="fine-print"></p><a id="ic-datasheet-link" class="ic-link fine-print" target="_blank" rel="noopener">Model reference datasheet ↗</a><div id="ic-pin-properties"></div></div>
+        <div id="ic-properties" class="ic-fields" hidden><label class="field-label" for="ic-model-select">Chip model</label><select id="ic-model-select"><option value="">Unassigned package</option></select><label class="field-label" for="ic-orientation-select">Package orientation</label><select id="ic-orientation-select"><option value="vertical">Vertical · notch at top</option><option value="horizontal">Horizontal · notch at left</option></select><label id="opamp-errors-row" class="toggle-row" hidden><span>Typical offset / bias errors</span><input id="opamp-errors" type="checkbox"></label><p id="ic-power-state" class="fine-print"></p><p id="ic-function-note" class="fine-print"></p><a id="ic-datasheet-link" class="ic-link fine-print" target="_blank" rel="noopener">Model reference datasheet ↗</a><div id="ic-pin-properties"></div></div>
         <div id="component-terminal-cards" class="terminal-cards"><div><span id="component-a-label">FIRST LEAD</span><strong id="component-a-location">—</strong></div><div><span id="component-b-label">SECOND LEAD</span><strong id="component-b-location">—</strong></div></div>
         <p id="component-model-note" class="fine-print"></p>
         <button id="delete-selected" class="action-button danger-subtle full-width">Remove component</button>
       </div>
     </section>
-    <section class="panel parts-panel" data-view="build"><div class="section-head"><span class="eyebrow">ON THE BOARD</span><span id="parts-total" class="quiet-label">0 parts</span></div><div id="build-component-list" class="parts-list"></div></section>
+    <section id="project-panel" class="panel project-panel" data-view="build" hidden>
+      <div class="section-head"><span class="eyebrow">PROJECT</span><span class="quiet-label">JSON</span></div>
+      <div class="small-actions"><button id="save-project" class="action-button">↓ Save circuit</button><button id="load-project" class="action-button">↑ Load circuit</button></div>
+      <button id="export-board-png" class="action-button full-width">↓ Export board PNG</button><input id="project-file" type="file" accept=".json,application/json" hidden>
+      <p class="fine-print" id="autosave-note">Saved automatically in this browser.</p>
+      <details class="project-details"><summary>Examples &amp; export</summary><p class="fine-print">Examples use layouts sized to the circuit. Undo returns to your board.</p><div class="small-actions"><button id="series-example" class="action-button">Series + cuts</button><button id="parallel-example" class="action-button">Parallel</button></div><button id="led-example" class="action-button full-width">LED + resistor example</button><button id="diode-example" class="action-button full-width">Diode + resistor example</button><button id="switch-example" class="action-button full-width">Switch + LED example</button><button id="ic-example" class="action-button full-width">74x08 AND gate example</button><button id="dff-example" class="action-button full-width">D flip-flop example</button><button id="jk-example" class="action-button full-width">JK toggle example</button><button id="counter-example" class="action-button full-width">Decade counter example</button><label class="field-label" for="opamp-example">LM741 circuits · ±15 V</label><select id="opamp-example"><option value="non-inverting">Non-inverting amplifier</option><option value="inverting">Inverting amplifier</option><option value="follower">Voltage follower</option><option value="summing">Summing amplifier</option><option value="difference">Difference amplifier</option><option value="low-pass">Low-pass filter</option><option value="high-pass">High-pass filter</option><option value="integrator">Integrator</option><option value="differentiator">Differentiator</option></select><button id="load-opamp-example" class="action-button full-width">Load LM741 example</button><p class="fine-print">LM741 examples use a 24 × 18 board. Undo restores your circuit.</p><button id="export-netlist" class="action-button full-width">Export DC SPICE netlist</button></details>
+    </section>
+
+    <section id="board-parts-panel" class="panel parts-panel" data-view="build"><div class="section-head"><span class="eyebrow">ON THE BOARD</span><span id="parts-total" class="quiet-label">0 parts</span></div><div id="build-component-list" class="parts-list"></div></section>
+    <section class="panel scope-panel" data-view="simulation"><div class="section-head"><span class="eyebrow">SCOPE / RESPONSE</span><span id="scope-state" class="quiet-label">READY</span></div><h2 id="scope-title">Analog traces</h2><div id="scope-plot" class="scope-plot"><p class="fine-print">Place a Scope in Build, then select it in Simulate.</p></div><label class="field-label" for="scope-cursor">Trace cursor</label><input id="scope-cursor" type="range" min="0" max="0" value="0" disabled><p id="scope-reading" class="scope-reading">Place a Scope to see its signal.</p><p id="scope-notes" class="fine-print">Changing a circuit invalidates its trace. DC analysis stays live.</p></section>
     <section class="panel" data-view="simulation">
       <div class="section-head"><span class="eyebrow">LIVE ANALYSIS</span><span id="status-dot" class="status-dot"></span></div>
       <h2>Readings</h2><div id="status-value" class="status-value">Open / no load current</div>
@@ -222,10 +240,11 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       <div class="meter-heading"><h3>Component readings</h3></div><div id="component-readings"></div>
       <p class="fine-print">Signed readings follow first lead → second lead. Component power is shown in mW.</p>
     </section>
-    <details class="panel model-details" data-view="simulation"><summary>About the simulation</summary><p class="fine-print">DC resistors, LEDs, diodes, ideal switches, copper, wire links and meters. Open switches disconnect their leads; closed switches have zero resistance. Ammeters close a circuit in series; voltmeters draw no current. Ideal parallel conductors can have indeterminate current splits. LEDs and diodes use approximate forward thresholds with 20 Ω and 1 Ω slope resistance respectively; reverse current is blocked. Diodes default to 0.7 V. The gate and flip-flop ICs use an HC-style electrical approximation: high-impedance inputs, 2–6 V supply, approximate LOW/HIGH thresholds at 30%/70% of VCC (25%/75% near 2 V), and 50 Ω output drivers. Floating inputs read X; undefined or unpowered outputs are undriven. The 74x90 uses LS-style input thresholds (LOW ≤0.8 V, HIGH ≥2 V) and a 4.75–5.25 V supply; its output drivers are approximate. Flip-flops and counters respond to wired clock edges in Simulate mode and store their state. Reset/preset inputs act immediately in either mode. Power loss clears stored state to X. No propagation delay, setup/hold timing, switch bounce, input clamp diodes, quiescent IC current, reverse breakdown, AC, transient, damage or thermal models. <a class="ic-link" href="https://www.ti.com/lit/ds/symlink/sn74hc08.pdf" target="_blank" rel="noopener">74HC08 datasheet</a>.</p></details>
+
+    <details class="panel model-details" data-view="simulation"><summary>About the simulation</summary><p class="fine-print">DC resistors, LEDs, diodes, ideal switches, copper, wire links and meters. Open switches disconnect their leads; closed switches have zero resistance. Ammeters close a circuit in series; voltmeters draw no current. Ideal parallel conductors can have indeterminate current splits. LEDs and diodes use approximate forward thresholds with 20 Ω and 1 Ω slope resistance respectively; reverse current is blocked. Diodes default to 0.7 V. The gate and flip-flop ICs use an HC-style electrical approximation: high-impedance inputs, 2–6 V supply, approximate LOW/HIGH thresholds at 30%/70% of VCC (25%/75% near 2 V), and 50 Ω output drivers. Floating inputs read X; undefined or unpowered outputs are undriven. The 74x90 uses LS-style input thresholds (LOW ≤0.8 V, HIGH ≥2 V) and a 4.75–5.25 V supply; its output drivers are approximate. Flip-flops and counters respond to wired clock edges in Simulate mode and store their state. Reset/preset inputs act immediately in either mode. Power loss clears stored state to X. No propagation delay, setup/hold timing, switch bounce, input clamp diodes, quiescent IC current, reverse breakdown, damage or thermal models for digital parts. LM741 circuits support DC, small-signal AC and backward-Euler time analysis. The one-pole analog approximation includes finite gain, bandwidth, slew, input/output resistance, output swing and current limits. It does not model offset-null pins, temperature, noise, recovery from overload or device damage. Its parameters describe a typical educational approximation, not a transistor-level SPICE macromodel. <a class="ic-link" href="https://www.ti.com/lit/ds/symlink/sn74hc08.pdf" target="_blank" rel="noopener">74HC08 datasheet</a>.</p></details>
   </aside>
 </main>
-<footer class="status-bar"><span id="mode-status" class="mode-status">BUILD</span><p id="tool-message" aria-live="polite">Select a component or choose a building tool.</p><span class="quiet-label">V1.0 / LOCAL WORKBENCH</span></footer>
+<footer class="status-bar"><span id="mode-status" class="mode-status">BUILD</span><p id="tool-message" aria-live="polite">Select a component or choose a building tool.</p><span class="quiet-label">V1.02 / LOCAL WORKBENCH</span></footer>
 <script>
 
     let ROWS = 10;
@@ -308,7 +327,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       Object.assign(data,supply);
       try{validateBoard(data);}catch(err){resetInputs();showMessage(`Cannot resize: ${err.message}`);return;}
       actionHistory.push({type:'snapshot',board:before});const selection=selectedComponent;restoreBoard(data);
-      selectedComponent=selection;renderProperties();
+      selectedComponent=selection;renderProperties();updateBuildContext();
       showMessage(`${cols} × ${rows} board ready. Undo restores the previous size.${bread&&rows!==before.rows?' Signal contacts followed the centre split; ground connections followed the bottom rail.':''}`);
     }
 
@@ -320,6 +339,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
 
     // Package geometry is independent of the selected IC model.
     const IC_MODELS = {
+      LM741:{name:'LM741',description:'Operational amplifier · DIP-8',kind:'opamp',family:'analog',vcc:7,gnd:4,minV:20,maxV:44,pins:['OFFSET NULL','IN−','IN+','V−','OFFSET NULL','OUT','V+','NC'],inputPins:[2,3],outputPins:[6],notes:'Analog LM741 approximation: gain 200,000; 1 MHz gain-bandwidth; 0.5 V/µs slew; 2 MΩ differential input; 75 Ω output; 25 mA limit; 2 V rail headroom; 1.7 mA idle. Recommended ±15 V. Offset-null trims and pin 8 are not simulated. Offset and bias default to zero; optional typical errors: 1 mV and 80 nA.'},
       '74x00': {name:'74x00',description:'Quad 2-input NAND',op:'NAND',pins:['1A','1B','1Y','2A','2B','2Y','GND','3Y','3A','3B','4Y','4A','4B','VCC'],gates:[{a:1,b:2,y:3},{a:4,b:5,y:6},{a:9,b:10,y:8},{a:12,b:13,y:11}]},
       '74x02': {name:'74x02',description:'Quad 2-input NOR',op:'NOR',pins:['1Y','1A','1B','2Y','2A','2B','GND','3A','3B','3Y','4A','4B','4Y','VCC'],gates:[{a:2,b:3,y:1},{a:5,b:6,y:4},{a:8,b:9,y:10},{a:11,b:12,y:13}]},
       '74x04': {name:'74x04',description:'Hex inverter',op:'NOT',pins:['1A','1Y','2A','2Y','3A','3Y','GND','4Y','4A','5Y','5A','6Y','6A','VCC'],gates:[{a:1,y:2},{a:3,y:4},{a:5,y:6},{a:9,y:8},{a:11,y:10},{a:13,y:12}]},
@@ -335,10 +355,10 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       m.kind=m.kind||'gates';m.family=m.family||'HC';m.vcc=m.vcc||14;m.gnd=m.gnd||7;m.minV=m.minV||2;m.maxV=m.maxV||6;m.packagePins=m.pins.length;
       if(m.gates){m.gates=m.gates.map(g=>({...g,inputs:[g.a,g.b,g.c].filter(Boolean)}));m.inputPins=m.gates.flatMap(g=>g.inputs);m.outputPins=m.gates.map(g=>g.y);}
       if(m.units){m.inputPins=m.units.flatMap(u=>[u.pre,u.clear,u.clock,u.d,u.j,u.k].filter(Boolean));m.outputPins=m.units.flatMap(u=>[u.q,u.qb]);}
-      m.datasheet=m.kind==='jkff'?'https://media.digikey.com/pdf/Data%20Sheets/ST%20Microelectronics%20PDFS/M74HC76.pdf':`https://www.ti.com/lit/ds/symlink/sn74${m.family.toLowerCase()}${m.name.slice(-2)}.pdf`;
+      m.datasheet=m.kind==='opamp'?'https://www.ti.com/lit/ds/symlink/lm741.pdf':m.kind==='jkff'?'https://media.digikey.com/pdf/Data%20Sheets/ST%20Microelectronics%20PDFS/M74HC76.pdf':`https://www.ti.com/lit/ds/symlink/sn74${m.family.toLowerCase()}${m.name.slice(-2)}.pdf`;
     }
-    function isIC(c){return c?.type==='dip14'||c?.type==='dip16';}
-    function packagePins(c){return c.type==='dip16'?16:14;}
+    function isIC(c){return ['dip8','dip14','dip16'].includes(c?.type);}
+    function packagePins(c){return c.type==='dip8'?8:c.type==='dip16'?16:14;}
     function packageName(c){return `DIP-${packagePins(c)}`;}
     function cloneLogic(value){return value?JSON.parse(JSON.stringify(value)):null;}
     function logicSnapshot(){return components.filter(isIC).map(c=>({id:c.id,memory:cloneLogic(c.memory)}));}
@@ -354,7 +374,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     }
 
     const IC_OUTPUT_RESISTANCE = 50; // Educational DC output-driver approximation.
-    let dipOrientation = 'vertical', hoverPoint = null;
+    let dipOrientation = 'vertical', dipPlacementPins=14, hoverPoint = null;
     function dipPins(c) {
       const p=pointFromId(c.a),horizontal=c.orientation==='horizontal';
       return Array.from({length:packagePins(c)},(_,i)=>{
@@ -373,10 +393,10 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       return '';
     }
     function placeDIP(id) {
-      const c={id:`${Date.now()}-${Math.random().toString(16).slice(2)}`,type:'dip14',a:id,orientation:dipOrientation,model:''};
+      const c={id:`${Date.now()}-${Math.random().toString(16).slice(2)}`,type:'dip'+dipPlacementPins,a:id,orientation:dipOrientation,model:''};
       const problem=dipPlacementProblem(c);if(problem){showMessage(problem);return;}
       c.b=dipPins(c)[packagePins(c)/2-1].point;components.push(c);actionHistory.push({type:'component',id:c.id});
-      selectedComponent=c.id;firstPoint=null;hoverPoint=null;setActiveTool('select');render();
+      selectedComponent=c.id;editorTab='board';firstPoint=null;hoverPoint=null;setActiveTool('select');render();
       showMessage(`${packageName(c)} placed. Choose its model on the right, then wire its labelled power pins.`);
     }
     function drawDIP(c,preview=false,valid=true) {
@@ -410,7 +430,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       layer.querySelectorAll('.placement-preview').forEach(e=>e.remove());
       if(workbenchMode!=='build'||!hoverPoint)return;
       if(activeTool==='ic'){
-        const c={type:'dip14',id:'preview',a:hoverPoint,orientation:dipOrientation,model:''},problem=dipPlacementProblem(c);
+        const c={type:'dip'+dipPlacementPins,id:'preview',a:hoverPoint,orientation:dipOrientation,model:''},problem=dipPlacementProblem(c);
         layer.appendChild(drawDIP(c,true,!problem));
         document.getElementById('board-hint').textContent=problem||`${packageName(c)} preview · top-left anchor ${locationLabel(hoverPoint)} · click once to place.`;
       }else if(firstPoint&&firstPoint!==hoverPoint&&['wire','resistor','led','diode','switch','ammeter','voltmeter'].includes(activeTool)){
@@ -420,7 +440,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     }
     function editIC(changes) {
       const c=components.find(c=>c.id===selectedComponent&&isIC(c));if(!c||workbenchMode!=='build')return;
-      const next={...c,...changes};if(changes.model&&IC_MODELS[changes.model])next.type=IC_MODELS[changes.model].packagePins===16?'dip16':'dip14';const problem=dipPlacementProblem(next);if(problem){showMessage(problem);renderProperties();return;}
+      const next={...c,...changes};if(changes.model&&IC_MODELS[changes.model])next.type='dip'+IC_MODELS[changes.model].packagePins;const problem=dipPlacementProblem(next);if(problem){showMessage(problem);renderProperties();return;}
       actionHistory.push({type:'ic-edit',id:c.id,previous:{type:c.type,model:c.model,orientation:c.orientation,b:c.b,memory:cloneLogic(c.memory)}});
       if(changes.model!==undefined&&changes.model!==c.model)delete c.memory;Object.assign(c,{type:next.type},changes);c.b=dipPins(c)[packagePins(c)/2-1].point;render();
     }
@@ -434,6 +454,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       return v<=low*supply+1e-8?'0':v>=high*supply-1e-8?'1':'X';
     }
     function evaluateIC(c) {
+      if(c.model==='LM741')return evaluateOpamp(c);
       const model=IC_MODELS[c.model];
       if(!model)return {powered:false,state:'Unassigned package',supply:null,gates:[],units:[],count:null,pins:dipPins(c).map(p=>({...p,name:`Pin ${p.number}`,voltage:icPinVoltage(c,p.number),logic:'—'}))};
       const vcc=icPinVoltage(c,model.vcc),ground=icPinVoltage(c,model.gnd),supply=vcc!==null&&ground!==null?vcc-ground:null;
@@ -508,7 +529,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     function solveCircuit() {
       const chips=components.filter(isIC);
       if(!chips.length){solveAnalogueCircuit();solution.chips={};solution.icDrivers=[];return;}
-      for(const c of chips)if(IC_MODELS[c.model]?.kind!=='gates'&&IC_MODELS[c.model]&&(!c.memory||c.memory.model!==c.model))c.memory=blankMemory(c.model);
+      for(const c of chips)if(isSequential(c)&&IC_MODELS[c.model]&&(!c.memory||c.memory.model!==c.model))c.memory=blankMemory(c.model);
       const prior=solution.icDrivers||[];
       let drivers=prior.flatMap(d=>{
         const c=chips.find(c=>c.id===d.owner&&c.model===d.model);if(!c)return [];
@@ -529,7 +550,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
           if(seen.has(key)){failed=true;break;}seen.add(key);drivers=next;
         }
         if(failed||!settled){failed=true;break;}
-        const proposals=chips.map((c,i)=>IC_MODELS[c.model]&&IC_MODELS[c.model].kind!=='gates'?stepMemory(c,states[i]):null);
+        const proposals=chips.map((c,i)=>isSequential(c)?stepMemory(c,states[i]):null);
         let changed=false;
         chips.forEach((c,i)=>{if(proposals[i]){if(memoryOutputKey(proposals[i])!==memoryOutputKey(c.memory))changed=true;c.memory=proposals[i];}});
         if(!changed){stable=true;states=chips.map(evaluateIC);break;}
@@ -545,7 +566,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       }
       solution.chips=Object.fromEntries(chips.map((c,i)=>[c.id,states[i]||evaluateIC(c)]));solution.icDrivers=drivers;
       for(const c of chips){
-        const state=solution.chips[c.id],model=IC_MODELS[c.model];state.pinCurrents=Array(packagePins(c)).fill(0);state.dissipation=0;if(!model)continue;
+        const state=solution.chips[c.id],model=IC_MODELS[c.model];if(model?.kind==='opamp'){finishOpampReadings(c,state);continue;}state.pinCurrents=Array(packagePins(c)).fill(0);state.dissipation=0;if(!model)continue;
         for(const d of drivers.filter(d=>d.owner===c.id)){
           const current=solution.currents[d.id];if(!Number.isFinite(current))continue;
           state.pinCurrents[d.outputPin-1]+=current;state.pinCurrents[(d.logic==='1'?model.vcc:model.gnd)-1]-=current;state.dissipation+=current*current*d.resistance;
@@ -568,8 +589,8 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       for(const t of ['PIN','NAME','HOLE',readings?'V / LOGIC':'ROLE']){const e=document.createElement('span');e.textContent=t;header.appendChild(e);}table.appendChild(header);
       for(const p of state.pins){
         const row=document.createElement('div');row.className='ic-pin-row';
-        const m=IC_MODELS[c.model],role=p.name==='VCC'||p.name==='GND'?'Power':p.name==='NC'?'NC':m?.outputPins.includes(p.number)?'Output':c.model?'Input':'—';
-        const value=readings?`${p.voltage===null?'—':formatNumber(p.voltage)} V · ${p.logic}`:role;
+        const m=IC_MODELS[c.model],role=['VCC','GND','V+','V−'].includes(p.name)?'Power':p.name==='NC'?'NC':m?.outputPins.includes(p.number)?'Output':c.model?'Input':'—';
+        const value=readings?`${p.voltage===null?'—':formatNumber(p.voltage)} V${m?.kind==='opamp'?'':' · '+p.logic}`:role;
         for(const t of [p.number,p.name,locationLabel(p.point),value]){const e=document.createElement('span');e.textContent=t;row.appendChild(e);}table.appendChild(row);
       }
       return table;
@@ -578,8 +599,9 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       const item=document.createElement('div');item.className=`component-item ${selectedComponent===c.id?'selected-item':''}`;
       const button=document.createElement('button');button.className='inspect-button';button.textContent=`${componentLabel(c)} · ${c.model||packageName(c)}`;button.addEventListener('click',()=>selectComponent(c.id));item.appendChild(button);
       const state=solution.chips?.[c.id]||evaluateIC(c),text=document.createElement('p');
-      text.textContent=`${state.state}${state.supply===null?'':` · ${formatNumber(state.supply)} V VCC–GND`}${state.powered?` · ${formatCurrent(solution.currents[c.id])} VCC current`:''}`;item.appendChild(text);
+      text.textContent=`${state.state}${state.supply===null?'':` · ${formatNumber(state.supply)} V ${c.model==='LM741'?'V+ − V−':'VCC–GND'}`}${state.powered?` · ${formatCurrent(solution.currents[c.id])} VCC current`:''}`;item.appendChild(text);
       const model=IC_MODELS[c.model];
+      if(model?.kind==='opamp'){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`IN+ ${formatNumber(state.pins[2].voltage)} V · IN− ${formatNumber(state.pins[1].voltage)} V · OUT ${formatNumber(state.pins[5].voltage)} V · ${state.operating||'Undriven'}`;item.appendChild(row);}
       if(model?.kind==='gates')for(const gate of state.gates){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`Gate ${gate.number}: ${gate.op==='NOT'?'NOT '+gate.inputs[0]:gate.inputs.join(' '+gate.op+' ')} → ${gate.output}${gate.output==='X'?' (undriven)':''}`;item.appendChild(row);}
       for(const u of state.units||[]){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`FF${u.number}: ${model.kind==='dff'?'D='+u.data:'J='+u.jValue+' K='+u.kValue} CLK=${u.clockValue} · Q=${u.qValue} Q̅=${u.qbValue}`;item.appendChild(row);}
       if(model?.kind==='counter90'){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`Count: ${state.count===null?'X':state.count} · QD QC QB QA: ${[...state.gates].reverse().map(g=>g.output).join(' ')}`;item.appendChild(row);}
@@ -590,59 +612,18 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       const bits=a=>Array.isArray(a)&&a.length===2&&a.every(v=>['0','1','X'].includes(v));
       return !!IC_MODELS[c.model]&&IC_MODELS[c.model].kind!=='gates'&&m.version===1&&m.model===c.model&&typeof m.powered==='boolean'&&bits(m.q)&&bits(m.qb)&&Array.isArray(m.clocks)&&m.clocks.length===2&&m.clocks.every(v=>v===null||['0','1','X'].includes(v))&&Array.isArray(m.illegal)&&m.illegal.length===2&&m.illegal.every(v=>typeof v==='boolean')&&['0','1','X'].includes(m.qa)&&(m.divide5===null||Number.isInteger(m.divide5)&&m.divide5>=0&&m.divide5<=4);
     }
-    function loadSequentialExample(modelId){
-      actionHistory.push({type:'snapshot',board:boardData()});const model=IC_MODELS[modelId],bread=boardType==='breadboard';
-      const board={...boardData(),rows:10,columns:18,stripboardTerminals:{positiveTerminal:'1-0',negativeTerminal:'8-0'},voltage:5,breadboardBreak:bread,positiveTerminal:'0-0',negativeTerminal:'9-0',cuts:[],components:[],meters:[]};
-      const c={id:'seq-demo',type:model.packagePins===16?'dip16':'dip14',a:bread?'3-4':'1-5',orientation:bread?'horizontal':'vertical',model:modelId};
-      const pins=dipPins(c);c.b=pins[packagePins(c)/2-1].point;board.components.push(c);
-      const add=(id,type,a,b,extra={})=>board.components.push({id,type,a,b,...extra}),pin=n=>pins[n-1].point;
-      const wire=(id,a,b)=>add(id,'wire',a,b,{resistance:0});wire('seq-power',pin(model.vcc),'0-0');wire('seq-ground',pin(model.gnd),'9-0');
-      if(!bread)for(let row=1;row<=packagePins(c)/2;row++)board.cuts.push(`${row}-6`);
-      const fixed=(n,high)=>wire(`seq-fixed-${n}`,pin(n),high?'0-0':'9-0');
-      const switched=(id,n,pullHigh,closed)=>{add(id+'-pull','resistor',pin(n),pullHigh?'0-0':'9-0',{resistance:10000});add(id,'switch',pin(n),pullHigh?'9-0':'0-0',{closed});};
-      if(model.units){
-        const u=model.units[0],unused=model.units[1];fixed(u.pre,true);switched('seq-reset',u.clear,true,true);switched('seq-clock',u.clock,false,false);
-        if(u.d)switched('seq-data',u.d,false,false);else{fixed(u.j,true);fixed(u.k,true);}
-        fixed(unused.pre,true);fixed(unused.clear,false);fixed(unused.clock,false);if(unused.d)fixed(unused.d,false);else{fixed(unused.j,false);fixed(unused.k,false);}
-      }else{
-        switched('seq-reset',2,false,true);wire('seq-reset-pair',pin(2),pin(3));fixed(6,false);fixed(7,false);switched('seq-clock',14,false,true);wire('seq-decade-link',pin(12),pin(1));
-      }
-      const outputs=model.kind==='counter90'?model.outputPins:[model.units[0].q];
-      outputs.forEach((n,i)=>{
-        const end=bread?`8-${14+i}`:`9-${13+i}`;if(!bread)board.cuts.push(end);
-        add(`seq-led-${i}`,'led',pin(n),end,{colour:'red',forwardVoltage:2});add(`seq-led-r-${i}`,'resistor',end,'9-0',{resistance:model.family==='LS'?10000:1000});
-      });
-      restoreBoard(board);selectComponent(c.id);
-      showMessage(model.kind==='dff'?'D flip-flop: release RESET, choose DATA, then close CLOCK to capture on the rising edge.':model.kind==='jkff'?'JK toggle: release RESET, close then open CLOCK. Each falling edge toggles Q.':'Decade counter: release RESET, then open CLOCK to count. Close/open again for each subsequent count.');
-    }
 
     function initializeICControls() {
       const select=document.getElementById('ic-model-select');select.replaceChildren();
-      for(const [value,label]of [['unassigned14','Unassigned DIP-14'],['unassigned16','Unassigned DIP-16'],...Object.entries(IC_MODELS).map(([id,m])=>[id,`${m.name} · ${m.description}`])]){const option=document.createElement('option');option.value=value;option.textContent=label;select.appendChild(option);}
+      for(const [value,label]of [['unassigned8','Unassigned DIP-8'],['unassigned14','Unassigned DIP-14'],['unassigned16','Unassigned DIP-16'],...Object.entries(IC_MODELS).map(([id,m])=>[id,`${m.name} · ${m.description}`])]){const option=document.createElement('option');option.value=value;option.textContent=label;select.appendChild(option);}
+      document.getElementById('dip-placement-size').addEventListener('change',e=>{const n=Number(e.target.value);if([8,14,16].includes(n)){dipPlacementPins=n;renderPlacementPreview();}});
       document.getElementById('dip-placement-orientation').addEventListener('change',e=>{dipOrientation=e.target.value;renderVisuals();updateModeUI();renderPlacementPreview();});
-      document.getElementById('ic-model-select').addEventListener('change',e=>{const value=e.target.value;if(['unassigned14','unassigned16'].includes(value))editIC({model:'',type:value==='unassigned16'?'dip16':'dip14'});else if(Object.hasOwn(IC_MODELS,value))editIC({model:value});});
+      document.getElementById('ic-model-select').addEventListener('change',e=>{const value=e.target.value;if(['unassigned8','unassigned14','unassigned16'].includes(value))editIC({model:'',type:'dip'+value.slice(10)});else if(Object.hasOwn(IC_MODELS,value))editIC({model:value});});
       document.getElementById('ic-orientation-select').addEventListener('change',e=>{if(['horizontal','vertical'].includes(e.target.value))editIC({orientation:e.target.value});});
       grid.addEventListener('mouseleave',()=>{hoverPoint=null;renderPlacementPreview();updateModeUI();});
       document.getElementById('ic-example').addEventListener('click',loadICExample);
       for(const [id,model]of [['dff-example','74x74'],['jk-example','74HC76'],['counter-example','74x90']])document.getElementById(id).addEventListener('click',()=>loadSequentialExample(model));
     }
-    function loadICExample() {
-      actionHistory.push({type:'snapshot',board:boardData()});const bread=boardType==='breadboard';
-      const board={...boardData(),rows:10,columns:18,stripboardTerminals:{positiveTerminal:'1-0',negativeTerminal:'8-0'},voltage:5,breadboardBreak:bread,positiveTerminal:'0-0',negativeTerminal:'9-0',cuts:[],components:[],meters:[]};
-      const chip={id:'ic-demo',type:'dip14',a:bread?'3-5':'1-5',orientation:bread?'horizontal':'vertical',model:'74x08'};
-      const pins=dipPins(chip);chip.b=pins[6].point;board.components.push(chip);
-      const add=(id,type,a,b,extra={})=>board.components.push({id,type,a,b,...extra});
-      const wire=(id,a,b)=>add(id,'wire',a,b,{resistance:0});
-      wire('ic-vcc',pins[13].point,'0-5');wire('ic-gnd',pins[6].point,'9-11');
-      for(const n of [4,5,9,10,12,13])wire(`ic-unused-${n}`,pins[n-1].point,'9-0');
-      for(const n of [1,2]){add(`ic-switch-${n}`,'switch','0-'+n,pins[n-1].point,{closed:false});add(`ic-pull-${n}`,'resistor',pins[n-1].point,'9-'+n,{resistance:10000});}
-      const ledEnd=bread?'8-14':'8-5';
-      add('ic-led','led',pins[2].point,ledEnd,{colour:'red',forwardVoltage:2});add('ic-led-r','resistor',ledEnd,'9-14',{resistance:1000});
-      if(!bread)for(let row=1;row<=7;row++)board.cuts.push(`${row}-6`);
-      board.meters=[{id:'ic-output-v',type:'voltmeter',a:pins[2].point,b:'9-0'}];
-      restoreBoard(board);selectComponent(chip.id);showMessage('74x08 example: 5 V, two input switches and an output LED. In Simulate, close both switches to light the LED.');
-    }
-
 
     function pointFromId(id) {
       const [row, col] = id.split("-").map(Number);
@@ -718,13 +699,13 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       finishComponentDrag(null,true);
       if (workbenchMode !== 'build') setWorkbenchMode('build');
       if (boardType === 'breadboard' && ['drill','move-plus','move-minus'].includes(tool)) {
-        selectedComponent = 'supply'; render(); showMessage('Breadboard rails are fixed. Use Centre break in Properties to split the rows.'); return;
+        toolkitTab=tool==='drill'?'board':'supply';render();showMessage('Breadboard rails are fixed. Use Centre break in the Board toolkit to split the contacts.'); return;
       }
       activeTool = tool;
       if(tool==='ic')dipOrientation=boardType==='breadboard'?'horizontal':'vertical';
       hoverPoint=null;
       firstPoint = null;
-      if (tool === 'move-plus' || tool === 'move-minus') selectedComponent = 'supply';
+      if (tool === 'move-plus' || tool === 'move-minus') toolkitTab='supply';
 
       document.querySelectorAll("[data-tool]").forEach(button => {
         const selected = button.dataset.tool === tool;
@@ -733,7 +714,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       });
 
       const instructions = {
-        select: "Click a component to edit; drag its body or lead to move it between holes. Click empty board space for supply settings.",
+        select: "Click a component to edit; drag its body or lead to move it between holes. Click empty board space to see the component list.",
         ic: "Hover to preview an IC. Click once to place; choose its chip model or unassigned package size in Properties.",
         resistor: "Click two holes to place a resistor.",
         led: "Click the anode (+) hole first, then the cathode (−). Add a resistor in series to limit current.",
@@ -756,7 +737,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
 
     function handleHoleClick(id) {
       if (boardType === 'breadboard' && ['drill','move-plus','move-minus'].includes(activeTool)) {
-        activeTool = 'select'; firstPoint = null; selectedComponent = 'supply'; render(); return;
+        activeTool = 'select';firstPoint = null;toolkitTab='supply';render();return;
       }
       if (workbenchMode === 'simulation') {
         if (id === positiveTerminal || id === negativeTerminal) selectSupply();
@@ -767,10 +748,10 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       if (activeTool === 'select') {
         const chip=components.find(c=>isIC(c)&&dipPins(c).some(p=>p.point===id));
         if(chip){selectComponent(chip.id);return;}
-        selectedComponent = id === positiveTerminal || id === negativeTerminal ? 'supply' : null;
+        selectedComponent = null;if(id===positiveTerminal||id===negativeTerminal)toolkitTab='supply';editorTab='board';
         render();
     updateBoardScale();
-        showMessage('Power supply settings are shown on the right. Choose a building tool to connect components.');
+        showMessage('Select a part to edit it on the right. The left toolkit has Tools, Board and Supply tabs.');
         return;
       }
       if (activeTool === "move-plus" || activeTool === "move-minus") {
@@ -840,21 +821,24 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         b: id
       };
 
-      if (activeTool === "ammeter" || activeTool === "voltmeter") {
+      if (activeTool === "ammeter" || activeTool === "voltmeter" || activeTool === "scope") {
+        if(activeTool==='scope')Object.assign(connection,defaultScopeSettings());
         meters.push(connection);
         actionHistory.push({ type: "meter", id: connection.id });
-        showMessage(`${activeTool === "ammeter" ? "Ammeter" : "Voltmeter"} added.`);
+        showMessage(`${activeTool === "scope" ? "Scope" : activeTool === "ammeter" ? "Ammeter" : "Voltmeter"} added.`);
       } else {
         if (activeTool === 'led') { connection.colour = 'red'; connection.forwardVoltage = LED_COLOURS.red.forwardVoltage; }
         else if (activeTool === 'diode') connection.forwardVoltage = .7;
         else if (activeTool === 'switch') connection.closed = false;
+        else if(activeTool==='capacitor'){connection.capacitance=1e-6;connection.initialVoltage=0;}
+        else if(activeTool==='source')Object.assign(connection,{dc:1,wave:'dc',amplitude:1,frequency:100,phase:0,acAmplitude:1,acPhase:0,delay:0});
         else connection.resistance = activeTool === "wire" ? 0 : requestedResistance;
         components.push(connection);
         actionHistory.push({ type: "component", id: connection.id });
-        showMessage(`${({wire:"Wire link",resistor:"Resistor",led:"LED",diode:"Diode",switch:"Switch"})[activeTool]} placed.`);
+        showMessage(`${({wire:"Wire link",resistor:"Resistor",led:"LED",diode:"Diode",capacitor:"Capacitor",source:"Signal source",switch:"Switch"})[activeTool]} placed.`);
       }
 
-      selectedComponent = connection.id;
+      selectedComponent = connection.id;editorTab='board';
       firstPoint = null;
       refreshSelection();
       render();
@@ -906,7 +890,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       if(!d.active&&Math.hypot(dx,dy)<5)return;
       e.preventDefault();
       if(!d.active){
-        d.active=true;selectedComponent=c.id;firstPoint=null;hoverPoint=null;
+        d.active=true;selectedComponent=c.id;editorTab='board';firstPoint=null;hoverPoint=null;
         refreshSelection();renderVisuals();renderProperties();updateModeUI();
         const ghost=document.createElement('div');ghost.className='move-preview';ghost.setAttribute('aria-hidden','true');
         for(const node of [...layer.children].filter(node=>node.dataset.component===c.id)){
@@ -1021,6 +1005,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       components.forEach((component, index) => {
         if(isIC(component)){layer.appendChild(drawDIP(component));return;}
         const drawn = drawLine(component.a, component.b, component.type === 'wire' ? 'wire-lead' : 'resistor-lead');
+        if(['capacitor','source'].includes(component.type))drawn.line=drawAnalogLeads(component,drawn);
         drawn.line.dataset.component = component.id;
         drawn.line.classList.toggle('inspected', selectedComponent === component.id);
         drawn.line.title = 'Click to inspect; drag with Select in Build mode to move';
@@ -1029,6 +1014,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
           else selectComponent(component.id);
         });
         layer.appendChild(drawn.line);
+        if(['capacitor','source'].includes(component.type)){layer.appendChild(drawAnalogBody(component,drawn));}
         if (component.type === 'resistor') {
           const body = document.createElement('button');
           body.type = 'button';
@@ -1075,12 +1061,13 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
           body.classList.toggle('closed', component.closed); body.classList.toggle('inspected', selectedComponent === component.id);
           body.style.left = `${(drawn.x1 + drawn.x2) / 2 - 20}px`; body.style.top = `${(drawn.y1 + drawn.y2) / 2 - 16}px`;
           body.style.transform = `rotate(${drawn.angle}deg)`;
-          body.title = `${componentLabel(component)} · ${component.closed ? 'Closed' : 'Open'} · ${workbenchMode === 'simulation' ? 'click to toggle' : 'click to inspect'}`;
+          body.title = `${componentLabel(component)}${component.name?' · '+component.name:''} · ${component.closed ? 'Closed' : 'Open'} · ${workbenchMode === 'simulation' ? 'click to toggle' : 'click to inspect'}`;
           body.setAttribute('aria-label', body.title); body.setAttribute('aria-pressed', String(component.closed));
           const blade = document.createElement('span'); blade.className = 'switch-blade'; body.appendChild(blade);
           body.addEventListener('click', () => workbenchMode === 'simulation' ? operateSwitch(component.id) : selectComponent(component.id)); layer.appendChild(body);
+          if(component.name){const label=document.createElement('span');label.className='control-label';label.textContent=component.name;label.dataset.component=component.id;label.style.left=`${(drawn.x1+drawn.x2)/2+24}px`;label.style.top=`${(drawn.y1+drawn.y2)/2-5}px`;label.addEventListener('click',()=>workbenchMode==='simulation'?operateSwitch(component.id):selectComponent(component.id));layer.appendChild(label);}
         }
-        addFlow(component.a, component.b, solution.currents[component.id], index);
+        if(component.type==='source'&&isACSource(component)&&showACFlow)addACFlow(component,index);else addFlow(component.a, component.b, solution.currents[component.id], index);
       });
       meters.forEach((meter, index) => {
         const drawn = drawLine(meter.a, meter.b, 'meter-lead');
@@ -1097,8 +1084,9 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         });
         const tag = document.createElement('button');
         tag.type = 'button';
-        tag.className = 'meter-tag';tag.dataset.component=meter.id;
-        tag.textContent = componentLabel(meter);
+        tag.className = meter.type==='scope'?'meter-tag scope-tag':'meter-tag';tag.dataset.component=meter.id;
+        tag.classList.toggle('inspected',selectedComponent===meter.id);
+        tag.textContent = meter.type==='scope'?'∿ '+componentLabel(meter):componentLabel(meter);tag.title=meter.type==='scope'?`${componentLabel(meter)} · signal ${locationLabel(meter.a)} · reference ${locationLabel(meter.b)} · click to inspect`:componentLabel(meter);
         tag.style.left = `${(drawn.x1 + drawn.x2) / 2}px`;
         tag.style.top = `${(drawn.y1 + drawn.y2) / 2 - 14}px`;
         tag.addEventListener('click', () => { selectComponent(meter.id); });
@@ -1354,25 +1342,8 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       });
       document.getElementById('led-example').addEventListener('click',()=>loadLEDExample());
     }
-    function loadLEDExample(type='led') {
-      actionHistory.push({type:'snapshot',board:boardData()});
-      const bread=boardType==='breadboard';
-      const board={format:'stripboard-dc',version:3,rows:10,columns:18,voltage:9,boardType,breadboardBreak:bread,breadboardTopology:'vertical-signal-columns',stripboardTerminals:{positiveTerminal:'1-0',negativeTerminal:'8-0'},positiveTerminal:bread?'0-0':'1-0',negativeTerminal:bread?'9-0':'8-0',cuts:[],components:[],meters:[]};
-      board.components=bread ? [
-        {id:'led-demo-r',type:'resistor',a:'0-4',b:'1-4',resistance:1000},
-        {id:'led-demo-led',type:'led',a:'3-4',b:'6-4',colour:'red',forwardVoltage:2},
-        {id:'led-demo-wire',type:'wire',a:'8-4',b:'9-4',resistance:0}
-      ] : [
-        {id:'led-demo-r',type:'resistor',a:'1-3',b:'4-3',resistance:1000},
-        {id:'led-demo-led',type:'led',a:'4-5',b:'8-5',colour:'red',forwardVoltage:2}
-      ];
-      const led=board.components.find(c=>c.type==='led');
-      if(type==='diode'){led.type='diode';led.forwardVoltage=.7;delete led.colour;}
-      board.meters=[{id:'led-demo-v',type:'voltmeter',a:led.a,b:led.b}];
-      restoreBoard(board);selectComponent(led.id);showMessage(`${type==='diode'?'Diode':'LED'} example: 9 V with a 1 kΩ series resistor. Try reversing polarity or changing the resistance.`);
-    }
 
-    function solveAnalogueCircuit(extraDevices=[]) {
+    function solveLegacyAnalogueCircuit(extraDevices=[]) {
       solution = { status: 'open', currents: {}, drops: {}, power: {}, islands: {}, relativeVoltages: {}, warnings: [] };
       nodeVoltages = {};
       totalCurrent = 0;
@@ -1510,8 +1481,8 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     }
 
     function componentLabel(c) {
-      const list = c.type === 'ammeter' || c.type === 'voltmeter' ? meters : components;
-      return `${({ resistor: 'R', dip14: 'U', dip16: 'U', led: 'LED', diode: 'D', switch: 'S', wire: 'W', ammeter: 'A', voltmeter: 'V' })[c.type]}${list.filter(item => isIC(c)?isIC(item):item.type === c.type).indexOf(c) + 1}`;
+      const list = ['ammeter','voltmeter','scope'].includes(c.type) ? meters : components;
+      return `${({ resistor: 'R', capacitor:'C',source:'VS',dip8:'U',dip14: 'U', dip16: 'U', led: 'LED', diode: 'D', switch: 'S', wire: 'W', ammeter: 'A', voltmeter: 'V',scope:'SC' })[c.type]}${list.filter(item => isIC(c)?isIC(item):item.type === c.type).indexOf(c) + 1}`;
     }
     function meterVoltage(m) {
       if (solution.status === 'short' || solution.status === 'error') return null;
@@ -1559,9 +1530,9 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         heading.append(name, remove);
         const detail = document.createElement('p');
         const current = solution.currents[c.id];
-        const voltage = c.type === 'voltmeter' ? meterVoltage(c) : solution.drops[c.id];
+        const voltage = ['voltmeter','scope'].includes(c.type) ? meterVoltage(c) : solution.drops[c.id];
         let reading = solution.status === 'short' || solution.status === 'error' ? 'Undefined' : `${voltage === null || voltage === undefined ? '—' : formatNumber(voltage)} V`;
-        if (c.type !== 'voltmeter' && solution.status !== 'short' && solution.status !== 'error') reading += ` · ${formatCurrent(current)}`;
+        if (!['voltmeter','scope'].includes(c.type) && solution.status !== 'short' && solution.status !== 'error') reading += ` · ${formatCurrent(current)}`;
         if ((c.type === 'resistor' || isDiode(c)) && Number.isFinite(solution.power[c.id])) reading += ` · ${formatNumber(solution.power[c.id] * 1000)} mW`;
         if (c.type === 'led') reading += ` · ${ledState(c)}`;
         if (c.type === 'diode') reading += ` · ${diodeState(c)}`;
@@ -1581,12 +1552,13 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       finishComponentDrag(null,true);
       const component = [...components, ...meters].find(c => c.id === id);
       if (!component) return;
-      const isMeter = component.type === 'ammeter' || component.type === 'voltmeter';
+      const isMeter = ['ammeter','voltmeter','scope'].includes(component.type);
       actionHistory.push({ type: 'remove', component: { ...component }, index: (isMeter ? meters : components).indexOf(component), isMeter });
       components = components.filter(c => c.id !== id); meters = meters.filter(c => c.id !== id);
       selectedComponent = null; render(); showMessage('Component removed. Undo restores it.');
     }
     function render() {
+      invalidateAnalysisIfChanged();
       solveCircuit(); // Solve before drawing; arrows always use the current board.
       renderVisuals();
       updateReadings();
@@ -1596,6 +1568,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       document.getElementById('voltmeter-count').textContent = meters.filter(m => m.type === 'voltmeter').length;
       updateModeUI();
       persistBoard();
+      refreshAnalysisChoices();
     }
 
     function undoLastAction() {
@@ -1627,7 +1600,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         refreshTerminalMarkers();
       }
 
-      if (selectedComponent && selectedComponent !== 'supply' && ![...components,...meters].some(c => c.id === selectedComponent)) selectedComponent = null;
+      if (selectedComponent && selectedComponent !== 'supply' && selectedComponent !== 'board' && ![...components,...meters].some(c => c.id === selectedComponent)) selectedComponent = null;
       firstPoint = null;
       refreshSelection();
       render();
@@ -1657,8 +1630,9 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       showMessage("Board cleared. Supply terminals reset.");
     }
 
+    function canAnimateFlow(){return !['short','error'].includes(solution.status)&&((solution.status==='complete'&&totalCurrent>0)||(showACFlow&&components.some(isACSource)));}
     function toggleCurrentFlow() {
-      if ((solution.status !== 'complete' || totalCurrent <= 0) && !currentFlowRunning) {
+      if (!canAnimateFlow() && !currentFlowRunning) {
         showMessage("Build a complete circuit first, then start current flow.");
         return;
       }
@@ -1689,9 +1663,10 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       if (!Array.isArray(data.cuts) || data.cuts.length > data.rows * data.columns || !data.cuts.every(validPoint)) throw new Error('Invalid track cuts.');
       if (!Array.isArray(data.components) || !Array.isArray(data.meters) || data.components.length + data.meters.length > 500) throw new Error('Invalid component list (maximum 500).');
       const ids = new Set();
-      for (const [list, types] of [[data.components, ['wire', 'resistor', 'led', 'diode', 'switch', 'dip14', 'dip16']], [data.meters, ['ammeter', 'voltmeter']]]) {
+      for (const [list, types] of [[data.components, ['wire', 'resistor', 'capacitor','source','led', 'diode', 'switch','dip8', 'dip14', 'dip16']], [data.meters, ['ammeter', 'voltmeter','scope']]]) {
         for (const c of list) {
           if (!c || typeof c.id !== 'string' || !c.id.length || ['__proto__', 'constructor', 'prototype'].includes(c.id) || c.id.startsWith('ic:') || c.id.startsWith('track:') || c.id.startsWith('contact:') || ids.has(c.id) || !types.includes(c.type) || !validPoint(c.a) || !validPoint(c.b) || c.a === c.b) throw new Error('Invalid or duplicate component.');
+          validateAnalogPart(c);validateScopePart(c);if(c.name!==undefined&&(typeof c.name!=='string'||c.name.length>40))throw new Error('Invalid component name.');
           if (c.type === 'resistor' && (!Number.isFinite(c.resistance) || c.resistance <= 0 || c.resistance > 1e12)) throw new Error('Invalid resistor value.');
           if (c.type === 'led' && (!Object.hasOwn(LED_COLOURS,c.colour || 'red') || (c.forwardVoltage !== undefined && (!Number.isFinite(c.forwardVoltage) || c.forwardVoltage < .1 || c.forwardVoltage > 10)))) throw new Error('Invalid LED colour or forward threshold.');
           if (c.type === 'diode' && c.forwardVoltage !== undefined && (!Number.isFinite(c.forwardVoltage) || c.forwardVoltage < .1 || c.forwardVoltage > 10)) throw new Error('Invalid diode forward threshold.');
@@ -1711,8 +1686,9 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       if (boardType === 'breadboard' && ['drill','move-plus','move-minus'].includes(activeTool)) activeTool = 'select';
       positiveTerminal = data.positiveTerminal; negativeTerminal = data.negativeTerminal;
       cuts = new Set(data.cuts);
-      components = data.components.map(c => c.type === 'led' ? ({id:c.id,type:'led',a:c.a,b:c.b,colour:c.colour || 'red',forwardVoltage:c.forwardVoltage ?? LED_COLOURS[c.colour || 'red'].forwardVoltage}) : c.type === 'diode' ? ({id:c.id,type:'diode',a:c.a,b:c.b,forwardVoltage:c.forwardVoltage ?? .7}) : c.type === 'switch' ? ({id:c.id,type:'switch',a:c.a,b:c.b,closed:c.closed ?? false}) : isIC(c)?({id:c.id,type:c.type,a:c.a,b:c.b,orientation:c.orientation,model:c.model,...(c.memory?{memory:cloneLogic(c.memory)}:{})}) : ({ id:c.id, type:c.type, a:c.a, b:c.b, resistance:c.type === 'wire' ? 0 : c.resistance }));
-      meters = data.meters.map(c => ({ id:c.id, type:c.type, a:c.a, b:c.b }));
+      components = data.components.map(c => ['capacitor','source'].includes(c.type)?cleanAnalogPart(c):c.type === 'led' ? ({id:c.id,type:'led',a:c.a,b:c.b,colour:c.colour || 'red',forwardVoltage:c.forwardVoltage ?? LED_COLOURS[c.colour || 'red'].forwardVoltage}) : c.type === 'diode' ? ({id:c.id,type:'diode',a:c.a,b:c.b,forwardVoltage:c.forwardVoltage ?? .7}) : c.type === 'switch' ? ({id:c.id,type:'switch',a:c.a,b:c.b,closed:c.closed ?? false}) : isIC(c)?({id:c.id,type:c.type,a:c.a,b:c.b,orientation:c.orientation,model:c.model,...(c.model==='LM741'?{errors:!!c.errors}:{}),...(c.memory?{memory:cloneLogic(c.memory)}:{})}) : ({ id:c.id, type:c.type, a:c.a, b:c.b, resistance:c.type === 'wire' ? 0 : c.resistance }));
+      components.forEach((c,i)=>{if(data.components[i].name)c.name=data.components[i].name;});
+      meters = data.meters.map(c => c.type==='scope'?cleanScopePart(c):({ id:c.id, type:c.type, a:c.a, b:c.b }));
       firstPoint = null; hoverPoint=null; selectedComponent = null; currentFlowRunning = false;
       document.getElementById('supply-input').value = SUPPLY_VOLTAGE;
       document.getElementById('flow-button').classList.remove('playing');
@@ -1728,47 +1704,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       const link = document.createElement('a'); link.href = url; link.download = name; link.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     }
-    function loadExample(kind) {
-      actionHistory.push({ type:'snapshot', board:boardData() });
-      const board = { format:'stripboard-dc', version:2, rows:10, columns:18, voltage:9, positiveTerminal:'1-0', negativeTerminal:'8-0', cuts:[], components:[], meters:[] };
-      if (kind === 'series') {
-        board.negativeTerminal = '1-17';
-        board.cuts = ['1-5','1-11','1-15'];
-        board.components = [
-          { id:'example-r1',type:'resistor',a:'1-3',b:'1-7',resistance:1000 },
-          { id:'example-r2',type:'resistor',a:'1-9',b:'1-13',resistance:2000 }
-        ];
-        board.meters = [{ id:'example-a1',type:'ammeter',a:'1-14',b:'1-16' },{ id:'example-v1',type:'voltmeter',a:'1-8',b:'1-17' }];
-      } else {
-        board.components = [
-          { id:'example-r1',type:'resistor',a:'1-3',b:'3-3',resistance:1000 },
-          { id:'example-r2',type:'resistor',a:'1-12',b:'5-12',resistance:2000 }
-        ];
-        board.meters = [{ id:'example-a1',type:'ammeter',a:'3-4',b:'8-4' },{ id:'example-a2',type:'ammeter',a:'5-13',b:'8-13' },{ id:'example-v1',type:'voltmeter',a:'1-7',b:'8-7' }];
-      }
-      if (boardType === 'breadboard') {
-        board.version = 3; board.boardType = 'breadboard'; board.breadboardBreak = kind === 'series'; board.stripboardTerminals = {positiveTerminal:'1-0',negativeTerminal:'8-0'};
-        board.positiveTerminal = '0-0'; board.negativeTerminal = '9-0'; board.cuts = [...cuts];
-        if (kind === 'series') {
-          board.components = [
-            {id:'example-w',type:'wire',a:'0-4',b:'1-4',resistance:0},
-            {id:'example-r1',type:'resistor',a:'3-4',b:'6-4',resistance:1000},
-            {id:'example-r2',type:'resistor',a:'7-4',b:'7-9',resistance:2000}
-          ];
-          board.meters = [{id:'example-a1',type:'ammeter',a:'8-9',b:'9-9'},{id:'example-v1',type:'voltmeter',a:'6-4',b:'9-4'}];
-        } else {
-          board.components = [
-            {id:'example-r1',type:'resistor',a:'0-3',b:'1-3',resistance:1000},
-            {id:'example-r2',type:'resistor',a:'0-12',b:'1-12',resistance:2000}
-          ];
-          board.meters = [{id:'example-a1',type:'ammeter',a:'8-3',b:'9-3'},{id:'example-a2',type:'ammeter',a:'8-12',b:'9-12'},{id:'example-v1',type:'voltmeter',a:'0-7',b:'9-7'}];
-        }
-      }
-      restoreBoard(board);
-      showMessage(kind === 'series' ? 'Series example: 3 mA through both resistors and A1, with 6 V across R2. Undo returns to your board.' : 'Parallel example: 9 mA and 4.5 mA in the two branches; total 13.5 mA. Undo returns to your board.');
-    }
-    // Draw the actual board geometry at print resolution. No external images or
-    // HTML-to-image dependencies: the PNG also works from an offline HTML file.
+
     function drawBoardPicture(canvas,scale=2){
       const width=boardWidth(),height=boardHeight(),ctx=canvas.getContext('2d');
       if(!ctx)throw new Error('This browser could not create a drawing canvas.');
@@ -1821,25 +1757,29 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       for(const c of components){
         if(isIC(c))continue;
         const a=xy(c.a),b=xy(c.b),mx=(a.x+b.x)/2,my=(a.y+b.y)/2,angle=Math.atan2(b.y-a.y,b.x-a.x);
-        line(a,b,c.type==='wire'?(bread?'#498ccf':'#79d2e5'):(bread?'#aeb8b0':'#e7ddc5'),c.type==='wire'?5:4);
-        ctx.save();ctx.translate(mx,my);ctx.rotate(angle);
+        const analog=['capacitor','source'].includes(c.type),position=analog?analogBodyPosition(c,a,b):{x:mx,y:my,angle};
+        if(analog){const dx=Math.cos(angle)*12,dy=Math.sin(angle)*12;line(a,{x:position.x-dx,y:position.y-dy},bread?'#aeb8b0':'#e7ddc5',4);line({x:position.x+dx,y:position.y+dy},b,bread?'#aeb8b0':'#e7ddc5',4);}
+        else line(a,b,c.type==='wire'?(bread?'#498ccf':'#79d2e5'):(bread?'#aeb8b0':'#e7ddc5'),c.type==='wire'?5:4);
+        ctx.save();ctx.translate(position.x,position.y);ctx.rotate(angle);
         if(c.type==='resistor'){rounded(-25.5,-9,51,18,7,'#e7c18a','#552e14');text(formatResistance(c.resistance),0,0,8,'#4a2815','center');}
         else if(c.type==='led'){
           const colour=LED_COLOURS[c.colour||'red'].hex,brightness=ledBrightness(c);if(brightness>0){ctx.shadowColor=colour;ctx.shadowBlur=10+16*brightness;}const off='#'+[0,1,2].map(i=>Math.round(parseInt(colour.slice(1+i*2,3+i*2),16)*.3+[40,39,39][i]*.7).toString(16).padStart(2,'0')).join('');circle(0,0,12,brightness>0?colour:off,'#604b3c',2);ctx.shadowBlur=0;circle(-4,-5,3,'#ffffff60');rounded(9,-7,2,12,1,'#202a22');
         }else if(c.type==='diode'){rounded(-17,-8.5,34,17,5,'#30363f','#697079');rounded(7,-8,5,16,0,'#d3dce4');}
+        else if(c.type==='capacitor'){rounded(-12,-11,24,22,2,bread?'#f3f6ee':'#bd7854');line({x:-4,y:-10},{x:-4,y:10},'#67cbc4',3);line({x:4,y:-10},{x:4,y:10},'#67cbc4',3);text(formatCapacitance(c.capacitance),0,-18,8,'#173d37','center');}
+        else if(c.type==='source'){circle(0,0,16,'#1d363a','#72d3de',2);if(c.wave==='dc'){line({x:-6,y:-3},{x:6,y:-3},'#b8f1e9',1.5);line({x:-6,y:3},{x:6,y:3},'#b8f1e9',1.5,true);}else{ctx.beginPath();for(let i=0;i<=20;i++){const x=-9+i*.9,y=-5*Math.sin(i/20*2*Math.PI);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);}ctx.strokeStyle='#b8f1e9';ctx.lineWidth=1.5;ctx.stroke();}text(`${c.dc} V${c.wave==='dc'?'':' '+c.wave}`,0,-25,8,'#173d37','center');text('+',-10,-9,8,'#b8f1e9','center');text('−',10,9,8,'#b8f1e9','center');}
         else if(c.type==='switch'){rounded(-20,-16,40,26,6,'#15241e','#607064');const colour=c.closed?'#b1eac0':'#f1cc88';circle(-12,-1,2.5,colour);circle(12,-1,2.5,colour);line({x:-12,y:0},{x:12,y:c.closed?0:-11},colour,3);}
-        ctx.restore();
+        ctx.restore();if(c.type==='switch'&&c.name)text(c.name,position.x+24,position.y,8,bread?'#365b40':'#362315');
       }
       for(const m of meters){
         const a=xy(m.a),b=xy(m.b);line(a,b,bread?'#b59f43':'#e2c277',3,true);circle(a.x,a.y,6,'#f07e66','#fff3b7',2);circle(b.x,b.y,6,'#292929','#fff3b7',2);
-        const label=componentLabel(m),mx=(a.x+b.x)/2,my=(a.y+b.y)/2-14;rounded(mx-13,my-7,26,14,7,'#273031','#e2c277');text(label,mx,my,9,'#fff0a7','center');
+        const label=componentLabel(m),mx=(a.x+b.x)/2,my=(a.y+b.y)/2-14;if(m.type==='scope'){rounded(mx-22,my-14,44,28,4,'#20263a','#adabf0');line({x:mx-15,y:my},{x:mx-9,y:my},'#80d5d6',1);line({x:mx-9,y:my},{x:mx-5,y:my-6},'#80d5d6',1);line({x:mx-5,y:my-6},{x:mx+1,y:my+6},'#80d5d6',1);line({x:mx+1,y:my+6},{x:mx+7,y:my},'#80d5d6',1);text(label,mx+9,my+7,7,'#cfcbff','center');}else{rounded(mx-13,my-7,26,14,7,'#273031','#e2c277');text(label,mx,my,9,'#fff0a7','center');}
       }
       for(const c of components.filter(isIC))drawIC(c);
       // Capture a still frame of enabled current arrows and voltage labels.
       if(workbenchMode==='simulation'&&currentFlowRunning){
         const arrow=(a,b,current)=>{if(!Number.isFinite(current)||Math.abs(current)<1e-12||solution.status==='short')return;if(current<0)[a,b]=[b,a];const p=xy(a),q=xy(b),angle=Math.atan2(q.y-p.y,q.x-p.x);ctx.save();ctx.translate((p.x+q.x)/2,(p.y+q.y)/2);ctx.rotate(angle);line({x:-5,y:-4},{x:0,y:0},bread?'#bb7235':'#ffe17d',2);line({x:-5,y:4},{x:0,y:0},bread?'#bb7235':'#ffe17d',2);ctx.restore();};
         if(showCopperFlow)for(const e of solution.idealEdges||[])if(e.type==='copper')arrow(e.a,e.b,solution.currents[e.id]);
-        if(showComponentFlow)for(const c of [...components.filter(c=>!isIC(c)),...meters.filter(m=>m.type==='ammeter')])arrow(c.a,c.b,solution.currents[c.id]);
+        if(showComponentFlow)for(const c of [...components.filter(c=>!isIC(c)),...meters.filter(m=>m.type==='ammeter')]){if(c.type==='source'&&showACFlow&&isACSource(c)){const a=xy(c.a),b=xy(c.b),angle=Math.atan2(b.y-a.y,b.x-a.x);ctx.save();ctx.translate(a.x+(b.x-a.x)*.25,a.y+(b.y-a.y)*.25);ctx.rotate(angle);for(const sign of [-1,1]){line({x:sign*4,y:-4},{x:sign*9,y:0},'#4faaa9',2);line({x:sign*4,y:4},{x:sign*9,y:0},'#4faaa9',2);}ctx.restore();}else arrow(c.a,c.b,solution.currents[c.id]);}
       }
       if(workbenchMode==='simulation'&&showNodeVoltage)for(let row=0;row<ROWS;row++)for(let col=0;col<COLS;col++){
         const id=pointId(row,col),p=xy(id),voltage=getVoltage(id,latestNodes),label=voltage===null?'—':`${formatNumber(voltage)}V`;ctx.font='7px monospace';const tw=ctx.measureText(label).width;rounded(p.x-tw/2-2,p.y+11,tw+4,10,2,'#15231de8');text(label,p.x,p.y+16,7,'#dceccc','center');
@@ -1866,15 +1806,26 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       const names = { [latestNodes[negativeTerminal]]:'0' };
       let next = 1;
       const net = root => { if (names[root] === undefined) names[root] = `n${next++}`; return names[root]; };
-      const lines = [`${boardType === 'breadboard' ? 'Breadboard' : 'Stripboard'} DC operating point`, '* Ideal conductors, wires, closed switches and ammeters collapsed into nets.', '* DC only. LEDs and diodes use piecewise-linear behavioural current sources. Floating islands are omitted.'];
+      const lines = [`${boardType === 'breadboard' ? 'Breadboard' : 'Stripboard'} DC operating point`, '* Ideal conductors, wires, closed switches and ammeters collapsed into nets.', '* DC operating point. Capacitors, independent sources and LM741 DC behavioral model included. LEDs and diodes use piecewise-linear behavioural current sources. Floating islands are omitted.'];
       lines.push(`Vbench ${net(latestNodes[positiveTerminal])} 0 DC ${SUPPLY_VOLTAGE}`);
-      if(components.some(c=>isIC(c)))lines.push('* IC outputs below are the solved DC logic-state snapshot, not a dynamic SPICE logic model.');
+      if(components.some(c=>isIC(c)&&c.model!=='LM741'))lines.push('* Digital IC outputs below are the solved DC logic-state snapshot, not a dynamic SPICE logic model.');
       [...components.filter(c => c.type === 'resistor' || isDiode(c)),...(solution.icDrivers||[])].forEach(c => {
         const a = latestNodes[c.a], b = latestNodes[c.b];
         if (getVoltage(c.a, latestNodes) === null || a === b) { lines.push(`* ${componentLabel(c)} omitted: ${a === b ? 'bypassed' : 'floating island'}`); return; }
         if(isDiode(c)) lines.push(`B${componentLabel(c)} ${net(a)} ${net(b)} I={max((V(${net(a)},${net(b)})-${diodeForwardVoltage(c)})/${diodeSlopeResistance(c)},0)}`);
         else lines.push(`${c.netlistName||componentLabel(c)} ${net(a)} ${net(b)} ${c.resistance}`);
       });
+      components.filter(c=>c.type==='capacitor').forEach(c=>lines.push(`${componentLabel(c)} ${net(latestNodes[c.a])} ${net(latestNodes[c.b])} ${c.capacitance} IC=${c.initialVoltage??0}`));
+      components.filter(c=>c.type==='source').forEach(c=>lines.push(`${componentLabel(c)} ${net(latestNodes[c.a])} ${net(latestNodes[c.b])} DC ${c.dc} AC ${c.acAmplitude} ${c.acPhase}`));
+      for(const c of components.filter(c=>c.model==='LM741')){
+        const pins=dipPins(c).map(p=>net(latestNodes[p.point])),u=componentLabel(c),hi=pins[6],lo=pins[3],out=pins[5],plus=pins[2],minus=pins[1];
+        lines.push(`* ${u} LM741 DC behavioral approximation; offset-null/NC omitted; no dynamic pole/slew in this export.`);
+        if(solution.chips[c.id]?.powered){
+          const target=`limit(200000*(V(${plus},${minus})+${c.errors?.001:0})+(V(${hi})+V(${lo}))/2,V(${lo})+2,V(${hi})-2)`,current=`limit((V(${out})-(${target}))/75,-0.025,0.025)`;
+          lines.push(`R_${u}_IN ${plus} ${minus} 2Meg`,`B_${u}_SINK ${out} ${lo} I={max(${current},0)}`,`B_${u}_SOURCE ${out} ${hi} I={min(${current},0)}`,`B_${u}_IDLE ${hi} ${lo} I={0.0017}`);
+          if(c.errors)lines.push(`I_${u}_BIASP ${plus} ${lo} 80n`,`I_${u}_BIASM ${minus} ${lo} 80n`);
+        }else lines.push(`* ${u} output undriven: power outside model range.`);
+      }
       components.filter(c=>isIC(c)).forEach(c=>lines.push(`* ${componentLabel(c)} ${c.model||`unassigned ${packageName(c)}`}: ${solution.chips[c.id].state}; gates ${solution.chips[c.id].gates.map(g=>g.output).join(',')}`));
       components.filter(c => c.type === 'switch').forEach(c => lines.push(`* ${componentLabel(c)}: ${c.closed ? 'closed (ideal conductor collapsed)' : 'open (disconnected)'}; ${locationLabel(c.a)} -> ${locationLabel(c.b)}`));
       Object.entries(latestNodes).forEach(([point, root]) => { if (names[root] !== undefined) lines.push(`* Hole ${locationLabel(point)} = ${names[root]}`); });
@@ -1938,24 +1889,28 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       finishComponentDrag(null,true);
       workbenchMode = mode;
       firstPoint = null;
-      currentFlowRunning = mode === 'simulation' && solution.status === 'complete';
+      currentFlowRunning = mode === 'simulation' && canAnimateFlow();
       document.getElementById('flow-button').classList.toggle('playing', currentFlowRunning);
       refreshSelection(); render(); updateBoardScale();
+      if(mode==='simulation')queueScopeRefresh();
       showMessage(mode === 'simulation' ? 'Simulation is live. Use the controls on the left; readings are on the right.' : 'Choose a tool to build, or use Select to inspect and drag components.');
     }
     function updateModeUI() {
       document.body.dataset.mode = workbenchMode;document.body.dataset.activeTool=activeTool;
       document.getElementById('dip-placement-controls').hidden=workbenchMode!=='build'||activeTool!=='ic';
-      document.getElementById('dip-placement-orientation').value=dipOrientation;
+      document.getElementById('dip-placement-orientation').value=dipOrientation;document.getElementById('dip-placement-size').value=dipPlacementPins;
       document.querySelectorAll('[data-view]').forEach(el => { el.hidden = el.dataset.view !== workbenchMode; });
       for (const [id, mode] of [['build-mode','build'],['simulation-mode','simulation']]) {
         const button = document.getElementById(id); const active = mode === workbenchMode;
         button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
       }
+      updateBuildContext();
       document.getElementById('mode-status').textContent = workbenchMode === 'build' ? 'BUILD' : 'SIMULATE';
-      document.getElementById('board-mode-label').textContent = `${workbenchMode === 'build' ? 'LAYOUT' : 'LIVE DC'} / ${boardType === 'breadboard' ? 'BREADBOARD' : 'COPPER SIDE'}`;
+      document.getElementById('board-mode-label').textContent = `${workbenchMode === 'build' ? 'LAYOUT' : 'LIVE DC / SCOPE'} / ${boardType === 'breadboard' ? 'BREADBOARD' : 'COPPER SIDE'}`;
       const hints = {
         select: 'Click to select; drag a part to move it. Connections snap to holes. Esc cancels a move.',
+        capacitor:'Click two lead holes, then set capacitance on the right.',
+        source:'Click the positive lead first, then the negative reference lead. Set DC or a waveform on the right.',
         ic: 'Hover to preview. Click once to place an IC; its model sets the package size in Properties.',
         resistor: 'Click two holes to place a resistor, then set its value on the right.',
         led: 'Click anode (+) first, then cathode (−). Place a resistor in series to limit LED current.',
@@ -1964,6 +1919,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         wire: 'Click two holes to place a wire link.',
         drill: 'Click a hole to cut the copper around it. Click again to restore.',
         ammeter: 'Click two holes to insert an ammeter in series across a circuit break.',
+        scope:'Click the signal hole first, then its reference. Set the scope up in the right properties panel.',
         voltmeter: 'Click two holes to connect voltage probes. First lead is positive.',
         'move-plus': 'Click a new hole for the positive supply terminal.',
         'move-minus': 'Click a new hole for the 0 V reference terminal.'
@@ -1972,22 +1928,24 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     }
     function selectComponent(id) {
       if (![...components,...meters].some(c => c.id === id)) return;
-      selectedComponent = id;
+      selectedComponent = id;editorTab='board';if(meters.some(m=>m.id===id&&m.type==='scope'))selectActiveScope(id,workbenchMode==='simulation');
       if (workbenchMode === 'build') setActiveTool('select');
       firstPoint = null; refreshSelection(); render();
     }
     function selectSupply() {
       setWorkbenchMode('build');
-      selectedComponent = 'supply'; setActiveTool('select'); render();
-      showMessage(boardType === 'breadboard' ? 'Edit the DC supply voltage on the right. The positive and ground rails are fixed.' : 'Edit the DC supply voltage on the right, or move either terminal.');
+      toolkitTab='supply';setActiveTool('select');render();
+      showMessage(boardType === 'breadboard' ? 'Edit the DC supply voltage on the left. The positive and ground rails are fixed.' : 'Edit the DC supply voltage on the left, or move either terminal.');
     }
     function renderProperties() {
       renderBoardSettings();
       const c = [...components,...meters].find(c => c.id === selectedComponent);
-      if (selectedComponent && selectedComponent !== 'supply' && !c) selectedComponent = null;
+      renderScopeProperties(c);
+      if (selectedComponent && !c) selectedComponent = null;
+      renderAnalogProperties(c);
       const componentPanel = document.getElementById('component-properties');
       const supplyPanel = document.getElementById('supply-properties');
-      componentPanel.hidden = !c; supplyPanel.hidden = !!c;
+      componentPanel.hidden = !c; supplyPanel.hidden = toolkitTab!=='supply';document.getElementById('board-properties').hidden=toolkitTab!=='board';
       document.getElementById('resistor-properties').hidden = !c || c.type !== 'resistor';
       document.getElementById('led-properties').hidden = !c || c.type !== 'led';
       document.getElementById('diode-properties').hidden = !c || c.type !== 'diode';
@@ -1997,10 +1955,10 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       document.getElementById('component-a-label').textContent = isDiode(c) ? 'ANODE (+)' : 'FIRST LEAD';
       document.getElementById('component-b-label').textContent = isDiode(c) ? 'CATHODE (−)' : 'SECOND LEAD';
       document.getElementById('deselect-button').disabled = !selectedComponent;
-      document.getElementById('property-symbol').textContent = c ? ({resistor:'Ω',dip14:'▤',dip16:'▤',led:'◉',diode:'▸│',switch:'⏼',wire:'⌁',ammeter:'A',voltmeter:'V'})[c.type] : '⎓';
-      document.getElementById('property-type').textContent = c ? c.type.toUpperCase() : 'BENCH SUPPLY';
-      document.getElementById('property-title').textContent = c ? `${componentLabel(c)} · ${({resistor:'Resistor',dip14:'DIP-14',dip16:'DIP-16',led:'LED',diode:'Diode',switch:'Switch',wire:'Wire link',ammeter:'Ammeter',voltmeter:'Voltmeter'})[c.type]}` : 'Power supply';
-      document.getElementById('property-description').textContent = c ? ({resistor:'Set the resistance of this component.',dip14:'Choose the chip inside this package. Pin 1 is marked by the dot; the notch sets its orientation.',dip16:'Choose the chip inside this package. Pin 1 is marked by the dot; the notch sets its orientation.',led:'Set colour, threshold and polarity. Glow follows forward current.',diode:'Set the forward threshold and polarity. The silver band marks the cathode.',switch:'Set its starting state here. In Simulate mode, click the switch to operate it.',wire:'An ideal connection between the two lead holes.',ammeter:'An ideal meter inserted in series with a branch.',voltmeter:'A voltage measurement between two lead holes.'})[c.type] : 'Click a component to edit it, or adjust the supply here.';
+      document.getElementById('property-symbol').textContent = c ? ({resistor:'Ω',capacitor:'Ⅱ',source:'∿',dip8:'▤',dip14:'▤',dip16:'▤',led:'◉',diode:'▸│',switch:'⏼',wire:'⌁',ammeter:'A',voltmeter:'V',scope:'⌁'})[c.type] : '⎓';
+      document.getElementById('property-type').textContent = c ? c.type.toUpperCase() : 'COMPONENT';
+      document.getElementById('property-title').textContent = c ? `${componentLabel(c)} · ${({resistor:'Resistor',capacitor:'Capacitor',source:'Voltage / signal source',dip8:'DIP-8',dip14:'DIP-14',dip16:'DIP-16',led:'LED',diode:'Diode',switch:'Switch',wire:'Wire link',ammeter:'Ammeter',voltmeter:'Voltmeter',scope:'Oscilloscope'})[c.type]}` : 'Component properties';
+      document.getElementById('property-description').textContent = c ? ({resistor:'Set the resistance of this component.',capacitor:'Set capacitance and initial voltage for time analysis.',source:'First lead is positive. Negative DC values create a negative supply rail.',dip8:'Choose LM741 or leave the eight pins unassigned.',dip14:'Choose the chip inside this package. Pin 1 is marked by the dot; the notch sets its orientation.',dip16:'Choose the chip inside this package. Pin 1 is marked by the dot; the notch sets its orientation.',led:'Set colour, threshold and polarity. Glow follows forward current.',diode:'Set the forward threshold and polarity. The silver band marks the cathode.',switch:'Set its starting state here. In Simulate mode, click the switch to operate it.',wire:'An ideal connection between the two lead holes.',ammeter:'An ideal meter inserted in series with a branch.',voltmeter:'A voltage measurement between two lead holes.',scope:'Choose the analysis for this instrument; its probes measure first lead minus second.'})[c.type] : 'Click a component on the board to edit it here.';
       document.getElementById('supply-positive-location').textContent = boardType === 'breadboard' ? 'Top + rail' : `Row ${pointFromId(positiveTerminal).row + 1} · Col ${pointFromId(positiveTerminal).col + 1}`;
       document.getElementById('supply-negative-location').textContent = boardType === 'breadboard' ? 'Bottom GND rail' : `Row ${pointFromId(negativeTerminal).row + 1} · Col ${pointFromId(negativeTerminal).col + 1}`;
       for (const id of ['supply-input','sim-supply-input']) {
@@ -2009,9 +1967,9 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       }
       if (c) {
         if(isIC(c)){
-          document.getElementById('ic-model-select').value=c.model||(c.type==='dip16'?'unassigned16':'unassigned14');document.getElementById('ic-orientation-select').value=c.orientation;
+          document.getElementById('ic-model-select').value=c.model||'unassigned'+packagePins(c);document.getElementById('ic-orientation-select').value=c.orientation;
           const state=solution.chips?.[c.id];document.getElementById('ic-power-state').textContent=c.model?`${state?.state||'—'} · ${IC_MODELS[c.model].family}-style electrical approximation · use 5 V for examples.`:'No chip selected. All pins are independent and undriven.';
-          const m=IC_MODELS[c.model];document.getElementById('ic-function-note').textContent=m?(m.notes||`${m.description}. X is floating or undefined. Outputs have approximate 50 Ω drive.`):'Choose a model to assign pin functions. Package size changes automatically if needed.';
+          const m=IC_MODELS[c.model];document.getElementById('opamp-errors-row').hidden=m?.kind!=='opamp';document.getElementById('opamp-errors').checked=!!c.errors;document.getElementById('opamp-errors').disabled=workbenchMode!=='build';if(m?.kind==='opamp')document.getElementById('ic-power-state').textContent=`${state?.state||'—'} · analog model · recommended ±15 V.`;document.getElementById('ic-function-note').textContent=m?(m.notes||`${m.description}. X is floating or undefined. Outputs have approximate 50 Ω drive.`):'Choose a model to assign pin functions. Package size changes automatically if needed.';
           const link=document.getElementById('ic-datasheet-link');link.hidden=!m;if(m)link.href=m.datasheet;
           const pins=document.getElementById('ic-pin-properties');pins.replaceChildren(renderICPinTable(c));
         }
@@ -2031,15 +1989,15 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         document.getElementById('component-b-location').textContent = locationLabel(c.b);
         const field = document.getElementById('component-value-input');
         if (c.type === 'resistor' && document.activeElement !== field) field.value = c.resistance;
-        document.getElementById('component-model-note').textContent = isIC(c)?(boardType==='breadboard'?'Straddle the centre break horizontally and turn Centre break on.':'Cut copper between opposing pin columns to keep the IC pins separate.')+(c.model?` VCC: pin ${IC_MODELS[c.model].vcc}; GND: pin ${IC_MODELS[c.model].gnd}. Inputs require defined levels.`:' Select a model to see its power and signal pins.'):({resistor:boardType === 'breadboard' ? 'Signal contacts connect vertically within each column. Contacts in the same connected group bypass this resistor. Bridge the horizontal split or use separate columns.' : 'Terminals connect only at the two lead holes. Uncut copper under the resistor can bypass it.',led:'Approximate diode model: forward threshold + 20 Ω slope resistance. Anode (+) is the first lead; cathode (−) is second. Use a series resistor. Overcurrent and reverse voltage warn without simulating damage.',diode:'Approximate silicon diode: default 0.7 V threshold + 1 Ω slope resistance. First lead is anode; second is the banded cathode. Reverse current is blocked. Reverse breakdown and damage are not simulated.',switch:'Ideal SPST switch: open disconnects the leads; closed connects them with 0 Ω. Copper or wires joining the same leads can bypass the switch. Contacts connect only at the lead holes.',wire:'Wire resistance is 0 Ω. Crossings connect only when they share a lead hole.',ammeter:'Meter resistance is 0 Ω. Connect across a circuit break; parallel ideal paths have an indeterminate current split.',voltmeter:'Ideal infinite input resistance. This meter does not conduct current.'})[c.type];
+        document.getElementById('component-model-note').textContent = isIC(c)?(boardType==='breadboard'?'Straddle the centre break horizontally and turn Centre break on.':'Cut copper between opposing pin columns to keep the IC pins separate.')+(c.model==='LM741'?' V+: pin 7; V−: pin 4. Add a −15 V source against ground for dual supplies. IN−: 2, IN+: 3, OUT: 6.':c.model?` VCC: pin ${IC_MODELS[c.model].vcc}; GND: pin ${IC_MODELS[c.model].gnd}. Inputs require defined levels.`:' Select a model to see its power and signal pins.'):({capacitor:'Ideal non-polar capacitor. DC is open; time analysis uses the entered initial voltage (first lead minus second). AC uses jωC.',source:'Ideal two-terminal source: V(first) − V(second). Use −15 V DC for a negative rail. Waveform DC means constant; other modes use DC as offset. AC amplitude/phase are independent small-signal settings.',resistor:boardType === 'breadboard' ? 'Signal contacts connect vertically within each column. Contacts in the same connected group bypass this resistor. Bridge the horizontal split or use separate columns.' : 'Terminals connect only at the two lead holes. Uncut copper under the resistor can bypass it.',led:'Approximate diode model: forward threshold + 20 Ω slope resistance. Anode (+) is the first lead; cathode (−) is second. Use a series resistor. Overcurrent and reverse voltage warn without simulating damage.',diode:'Approximate silicon diode: default 0.7 V threshold + 1 Ω slope resistance. First lead is anode; second is the banded cathode. Reverse current is blocked. Reverse breakdown and damage are not simulated.',switch:'Ideal SPST switch: open disconnects the leads; closed connects them with 0 Ω. Copper or wires joining the same leads can bypass the switch. Contacts connect only at the lead holes.',wire:'Wire resistance is 0 Ω. Crossings connect only when they share a lead hole.',ammeter:'Meter resistance is 0 Ω. Connect across a circuit break; parallel ideal paths have an indeterminate current split.',voltmeter:'Ideal infinite input resistance. This meter does not conduct current.',scope:'High-impedance instrument. Probes and settings are saved with the circuit. Select this scope in Simulate to see its trace.'})[c.type];
       }
       const list = document.getElementById('build-component-list'); list.replaceChildren();
       const all = [...components,...meters];
       document.getElementById('parts-total').textContent = `${all.length} ${all.length === 1 ? 'part' : 'parts'}`;
       all.forEach(c => {
         const row = document.createElement('button'); row.type = 'button'; row.className = `part-row ${c.id === selectedComponent ? 'selected-item' : ''}`;
-        const name = document.createElement('span'); name.textContent = `${componentLabel(c)} · ${c.type}`;
-        const value = document.createElement('span'); value.textContent = c.type === 'resistor' ? formatResistance(c.resistance) : isIC(c)?(c.model||'Unassigned'): c.type === 'led' ? LED_COLOURS[c.colour || 'red'].name : c.type === 'diode' ? `${formatNumber(diodeForwardVoltage(c))} V` : c.type === 'switch' ? (c.closed ? 'Closed' : 'Open') : `${locationLabel(c.a)} → ${locationLabel(c.b)}`;
+        const name = document.createElement('span'); name.textContent = `${componentLabel(c)} · ${c.name||c.type}`;
+        const value = document.createElement('span'); value.textContent = c.type === 'resistor' ? formatResistance(c.resistance) : c.type==='capacitor'?formatCapacitance(c.capacitance):c.type==='source'?`${c.dc} V · ${c.wave}`:isIC(c)?(c.model||'Unassigned'): c.type === 'led' ? LED_COLOURS[c.colour || 'red'].name : c.type === 'diode' ? `${formatNumber(diodeForwardVoltage(c))} V` : c.type === 'switch' ? (c.closed ? 'Closed' : 'Open') : `${locationLabel(c.a)} → ${locationLabel(c.b)}`;
         row.append(name,value); row.addEventListener('click', () => selectComponent(c.id)); list.appendChild(row);
       });
       if (!all.length) {
@@ -2086,18 +2044,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       selectedComponent=c.id;firstPoint=null;refreshSelection();render();
       showMessage(`${componentLabel(c)} ${c.closed ? 'closed' : 'opened'}. Readings updated.`);
     }
-    function loadSwitchExample() {
-      loadLEDExample(); // Retain a single undo snapshot of the previous board.
-      const board=boardData(),bread=boardType==='breadboard';
-      if(bread) {
-        board.components[1].a='3-7';board.components[1].b='6-7';
-        board.components[2].a='8-7';board.components[2].b='9-7';
-        board.meters[0].a='3-7';board.meters[0].b='6-7';
-      } else board.components[0].b='3-3';
-      const s={id:'switch-demo',type:'switch',a:bread?'3-4':'3-5',b:bread?'3-7':'4-5',closed:false};
-      board.components.push(s);restoreBoard(board);selectComponent(s.id);
-      showMessage('Switch + LED example: enter Simulate and click the switch to light the LED.');
-    }
+
     function initializeModes() {
       initializeComponentDragging();
       document.getElementById('resize-board').addEventListener('click',()=>resizeBoard(document.getElementById('board-rows-input').value,document.getElementById('board-cols-input').value));
@@ -2136,7 +2083,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         });
       }
       document.getElementById('sim-board').addEventListener('click', e => {
-        if (workbenchMode === 'build' && !e.target.closest('.hole,.lead,.resistor-body,.led-body,.diode-body,.switch-body,.ic-body,.meter-tag,.supply-pin-label')) {
+        if (workbenchMode === 'build' && !e.target.closest('.hole,.lead,.resistor-body,.led-body,.diode-body,.switch-body,.analog-body,.ic-body,.meter-tag,.meter-probe,.control-label,.supply-pin-label')) {
           selectedComponent = null; firstPoint = null; refreshSelection(); render();
         }
       });
@@ -2144,8 +2091,348 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       if (typeof window !== 'undefined') window.addEventListener('resize', updateBoardScale);
     }
 
+    // Analog v1.01: MNA with independent sources, capacitors and a one-pole 741.
+    const OPAMP={gain:200000,gbw:1e6,slew:5e5,rin:2e6,rout:75,limit:.025,headroom:2,idle:.0017};
+    let analogLast=null,analysisResult=null,analysisFingerprint='',analysisRunning=false;
+    function isSequential(c){return ['dff','jkff','counter90'].includes(IC_MODELS[c.model]?.kind);}
+    function formatCapacitance(v){return v>=1e-3?`${formatNumber(v*1e3)} mF`:v>=1e-6?`${formatNumber(v*1e6)} µF`:v>=1e-9?`${formatNumber(v*1e9)} nF`:`${formatNumber(v*1e12)} pF`;}
+    function cleanAnalogPart(c){const base={id:c.id,type:c.type,a:c.a,b:c.b};return c.type==='capacitor'?{...base,capacitance:c.capacitance,initialVoltage:c.initialVoltage??0}:{...base,dc:c.dc??0,wave:c.wave??'dc',amplitude:c.amplitude??1,frequency:c.frequency??100,phase:c.phase??0,acAmplitude:c.acAmplitude??1,acPhase:c.acPhase??0,delay:c.delay??0};}
+    function validateAnalogPart(c){
+      const range=(v,min,max)=>Number.isFinite(v)&&v>=min&&v<=max;
+      if(c.type==='capacitor'&&(!range(c.capacitance,1e-12,1)||!range(c.initialVoltage??0,-1000,1000)))throw new Error('Capacitance must be 1 pF–1 F, with initial voltage within ±1000 V.');
+      if(c.type==='source'){const d=cleanAnalogPart(c);if(!range(d.dc,-1000,1000)||!range(d.amplitude,0,1000)||!range(d.acAmplitude,0,1000)||!range(d.frequency,.001,1e7)||!range(d.phase,-360,360)||!range(d.acPhase,-360,360)||!range(d.delay,0,10)||!['dc','sine','square','step'].includes(d.wave))throw new Error('Invalid voltage source settings.');}
+      if(c.model==='LM741'&&c.errors!==undefined&&typeof c.errors!=='boolean')throw new Error('Invalid LM741 error setting.');
+    }
+    function sourceAt(c,t){const d=cleanAnalogPart(c);if(t===null||d.wave==='dc')return d.dc;if(t<d.delay)return d.dc;const angle=2*Math.PI*d.frequency*(t-d.delay)+d.phase*Math.PI/180;return d.dc+d.amplitude*(d.wave==='sine'?Math.sin(angle):d.wave==='square'?(Math.sin(angle)>=-1e-14?1:-1):1);}
+    function analogRequired(){return components.some(c=>['capacitor','source'].includes(c.type)||c.model==='LM741');}
+    function analogBodyPosition(c,a,b){const angle=Math.atan2(b.y-a.y,b.x-a.x),offset=c.type==='capacitor'&&components.some(other=>other.id!==c.id&&((other.a===c.a&&other.b===c.b)||(other.a===c.b&&other.b===c.a)))?28:0;return {x:(a.x+b.x)/2-Math.sin(angle)*offset,y:(a.y+b.y)/2+Math.cos(angle)*offset,angle};}
+    function drawAnalogLeads(c,d){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.classList.add('analog-leads');svg.style.width=`${COLS*PITCH}px`;svg.style.height=`${ROWS*PITCH}px`;svg.setAttribute('viewBox',`0 0 ${COLS*PITCH} ${ROWS*PITCH}`);const a={x:d.x1,y:d.y1},b={x:d.x2,y:d.y2},p=analogBodyPosition(c,a,b),dx=Math.cos(p.angle)*12,dy=Math.sin(p.angle)*12,path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',`M${a.x},${a.y} L${p.x-dx},${p.y-dy} L${p.x+dx},${p.y+dy} L${b.x},${b.y}`);svg.appendChild(path);return svg;}
+    function drawAnalogBody(c,d){const position=analogBodyPosition(c,{x:d.x1,y:d.y1},{x:d.x2,y:d.y2});const body=document.createElement('button');body.type='button';body.dataset.component=c.id;body.className=`analog-body ${c.type}-body ${selectedComponent===c.id?'inspected':''}`;body.style.left=`${position.x-(c.type==='source'?17:16)}px`;body.style.top=`${position.y-(c.type==='source'?17:14)}px`;body.style.transform=`rotate(${d.angle}deg)`;body.textContent=c.type==='capacitor'?'Ⅱ':c.wave==='dc'?'⎓':'∿';body.title=c.type==='capacitor'?`${componentLabel(c)} · ${formatCapacitance(c.capacitance)}`:`${componentLabel(c)} · first lead + · ${c.wave} · ${c.dc} V offset`;const label=document.createElement('span');label.className='analog-value';label.textContent=c.type==='capacitor'?formatCapacitance(c.capacitance):`${c.dc} V${c.wave==='dc'?'':' '+c.wave}`;body.appendChild(label);body.addEventListener('click',()=>selectComponent(c.id));return body;}
+    function renderAnalogProperties(c){
+      const panel=document.getElementById('analog-properties');panel.hidden=!c||!['source','capacitor'].includes(c.type);if(panel.hidden)return;
+      const key=JSON.stringify(c)+workbenchMode;if(panel.dataset.component===key)return;panel.dataset.component=key;panel.replaceChildren();
+      const field=(name,label,value,min,max,unit='')=>{const l=document.createElement('label');l.className='field-label';l.textContent=label+(unit?` (${unit})`:'');l.htmlFor='analog-'+name;const input=document.createElement('input');input.id='analog-'+name;input.type='number';input.min=min;input.max=max;input.step='any';input.value=value;input.disabled=workbenchMode!=='build';l.appendChild(input);panel.appendChild(l);input.addEventListener('change',()=>{if(workbenchMode!=='build')return;const next={...c,[name]:input.value.trim()===''?NaN:Number(input.value)};try{validateAnalogPart(next);actionHistory.push({type:'snapshot',board:boardData()});Object.assign(c,next);panel.dataset.component='';render();}catch(e){input.value=c[name];showMessage(e.message);}});input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();input.dispatchEvent(new Event('change'));}});};
+      if(c.type==='capacitor'){const presets=document.createElement('div');presets.className='preset-values';for(const value of [1e-9,100e-9,1e-6,47e-6]){const button=document.createElement('button');button.textContent=formatCapacitance(value);button.disabled=workbenchMode!=='build';button.addEventListener('click',()=>{if(workbenchMode!=='build')return;actionHistory.push({type:'snapshot',board:boardData()});c.capacitance=value;panel.dataset.component='';render();});presets.appendChild(button);}panel.appendChild(presets);field('capacitance','Capacitance',c.capacitance,1e-12,1,'F');field('initialVoltage','Initial lead voltage',c.initialVoltage??0,-1000,1000,'V');const note=document.createElement('p');note.className='fine-print';note.textContent='Use 0.000001 for 1 µF, 0.0000001 for 100 nF. Non-polar; initial voltage is first lead minus second.';panel.appendChild(note);return;}
+      const d=cleanAnalogPart(c);field('dc','DC / waveform offset',d.dc,-1000,1000,'V');const label=document.createElement('label');label.className='field-label';label.textContent='Waveform';const select=document.createElement('select');for(const value of ['dc','sine','square','step']){const o=document.createElement('option');o.value=value;o.textContent=value==='dc'?'DC / constant':value;select.appendChild(o);}select.value=d.wave;select.disabled=workbenchMode!=='build';label.appendChild(select);panel.appendChild(label);select.addEventListener('change',()=>{if(workbenchMode!=='build')return;actionHistory.push({type:'snapshot',board:boardData()});c.wave=select.value;panel.dataset.component='';render();});
+      field('amplitude','Waveform peak amplitude',d.amplitude,0,1000,'V');field('frequency','Waveform frequency',d.frequency,.001,1e7,'Hz');field('phase','Waveform phase',d.phase,-360,360,'°');field('delay','Waveform delay',d.delay,0,10,'s');field('acAmplitude','Small-signal AC amplitude',d.acAmplitude,0,1000,'V');field('acPhase','Small-signal AC phase',d.acPhase,-360,360,'°');
+    }
+    function createAnalogSystem(extra=[]){
+      const nodes=buildElectricalNodes(),all=[...new Set(Object.values(nodes))],ground=nodes[negativeTerminal],plus=nodes[positiveTerminal];if(ground===plus)throw new Error('The bench supply is shorted by an ideal conductor.');
+      const devices=[...components.filter(c=>c.type==='resistor'||isDiode(c)||c.type==='capacitor'),...extra],sources=[{id:'ic:bench',a:positiveTerminal,b:negativeTerminal,dc:SUPPLY_VOLTAGE,wave:'dc',acAmplitude:1,acPhase:0},...components.filter(c=>c.type==='source').map(cleanAnalogPart)],amps=components.filter(c=>c.model==='LM741').map(c=>({c,p:dipPins(c).map(p=>p.point)}));
+      const used=new Set([ground,plus]);for(const d of [...devices,...sources]){used.add(nodes[d.a]);used.add(nodes[d.b]);}for(const o of amps)for(const pin of [2,3,4,6,7])used.add(nodes[o.p[pin-1]]);
+      const nets=[...used].filter(n=>n!==ground),index=Object.fromEntries(nets.map((n,i)=>[n,i])),n=nets.length,sindex=Object.fromEntries(sources.map((s,i)=>[s.id,n+i])),oindex=Object.fromEntries(amps.map((o,i)=>[o.c.id,n+sources.length+i]));
+      // Unused copper is excluded from MNA. Gmin (1 pS) fixes mathematical gauges;
+      // actual floating islands are identified separately and never shown as zero.
+      return {nodes,all,ground,plus,devices,sources,amps,nets,index,n,sindex,oindex,size:n+sources.length+amps.length,edges:solution.idealEdges||[]};
+    }
+    function complexSolve(re,im,br,bi){const n=br.length,m=Array.from({length:n*2},()=>Array(n*2).fill(0));for(let i=0;i<n;i++)for(let j=0;j<n;j++){m[i][j]=re[i][j];m[i][j+n]=-im[i][j];m[i+n][j]=im[i][j];m[i+n][j+n]=re[i][j];}const x=gaussianSolve(m,[...br,...bi]);return x.slice(0,n).map((r,i)=>({re:r,im:x[i+n]}));}
+    function solveAnalogPoint(sys,options={}){
+      const {nodes,index,size,n,sindex,oindex}=sys,ac=options.frequency!==undefined,dt=options.dt,history=options.history||{},t=options.time??null;
+      const v=(point,x)=>{const i=index[nodes[point]];return i===undefined?0:x[i]||0;},previous=options.guess||Array(size).fill(0);
+      let x=previous.slice(),lastModes={},lastMatrix;
+      const stamp=(gain=OPAMP.gain,guess=x)=>{
+        const a=Array.from({length:size},()=>Array(size).fill(0)),b=Array(size).fill(0),im=ac?Array.from({length:size},()=>Array(size).fill(0)):null,bi=ac?Array(size).fill(0):null,modes={};
+        const at=(net,col,value,imag=0)=>{const i=index[net];if(i!==undefined){a[i][col]+=value;if(im)im[i][col]+=imag;}};
+        const conduct=(p,q,g,offset=0,ig=0)=>{const u=index[nodes[p]],w=index[nodes[q]];if(u!==undefined){a[u][u]+=g;b[u]-=offset;if(im)im[u][u]+=ig;if(w!==undefined){a[u][w]-=g;if(im)im[u][w]-=ig;}}if(w!==undefined){a[w][w]+=g;b[w]+=offset;if(im)im[w][w]+=ig;if(u!==undefined){a[w][u]-=g;if(im)im[w][u]-=ig;}}};
+        const coefficient=(row,p,g,ig=0)=>{const j=index[nodes[p]];if(j!==undefined){a[row][j]+=g;if(im)im[row][j]+=ig;}};
+        const current=(p,q,i)=>{const u=index[nodes[p]],w=index[nodes[q]];if(u!==undefined)b[u]-=i;if(w!==undefined)b[w]+=i;};
+        for(let i=0;i<n;i++)a[i][i]+=1e-12;
+        for(const d of sys.devices){
+          if(d.type==='resistor')conduct(d.a,d.b,1/d.resistance);
+          else if(d.type==='capacitor'){if(ac)conduct(d.a,d.b,0,0,2*Math.PI*options.frequency*d.capacitance);else if(dt){const g=d.capacitance/dt;conduct(d.a,d.b,g,-g*(history.caps?.[d.id]??d.initialVoltage??0));}}
+          else {const drop=v(d.a,guess)-v(d.b,guess),law=deviceLaw(d,drop);conduct(d.a,d.b,law.conductance+1e-12,ac?0:law.current-law.conductance*drop);}
+        }
+        for(const s of sys.sources){const k=sindex[s.id];at(nodes[s.a],k,1);at(nodes[s.b],k,-1);coefficient(k,s.a,1);coefficient(k,s.b,-1);if(ac){const chosen=s.id===options.source,amp=chosen?(s.acAmplitude??1):0,phase=(s.acPhase??0)*Math.PI/180;b[k]=amp*Math.cos(phase);bi[k]=amp*Math.sin(phase);}else b[k]=sourceAt(s,t);}
+        for(const o of sys.amps){
+          const p=o.p,k=oindex[o.c.id],hi=v(p[6],guess),lo=v(p[3],guess),supply=hi-lo,powered=supply>=20-1e-7&&supply<=44+1e-7,mid=(hi+lo)/2;
+          conduct(p[1],p[2],1/OPAMP.rin);if(!ac&&powered){current(p[6],p[3],OPAMP.idle);if(o.c.errors){current(p[1],p[3],80e-9);current(p[2],p[3],80e-9);}}
+          if(!powered){a[k][k]=1;modes[o.c.id]={powered:false,internal:mid,mode:'Unpowered'};continue;}
+          const returnPin=guess[k]<0?p[6]:p[3];at(nodes[p[5]],k,1);at(nodes[returnPin],k,-1);
+          let g=gain,offset=mid+gain*(o.c.errors?.001:0),ig=0;
+          if(ac){const ratio=options.frequency/(OPAMP.gbw/OPAMP.gain);g=OPAMP.gain/(1+ratio*ratio);ig=-g*ratio;offset=0;}
+          else if(dt){const alpha=dt/(dt+OPAMP.gain/(2*Math.PI*OPAMP.gbw));g=gain*alpha;offset=mid+(1-alpha)*((history.amps?.[o.c.id]??mid)-mid)+(o.c.errors?g*.001:0);}
+          const raw=g*(v(p[2],guess)-v(p[1],guess))+offset;
+          let target=raw,mode='Linear',rail=0,slewBound=null;
+          if(!ac){if(raw>hi-OPAMP.headroom){target=hi-OPAMP.headroom;mode='Positive saturation';rail=7;}else if(raw<lo+OPAMP.headroom){target=lo+OPAMP.headroom;mode='Negative saturation';rail=4;}
+            if(dt){const prev=history.amps?.[o.c.id]??mid,max=OPAMP.slew*dt;if(target>prev+max){target=prev+max;mode='Slew limited';slewBound=target;}else if(target<prev-max){target=prev-max;mode='Slew limited';slewBound=target;}}
+          }
+          const limited=!ac&&(guess[k]>=.025-1e-10||guess[k]<=-.025+1e-10)&&((guess[k]>0&&target<v(p[5],guess)-OPAMP.rout*.025)||(guess[k]<0&&target>v(p[5],guess)+OPAMP.rout*.025));
+          if(limited){a[k][k]=1;b[k]=guess[k]>0?.025:-.025;mode='Current limited';}
+          else {coefficient(k,p[5],1);a[k][k]=-OPAMP.rout;
+            if(slewBound!==null)b[k]=target;
+            else if(rail){coefficient(k,p[rail-1],-1);b[k]=rail===7?-OPAMP.headroom:OPAMP.headroom;}
+            else {coefficient(k,p[2],-g,-ig);coefficient(k,p[1],g,ig);coefficient(k,p[6],-.5);coefficient(k,p[3],-.5);b[k]=offset-mid;}
+          }
+          modes[o.c.id]={powered,internal:target,mode,commonMode:(v(p[1],guess)+v(p[2],guess))/2,hi,lo};
+        }
+        return {a,b,im,bi,modes};
+      };
+      // First establish supply sources without output drive; then use increasing
+      // gain continuation. Newton residual line-search handles clipping/diodes.
+      if(ac){const state=stamp(OPAMP.gain,previous),values=complexSolve(state.a,state.im,state.b,state.bi);return {values,modes:state.modes};}
+      const residual=(state,xx)=>state.a.map((row,i)=>Math.abs(row.reduce((sum,g,j)=>sum+g*xx[j],-state.b[i]))/(i<n?.001:1));
+      const norm=state=>Math.max(0,...residual(state,x));
+      const gains=dt?[OPAMP.gain]:[10,100,1000,10000,OPAMP.gain];
+      for(const gain of gains){let converged=false;for(let it=0;it<100;it++){
+        const state=stamp(gain),next=gaussianSolve(state.a,state.b),err=Math.max(0,...next.map((q,i)=>Math.abs(q-x[i]))),r0=norm(state);
+        if(err<1e-8&&r0<1e-6){x=next;lastModes=stamp(gain,x).modes;lastMatrix=state;converged=true;break;}
+        let alpha=1,best=next,bestNorm=Infinity;
+        for(let search=0;search<18;search++){const trial=x.map((q,i)=>q+alpha*(next[i]-q)),test=stamp(gain,trial),r=Math.max(0,...residual(test,trial));if(r<bestNorm){best=trial;bestNorm=r;}if(r<=r0*(1-1e-4*alpha)+1e-7)break;alpha*=.5;}
+        x=best;
+        if(it===99)throw new Error('Analog circuit did not converge. Check positive feedback, conflicting sources and extreme component values.');
+      }if(!converged)throw new Error('Analog convergence failed.');}
+      const voltages=Object.fromEntries(sys.all.map(net=>[net,net===sys.ground?0:(index[net]===undefined?null:x[index[net]])])),currents={},caps={},amps={};
+      for(const d of sys.devices){const drop=v(d.a,x)-v(d.b,x);currents[d.id]=d.type==='capacitor'?(dt?d.capacitance/dt*(drop-(history.caps?.[d.id]??d.initialVoltage??0)):0):deviceLaw(d,drop).current;if(d.type==='capacitor')caps[d.id]=drop;}
+      for(const s of sys.sources)currents[s.id]=x[sindex[s.id]];
+      for(const o of sys.amps){const mode=lastModes[o.c.id];currents[o.c.id]=x[oindex[o.c.id]];amps[o.c.id]=mode.internal;}
+      return {values:x,voltages,currents,modes:lastModes,history:{caps,amps}};
+    }
+    function referencedAnalogNets(sys,point,transient=false){
+      const graph=Object.fromEntries(sys.all.map(n=>[n,[]])),join=(a,b)=>{a=sys.nodes[a];b=sys.nodes[b];graph[a].push(b);graph[b].push(a);};
+      for(const d of sys.devices)if(d.type==='resistor'||d.type==='capacitor'&&transient||isDiode(d)&&point.currents[d.id]>0)join(d.a,d.b);
+      for(const s of sys.sources)join(s.a,s.b);for(const o of sys.amps){join(o.p[1],o.p[2]);if(point.modes[o.c.id].powered)join(o.p[5],o.p[3]);}
+      const seen=new Set([sys.ground]),q=[sys.ground];for(let i=0;i<q.length;i++)for(const other of graph[q[i]])if(!seen.has(other)){seen.add(other);q.push(other);}return seen;
+    }
+    function solveAnalogueCircuit(extraDevices=[]){
+      if(!analogRequired()){analogLast=null;return solveLegacyAnalogueCircuit(extraDevices);}
+      solution={status:'open',currents:{},drops:{},power:{},islands:{},relativeVoltages:{},warnings:[]};nodeVoltages={};totalCurrent=0;
+      try{
+        const sys=createAnalogSystem(extraDevices);latestNodes=sys.nodes;const point=solveAnalogPoint(sys),referenced=referencedAnalogNets(sys,point);analogLast={sys,point};
+        solution.currents={...point.currents};solution.relativeVoltages={...point.voltages};solution.idealEdges=sys.edges;
+        for(const n of sys.all){nodeVoltages[n]=referenced.has(n)?point.voltages[n]:null;solution.islands[n]=referenced.has(n)?0:n;}
+        const injection=Object.fromEntries(Object.keys(sys.nodes).map(p=>[p,0])),inject=(a,b,i)=>{injection[a]-=i;injection[b]+=i;};
+        for(const d of [...sys.devices,...sys.sources]){const current=point.currents[d.id],drop=point.voltages[sys.nodes[d.a]]-point.voltages[sys.nodes[d.b]];solution.drops[d.id]=getVoltage(d.a,sys.nodes)===null||getVoltage(d.b,sys.nodes)===null?null:drop;solution.power[d.id]=drop*current;inject(d.a,d.b,current);if(sys.nodes[d.a]===sys.nodes[d.b]&&d.type!=='source')solution.warnings.push(`${d.label||componentLabel(d)} is bypassed by an ideal conductor.`);}
+        for(const o of sys.amps){const i=point.currents[o.c.id],m=point.modes[o.c.id];if(m.powered){inject(o.p[5],i<0?o.p[6]:o.p[3],i);inject(o.p[6],o.p[3],OPAMP.idle);if(o.c.errors){inject(o.p[1],o.p[3],80e-9);inject(o.p[2],o.p[3],80e-9);}}}
+        totalCurrent=-point.currents['ic:bench'];if(Math.abs(totalCurrent)<1e-10)totalCurrent=0;solution.status=Math.abs(totalCurrent)>0?'complete':'open';solution.resistance=totalCurrent>0?SUPPLY_VOLTAGE/totalCurrent:Infinity;computeIdealCurrents(sys.edges,injection);
+        for(const c of components.filter(c=>c.type==='switch')){if(!c.closed){solution.currents[c.id]=0;solution.drops[c.id]=meterVoltage(c);}solution.power[c.id]=0;}
+        for(const c of components.filter(c=>c.type==='led'))if(solution.currents[c.id]>.02000001)solution.warnings.push(`${componentLabel(c)} is overdriven. Increase its series resistor.`);
+        if(meters.some(m=>m.type==='ammeter'&&!Number.isFinite(solution.currents[m.id])))solution.warnings.push('An ammeter has a parallel ideal conductor path. Its current split is indeterminate.');
+      }catch(e){analogLast=null;solution.status='error';solution.warnings.push(e.message==='Circuit matrix is singular.'?'Conflicting or redundant ideal voltage sources. Check sources placed on the same net and parallel source loops.':e.message);nodeVoltages={};totalCurrent=null;}
+    }
+    function evaluateOpamp(c){
+      const pins=dipPins(c).map(p=>({...p,name:IC_MODELS.LM741.pins[p.number-1],voltage:icPinVoltage(c,p.number),logic:'—'})),hi=pins[6].voltage,lo=pins[3].voltage,supply=hi!==null&&lo!==null?hi-lo:null,mode=analogLast?.point.modes[c.id],powered=!!mode?.powered&&supply!==null;
+      const state=solution.status==='error'?'Undefined · circuit error':supply===null?'Power pins floating':powered?'Powered':supply<0?'Reversed supply':'Supply outside 20–44 V model range';return {pins,supply,powered,state,gates:[],units:[],count:null,operating:mode?.mode||'Undriven'};
+    }
+    function finishOpampReadings(c,state){
+      const mode=analogLast?.point.modes[c.id],i=analogLast?.point.currents[c.id]??0;state.pinCurrents=Array(8).fill(0);state.dissipation=0;
+      if(state.powered){if([1,2].some(k=>state.pins[k].voltage===null))solution.warnings.push(`${componentLabel(c)}: input pins are floating; wire their reference before using this output.`);state.pinCurrents[5]=i;state.pinCurrents[i<0?6:3]-=i;state.pinCurrents[6]+=OPAMP.idle;state.pinCurrents[3]-=OPAMP.idle;if(c.errors){state.pinCurrents[1]=80e-9;state.pinCurrents[2]=80e-9;state.pinCurrents[3]-=160e-9;}state.dissipation=state.pinCurrents.reduce((s,q,k)=>s+q*(state.pins[k].voltage??0),0);if(mode.mode!=='Linear')solution.warnings.push(`${componentLabel(c)}: ${mode.mode}. OUT is constrained by supply headroom or load current.`);if(mode.commonMode<mode.lo+3||mode.commonMode>mode.hi-3)solution.warnings.push(`${componentLabel(c)}: input common-mode voltage is outside the approximate V− + 3 V to V+ − 3 V range; results are outside the reliable LM741 model region.`);if([0,4].some(k=>getVoltage(state.pins[k].point,latestNodes)!==null))solution.warnings.push(`${componentLabel(c)}: offset-null wiring is not modeled. Use the offset/bias toggle for typical input errors.`);}
+      else solution.warnings.push(`${componentLabel(c)}: ${state.state}. Connect V+ pin 7 and V− pin 4; examples use +15 V and −15 V.`);
+      solution.currents[c.id]=state.powered?state.pinCurrents[6]:0;solution.drops[c.id]=state.supply;solution.power[c.id]=state.dissipation;
+    }
+
+    function loadOpampExample(){
+      const kind=document.getElementById('opamp-example').value;actionHistory.push({type:'snapshot',board:boardData()});restoreBoard(makeOpampExample(kind));selectComponent('opamp');
+      activeScopeId='example-scope';refreshAnalysisChoices();
+      const description={'non-inverting':'Gain ≈ +2: 1 V in → 2 V out.',inverting:'Gain ≈ −2: 1 V in → −2 V out.',follower:'Unity gain: 1 V in → 1 V out.',summing:'Equal weights: 1 V + 2 V → −3 V.',difference:'Matched resistor ratios: 2 × (2 V − 1 V) → 2 V.', 'low-pass':'Gain ≈ 2, RC cutoff ≈ 159 Hz. Run Frequency response.', 'high-pass':'Gain ≈ 2, RC cutoff ≈ 159 Hz. Run Frequency response.',integrator:'Practical integrator: 10 kΩ / 1 µF, 10 MΩ DC feedback. Run Time to see integration of a 100 Hz sine.',differentiator:'Practical differentiator: 100 nF input, 1 kΩ stabilising resistor, 10 kΩ / 1 nF feedback. Run Time to see differentiation of a 100 Hz sine.'}[kind];
+      showMessage(`LM741 ${kind}: ${description} Both supply rails are wired; Undo restores your circuit.`);document.getElementById('scope-notes').textContent=description;
+    }
+    function analogFingerprint(){return JSON.stringify({rows:ROWS,cols:COLS,boardType,breadboardBreak,positiveTerminal,negativeTerminal,SUPPLY_VOLTAGE,cuts:[...cuts],components:components.map(c=>{const d={...c};delete d.memory;return d;}),meters});}
+    function invalidateAnalysisIfChanged(){const key=analogFingerprint();if(analysisResult&&key!==analysisFingerprint){analysisResult=null;document.getElementById('scope-state').textContent='CHANGED';document.getElementById('scope-plot').replaceChildren();document.getElementById('scope-reading').textContent='Circuit changed. Refresh the scope.';document.getElementById('scope-cursor').disabled=true;if(workbenchMode==='simulation')queueScopeRefresh();}}
+
+
+    function analysisProbe(id){const meter=meters.find(c=>c.id===id&&c.type==='voltmeter');if(meter)return {a:meter.a,b:meter.b};const amp=components.find(c=>c.id===id&&c.model==='LM741');if(amp)return {a:dipPins(amp)[5].point,b:negativeTerminal};throw new Error('Add a voltmeter or an LM741 to choose an output.');}
+    function analyzeAC(sys,source,probe,fmin,fmax,count=160,point){
+      const s=sys.sources.find(s=>s.id===source);if(!s||!(s.acAmplitude>0))throw new Error('Choose an input source with a non-zero AC amplitude.');const dc=point||solveAnalogPoint(sys),defined=referencedAnalogNets(sys,dc,true);
+      if(!defined.has(sys.nodes[probe.a])||!defined.has(sys.nodes[probe.b]))throw new Error('The selected output is floating. Connect its reference.');
+      const phase=(s.acPhase??0)*Math.PI/180,input={re:s.acAmplitude*Math.cos(phase),im:s.acAmplitude*Math.sin(phase)},rows=[];
+      const voltage=(point,p)=>point.values[sys.index[sys.nodes[p]]]||{re:0,im:0};
+      for(let i=0;i<count;i++){const f=fmin*(fmax/fmin)**(i/(count-1)),result=solveAnalogPoint(sys,{frequency:f,source,guess:dc.values}),a=voltage(result,probe.a),b=voltage(result,probe.b),out={re:a.re-b.re,im:a.im-b.im},gain=Math.hypot(out.re,out.im)/s.acAmplitude,p=Math.atan2(out.im,out.re)-phase;rows.push({x:f,input:s.acAmplitude,output:Math.hypot(out.re,out.im),gain:20*Math.log10(Math.max(gain,1e-15)),phase:((p*180/Math.PI+540)%360)-180});}return rows;
+    }
+    function analyzeTime(sys,source,probe,duration,steps,zero=true,dc){
+      const point=dc||solveAnalogPoint(sys),referenced=referencedAnalogNets(sys,point,true);if(!referenced.has(sys.nodes[probe.a])||!referenced.has(sys.nodes[probe.b]))throw new Error('The selected output is floating. Connect its reference.');
+      const s=sys.sources.find(s=>s.id===source);if(!s)throw new Error('Add a signal source and select it as the input.');const rows=[],dt=duration/steps;let history=zero?{caps:Object.fromEntries(sys.devices.filter(c=>c.type==='capacitor').map(c=>[c.id,c.initialVoltage??0])),amps:Object.fromEntries(sys.amps.map(o=>[o.c.id,((point.voltages[sys.nodes[o.p[6]]]??0)+(point.voltages[sys.nodes[o.p[3]]]??0))/2]))}:point.history,guess=point.values;
+      for(let i=0;i<=steps;i++){const time=i*dt,result=solveAnalogPoint(sys,{dt:i===0?1e-12:dt,time,history,guess});history=result.history;guess=result.values;const voltage=p=>result.voltages[sys.nodes[p]]??0;rows.push({x:time,input:voltage(s.a)-voltage(s.b),output:voltage(probe.a)-voltage(probe.b),limited:Object.values(result.modes).some(m=>m.mode!=='Linear'),outside:Object.values(result.modes).some(m=>m.powered&&(m.commonMode<m.lo+3||m.commonMode>m.hi-3))});}return rows;
+    }
+    function plotScope(){
+      if(!analysisResult)return;const {mode,rows}=analysisResult,ac=mode==='ac',host=document.getElementById('scope-plot');host.replaceChildren();const legend=document.createElement('div');legend.className='scope-legend';for(const label of ac?['Gain / dB','Phase / °']:['Input / V','Output / V']){const s=document.createElement('span');s.textContent=label;legend.appendChild(s);}host.appendChild(legend);
+      const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 360 240');svg.setAttribute('role','img');svg.setAttribute('aria-label',ac?'Frequency response gain and phase':'Input and output voltage versus time');host.appendChild(svg);
+      const add=(tag,attrs,text)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;svg.appendChild(e);return e;},lo=ac?Math.log10(rows[0].x):rows[0].x,hi=ac?Math.log10(rows.at(-1).x):rows.at(-1).x,x=v=>44+(ac?Math.log10(v)-lo:v-lo)/(hi-lo)*274;
+      const values=ac?rows.map(r=>r.gain):rows.flatMap(r=>[r.input,r.output]);let ymin=Math.min(0,...values),ymax=Math.max(0,...values);if(ymin===ymax){ymin-=1;ymax+=1;}const margin=(ymax-ymin)*.08;ymin-=margin;ymax+=margin;const y=v=>200-(v-ymin)/(ymax-ymin)*174;
+      for(let i=0;i<5;i++){const q=ymin+(ymax-ymin)*i/4;add('line',{x1:44,x2:318,y1:y(q),y2:y(q),stroke:'#3a4a43','stroke-width':.6});add('text',{x:40,y:y(q)+3,'text-anchor':'end',fill:'#a4b5aa','font-size':9},formatNumber(q));const xx=44+274*i/4,value=ac?10**(lo+(hi-lo)*i/4):rows.at(-1).x*i/4;add('text',{x:xx,y:219,'text-anchor':'middle',fill:'#a4b5aa','font-size':9},ac?formatNumber(value):formatNumber(value*1000));}
+      for(const [key,color]of ac?[['gain','#7bd4da'],['phase','#e9b878']]:[['input','#7bd4da'],['output','#e9b878']]){const yy=key==='phase'?v=>200-(v+180)/360*174:y;add('path',{d:rows.map((r,i)=>`${i?'L':'M'}${x(r.x).toFixed(2)},${yy(r[key]).toFixed(2)}`).join(' '),stroke:color,fill:'none','stroke-width':1.7});}
+      if(ac)for(const [p,label]of [[180,'+180°'],[0,'0°'],[-180,'−180°']])add('text',{x:323,y:200-(p+180)/360*174+3,fill:'#e9b878','font-size':8},label);
+      add('text',{x:182,y:237,'text-anchor':'middle',fill:'#c8d5cb','font-size':10},ac?'Frequency / Hz · logarithmic':'Time / ms');
+      const cursor=document.getElementById('scope-cursor');cursor.max=rows.length-1;cursor.value=0;cursor.disabled=false;showScopeCursor();
+    }
+    function showScopeCursor(){if(!analysisResult)return;const r=analysisResult.rows[Number(document.getElementById('scope-cursor').value)]||analysisResult.rows[0];document.getElementById('scope-reading').textContent=analysisResult.mode==='ac'?`${formatNumber(r.x)} Hz · gain ${formatNumber(r.gain)} dB · phase ${formatNumber(r.phase)}° · out ${formatNumber(r.output)} V`:`${formatNumber(r.x*1000)} ms · in ${formatNumber(r.input)} V · out ${formatNumber(r.output)} V${r.limited?' · output limited':''}`;}
+
+
+    function exampleBase(type,rows,cols,voltage){return {format:'stripboard-dc',version:3,rows,columns:cols,voltage,boardType:type,breadboardBreak:type==='breadboard',breadboardTopology:'vertical-signal-columns',stripboardTerminals:{positiveTerminal:'0-0',negativeTerminal:pointId(rows-1,0)},positiveTerminal:'0-0',negativeTerminal:pointId(rows-1,0),cuts:[],components:[],meters:[]};}
+    function exampleParts(board){let serial=0;const add=(type,a,b,extra={},id)=>{const c={id:id||`layout-${++serial}`,type,a,b,...extra};board.components.push(c);return c;};return {add,wire:(a,b,id)=>a===b?null:add('wire',a,b,{resistance:0},id),r:(a,b,resistance,id)=>add('resistor',a,b,{resistance},id),cap:(a,b,capacitance,id)=>add('capacitor',a,b,{capacitance,initialVoltage:0},id),source:(a,b,dc,id,wave='dc',amplitude=1)=>add('source',a,b,{dc,wave,amplitude,frequency:100,phase:0,acAmplitude:wave==='dc'&&dc===-15?0:1,acPhase:0,delay:0},id)};}
+    function makeOpampExample(kind,type=boardType){
+      const bread=type==='breadboard',board=exampleBase(type,18,24,15),kit=exampleParts(board),{wire,r,cap,source}=kit;
+      const chip={id:'opamp',type:'dip8',a:bread?'7-9':'4-10',orientation:bread?'horizontal':'vertical',model:'LM741',errors:false},pins=dipPins(chip);chip.b=pins[3].point;board.components.push(chip);
+      const dynamic=['low-pass','high-pass','integrator','differentiator'].includes(kind),amplitude=kind==='differentiator'?.5:1;
+      const probe={id:'output-probe',type:'voltmeter',a:bread?'4-23':'12-23',b:'17-23'};
+      if(bread){
+        // Upper output columns feed the feedback components across the split;
+        // the lower columns carry the input, summing node and negative supply.
+        wire('0-10','1-10','op-vcc');source('15-12','17-12',-15,'negative-rail','dc',0);
+        const feedbackCap=['integrator','differentiator'].includes(kind);
+        if(feedbackCap){wire('3-11','3-15');wire('3-15','3-17');wire('14-10','14-15');wire('14-15','14-17');}else{wire('3-11','3-17');wire('14-10','14-17');}wire('3-17','3-23');
+        source('14-3','17-3',dynamic?0:1,'input-source',dynamic?'sine':'dc',amplitude);
+        const feedback=value=>r('4-17','14-17',value);
+        if(['non-inverting','low-pass','high-pass'].includes(kind)){feedback(10000);r('15-10','17-10',10000);if(kind==='non-inverting')wire('11-3','11-11');else{if(kind==='low-pass'){r('11-3','11-5',10000);cap('14-5','17-5',100e-9);}else{cap('11-3','11-5',100e-9);r('14-5','17-5',10000);}wire('12-5','12-11');}}
+        if(kind==='follower'){wire('11-3','11-11');wire('4-17','14-17');}
+        if(['inverting','summing','integrator','differentiator'].includes(kind)){wire('15-11','17-11');if(kind==='differentiator'){cap('11-3','11-5',100e-9);r('12-5','12-10',1000);feedback(10000);cap('4-15','14-15',1e-9);}else{r('11-3','11-10',10000);if(kind==='integrator'){feedback(1e7);cap('4-15','14-15',1e-6);}else feedback(kind==='summing'?10000:20000);}if(kind==='summing'){source('14-5','17-5',2,'input-source-2');r('12-5','12-10',10000);}}
+        if(kind==='difference'){source('14-5','17-5',2,'input-source-2');r('11-3','11-10',10000);feedback(20000);r('12-5','12-11',10000);r('15-11','17-11',20000);}
+      }else{
+        for(let row=4;row<=7;row++)board.cuts.push(`${row}-11`);
+        wire('0-17','5-17','op-vcc');wire('7-0','15-0','op-vminus');wire('6-18','12-18','op-output');source('15-13','17-13',-15,'negative-rail','dc',0);source('9-1','17-1',dynamic?0:1,'input-source',dynamic?'sine':'dc',amplitude);
+        if(['non-inverting','low-pass','high-pass'].includes(kind)){r('5-4','12-4',10000);r('5-3','17-3',10000);if(kind==='non-inverting')wire('6-7','9-7');else{if(kind==='low-pass'){r('9-6','11-6',10000);cap('11-5','17-5',100e-9);}else{cap('9-6','11-6',100e-9);r('11-5','17-5',10000);}wire('6-7','11-7');}}
+        if(kind==='follower'){wire('6-7','9-7');wire('5-3','12-3');}
+        if(['inverting','summing','integrator','differentiator'].includes(kind)){wire('6-8','17-8');if(kind==='differentiator'){cap('9-6','11-6',100e-9);r('5-2','11-2',1000);r('5-4','12-4',10000);cap('5-6','12-6',1e-9);}else{r('5-2','9-2',10000);if(kind==='integrator'){cap('5-6','12-6',1e-6);r('5-4','12-4',1e7);}else r('5-4','12-4',kind==='summing'?10000:20000);}if(kind==='summing'){source('11-15','17-15',2,'input-source-2');r('5-6','11-6',10000);}}
+        if(kind==='difference'){source('11-15','17-15',2,'input-source-2');r('5-2','9-2',10000);r('5-4','12-4',20000);r('6-7','11-7',10000);r('6-9','17-9',20000);}
+      }
+      board.meters=[probe,{id:'example-scope',type:'scope',a:bread?'4-21':'12-20',b:bread?'17-21':'17-20',...defaultScopeSettings(),source:'input-source',mode:['low-pass','high-pass'].includes(kind)?'ac':dynamic?'transient':'dc'}];
+      // Separate probe columns share the upper output via its contact track.
+      if(bread){wire('2-23','2-21');}return board;
+    }
+    function makePassiveExample(kind,type=boardType){
+      const bread=type==='breadboard',board=exampleBase(type,10,18,9),{add,wire,r}=exampleParts(board);
+      if(kind==='series'){
+        if(bread){wire('0-4','1-4');r('3-4','6-4',1000,'example-r1');r('7-4','7-9',2000,'example-r2');board.meters=[{id:'example-a1',type:'ammeter',a:'8-9',b:'9-9'},{id:'example-v1',type:'voltmeter',a:'6-4',b:'9-4'}];}
+        else{board.positiveTerminal='1-0';board.negativeTerminal='1-17';board.stripboardTerminals={positiveTerminal:'1-0',negativeTerminal:'1-17'};board.cuts=['1-5','1-11','1-15'];r('1-3','1-7',1000,'example-r1');r('1-9','1-13',2000,'example-r2');wire('1-17','4-17');board.meters=[{id:'example-a1',type:'ammeter',a:'1-14',b:'1-16'},{id:'example-v1',type:'voltmeter',a:'1-8',b:'4-8'}];}
+      }else if(kind==='parallel'){
+        if(bread){board.breadboardBreak=false;r('0-3','2-3',1000,'example-r1');r('0-12','2-12',2000,'example-r2');board.meters=[{id:'example-a1',type:'ammeter',a:'8-3',b:'9-3'},{id:'example-a2',type:'ammeter',a:'8-12',b:'9-12'},{id:'example-v1',type:'voltmeter',a:'0-7',b:'9-7'}];}
+        else{board.positiveTerminal='1-0';board.negativeTerminal='8-0';board.stripboardTerminals={positiveTerminal:'1-0',negativeTerminal:'8-0'};r('1-3','3-3',1000,'example-r1');r('1-12','5-12',2000,'example-r2');board.meters=[{id:'example-a1',type:'ammeter',a:'3-3',b:'8-3'},{id:'example-a2',type:'ammeter',a:'5-12',b:'8-12'},{id:'example-v1',type:'voltmeter',a:'1-7',b:'8-7'}];}
+      }else{
+        const switched=kind==='switch',diode=kind==='diode',partType=diode?'diode':'led',extra=diode?{forwardVoltage:.7}:{forwardVoltage:2,colour:'red'};
+        if(bread){r('0-3','2-3',1000,'led-demo-r');if(switched)add('switch','3-3','3-6',{closed:false},'switch-demo');else wire('3-3','3-6');add(partType,'4-6','6-6',extra,'led-demo-led');wire('8-6','9-6');wire('4-6','4-10');wire('6-6','6-10');board.meters=[{id:'led-demo-v',type:'voltmeter',a:'4-10',b:'6-10'}];}
+        else{board.positiveTerminal='1-0';board.negativeTerminal='8-0';board.stripboardTerminals={positiveTerminal:'1-0',negativeTerminal:'8-0'};r('1-5',switched?'3-5':'4-5',1000,'led-demo-r');if(switched)add('switch','3-5','5-5',{closed:false},'switch-demo');add(partType,switched?'5-5':'4-5','8-5',extra,'led-demo-led');board.meters=[{id:'led-demo-v',type:'voltmeter',a:switched?'5-10':'4-10',b:'8-10'}];}
+      }return board;
+    }
+    function loadExample(kind){actionHistory.push({type:'snapshot',board:boardData()});restoreBoard(makePassiveExample(kind));showMessage(kind==='series'?'Series example: 3 mA through both resistors and A1; 6 V across R2. Undo restores your board.':'Parallel example: 9 mA and 4.5 mA branches; total 13.5 mA. Undo restores your board.');}
+    function loadLEDExample(type='led'){actionHistory.push({type:'snapshot',board:boardData()});restoreBoard(makePassiveExample(type));selectComponent('led-demo-led');showMessage(`${type==='diode'?'Diode':'LED'} example: 9 V through 1 kΩ. Components share the board contacts; all leads are straight.`);}
+    function loadSwitchExample(){actionHistory.push({type:'snapshot',board:boardData()});restoreBoard(makePassiveExample('switch'));selectComponent('switch-demo');showMessage('Switch + LED: enter Simulate and click the switch. Undo restores your board.');}
+    function makeDigitalExample(modelId,type=boardType){
+      const bread=type==='breadboard',model=IC_MODELS[modelId],isGate=modelId==='74x08',board=exampleBase(type,bread?22:18,26,5),kit=exampleParts(board),{add,wire,r}=kit;
+      const chip={id:isGate?'ic-demo':'seq-demo',type:'dip'+model.packagePins,a:bread?'9-7':'4-11',orientation:bread?'horizontal':'vertical',model:modelId},pins=dipPins(chip);chip.b=pins[model.packagePins/2-1].point;board.components.push(chip);
+      const pin=n=>pins[n-1].point,half=model.packagePins/2,ground=board.rows-1,groups={};
+      if(!bread)for(let row=4;row<4+half;row++)board.cuts.push(`${row}-12`);
+      // Collect power/fixed inputs into short buses in each native bank. No
+      // wire is stretched diagonally from an IC leg to a distant rail corner.
+      const fixed=(n,high)=>{const p=pointFromId(pin(n)),bank=bread?(p.row<11?'upper':'lower'):(p.col<12?'left':'right'),key=bank+(high?'+':'-');(groups[key]??=[]).push(n);};
+      fixed(model.vcc,true);fixed(model.gnd,false);
+      let control=0;
+      const switched=(id,n,pullHigh,closed)=>{
+        const p=pointFromId(pin(n)),label=id.includes('reset')?'RESET':id.includes('clock')?'CLOCK':id.includes('data')?'DATA':`IN ${n}`;
+        if(bread){const upper=p.row<11,base=upper?1:12,rail=upper?2:24,pullRow=base+control*2,switchRow=pullRow+1;control++;
+          r(pointId(pullRow,p.col),pointId(pullRow,pullHigh?rail:0),10000,id+'-pull');add('switch',pointId(switchRow,p.col),pointId(switchRow,pullHigh?0:rail),{closed,name:label},id);
+          // Each polarity column is fed once and then shared by its contacts.
+          const bank=upper?'upper':'lower';groups[bank+'+bus']=true;groups[bank+'-bus']=true;
+        }else{const left=p.col<12,base=left?1:15,pullCol=base+(left?control*2:0),switchCol=pullCol+1;control++;
+          r(pointId(p.row,pullCol),pointId(pullHigh?0:ground,pullCol),10000,id+'-pull');add('switch',pointId(p.row,switchCol),pointId(pullHigh?ground:0,switchCol),{closed,name:label},id);
+        }
+      };
+      if(isGate){for(const n of [4,5,9,10,12,13])fixed(n,false);for(const n of [1,2])switched('ic-switch-'+n,n,false,false);}
+      else if(model.units){const u=model.units[0],unused=model.units[1];fixed(u.pre,true);switched('seq-reset',u.clear,true,true);switched('seq-clock',u.clock,false,false);if(u.d)switched('seq-data',u.d,false,false);else{fixed(u.j,true);fixed(u.k,true);}fixed(unused.pre,true);fixed(unused.clear,false);fixed(unused.clock,false);if(unused.d)fixed(unused.d,false);else{fixed(unused.j,false);fixed(unused.k,false);}}
+      else{switched('seq-reset',2,false,true);fixed(6,false);fixed(7,false);switched('seq-clock',14,false,true);
+        if(bread){const a=pointFromId(pin(2)),b=pointFromId(pin(3));wire(pointId(19,a.col),pointId(19,b.col),'seq-reset-pair');const qa=pointFromId(pin(12)),ckb=pointFromId(pin(1));wire(pointId(3,qa.col),pointId(3,20));wire('5-20','14-20');wire(pointId(14,ckb.col),'14-20','seq-decade-link');}
+        else{const a=pointFromId(pin(2)),b=pointFromId(pin(3));wire(pointId(a.row,6),pointId(b.row,6),'seq-reset-pair');const qa=pointFromId(pin(12)),ckb=pointFromId(pin(1));wire(pointId(qa.row,16),'14-16');wire(pointId(ckb.row,8),'14-8');wire('14-8','14-16','seq-decade-link');}
+      }
+      for(const [key,list]of Object.entries(groups)){
+        if(key.endsWith('bus'))continue;const high=key.endsWith('+'),bank=key.slice(0,-1);
+        if(bread){const row=bank==='upper'?(high?3:5):(high?(model.kind==='counter90'?15:18):20),bus=high?(bank==='upper'?2:24):0,cols=[...new Set(list.map(n=>pointFromId(pin(n)).col))].sort((a,b)=>a-b),points=[bus,...cols].sort((a,b)=>a-b);for(let i=1;i<points.length;i++)wire(pointId(row,points[i-1]),pointId(row,points[i]));groups[bank+(high?'+bus':'-bus')]=true;}
+        else{const col=bank==='left'?(high?9:0):(high?23:25),rows=[...new Set(list.map(n=>pointFromId(pin(n)).row))].sort((a,b)=>a-b);for(let i=1;i<rows.length;i++)wire(pointId(rows[i-1],col),pointId(rows[i],col));wire(pointId(rows[high?0:rows.length-1],col),pointId(high?0:ground,col));}
+      }
+      if(bread){if(groups['upper+bus'])wire('0-2','1-2');if(groups['lower+bus'])wire('0-24','12-24');if(groups['upper-bus'])wire('5-0','21-0');if(groups['lower-bus'])wire('12-0','21-0');}
+      const outputs=isGate?[3]:model.kind==='counter90'?model.outputPins:[model.units[0].q];
+      outputs.forEach((n,i)=>{
+        const p=pointFromId(pin(n)),id=isGate?'ic-led':`seq-led-${i}`,value=model.family==='LS'?10000:1000;
+        if(bread){const upper=p.row<11,endCol=17+i*2;if(upper){wire(pointId(2+i,p.col),pointId(2+i,endCol));add('led',pointId(5,endCol),pointId(14,endCol),{colour:'red',forwardVoltage:2},id);r(pointId(16,endCol),pointId(21,endCol),value,id+'-r');}else{add('led',pointId(19,p.col),pointId(19,17),{colour:'red',forwardVoltage:2},id);r('19-17','21-17',value,id+'-r');}}
+        else{const col=p.col<12?8:18+i*2;const end=pointId(13,col);board.cuts.push(end);add('led',pointId(p.row,col),end,{colour:'red',forwardVoltage:2},id);r(end,pointId(ground,col),value,id+'-r');}
+      });
+      const first=pointFromId(pin(outputs[0]));if(bread){const upper=first.row<11;if(upper){wire(pointId(1,first.col),'1-25');board.meters=[{id:isGate?'ic-output-v':'seq-output-v',type:'voltmeter',a:'4-25',b:'21-25'}];}else board.meters=[{id:isGate?'ic-output-v':'seq-output-v',type:'voltmeter',a:pointId(20,first.col),b:pointId(21,first.col)}];}
+      else board.meters=[{id:isGate?'ic-output-v':'seq-output-v',type:'voltmeter',a:pointId(first.row,first.col<12?10:16),b:pointId(ground,first.col<12?10:16)}];
+      return board;
+    }
+    function loadICExample(){actionHistory.push({type:'snapshot',board:boardData()});restoreBoard(makeDigitalExample('74x08'));selectComponent('ic-demo');showMessage('74x08: two straight switch/pull-down lanes drive gate 1. Close both input switches in Simulate.');}
+    function loadSequentialExample(modelId){actionHistory.push({type:'snapshot',board:boardData()});restoreBoard(makeDigitalExample(modelId));selectComponent('seq-demo');showMessage(modelId==='74x74'?'D flip-flop: release RESET, set DATA, then close CLOCK to capture.':modelId==='74HC76'?'JK flip-flop: release RESET, then close and open CLOCK to toggle.':'Decade counter: release RESET, then close/open CLOCK for each count. QA is linked to CKB through a separate track.');}
+
+    let activeScopeId='',scopeRefreshQueued=false,scopeRefreshTimer=null,showACFlow=true;
+    let toolkitTab='tools',editorTab='board';
+    function defaultScopeSettings(){return {mode:'auto',source:'auto',duration:40,steps:1600,initial:true,fmin:1,fmax:100000};}
+    function cleanScopePart(c){const defaults=defaultScopeSettings();return {id:c.id,type:'scope',a:c.a,b:c.b,...Object.fromEntries(Object.keys(defaults).map(k=>[k,c[k]??defaults[k]]))};}
+    function validateScopePart(c){if(c.type!=='scope')return;const d=cleanScopePart(c),number=(v,min,max)=>Number.isFinite(v)&&v>=min&&v<=max;if(!['auto','dc','transient','ac'].includes(d.mode)||typeof d.source!=='string'||d.source.length>200||!number(d.duration,.001,10000)||!Number.isInteger(d.steps)||!number(d.steps,100,4000)||typeof d.initial!=='boolean'||!number(d.fmin,.001,1e7)||!number(d.fmax,.001,1e7)||d.fmax<=d.fmin)throw new Error('Invalid oscilloscope settings. Check duration, samples and frequency limits.');}
+    function updateBuildContext(){
+      const build=workbenchMode==='build',componentSelected=[...components,...meters].some(c=>c.id===selectedComponent);
+      document.getElementById('building-tools-panel').hidden=!build||toolkitTab!=='tools';
+      document.getElementById('toolkit-board-panel').hidden=!build||toolkitTab!=='board';
+      document.getElementById('toolkit-supply-panel').hidden=!build||toolkitTab!=='supply';
+      document.getElementById('project-panel').hidden=!build||editorTab!=='project';
+      document.getElementById('properties-panel').hidden=!build||editorTab!=='board'||!componentSelected;
+      document.getElementById('board-parts-panel').hidden=!build||editorTab!=='board'||componentSelected;
+      for(const [id,value]of [['show-tools','tools'],['show-board-properties','board'],['show-supply-properties','supply']]){
+        const button=document.getElementById(id),active=toolkitTab===value;button.classList.toggle('active-context',active);button.setAttribute('aria-pressed',String(active));
+      }
+      for(const [id,value]of [['show-board-editor','board'],['show-project','project']]){
+        const button=document.getElementById(id),active=editorTab===value;button.classList.toggle('active-context',active);button.setAttribute('aria-pressed',String(active));
+      }
+    }
+    function showToolkitTab(tab){
+      finishComponentDrag(null,true);if(workbenchMode!=='build')setWorkbenchMode('build');toolkitTab=tab;firstPoint=null;hoverPoint=null;activeTool='select';render();
+    }
+    function showEditorTab(tab){
+      finishComponentDrag(null,true);if(workbenchMode!=='build')setWorkbenchMode('build');editorTab=tab;render();
+    }
+    function scopeSource(c){if(c.source&&c.source!=='auto')return c.source;const signals=components.filter(c=>c.type==='source');return (signals.find(c=>isACSource(c))||signals.find(c=>c.wave==='step'&&c.amplitude>0)||signals.find(c=>c.acAmplitude>0)||signals[0])?.id||'ic:bench';}
+    function scopeMode(c){if(c.mode!=='auto')return c.mode;const source=components.find(s=>s.id===scopeSource(c));return source&&source.wave!=='dc'&&source.amplitude>0?'transient':'dc';}
+    function currentScope(){return meters.find(c=>c.id===activeScopeId&&c.type==='scope');}
+    function setScopeFields(c){if(!c)return;document.getElementById('analysis-mode').value=c.mode;document.getElementById('analysis-source').value=c.source;document.getElementById('analysis-duration').value=c.duration;document.getElementById('analysis-steps').value=c.steps;document.getElementById('analysis-zero').checked=c.initial;document.getElementById('analysis-fmin').value=c.fmin;document.getElementById('analysis-fmax').value=c.fmax;document.getElementById('time-settings').hidden=!['transient','auto'].includes(c.mode);document.getElementById('frequency-settings').hidden=c.mode!=='ac';}
+    function renderScopeProperties(c){const panel=document.getElementById('scope-properties');panel.hidden=c?.type!=='scope';if(panel.hidden)return;refreshScopeSources();setScopeFields(c);}
+    function refreshScopeSources(){const select=document.getElementById('analysis-source'),list=[['auto','Automatic · waveform / signal'],['ic:bench','Bench supply'],...components.filter(c=>c.type==='source').map(c=>[c.id,`${componentLabel(c)} · ${c.dc} V · ${c.wave}`])],key=JSON.stringify(list);if(select.dataset.choices===key)return;const old=select.value;select.dataset.choices=key;select.replaceChildren();for(const [value,label]of list){const o=document.createElement('option');o.value=value;o.textContent=label;select.appendChild(o);}select.value=list.some(i=>i[0]===old)?old:'auto';}
+    function refreshAnalysisChoices(){
+      refreshScopeSources();const select=document.getElementById('analysis-scope'),scopes=meters.filter(c=>c.type==='scope'),key=JSON.stringify(scopes.map(c=>[c.id,c.a,c.b,c.mode]));
+      if(!scopes.some(c=>c.id===activeScopeId))activeScopeId=scopes[0]?.id||'';
+      if(select.dataset.choices!==key){select.dataset.choices=key;select.replaceChildren();for(const c of scopes){const o=document.createElement('option');o.value=c.id;o.textContent=`${componentLabel(c)} · ${locationLabel(c.a)} − ${locationLabel(c.b)}`;select.appendChild(o);}}
+      select.value=activeScopeId;select.disabled=!scopes.length;document.getElementById('run-analysis').disabled=analysisRunning||!scopes.length;
+      const c=currentScope();document.getElementById('scope-selection-note').textContent=c?`${componentLabel(c)} · ${scopeMode(c)==='ac'?'Frequency response':scopeMode(c)==='dc'?'Live DC':`${c.duration} ms waveform`}. Click the scope in Build to change its settings.`:'Place a Scope in Build mode. Probe + is the signal; probe − is its reference.';
+      if(!c){analysisResult=null;document.getElementById('scope-plot').replaceChildren();document.getElementById('scope-cursor').disabled=true;document.getElementById('scope-reading').textContent='Place a Scope on the board to measure a signal.';document.getElementById('scope-state').textContent='NO SCOPE';}
+      else if(workbenchMode==='simulation'&&scopeMode(c)==='dc')showScopeDC(c);
+    }
+    function updateAnalysisMode(){const c=meters.find(c=>c.id===selectedComponent&&c.type==='scope');if(c)setScopeFields(c);document.getElementById('run-analysis').textContent='Refresh scope';}
+    function selectActiveScope(id,refresh=true){if(!meters.some(m=>m.id===id&&m.type==='scope'))return;activeScopeId=id;document.getElementById('analysis-scope').value=id;analysisResult=null;document.getElementById('scope-plot').replaceChildren();document.getElementById('scope-cursor').disabled=true;if(refresh)queueScopeRefresh();}
+    function queueScopeRefresh(){if(workbenchMode!=='simulation'||!currentScope())return;if(analysisRunning){scopeRefreshQueued=true;return;}clearTimeout(scopeRefreshTimer);scopeRefreshTimer=setTimeout(()=>{scopeRefreshTimer=null;if(workbenchMode==='simulation')runAnalogAnalysis();},0);}
+    function showScopeDC(c){
+      const voltage=meterVoltage(c);if(voltage===null){analysisResult=null;document.getElementById('scope-state').textContent='FLOATING';document.getElementById('scope-plot').replaceChildren();document.getElementById('scope-cursor').disabled=true;document.getElementById('scope-reading').textContent=`${componentLabel(c)} probes are floating / undefined.`;return;}
+      const source=components.find(s=>s.id===scopeSource(c)),input=source?source.dc:SUPPLY_VOLTAGE;
+      analysisResult={scopeId:c.id,mode:'dc',rows:[{x:0,input,output:voltage},{x:c.duration/1000,input,output:voltage}]};analysisFingerprint=analogFingerprint();document.getElementById('scope-title').textContent=`${componentLabel(c)} · live DC`;document.getElementById('scope-state').textContent='LIVE';document.getElementById('scope-notes').textContent='Live voltage between this scope’s probes. Change its analysis in Build to see a waveform or frequency response.';plotScope();document.getElementById('scope-cursor').disabled=true;document.getElementById('scope-reading').textContent=`${componentLabel(c)} · ${formatNumber(voltage)} V · ${locationLabel(c.a)} − ${locationLabel(c.b)}`;
+    }
+    async function runAnalogAnalysis(){
+      if(analysisRunning){scopeRefreshQueued=true;return;}const scope=currentScope();if(!scope){showMessage('Place a Scope in Build mode, then select it here.');return;}const config=cleanScopePart(scope),mode=scopeMode(scope),source=scopeSource(scope),fingerprint=analogFingerprint();if(mode==='dc'){showScopeDC(scope);return;}
+      const button=document.getElementById('run-analysis');analysisRunning=true;button.disabled=true;button.textContent='Calculating…';await new Promise(resolve=>setTimeout(resolve,20));
+      try{
+        if(workbenchMode!=='simulation'||fingerprint!==analogFingerprint()||activeScopeId!==config.id){scopeRefreshQueued=true;return;}
+        if(components.some(c=>isIC(c)&&c.model&&c.model!=='LM741'))throw new Error('Waveform / frequency analysis currently supports analog parts and LM741s. Use Automatic or DC for live digital logic voltages.');
+        if(solution.status==='error'||solution.status==='short')throw new Error('Resolve the DC circuit error before running this scope.');
+        const sys=createAnalogSystem(),point=solveAnalogPoint(sys),probe={a:config.a,b:config.b};
+        if(!sys.sources.some(s=>s.id===source))throw new Error('This scope’s input source was removed. Select another source in Build.');
+        if(sys.amps.some(o=>[1,2].some(k=>getVoltage(o.p[k],latestNodes)===null)))throw new Error('The LM741 input pins are floating. Wire their reference first.');if(sys.amps.some(o=>!point.modes[o.c.id].powered))throw new Error('Wire the LM741 supplies first. Examples use ±15 V.');if(sys.size>100)throw new Error('Scope analysis supports up to 100 electrical unknowns. Reduce separate nets or sources.');
+        let rows,notes='';if(mode==='ac'){rows=analyzeAC(sys,source,probe,config.fmin,config.fmax,160,point);notes='Small-signal output / selected input source. Only that source is excited; other sources have zero AC voltage. Phase uses the right axis. Clipping and slew are not represented.';if(Object.values(point.modes).some(m=>m.mode!=='Linear'))notes+=' The DC output is saturated; this linear preview is outside a valid small-signal operating point.';}
+        else{const duration=config.duration/1000,signal=components.find(c=>c.id===source),cycles=duration*(signal?.frequency||0);if(signal&&signal.wave!=='dc'&&signal.wave!=='step'&&config.steps<cycles*40)throw new Error('Increase this scope’s samples or shorten its duration: use at least 40 samples per input cycle.');rows=analyzeTime(sys,source,probe,duration,config.steps,config.initial,point);notes=`Time step ${formatNumber(duration/config.steps*1e6)} µs. Board readings remain DC.${rows.some(r=>r.limited)?' Trace includes output limiting.':''}${rows.some(r=>r.outside)?' Some samples exceed the LM741 input common-mode range.':''}`;}
+        analysisResult={scopeId:config.id,mode,rows};analysisFingerprint=fingerprint;document.getElementById('scope-state').textContent=mode==='ac'?'AC':'TIME';document.getElementById('scope-title').textContent=`${componentLabel(scope)} · ${mode==='ac'?'frequency response':'waveform'}`;document.getElementById('scope-notes').textContent=notes;plotScope();
+      }catch(e){analysisResult=null;document.getElementById('scope-state').textContent='CHECK PROBES';document.getElementById('scope-plot').replaceChildren();document.getElementById('scope-cursor').disabled=true;document.getElementById('scope-reading').textContent=e.message;showMessage(e.message);}
+      finally{solveCircuit();analysisRunning=false;button.disabled=!currentScope();button.textContent='Refresh scope';if(scopeRefreshQueued){scopeRefreshQueued=false;queueScopeRefresh();}}
+    }
+    function initializeScopeControls(){
+      document.getElementById('show-tools').addEventListener('click',()=>showToolkitTab('tools'));document.getElementById('show-board-properties').addEventListener('click',()=>showToolkitTab('board'));document.getElementById('show-supply-properties').addEventListener('click',()=>showToolkitTab('supply'));
+      document.getElementById('show-board-editor').addEventListener('click',()=>showEditorTab('board'));document.getElementById('show-project').addEventListener('click',()=>showEditorTab('project'));
+      document.getElementById('analysis-scope').addEventListener('change',e=>selectActiveScope(e.target.value,true));document.getElementById('run-analysis').addEventListener('click',runAnalogAnalysis);document.getElementById('show-ac-flow').addEventListener('change',e=>{showACFlow=e.target.checked;renderVisuals();});
+      const fields={mode:'analysis-mode',source:'analysis-source',duration:'analysis-duration',steps:'analysis-steps',initial:'analysis-zero',fmin:'analysis-fmin',fmax:'analysis-fmax'};
+      for(const [key,id]of Object.entries(fields)){const field=document.getElementById(id);field.addEventListener('change',()=>{const c=meters.find(c=>c.id===selectedComponent&&c.type==='scope');if(!c||workbenchMode!=='build')return;const value=key==='initial'?field.checked:['mode','source'].includes(key)?field.value:field.value.trim()===''?NaN:Number(field.value),next={...c,[key]:value};try{validateScopePart(next);actionHistory.push({type:'snapshot',board:boardData()});Object.assign(c,next);render();}catch(e){setScopeFields(c);showMessage(e.message);}});if(field.tagName==='INPUT'&&field.type!=='checkbox')field.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();field.dispatchEvent(new Event('change'));}});}
+    }
+    function initializeAnalogControls(){document.getElementById('load-opamp-example').addEventListener('click',loadOpampExample);document.getElementById('opamp-errors').addEventListener('change',e=>{const c=components.find(c=>c.id===selectedComponent&&c.model==='LM741');if(c&&workbenchMode==='build'){actionHistory.push({type:'snapshot',board:boardData()});c.errors=e.target.checked;render();}});document.getElementById('scope-cursor').addEventListener('input',showScopeCursor);initializeScopeControls();}
+    function isACSource(c){return c.type==='source'&&['sine','square'].includes(c.wave)&&(c.amplitude??1)>0;}
+    function addACFlow(c,index=0){
+      if(workbenchMode!=='simulation'||!showACFlow||!showComponentFlow)return;
+      const pa=pointFromId(c.a),pb=pointFromId(c.b),a={x:pa.col*PITCH+HOLE_OFFSET,y:pa.row*PITCH+HOLE_OFFSET},b={x:pb.col*PITCH+HOLE_OFFSET,y:pb.row*PITCH+HOLE_OFFSET},dx=b.x-a.x,dy=b.y-a.y,angle=Math.atan2(dy,dx)*180/Math.PI;
+      const root=document.createElement('span');root.className='ac-flow-indicator';root.dataset.source=c.id;root.style.left=`${a.x+dx*.25}px`;root.style.top=`${a.y+dy*.25}px`;root.style.transform=`translate(-50%,-50%) rotate(${angle}deg)`;root.setAttribute('aria-label','Alternating source drive indicator');root.title='AC drive indication; not an instantaneous branch current reading';const forward=document.createElement('span'),reverse=document.createElement('span');forward.className='ac-forward';reverse.className='ac-reverse';forward.textContent='››';reverse.textContent='‹‹';root.append(forward,reverse);layer.appendChild(root);
+    }
+
     function initializeWorkbench() {
       initializeModes();
+      initializeAnalogControls();
       document.getElementById('series-example').textContent = 'Series + cuts';
       document.getElementById('series-example').addEventListener('click', () => loadExample('series'));
       document.getElementById('parallel-example').addEventListener('click', () => loadExample('parallel'));
