@@ -1,917 +1,425 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Circuit Quiz Game</title>
-    <style>
-        body {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .header h1 {
-            color: #4a5568;
-            margin: 0 0 10px 0;
-            font-size: 2.5rem;
-        }
-        
-        .difficulty-toggle {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0 10px 0;
-        }
-        
-
-        
-        .btn-toggle {
-            padding: 10px 20px;
-            border: 2px solid #4299e1;
-            border-radius: 25px;
-            background: white;
-            color: #4299e1;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-toggle:hover {
-            background: #ebf8ff;
-            transform: translateY(-1px);
-        }
-        
-        .btn-toggle.active {
-            background: #4299e1;
-            color: white;
-        }
-        
-        .difficulty-info {
-            text-align: center;
-            color: #718096;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-        
-        .score-board {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        
-        .score-item {
-            background: #f7fafc;
-            padding: 15px 25px;
-            border-radius: 12px;
-            text-align: center;
-            border: 2px solid #e2e8f0;
-        }
-        
-        .score-number {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #4299e1;
-        }
-        
-        .game-area {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .circuit-panel {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            border: 2px solid #e9ecef;
-        }
-        
-        .question-panel {
-            background: #f8f9fa;
-            border-radius: 15px;
-            padding: 25px;
-            border: 2px solid #e9ecef;
-        }
-        
-        .circuit-svg {
-            width: 100%;
-            height: 300px;
-            border: 1px solid #dee2e6;
-            border-radius: 10px;
-            background: white;
-        }
-        
-        .question-text {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
-            color: #2d3748;
-            font-weight: 500;
-        }
-        
-        .answer-input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            margin-bottom: 15px;
-            transition: border-color 0.3s;
-        }
-        
-        .answer-input:focus {
-            outline: none;
-            border-color: #4299e1;
-        }
-        
-        .btn {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-right: 10px;
-        }
-        
-        .btn-primary {
-            background: #4299e1;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background: #3182ce;
-            transform: translateY(-2px);
-        }
-        
-        .btn-secondary {
-            background: #718096;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background: #4a5568;
-            transform: translateY(-2px);
-        }
-        
-        .feedback {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 8px;
-            font-weight: 500;
-        }
-        
-        .feedback.correct {
-            background: #c6f6d5;
-            color: #22543d;
-            border: 1px solid #9ae6b4;
-        }
-        
-        .feedback.incorrect {
-            background: #fed7d7;
-            color: #742a2a;
-            border: 1px solid #fc8181;
-        }
-        
-        .circuit-info {
-            margin-top: 15px;
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-        }
-        
-        .resistor-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .resistor-item {
-            background: #edf2f7;
-            padding: 8px 12px;
-            border-radius: 6px;
-            text-align: center;
-            font-weight: 500;
-        }
-        
-        @media (max-width: 768px) {
-            .game-area {
-                grid-template-columns: 1fr;
-            }
-            
-            .score-board {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resistor Circuit Challenge | Engineering Share</title>
+<style>
+:root{--blue:#3467d5;--deep:#233862;--ink:#243044;--muted:#617188;--line:#dfe6ef;--pale:#f4f7fc;--green:#138453;--red:#b52d3f;--radius:16px}
+*{box-sizing:border-box}
+body{margin:0;padding:20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:var(--ink);background:linear-gradient(135deg,#6476da,#7454a8);min-height:100vh}
+.page{max-width:1250px;margin:auto}.back{display:inline-block;background:#111827;color:white;text-decoration:none;padding:9px 14px;border-radius:9px;font-weight:600;font-size:14px;margin-bottom:12px}
+.shell{background:white;border-radius:20px;padding:30px;box-shadow:0 18px 42px #17255423}
+h1,h2,h3,p{margin-top:0}h1{font-size:clamp(1.65rem,3vw,2.5rem);letter-spacing:-.03em;margin-bottom:7px}h2{font-size:1.45rem}h3{font-size:1.05rem;margin-bottom:14px}.muted{color:var(--muted)}.header{text-align:center;margin:2px 0 25px}.header p{margin:0;font-size:1rem}
+[hidden]{display:none!important}
+.section{background:var(--pale);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:20px}
+.section-title{font-size:1.07rem;font-weight:750;margin-bottom:13px;color:var(--deep)}.subtitle{font-size:13px;color:var(--muted)}
+.levels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.level-card{border:2px solid var(--line);border-radius:13px;background:#fff;padding:16px 12px;text-align:left;cursor:pointer;color:var(--ink);font:inherit;min-height:128px;transition:background .15s,border-color .15s,transform .15s}
+.level-card strong{display:block;font-size:1.03rem;margin-bottom:6px}.level-card span{font-size:.84rem;line-height:1.45;color:var(--muted);display:block}.level-card:hover{border-color:#96b0eb;transform:translateY(-2px)}.level-card.selected{border-color:var(--blue);background:#edf3ff;box-shadow:0 0 0 1px #3467d555}
+.choice-row{display:flex;flex-wrap:wrap;gap:10px}.choice{border:1.5px solid var(--line);background:white;border-radius:10px;padding:10px 17px;cursor:pointer;font-weight:700;color:var(--ink);font:inherit}.choice.selected{background:#edf3ff;border-color:var(--blue);color:#164aab}
+.btn{border:0;border-radius:10px;padding:12px 19px;font-size:1rem;font-weight:700;cursor:pointer;transition:background .15s,transform .15s}.btn:hover:not(:disabled){transform:translateY(-1px)}.btn:disabled{opacity:.45;cursor:default}.btn-primary{background:var(--blue);color:white}.btn-primary:hover:not(:disabled){background:#204eb6}.btn-secondary{background:#e7edf6;color:var(--deep)}.btn-secondary:hover:not(:disabled){background:#d7e2f3}.btn-light{background:white;color:var(--deep);border:1px solid var(--line)}.btn-small{padding:9px 14px;font-size:.9rem}
+.action-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.start-row{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}.start-row .btn{min-width:185px}.details{margin-bottom:20px;border-radius:14px;border:1px solid var(--line);background:white}.details summary{padding:16px 19px;cursor:pointer;color:var(--deep);font-weight:750;list-style-position:inside}.details summary:hover{background:#f8faff}.details-body{padding:0 19px 18px}.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.check-grid{display:flex;flex-wrap:wrap;gap:10px 18px;margin:12px 0}.check-option{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:500}.check-option input{width:17px;height:17px;accent-color:var(--blue)}select{padding:9px 12px;border:1px solid #b9c8dd;border-radius:8px;background:white;font:inherit;color:var(--ink);max-width:100%}.setting-foot{margin:10px 0 0;font-size:.85rem;color:var(--muted)}
+.warning{padding:11px 13px;border-radius:9px;background:#fff4e5;border:1px solid #efbd71;color:#865315;margin-top:12px;font-size:.9rem}
+.game-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:15px}.game-meta{font-size:.88rem;color:var(--muted)}.game-top h2{margin:3px 0 0}.progress-track{background:#e4eafa;height:9px;border-radius:9px;overflow:hidden;margin-bottom:18px}.progress-fill{background:var(--blue);width:0;height:100%;border-radius:9px;transition:width .22s}
+.score-board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}.score-item{text-align:center;border:1px solid var(--line);background:#f8faff;border-radius:12px;padding:11px 8px}.score-item strong{font-size:1.5rem;color:var(--blue);display:block}.score-item span{color:var(--muted);font-size:.78rem}
+.game-area{display:grid;grid-template-columns:minmax(0,2.1fr) minmax(325px,1fr);gap:20px}.game-area.expanded{grid-template-columns:1fr}.game-area.expanded .panel:first-child{grid-column:1}.panel{min-width:0;background:#f8fafc;border:1px solid var(--line);padding:19px;border-radius:var(--radius)}
+.diagram-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:13px}.diagram-heading h3{margin:0}.diagram-heading .btn{padding:6px 10px;font-size:.78rem}.circuit-scroller{width:100%;max-width:100%;overflow-x:auto;background:#fff;border:1px solid #dbe2ed;border-radius:11px}.circuit-svg{width:100%;height:auto;display:block;background:white}.diagram-hint{color:var(--muted);font-size:.83rem;margin-top:7px}
+.circuit-info{background:white;border:1px solid var(--line);padding:12px 14px;border-radius:9px;margin-top:12px}.circuit-info-header{font-weight:750;font-size:.88rem}.resistor-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:8px;margin-top:10px}.resistor-item{background:#edf2f8;padding:7px;border-radius:7px;text-align:center;font-weight:600;font-size:.88rem}.resistor-item.focus{color:#09744b;background:#dcfbea;outline:1px solid #13a56a}
+.question-text{font-size:1.14rem;line-height:1.5;font-weight:670;margin-bottom:18px;color:#273c58}.answer-row{display:flex;gap:9px;margin-bottom:12px}.answer-input{min-width:0;width:100%;flex:1;border:2px solid #d0dcec;border-radius:9px;padding:12px 13px;font:inherit;font-size:1.1rem}.answer-input:focus{outline:none;border-color:var(--blue)}.answer-unit{display:grid;place-items:center;min-width:57px;background:#e9eef7;color:#2e405a;border-radius:9px;font-weight:800;padding:10px}.question-actions{display:flex;flex-wrap:wrap;gap:9px}.question-actions .btn{font-size:.93rem;padding:11px 14px}
+.hints-box{margin-top:17px;padding-top:14px;border-top:1px solid var(--line)}.hint-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.hint-header p{margin:0;font-size:.88rem;color:var(--muted)}.hint-line{background:#fffbea;border:1px solid #f2dc9f;border-radius:9px;padding:10px 13px;margin-top:9px;font-size:.9rem}.feedback{margin-top:16px;border-radius:10px;padding:13px 14px;font-weight:600}.feedback.correct{color:#145c3d;background:#def8e9;border:1px solid #86d7b0}.feedback.incorrect{color:#973343;background:#fce8e8;border:1px solid #e8a9b0}.feedback.skipped{background:#eef2f6;color:#46566a;border:1px solid #cad4e0}
+.solution-card{margin-top:12px;border:1px solid #c7d7ec;background:white;border-radius:11px;padding:15px}.solution-card h4{margin:0 0 11px;color:#223b67}.solution-step{border-left:3px solid #9db6e8;padding:3px 0 3px 12px;margin:11px 0}.solution-step strong{display:block;font-size:.92rem;margin-bottom:3px}.solution-step div{font-size:.9rem;line-height:1.5;color:#45536a;overflow-wrap:anywhere}.solution-step:last-child{border-color:var(--green)}
+.results-head{text-align:center;margin-bottom:20px}.results-head .emoji{font-size:3rem}.results-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}.result-stat{background:#f6f8fc;border:1px solid var(--line);border-radius:12px;padding:15px 8px;text-align:center}.result-stat strong{display:block;font-size:1.85rem;color:#2b59bc}.result-stat span{font-size:.82rem;color:var(--muted)}.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.breakdown{background:#f8fafc;border:1px solid var(--line);border-radius:13px;padding:17px}.breakdown h3{margin-bottom:14px}.performance-row{margin-bottom:13px}.performance-top{display:flex;justify-content:space-between;gap:10px;font-size:.87rem;margin-bottom:6px}.bar-track{height:8px;background:#e4e9f1;border-radius:8px;overflow:hidden}.bar-fill{height:100%;background:var(--blue)}.results-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:23px}.footnote{font-size:.83rem;color:var(--muted);margin-top:13px}
+:focus-visible{outline:3px solid #f8aa25;outline-offset:2px}
+@media(max-width:1030px){.game-area{grid-template-columns:1fr}.diagram-heading .btn{display:none}.levels{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){body{padding:10px}.shell{padding:17px;border-radius:15px}.section,.panel{padding:15px}.settings-grid,.breakdown-grid{grid-template-columns:1fr}.score-board{gap:7px}.score-item{padding:9px 4px}.score-item strong{font-size:1.27rem}.score-item span{font-size:.7rem}.results-grid{grid-template-columns:repeat(2,1fr)}.game-area{gap:12px}.btn{padding:11px 14px}.start-row{align-items:stretch}.start-row .btn{width:100%}.level-card{min-height:124px}}
+@media(max-width:380px){.levels{grid-template-columns:1fr}.score-board{grid-template-columns:repeat(2,1fr)}}
+@media print{body{padding:0;background:white}.back,#setupView,#quizView,.results-actions{display:none!important}.shell{box-shadow:none;padding:8px}#resultsView{display:block!important}.result-stat,.breakdown{break-inside:avoid}}
+</style>
 </head>
 <body>
-    <nav style="max-width:1000px;margin:0 auto 10px auto;">
-        <a href="https://engineeringshare.github.io/engineering-hub/interactive-hub/" style="display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:8px 12px;border-radius:8px">
-            ← Back to Interactive Hub
-        </a>
-    </nav>
-    <div class="container">
-        <div class="header">
-            <h1>⚡ Circuit Quiz Game</h1>
-            <p>Test your knowledge of series and parallel resistor circuits!</p>
-            <div class="difficulty-toggle">
-                <button class="btn-toggle active" id="easyBtn" onclick="setDifficulty('easy')">Easy Mode</button>
-                <button class="btn-toggle" id="hardBtn" onclick="setDifficulty('hard')">Hard Mode</button>
-            </div>
-            <div class="difficulty-info">
-                <span id="difficultyDescription">Easy: Only equivalent resistance questions</span>
-            </div>
+<div class="page">
+<a class="back" href="https://engineeringshare.github.io/engineering-hub/interactive-hub/">← Back to Interactive Hub</a>
+<main class="shell">
+<header class="header"><h1>⚡ Resistor Circuit Challenge</h1><p class="muted">Practise series, parallel and mixed circuits at your own pace.</p></header>
 
-        </div>
-        
-        <div class="score-board">
-            <div class="score-item">
-                <div class="score-number" id="score">0</div>
-                <div>Score</div>
-            </div>
-            <div class="score-item">
-                <div class="score-number" id="streak">0</div>
-                <div>Streak</div>
-            </div>
-            <div class="score-item">
-                <div class="score-number" id="total">0</div>
-                <div>Total Questions</div>
-            </div>
-        </div>
-        
-        <div class="game-area">
-            <div class="circuit-panel">
-                <h3>Circuit Diagram</h3>
-                <svg class="circuit-svg" id="circuitSvg"></svg>
-                <div class="circuit-info">
-                    <strong>Circuit Information:</strong>
-                    <div>Voltage Source: <span id="voltageDisplay">12V</span></div>
-                    <div class="resistor-list" id="resistorList"></div>
-                </div>
-            </div>
-            
-            <div class="question-panel">
-                <h3>Question</h3>
-                <div class="question-text" id="questionText">Loading question...</div>
-                <input type="number" class="answer-input" id="answerInput" placeholder="Enter your answer" step="0.01">
-                <div>
-                    <button class="btn btn-primary" onclick="checkAnswer()">Submit Answer</button>
-                    <button class="btn btn-secondary" onclick="generateNewQuestion()">New Question</button>
-                </div>
-                <div class="feedback" id="feedback" style="display: none;"></div>
-            </div>
-        </div>
+<section id="setupView" aria-label="Choose your practice">
+<div class="section">
+  <div class="section-title">1. Choose your level</div>
+  <div class="levels" id="levelCards" role="group" aria-label="Difficulty level">
+    <button type="button" class="level-card" data-level="beginner" aria-pressed="false"><strong>🌱 Beginner</strong><span>Simple series circuits, 2–3 resistors. Equivalent resistance only.</span></button>
+    <button type="button" class="level-card" data-level="easy" aria-pressed="false"><strong>🔹 Easy</strong><span>Series and parallel circuits, 2–3 resistors. Equivalent resistance.</span></button>
+    <button type="button" class="level-card" data-level="medium" aria-pressed="false"><strong>⚙️ Medium</strong><span>Mixed circuits, up to 4 resistors. Resistance and total current.</span></button>
+    <button type="button" class="level-card" data-level="hard" aria-pressed="false"><strong>⚡ Hard</strong><span>Up to 6 resistors, including nested circuits. Individual currents and voltages.</span></button>
+  </div>
+</div>
+<div class="section">
+  <div class="section-title">2. How many questions?</div>
+  <div class="choice-row" id="lengthChoices" role="group" aria-label="Quiz length">
+    <button type="button" class="choice" data-count="5" aria-pressed="false">5</button>
+    <button type="button" class="choice" data-count="10" aria-pressed="false">10</button>
+    <button type="button" class="choice" data-count="20" aria-pressed="false">20</button>
+    <button type="button" class="choice" data-count="endless" aria-pressed="false">Endless practice</button>
+  </div>
+</div>
+<details class="details" id="customDetails"><summary>🎛️ Customise your practice (optional)</summary>
+<div class="details-body">
+<div class="settings-grid">
+  <div><div class="section-title">Circuit types</div>
+    <div class="check-grid">
+      <label class="check-option"><input type="checkbox" name="topology" value="series"> Series</label>
+      <label class="check-option"><input type="checkbox" name="topology" value="parallel"> Parallel</label>
+      <label class="check-option"><input type="checkbox" name="topology" value="mixed"> Mixed</label>
     </div>
+    <label for="maxResistors"><strong>Maximum resistors:</strong></label>
+    <select id="maxResistors"><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select>
+    <p class="setting-foot">Mixed circuits need at least three resistors. Higher numbers can make diagrams wider.</p>
+  </div>
+  <div><div class="section-title">Question types</div>
+    <div class="check-grid">
+      <label class="check-option"><input type="checkbox" name="questionType" value="equivalent_resistance"> Equivalent resistance</label>
+      <label class="check-option"><input type="checkbox" name="questionType" value="total_current"> Total current</label>
+      <label class="check-option"><input type="checkbox" name="questionType" value="resistor_current"> Current through a resistor</label>
+      <label class="check-option"><input type="checkbox" name="questionType" value="resistor_voltage"> Voltage across a resistor</label>
+    </div>
+  </div>
+</div>
+<div class="check-grid" style="margin-bottom:0">
+  <label class="check-option"><input type="checkbox" id="highlightResistors" checked> Highlight the resistor mentioned in questions</label>
+  <label class="check-option"><input type="checkbox" id="allowHints" checked> Show optional hints</label>
+</div>
+</div></details>
+<div id="setupWarning" class="warning" role="alert" hidden></div>
+<div class="start-row">
+  <div><div class="section-title" style="margin-bottom:4px">Ready when you are</div><div class="subtitle" id="setupSummary">Your session summary appears here.</div></div>
+  <button type="button" id="startBtn" class="btn btn-primary">Start practice →</button>
+</div>
+</section>
 
-    <script>
-        let currentCircuit = null;
-        let currentQuestion = null;
-        let score = 0;
-        let streak = 0;
-        let totalQuestions = 0;
-        let difficulty = 'easy'; // 'easy' or 'hard'
-        const tolerancePercent = 2; // 2% tolerance
-        const toleranceAbsolute = 0.05; // ±0.05 units tolerance
+<section id="quizView" aria-label="Circuit quiz" hidden>
+<div class="game-top"><div><div class="game-meta" id="sessionLabel"></div><h2 id="questionNumber">Question 1</h2></div><button type="button" class="btn btn-light btn-small" id="finishBtn">Finish and view results</button></div>
+<div class="progress-track" role="progressbar" id="progressTrack" aria-label="Questions completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progressFill"></div></div>
+<div class="score-board">
+ <div class="score-item"><strong id="scoreDisplay">0</strong><span>Points</span></div>
+ <div class="score-item"><strong id="correctDisplay">0</strong><span>Correct</span></div>
+ <div class="score-item"><strong id="streakDisplay">0</strong><span>Streak</span></div>
+ <div class="score-item"><strong id="completedDisplay">0</strong><span>Completed</span></div>
+</div>
+<div class="game-area" id="gameArea">
+ <div class="panel"><div class="diagram-heading"><h3>Circuit diagram</h3><button type="button" class="btn btn-light btn-small" id="expandBtn" aria-expanded="false">⤢ Expand diagram</button></div><div class="circuit-scroller" id="circuitScroller"><svg class="circuit-svg" id="circuitSvg" role="img" aria-label="Resistor circuit"></svg></div><div class="diagram-hint" id="diagramHint" hidden>↔ Scroll sideways to see the whole circuit.</div><div class="circuit-info"><div class="circuit-info-header">Circuit information · Source: <span id="voltageDisplay">12 V</span></div><div class="resistor-list" id="resistorList"></div></div></div>
+ <div class="panel"><h3>Try this question</h3><div class="question-text" id="questionText"></div><div class="answer-row"><input type="number" class="answer-input" id="answerInput" min="0" step="any" inputmode="decimal" aria-label="Your numerical answer" placeholder="Enter your answer"><span class="answer-unit" id="answerUnit">Ω</span></div>
+ <div class="question-actions"><button class="btn btn-primary" type="button" id="submitBtn">Check answer</button><button class="btn btn-secondary" type="button" id="skipBtn">Skip</button><button class="btn btn-primary" type="button" id="nextBtn" hidden>Next question →</button></div>
+ <div class="hints-box" id="hintsBox"><div class="hint-header"><strong>Need a nudge?</strong><p id="hintCount">0 / 3 hints</p></div><div id="hintList"></div><button type="button" class="btn btn-light btn-small" id="hintBtn" style="margin-top:10px">💡 Show a hint (−1 point)</button></div>
+ <div class="feedback" id="feedback" role="status" aria-live="polite" hidden></div>
+ <div id="solutionTools" hidden><button type="button" class="btn btn-light btn-small" id="solutionToggle" style="margin-top:12px" aria-expanded="false">Show worked solution ▼</button><div id="solutionCard" class="solution-card" hidden><h4>Step-by-step solution</h4><div id="solutionSteps"></div></div></div>
+ </div>
+</div>
+</section>
 
-        class Circuit {
-            constructor() {
-                this.voltage = 12; // Fixed 12V source
-                this.resistors = [];
-                this.connections = [];
-                this.generateRandomCircuit();
-            }
+<section id="resultsView" aria-label="Your results" hidden>
+<div class="results-head"><div class="emoji">🎉</div><h2 id="resultsTitle">Practice complete!</h2><p class="muted" id="resultsIntro">Here is how you did.</p></div>
+<div class="results-grid">
+ <div class="result-stat"><strong id="rAccuracy">0%</strong><span>Accuracy</span></div>
+ <div class="result-stat"><strong id="rCorrect">0/0</strong><span>Correct / completed</span></div>
+ <div class="result-stat"><strong id="rPoints">0</strong><span>Points earned</span></div>
+ <div class="result-stat"><strong id="rStreak">0</strong><span>Best streak</span></div>
+</div>
+<div class="breakdown-grid"><div class="breakdown"><h3>By circuit type</h3><div id="topologyBreakdown"></div></div><div class="breakdown"><h3>By question type</h3><div id="typeBreakdown"></div></div></div>
+<p class="footnote" id="resultsFootnote"></p>
+<div class="results-actions"><button type="button" class="btn btn-primary" id="retryBtn">Try again</button><button type="button" class="btn btn-secondary" id="settingsBtn">Change settings</button><button type="button" class="btn btn-light" id="csvBtn">Download results (CSV)</button><button type="button" class="btn btn-light" id="printBtn">Print summary</button></div>
+</section>
+</main>
+</div>
+<script>
+'use strict';
+const SVG_NS='http://www.w3.org/2000/svg';
+const STANDARD_VALUES=[10,12,15,18,22,27,33,39,47,56,68,82,100,120,150,180,220,270,330,390,470,560,680,820];
+const LAYOUT=Object.freeze({resistorWidth:102,resistorAbove:39,resistorBelow:25,seriesGap:24,branchGap:34,junctionPadding:48});
+const LEVELS={
+ beginner:{label:'Beginner',topologies:['series'],types:['equivalent_resistance'],maxResistors:3,minResistors:2,points:1},
+ easy:{label:'Easy',topologies:['series','parallel'],types:['equivalent_resistance'],maxResistors:3,minResistors:2,points:2},
+ medium:{label:'Medium',topologies:['series','parallel','mixed'],types:['equivalent_resistance','total_current'],maxResistors:4,minResistors:3,points:3},
+ hard:{label:'Hard',topologies:['series','parallel','mixed'],types:['equivalent_resistance','total_current','resistor_current','resistor_voltage'],maxResistors:6,minResistors:4,points:4}
+};
+const TOPOLOGY_NAMES={series:'Series',parallel:'Parallel',mixed:'Mixed'};
+const TYPE_NAMES={equivalent_resistance:'Equivalent resistance',total_current:'Total current',resistor_current:'Resistor current',resistor_voltage:'Resistor voltage'};
+let selections={level:'easy',length:10};
+let session=null,currentCircuit=null,currentQuestion=null,questionSerial=0;
+const $=id=>document.getElementById(id);
+const pick=items=>items[Math.floor(Math.random()*items.length)];
+const randint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const series=(...children)=>({kind:'series',children});
+const parallel=(...children)=>({kind:'parallel',children});
+const fmt=n=>{if(!Number.isFinite(n))return '—';const rounded=Number(n.toFixed(3));return String(rounded);};
+function selectedValues(name){return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(input=>input.value);}
+function setCheckboxes(name,values){document.querySelectorAll(`input[name="${name}"]`).forEach(input=>{input.checked=values.includes(input.value);});}
+function chooseLevel(level){
+ if(!LEVELS[level])return;
+ selections.level=level;
+ const preset=LEVELS[level];
+ setCheckboxes('topology',preset.topologies);setCheckboxes('questionType',preset.types);$('maxResistors').value=String(preset.maxResistors);
+ document.querySelectorAll('.level-card').forEach(button=>{let active=button.dataset.level===level;button.classList.toggle('selected',active);button.setAttribute('aria-pressed',String(active));});
+ refreshSummary();
+}
+function chooseLength(length){selections.length=length;document.querySelectorAll('[data-count]').forEach(button=>{const active=button.dataset.count===String(length);button.classList.toggle('selected',active);button.setAttribute('aria-pressed',String(active));});refreshSummary();}
+function readSettings(){return {level:selections.level,length:selections.length,topologies:selectedValues('topology'),types:selectedValues('questionType'),maxResistors:Number($('maxResistors').value),highlight:$('highlightResistors').checked,hints:$('allowHints').checked};}
+function validateSettings(settings){
+ if(!settings.topologies.length)return 'Choose at least one circuit type.';
+ if(!settings.types.length)return 'Choose at least one question type.';
+ if(settings.maxResistors<3 && settings.topologies.includes('mixed'))return 'Mixed circuits require at least 3 resistors. Increase the maximum or deselect mixed circuits.';
+ return null;
+}
+function refreshSummary(){const settings=readSettings();const warning=validateSettings(settings);$('setupWarning').hidden=!warning;$('setupWarning').textContent=warning||'';$('startBtn').disabled=!!warning;const validTypes=settings.topologies.filter(x=>x!=='mixed'||settings.maxResistors>=3);$('setupSummary').textContent=`${LEVELS[settings.level].label} · ${validTypes.map(x=>TOPOLOGY_NAMES[x]).join(', ')||'No valid circuits'} · Up to ${settings.maxResistors} resistors · ${settings.length==='endless'?'Endless practice':settings.length+' questions'}`;}
 
-            generateRandomCircuit() {
-                // Standard E12 resistor values (commonly available)
-                const standardValues = [10, 12, 15, 18, 22, 27, 33, 39, 47, 56, 68, 82, 100, 120, 150, 180, 220, 270, 330, 390, 470, 560, 680, 820];
-                
-                // Generate 3-4 resistors with standard values
-                const numResistors = Math.floor(Math.random() * 2) + 3; // 3 or 4 resistors
-                this.resistors = [];
-                
-                for (let i = 0; i < numResistors; i++) {
-                    const randomValue = standardValues[Math.floor(Math.random() * standardValues.length)];
-                    this.resistors.push({
-                        id: `R${i + 1}`,
-                        value: randomValue,
-                        x: 0,
-                        y: 0
-                    });
-                }
+// A network tree is the ONLY source of truth for the circuit, calculations and diagram.
+function equivalentResistance(node){if(node.kind==='resistor')return node.value;const children=node.children.map(equivalentResistance);return node.kind==='series'?children.reduce((a,b)=>a+b,0):1/children.reduce((a,b)=>a+1/b,0);}
+function analyseNetwork(node,voltage,readings){
+ if(node.kind==='resistor'){readings[node.id]={voltage,current:voltage/node.value};return;}
+ if(node.kind==='parallel')node.children.forEach(child=>analyseNetwork(child,voltage,readings));
+ else{const current=voltage/equivalentResistance(node);node.children.forEach(child=>analyseNetwork(child,current*equivalentResistance(child),readings));}
+}
+function splitCounts(n,groups){const parts=Array(groups).fill(1);for(let i=0;i<n-groups;i++)parts[randint(0,groups-1)]++;return parts;}
+class Circuit{
+ constructor(settings){this.voltage=12;this.resistors=[];let eligible=settings.topologies.filter(x=>x!=='mixed'||settings.maxResistors>=3);this.topology=pick(eligible);
+  const lowerBound=Math.max(this.topology==='mixed'?3:2,Math.min(LEVELS[settings.level].minResistors,settings.maxResistors));
+  const count=randint(lowerBound,settings.maxResistors);
+  const r=()=>{const item={kind:'resistor',id:`R${this.resistors.length+1}`,value:pick(STANDARD_VALUES)};this.resistors.push(item);return item;};
+  if(this.topology==='series')this.network=series(...Array.from({length:count},r));
+  else if(this.topology==='parallel')this.network=parallel(...Array.from({length:count},r));
+  else{
+    // Opposite-kind subgroups guarantee a real mixed arrangement; harder layouts can nest further.
+    const rootKind=pick(['series','parallel']);
+    const root= rootKind==='series'?series:parallel;
+    const opposite=rootKind==='series'?parallel:series;
+    const groupSizes=splitCounts(count,randint(2,Math.min(3,count-1)));
+    // Ensure at least one subgroup has multiple resistors (mixed topology).
+    if(groupSizes.every(n=>n===1)){groupSizes[0]++;groupSizes.pop();}
+    const groups=groupSizes.map((n,i)=>{
+       if(n===1)return r();
+       if(settings.level==='hard' && n>=3 && Math.random()<0.58){
+         const innerSize=randint(2,n-1);
+         const nested=rootKind==='series'?series:parallel;
+         const items=[...Array.from({length:innerSize},r)];
+         return opposite(nested(...items),...Array.from({length:n-innerSize},r));
+       }
+       return opposite(...Array.from({length:n},r));
+    });
+    this.network=root(...groups);
+  }
+  this.resistance=equivalentResistance(this.network);this.resistorReadings={};analyseNetwork(this.network,this.voltage,this.resistorReadings);
+ }
+ getTotalCurrent(){return this.voltage/this.resistance;}
+}
+class Question{
+ constructor(circuit,settings){this.circuit=circuit;this.settings=settings;this.type=pick(settings.types);this.hintsRevealed=0;this.finished=false;this.targetResistor=null;
+ if(this.type==='equivalent_resistance'){this.text='What is the equivalent resistance of the entire circuit?';this.answer=circuit.resistance;this.unit='Ω';}
+ else if(this.type==='total_current'){this.text='What is the total current supplied by the battery?';this.answer=circuit.getTotalCurrent()*1000;this.unit='mA';}
+ else{
+  const resistor=pick(circuit.resistors);this.targetResistor=resistor.id;
+  if(this.type==='resistor_current'){this.text=`What is the current through ${resistor.id}?`;this.answer=circuit.resistorReadings[resistor.id].current*1000;this.unit='mA';}
+  else{this.text=`What is the voltage across ${resistor.id}?`;this.answer=circuit.resistorReadings[resistor.id].voltage;this.unit='V';}
+ }
+ }
+ checkAnswer(value){return Number.isFinite(value)&&Math.abs(value-this.answer)<=Math.max(Math.abs(this.answer)*0.02,0.005);}
+}
+function nodeLabel(node){if(node.kind==='resistor')return node.id;const joiner=node.kind==='series'?' + ':' ∥ ';return '('+node.children.map(nodeLabel).join(joiner)+')';}
+function findPath(node,id){if(node.kind==='resistor')return node.id===id?[node]:null;for(const child of node.children){const path=findPath(child,id);if(path)return[node,...path];}return null;}
+function makeHints(question){
+ const topology=question.circuit.topology;
+ if(question.type==='equivalent_resistance')return[
+  `Start by identifying the series and parallel sections of this ${topology} circuit.`,
+  'Series resistances add directly. For parallel branches, add the reciprocals, then take the reciprocal.',
+  'Calculate the smallest groups first. Replace each completed group with its equivalent resistance, then combine the remaining sections.'
+ ];
+ if(question.type==='total_current')return[
+  'Find the total equivalent resistance before calculating the source current.',
+  'Ohm’s law relates the battery voltage, total resistance and total current: I = V / R.',
+  'Use the 12 V supply with your calculated total resistance. Convert amperes to milliamperes by multiplying by 1,000.'
+ ];
+ if(question.type==='resistor_current')return[
+  `Locate ${question.targetResistor} and trace the branch it belongs to.`,
+  'Current is shared in series sections, but divides between parallel branches. Parallel branches have the same voltage.',
+  'Work through the circuit from the 12 V source to the selected branch. Once you know the resistor voltage, use I = V / R and express the result in mA.'
+ ];
+ return [
+  `Locate ${question.targetResistor} and decide if it is in a series section or a parallel branch.`,
+  'Voltage is equal across parallel branches. In a series section, individual voltage drops depend on the current and resistance.',
+  'First determine the total resistance and relevant section current. Work towards the selected resistor using V = I × R.'
+ ];
+}
+function solutionFor(question){
+ const circuit=question.circuit,steps=[];
+ const describeStep=(title,body)=>steps.push({title,body});
+ function reduce(node){
+  if(node.kind==='resistor')return node.value;
+  const values=node.children.map(reduce),res=equivalentResistance(node);
+  const formula=node.kind==='series'?values.map(x=>fmt(x)).join(' + '):'1 / ('+values.map(x=>`1/${fmt(x)}`).join(' + ')+')';
+  describeStep(`Combine ${nodeLabel(node)} (${node.kind})`,`${formula} = ${fmt(res)} Ω`);
+  return res;
+ }
+ const R=reduce(circuit.network);
+ describeStep('Total equivalent resistance',`R total = ${fmt(R)} Ω`);
+ if(question.type==='equivalent_resistance')return steps;
+ const I=circuit.voltage/R;
+ describeStep('Calculate source current',`I total = ${fmt(circuit.voltage)} V / ${fmt(R)} Ω = ${fmt(I*1000)} mA`);
+ if(question.type==='total_current')return steps;
+ const path=findPath(circuit.network,question.targetResistor);
+ let sectionVoltage=circuit.voltage;
+ for(let i=0;i<path.length-1;i++){
+  const node=path[i],child=path[i+1];
+  if(node.kind==='series'){
+   const totalR=equivalentResistance(node),sectionI=sectionVoltage/totalR;
+   const childVoltage=sectionI*equivalentResistance(child);
+   describeStep(`Follow series section towards ${question.targetResistor}`,`Current in ${nodeLabel(node)} = ${fmt(sectionVoltage)} V / ${fmt(totalR)} Ω = ${fmt(sectionI*1000)} mA. Voltage across ${nodeLabel(child)} = ${fmt(sectionI*1000)} mA × ${fmt(equivalentResistance(child))} Ω / 1,000 = ${fmt(childVoltage)} V.`);
+   sectionVoltage=childVoltage;
+  }else{
+   describeStep(`Follow parallel branch towards ${question.targetResistor}`,`All branches of ${nodeLabel(node)} have ${fmt(sectionVoltage)} V across them, so ${nodeLabel(child)} also has ${fmt(sectionVoltage)} V.`);
+  }
+ }
+ const item=circuit.resistors.find(r=>r.id===question.targetResistor);
+ if(question.type==='resistor_voltage')describeStep(`Voltage across ${item.id}`,`V${item.id} = ${fmt(sectionVoltage)} V`);
+ else describeStep(`Current through ${item.id}`,`I${item.id} = ${fmt(sectionVoltage)} V / ${item.value} Ω = ${fmt(sectionVoltage/item.value*1000)} mA`);
+ return steps;
+}
 
-                // Generate random circuit topology
-                this.generateTopology();
-            }
+// Measured SVG tree layout keeps symbols and labels separated, including nested branches.
+function measureNode(node){
+ if(node.kind==='resistor')return Object.assign(node,{width:LAYOUT.resistorWidth,above:LAYOUT.resistorAbove,below:LAYOUT.resistorBelow});
+ node.children.forEach(measureNode);
+ if(node.kind==='series'){
+  node.width=node.children.reduce((acc,child)=>acc+child.width,0)+LAYOUT.seriesGap*(node.children.length-1);
+  node.above=Math.max(...node.children.map(child=>child.above));node.below=Math.max(...node.children.map(child=>child.below));
+ }else{
+  node.width=Math.max(...node.children.map(child=>child.width))+2*LAYOUT.junctionPadding;
+  const height=node.children.reduce((acc,ch)=>acc+ch.above+ch.below,0)+LAYOUT.branchGap*(node.children.length-1);
+  let top=-height/2;node.branchOffsets=[];
+  for(const child of node.children){node.branchOffsets.push(top+child.above);top+=child.above+child.below+LAYOUT.branchGap;}
+  node.above=Math.max(0,...node.children.map((child,i)=>child.above-node.branchOffsets[i]));
+  node.below=Math.max(0,...node.children.map((child,i)=>child.below+node.branchOffsets[i]));
+ }
+ return node;
+}
+function el(tag,attrs={},text){const element=document.createElementNS(SVG_NS,tag);for(const [key,value] of Object.entries(attrs))element.setAttribute(key,String(value));if(text!==undefined)element.textContent=text;return element;}
+function wire(svg,x1,y1,x2,y2){svg.appendChild(el('line',{x1,y1,x2,y2,stroke:'#334155','stroke-width':2.6,'stroke-linecap':'square'}));}
+function junction(svg,x,y){svg.appendChild(el('circle',{cx:x,cy:y,r:3.6,fill:'#334155'}));}
+function caption(svg,x,y,value,size=13,other={}){svg.appendChild(el('text',{x,y,'text-anchor':'middle','font-family':'Segoe UI, Arial, sans-serif','font-size':size,'font-weight':700,fill:'#172033',...other},value));}
+function drawNode(svg,node,x,y,highlightId){
+ if(node.kind==='resistor'){
+  const cx=x+node.width/2,active=node.id===highlightId;
+  wire(svg,x,y,cx-34,y);wire(svg,cx+34,y,x+node.width,y);
+  svg.appendChild(el('rect',{class:'schematic-resistor','data-resistor-id':node.id,x:cx-34,y:y-12,width:68,height:24,rx:1,fill:active?'#dcfbea':'white',stroke:active?'#138453':'#334155','stroke-width':active?3.5:2.6}));
+  caption(svg,cx,y-22,node.id,14,active?{fill:'#138453'}:{});
+  caption(svg,cx,y+4.7,`${node.value}Ω`,12.5,active?{fill:'#12643e'}:{});
+  return;
+ }
+ if(node.kind==='series'){
+  let cursor=x;node.children.forEach((child,i)=>{if(i>0){wire(svg,cursor,y,cursor+LAYOUT.seriesGap,y);cursor+=LAYOUT.seriesGap;}drawNode(svg,child,cursor,y,highlightId);cursor+=child.width;});return;
+ }
+ const lx=x+LAYOUT.junctionPadding*.75,rx=x+node.width-LAYOUT.junctionPadding*.75;
+ const gap=rx-lx,ys=node.branchOffsets.map(offset=>y+offset);
+ wire(svg,x,y,lx,y);wire(svg,rx,y,x+node.width,y);
+ wire(svg,lx,Math.min(...ys),lx,Math.max(...ys));wire(svg,rx,Math.min(...ys),rx,Math.max(...ys));
+ node.children.forEach((child,i)=>{const bx=lx+(gap-child.width)/2,by=ys[i];wire(svg,lx,by,bx,by);drawNode(svg,child,bx,by,highlightId);wire(svg,bx+child.width,by,rx,by);junction(svg,lx,by);junction(svg,rx,by);});
+ junction(svg,lx,y);junction(svg,rx,y);
+}
+function drawBattery(svg,y,voltage){
+ wire(svg,52,y,88,y);wire(svg,112,y,171,y);
+ svg.appendChild(el('line',{x1:88,y1:y-24,x2:88,y2:y+24,stroke:'#334155','stroke-width':4}));
+ svg.appendChild(el('line',{x1:112,y1:y-15,x2:112,y2:y+15,stroke:'#334155','stroke-width':4}));
+ caption(svg,100,y-34,`${voltage} V`,15);caption(svg,73,y+5,'+',14);caption(svg,128,y+5,'−',14);
+}
+function drawCircuit(circuit,question){
+ const svg=$('circuitSvg');svg.replaceChildren();const root=measureNode(circuit.network);
+ const x=171,y=47+root.above,end=x+root.width,returnX=end+57,returnY=y+root.below+64;
+ const w=Math.max(610,returnX+38),h=returnY+30;
+ svg.setAttribute('viewBox',`0 0 ${w} ${h}`);svg.setAttribute('width',w);svg.setAttribute('height',h);svg.setAttribute('preserveAspectRatio','xMidYMid meet');
+ svg.setAttribute('aria-label',`12 volt ${circuit.topology} circuit with ${circuit.resistors.length} resistors`);
+ svg.style.minWidth=`${Math.ceil(Math.min(740,Math.max(470,w*.84)))}px`;
+ drawBattery(svg,y,circuit.voltage);drawNode(svg,root,x,y,question.settings.highlight?question.targetResistor:null);
+ wire(svg,end,y,returnX,y);wire(svg,returnX,y,returnX,returnY);wire(svg,returnX,returnY,52,returnY);wire(svg,52,returnY,52,y);
+ $('circuitScroller').scrollLeft=0;requestAnimationFrame(updateDiagramHint);
+}
+function updateDiagramHint(){$('diagramHint').hidden=$('circuitScroller').scrollWidth<=$('circuitScroller').clientWidth+2;}
+function drawResistorList(circuit,question){const list=$('resistorList');list.replaceChildren();for(const r of circuit.resistors){const d=document.createElement('div');d.className='resistor-item'+(question.settings.highlight&&r.id===question.targetResistor?' focus':'');d.textContent=`${r.id}: ${r.value} Ω`;list.appendChild(d);}}
 
-            generateTopology() {
-                const topologies = [
-                    'series',
-                    'parallel',
-                    'mixed_series_parallel',
-                    'mixed_parallel_series'
-                ];
-                
-                const topology = topologies[Math.floor(Math.random() * topologies.length)];
-                this.topology = topology;
-                
-                switch (topology) {
-                    case 'series':
-                        this.connections = ['series'];
-                        break;
-                    case 'parallel':
-                        this.connections = ['parallel'];
-                        break;
-                    case 'mixed_series_parallel':
-                        // R1 and R2 in series, then parallel with R3
-                        this.connections = ['series_12_parallel_3'];
-                        break;
-                    case 'mixed_parallel_series':
-                        // R1 and R2 in parallel, then series with R3
-                        this.connections = ['parallel_12_series_3'];
-                        break;
-                }
-            }
-
-            calculateEquivalentResistance() {
-                switch (this.topology) {
-                    case 'series':
-                        return this.resistors.reduce((sum, r) => sum + r.value, 0);
-                    
-                    case 'parallel':
-                        const reciprocalSum = this.resistors.reduce((sum, r) => sum + (1 / r.value), 0);
-                        return 1 / reciprocalSum;
-                    
-                    case 'mixed_series_parallel':
-                        // R1 and R2 in series, then parallel with R3
-                        const seriesR12 = this.resistors[0].value + this.resistors[1].value;
-                        return 1 / (1/seriesR12 + 1/this.resistors[2].value);
-                    
-                    case 'mixed_parallel_series':
-                        // R1 and R2 in parallel, then series with R3
-                        const parallelR12 = 1 / (1/this.resistors[0].value + 1/this.resistors[1].value);
-                        return parallelR12 + this.resistors[2].value;
-                    
-                    default:
-                        return 0;
-                }
-            }
-
-            getTotalCurrent() {
-                return this.voltage / this.calculateEquivalentResistance();
-            }
-
-            getCurrentThroughResistor(resistorId) {
-                const totalCurrent = this.getTotalCurrent();
-                
-                switch (this.topology) {
-                    case 'series':
-                        return totalCurrent; // Same current through all resistors in series
-                    
-                    case 'parallel':
-                        const resistor = this.resistors.find(r => r.id === resistorId);
-                        return this.voltage / resistor.value; // V/R for each parallel branch
-                    
-                    case 'mixed_series_parallel':
-                        if (resistorId === 'R1' || resistorId === 'R2') {
-                            // Current through series branch
-                            const seriesR12 = this.resistors[0].value + this.resistors[1].value;
-                            return this.voltage / seriesR12;
-                        } else {
-                            // Current through R3 (parallel branch)
-                            return this.voltage / this.resistors[2].value;
-                        }
-                    
-                    case 'mixed_parallel_series':
-                        if (resistorId === 'R1' || resistorId === 'R2') {
-                            // Voltage across parallel section
-                            const parallelR12 = 1 / (1/this.resistors[0].value + 1/this.resistors[1].value);
-                            const voltageAcrossParallel = totalCurrent * parallelR12;
-                            const resistor = this.resistors.find(r => r.id === resistorId);
-                            return voltageAcrossParallel / resistor.value;
-                        } else {
-                            // R3 is in series, so same as total current
-                            return totalCurrent;
-                        }
-                    
-                    default:
-                        return 0;
-                }
-            }
-        }
-
-        class Question {
-            constructor(circuit) {
-                this.circuit = circuit;
-                this.generateQuestion();
-            }
-
-            generateQuestion() {
-                let questionTypes;
-                
-                if (difficulty === 'easy') {
-                    questionTypes = ['equivalent_resistance'];
-                } else {
-                    questionTypes = [
-                        'equivalent_resistance',
-                        'total_current',
-                        'resistor_current'
-                    ];
-                }
-                
-                this.type = questionTypes[Math.floor(Math.random() * questionTypes.length)];
-                
-                switch (this.type) {
-                    case 'equivalent_resistance':
-                        this.text = "What is the equivalent resistance of the entire circuit?";
-                        this.answer = this.circuit.calculateEquivalentResistance();
-                        this.unit = "Ω";
-                        break;
-                    
-                    case 'total_current':
-                        this.text = "What is the total current from the voltage source?";
-                        this.answer = this.circuit.getTotalCurrent();
-                        this.unit = "A";
-                        break;
-                    
-                    case 'resistor_current':
-                        const randomResistor = this.circuit.resistors[Math.floor(Math.random() * this.circuit.resistors.length)];
-                        this.text = `What is the current through ${randomResistor.id}?`;
-                        this.answer = this.circuit.getCurrentThroughResistor(randomResistor.id);
-                        this.unit = "A";
-                        this.targetResistor = randomResistor.id;
-                        break;
-                }
-            }
-
-            checkAnswer(userAnswer) {
-                const percentTolerance = Math.abs(this.answer * (tolerancePercent / 100));
-                const toleranceAmount = Math.max(percentTolerance, toleranceAbsolute);
-                return Math.abs(userAnswer - this.answer) <= toleranceAmount;
-            }
-        }
-
-        function drawCircuit(circuit) {
-            const svg = document.getElementById('circuitSvg');
-            svg.innerHTML = '';
-            
-            const width = svg.clientWidth || 500;
-            const height = svg.clientHeight || 300;
-            
-            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-            
-            // Draw based on topology
-            switch (circuit.topology) {
-                case 'series':
-                    drawSeriesCircuit(svg, circuit, width, height);
-                    break;
-                case 'parallel':
-                    drawParallelCircuit(svg, circuit, width, height);
-                    break;
-                case 'mixed_series_parallel':
-                    drawMixedSeriesParallelCircuit(svg, circuit, width, height);
-                    break;
-                case 'mixed_parallel_series':
-                    drawMixedParallelSeriesCircuit(svg, circuit, width, height);
-                    break;
-            }
-        }
-
-        function drawSeriesCircuit(svg, circuit, width, height) {
-            const centerY = height / 2;
-            const startX = 50;
-            const spacing = (width - 100) / (circuit.resistors.length + 1);
-            
-            // Draw voltage source
-            drawVoltageSource(svg, startX, centerY, circuit.voltage);
-            
-            // Draw connecting wires and resistors
-            let currentX = startX + 60;
-            
-            for (let i = 0; i < circuit.resistors.length; i++) {
-                // Draw wire to resistor
-                drawWire(svg, currentX, centerY, currentX + spacing - 60, centerY);
-                
-                // Draw resistor
-                drawResistor(svg, currentX + spacing - 30, centerY, circuit.resistors[i]);
-                
-                currentX += spacing;
-            }
-            
-            // Close the circuit
-            drawWire(svg, currentX - 30, centerY, width - 50, centerY);
-            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
-            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
-            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
-            drawWire(svg, startX, centerY + 40, startX, centerY);
-        }
-
-        function drawParallelCircuit(svg, circuit, width, height) {
-            const centerY = height / 2;
-            const startX = 50;
-            
-            // Draw voltage source
-            drawVoltageSource(svg, startX, centerY, circuit.voltage);
-            
-            // Calculate branch positions
-            const branchStartX = startX + 120;
-            const branchEndX = width - 120;
-            const branchSpacing = Math.min(40, 120 / circuit.resistors.length);
-            const totalBranchHeight = (circuit.resistors.length - 1) * branchSpacing;
-            
-            // Draw left vertical connection line
-            const leftTopY = centerY - totalBranchHeight / 2;
-            const leftBottomY = centerY + totalBranchHeight / 2;
-            drawWire(svg, branchStartX, leftTopY, branchStartX, leftBottomY);
-            
-            // Draw right vertical connection line  
-            drawWire(svg, branchEndX, leftTopY, branchEndX, leftBottomY);
-            
-            // Connect voltage source to left junction
-            drawWire(svg, startX + 60, centerY, branchStartX, centerY);
-            
-            // Draw parallel branches
-            for (let i = 0; i < circuit.resistors.length; i++) {
-                const branchY = centerY - totalBranchHeight / 2 + i * branchSpacing;
-                
-                // Horizontal branch with resistor
-                const resistorX = (branchStartX + branchEndX) / 2;
-                drawWire(svg, branchStartX, branchY, resistorX - 30, branchY);
-                drawResistor(svg, resistorX, branchY, circuit.resistors[i]);
-                drawWire(svg, resistorX + 30, branchY, branchEndX, branchY);
-            }
-            
-            // Connect right junction to complete circuit
-            drawWire(svg, branchEndX, centerY, width - 50, centerY);
-            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
-            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
-            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
-            drawWire(svg, startX, centerY + 40, startX, centerY);
-        }
-
-        function drawMixedSeriesParallelCircuit(svg, circuit, width, height) {
-            const centerY = height / 2;
-            const startX = 50;
-            
-            // Draw voltage source
-            drawVoltageSource(svg, startX, centerY, circuit.voltage);
-            
-            // Draw R1 and R2 in series (top branch)
-            drawWire(svg, startX + 60, centerY, startX + 120, centerY);
-            drawResistor(svg, startX + 150, centerY, circuit.resistors[0]);
-            drawWire(svg, startX + 180, centerY, startX + 240, centerY);
-            drawResistor(svg, startX + 270, centerY, circuit.resistors[1]);
-            drawWire(svg, startX + 300, centerY, startX + 360, centerY);
-            
-            // Draw R3 in parallel (bottom branch)
-            drawWire(svg, startX + 120, centerY, startX + 120, centerY + 60);
-            drawWire(svg, startX + 120, centerY + 60, startX + 240, centerY + 60);
-            drawResistor(svg, startX + 270, centerY + 60, circuit.resistors[2]);
-            drawWire(svg, startX + 300, centerY + 60, startX + 360, centerY + 60);
-            drawWire(svg, startX + 360, centerY + 60, startX + 360, centerY);
-            
-            // Close circuit
-            drawWire(svg, startX + 360, centerY, width - 50, centerY);
-            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
-            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
-            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
-            drawWire(svg, startX, centerY + 40, startX, centerY);
-        }
-
-        function drawMixedParallelSeriesCircuit(svg, circuit, width, height) {
-            const centerY = height / 2;
-            const startX = 50;
-            
-            // Draw voltage source
-            drawVoltageSource(svg, startX, centerY, circuit.voltage);
-            
-            // Draw parallel section (R1 and R2)
-            drawWire(svg, startX + 60, centerY, startX + 120, centerY);
-            
-            // R1 branch
-            drawWire(svg, startX + 120, centerY, startX + 120, centerY - 30);
-            drawWire(svg, startX + 120, centerY - 30, startX + 180, centerY - 30);
-            drawResistor(svg, startX + 210, centerY - 30, circuit.resistors[0]);
-            drawWire(svg, startX + 240, centerY - 30, startX + 300, centerY - 30);
-            drawWire(svg, startX + 300, centerY - 30, startX + 300, centerY);
-            
-            // R2 branch
-            drawWire(svg, startX + 120, centerY, startX + 120, centerY + 30);
-            drawWire(svg, startX + 120, centerY + 30, startX + 180, centerY + 30);
-            drawResistor(svg, startX + 210, centerY + 30, circuit.resistors[1]);
-            drawWire(svg, startX + 240, centerY + 30, startX + 300, centerY + 30);
-            drawWire(svg, startX + 300, centerY + 30, startX + 300, centerY);
-            
-            // R3 in series
-            drawWire(svg, startX + 300, centerY, startX + 360, centerY);
-            drawResistor(svg, startX + 390, centerY, circuit.resistors[2]);
-            drawWire(svg, startX + 420, centerY, width - 50, centerY);
-            
-            // Close circuit
-            drawWire(svg, width - 50, centerY, width - 50, centerY + 80);
-            drawWire(svg, width - 50, centerY + 80, startX, centerY + 80);
-            drawWire(svg, startX, centerY + 80, startX, centerY + 40);
-            drawWire(svg, startX, centerY + 40, startX, centerY);
-        }
-
-        function drawVoltageSource(svg, x, y, voltage) {
-            // Draw battery symbol with proper connections
-            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            
-            // Connection wire from left
-            const leftWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            leftWire.setAttribute('x1', x);
-            leftWire.setAttribute('y1', y);
-            leftWire.setAttribute('x2', x + 20);
-            leftWire.setAttribute('y2', y);
-            leftWire.setAttribute('stroke', '#333');
-            leftWire.setAttribute('stroke-width', '2');
-            g.appendChild(leftWire);
-            
-            // Positive terminal (longer line)
-            const posLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            posLine.setAttribute('x1', x + 20);
-            posLine.setAttribute('y1', y - 20);
-            posLine.setAttribute('x2', x + 20);
-            posLine.setAttribute('y2', y + 20);
-            posLine.setAttribute('stroke', '#333');
-            posLine.setAttribute('stroke-width', '3');
-            g.appendChild(posLine);
-            
-            // Negative terminal (shorter line)
-            const negLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            negLine.setAttribute('x1', x + 40);
-            negLine.setAttribute('y1', y - 15);
-            negLine.setAttribute('x2', x + 40);
-            negLine.setAttribute('y2', y + 15);
-            negLine.setAttribute('stroke', '#333');
-            negLine.setAttribute('stroke-width', '3');
-            g.appendChild(negLine);
-            
-            // Connection wire to right
-            const rightWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            rightWire.setAttribute('x1', x + 40);
-            rightWire.setAttribute('y1', y);
-            rightWire.setAttribute('x2', x + 60);
-            rightWire.setAttribute('y2', y);
-            rightWire.setAttribute('stroke', '#333');
-            rightWire.setAttribute('stroke-width', '2');
-            g.appendChild(rightWire);
-            
-            // Voltage label
-            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            text.setAttribute('x', x + 30);
-            text.setAttribute('y', y - 25);
-            text.setAttribute('text-anchor', 'middle');
-            text.setAttribute('font-size', '12');
-            text.setAttribute('font-weight', 'bold');
-            text.setAttribute('fill', '#333');
-            text.textContent = `${voltage}V`;
-            g.appendChild(text);
-            
-            // Polarity labels
-            const plusText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            plusText.setAttribute('x', x + 15);
-            plusText.setAttribute('y', y + 5);
-            plusText.setAttribute('text-anchor', 'middle');
-            plusText.setAttribute('font-size', '10');
-            plusText.setAttribute('font-weight', 'bold');
-            plusText.setAttribute('fill', '#333');
-            plusText.textContent = '+';
-            g.appendChild(plusText);
-            
-            const minusText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            minusText.setAttribute('x', x + 45);
-            minusText.setAttribute('y', y + 5);
-            minusText.setAttribute('text-anchor', 'middle');
-            minusText.setAttribute('font-size', '10');
-            minusText.setAttribute('font-weight', 'bold');
-            minusText.setAttribute('fill', '#333');
-            minusText.textContent = '−';
-            g.appendChild(minusText);
-            
-            svg.appendChild(g);
-        }
-
-        function drawResistor(svg, x, y, resistor) {
-            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            
-            // IEC standard resistor symbol (rectangle)
-            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            rect.setAttribute('x', x - 20);
-            rect.setAttribute('y', y - 8);
-            rect.setAttribute('width', 40);
-            rect.setAttribute('height', 16);
-            rect.setAttribute('stroke', '#333');
-            rect.setAttribute('stroke-width', '2');
-            rect.setAttribute('fill', 'white');
-            g.appendChild(rect);
-            
-            // Connection wires
-            const leftWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            leftWire.setAttribute('x1', x - 30);
-            leftWire.setAttribute('y1', y);
-            leftWire.setAttribute('x2', x - 20);
-            leftWire.setAttribute('y2', y);
-            leftWire.setAttribute('stroke', '#333');
-            leftWire.setAttribute('stroke-width', '2');
-            g.appendChild(leftWire);
-            
-            const rightWire = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            rightWire.setAttribute('x1', x + 20);
-            rightWire.setAttribute('y1', y);
-            rightWire.setAttribute('x2', x + 30);
-            rightWire.setAttribute('y2', y);
-            rightWire.setAttribute('stroke', '#333');
-            rightWire.setAttribute('stroke-width', '2');
-            g.appendChild(rightWire);
-            
-            // Resistor label
-            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            text.setAttribute('x', x);
-            text.setAttribute('y', y - 15);
-            text.setAttribute('text-anchor', 'middle');
-            text.setAttribute('font-size', '11');
-            text.setAttribute('font-weight', 'bold');
-            text.setAttribute('fill', '#333');
-            text.textContent = `${resistor.id}`;
-            g.appendChild(text);
-            
-            // Resistance value (inside the resistor)
-            const valueText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            valueText.setAttribute('x', x);
-            valueText.setAttribute('y', y + 3);
-            valueText.setAttribute('text-anchor', 'middle');
-            valueText.setAttribute('dominant-baseline', 'middle');
-            valueText.setAttribute('font-size', '9');
-            valueText.setAttribute('font-weight', 'bold');
-            valueText.setAttribute('fill', '#333');
-            valueText.textContent = `${resistor.value}Ω`;
-            g.appendChild(valueText);
-            
-            svg.appendChild(g);
-        }
-
-        function drawWire(svg, x1, y1, x2, y2) {
-            const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            line.setAttribute('x1', x1);
-            line.setAttribute('y1', y1);
-            line.setAttribute('x2', x2);
-            line.setAttribute('y2', y2);
-            line.setAttribute('stroke', '#333');
-            line.setAttribute('stroke-width', '2');
-            svg.appendChild(line);
-        }
-
-        function updateResistorList(circuit) {
-            const resistorList = document.getElementById('resistorList');
-            resistorList.innerHTML = '';
-            
-            circuit.resistors.forEach(resistor => {
-                const div = document.createElement('div');
-                div.className = 'resistor-item';
-                div.textContent = `${resistor.id}: ${resistor.value}Ω`;
-                resistorList.appendChild(div);
-            });
-        }
-
-        function generateNewQuestion() {
-            currentCircuit = new Circuit();
-            currentQuestion = new Question(currentCircuit);
-            
-            drawCircuit(currentCircuit);
-            updateResistorList(currentCircuit);
-            
-            document.getElementById('questionText').textContent = currentQuestion.text;
-            document.getElementById('answerInput').value = '';
-            document.getElementById('feedback').style.display = 'none';
-            document.getElementById('voltageDisplay').textContent = `${currentCircuit.voltage}V`;
-            
-            // Reset submit button state
-            const submitBtn = document.querySelector('.btn-primary');
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit Answer';
-            submitBtn.style.opacity = '1';
-            
-            // Focus on input
-            document.getElementById('answerInput').focus();
-        }
-
-        function checkAnswer() {
-            const userAnswer = parseFloat(document.getElementById('answerInput').value);
-            const feedback = document.getElementById('feedback');
-            const submitBtn = document.querySelector('.btn-primary');
-            
-            if (isNaN(userAnswer)) {
-                feedback.textContent = 'Please enter a valid number.';
-                feedback.className = 'feedback incorrect';
-                feedback.style.display = 'block';
-                return;
-            }
-            
-            // Check if this question has already been answered
-            if (currentQuestion.hasBeenAnswered) {
-                feedback.textContent = 'This question has already been answered. Generate a new question to continue.';
-                feedback.className = 'feedback incorrect';
-                feedback.style.display = 'block';
-                return;
-            }
-            
-            // Mark question as answered to prevent re-submission
-            currentQuestion.hasBeenAnswered = true;
-            
-            // Disable submit button to prevent spam clicking
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitted';
-            submitBtn.style.opacity = '0.6';
-            
-            totalQuestions++;
-            
-            if (currentQuestion.checkAnswer(userAnswer)) {
-                const pointsEarned = difficulty === 'hard' ? 2 : 1;
-                const streakIncrement = difficulty === 'hard' ? 2 : 1;
-                
-                score += pointsEarned;
-                streak += streakIncrement;
-                
-                const bonusText = difficulty === 'hard' ? ` (+${pointsEarned} points!)` : '';
-                feedback.textContent = `Correct! The answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}${bonusText}`;
-                feedback.className = 'feedback correct';
-                
-                // Automatically generate new question after 2 seconds when correct
-                setTimeout(() => {
-                    generateNewQuestion();
-                }, 2000);
-                
-            } else {
-                streak = 0;
-                feedback.textContent = `Incorrect. The correct answer is ${currentQuestion.answer.toFixed(2)} ${currentQuestion.unit}`;
-                feedback.className = 'feedback incorrect';
-            }
-            
-            feedback.style.display = 'block';
-            updateScoreBoard();
-        }
-
-        function updateScoreBoard() {
-            document.getElementById('score').textContent = score;
-            document.getElementById('streak').textContent = streak;
-            document.getElementById('total').textContent = totalQuestions;
-        }
-
-        // Event listeners
-        document.getElementById('answerInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkAnswer();
-            }
-        });
-
-        function setDifficulty(newDifficulty) {
-            difficulty = newDifficulty;
-            
-            // Update button states
-            document.getElementById('easyBtn').classList.toggle('active', difficulty === 'easy');
-            document.getElementById('hardBtn').classList.toggle('active', difficulty === 'hard');
-            
-            // Update description
-            const description = difficulty === 'easy' 
-                ? 'Easy: Only equivalent resistance questions'
-                : 'Hard: All question types (2x points & streak!)';
-            document.getElementById('difficultyDescription').textContent = description;
-            
-            // Generate new question with new difficulty
-            generateNewQuestion();
-        }
-
-
-
-        // Initialize the game
-        generateNewQuestion();
-    </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'987459a1259bd4ce',t:'MTc1OTI0MTkxMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+function showView(view){for(const id of ['setupView','quizView','resultsView'])$(id).hidden=id!==view;window.scrollTo({top:0,behavior:'instant'});}
+function startSession(){const settings=readSettings(),err=validateSettings(settings);if(err){refreshSummary();return;}session={settings,history:[],points:0,streak:0,bestStreak:0,hintsUsed:0};questionSerial=0;showView('quizView');nextQuestion();}
+function updateBoard(){if(!session)return;const history=session.history;$('scoreDisplay').textContent=session.points;$('correctDisplay').textContent=history.filter(r=>r.status==='correct').length;$('streakDisplay').textContent=session.streak;$('completedDisplay').textContent=history.length;const max=session.settings.length;const pct=max==='endless'?0:100*history.length/max;$('progressFill').style.width=pct+'%';$('progressTrack').setAttribute('aria-valuenow',String(Math.round(pct)));}
+function nextQuestion(){
+ if(!session)return;if(session.settings.length!=='endless'&&session.history.length>=session.settings.length){showResults();return;}
+ currentCircuit=new Circuit(session.settings);currentQuestion=new Question(currentCircuit,session.settings);questionSerial++;
+ $('sessionLabel').textContent=`${LEVELS[session.settings.level].label} · ${TOPOLOGY_NAMES[currentCircuit.topology]} circuit`;
+ $('questionNumber').textContent=`Question ${questionSerial}${session.settings.length==='endless'?'':` of ${session.settings.length}`}`;
+ drawCircuit(currentCircuit,currentQuestion);drawResistorList(currentCircuit,currentQuestion);
+ $('voltageDisplay').textContent=currentCircuit.voltage+' V';$('questionText').textContent=currentQuestion.text;$('answerUnit').textContent=currentQuestion.unit;
+ $('answerInput').value='';$('answerInput').disabled=false;$('submitBtn').disabled=false;$('submitBtn').hidden=false;$('skipBtn').hidden=false;$('nextBtn').hidden=true;
+ $('feedback').hidden=true;$('feedback').textContent='';$('solutionTools').hidden=true;$('solutionCard').hidden=true;$('solutionToggle').textContent='Show worked solution ▼';$('solutionToggle').setAttribute('aria-expanded','false');
+ $('hintList').replaceChildren();$('hintCount').textContent='0 / 3 hints';$('hintsBox').hidden=!session.settings.hints;$('hintBtn').disabled=false;$('hintBtn').textContent='💡 Show a hint (−1 point)';
+ updateBoard();
+}
+function revealHint(){if(!currentQuestion||currentQuestion.finished||currentQuestion.hintsRevealed>=3)return;const hints=makeHints(currentQuestion);const index=currentQuestion.hintsRevealed++;const line=document.createElement('div');line.className='hint-line';line.textContent=`Hint ${index+1}: ${hints[index]}`;$('hintList').appendChild(line);$('hintCount').textContent=`${currentQuestion.hintsRevealed} / 3 hints`;if(currentQuestion.hintsRevealed===3){$('hintBtn').disabled=true;$('hintBtn').textContent='All hints shown';}}
+function renderSolution(){const box=$('solutionSteps');box.replaceChildren();for(const step of solutionFor(currentQuestion)){const div=document.createElement('div');div.className='solution-step';const h=document.createElement('strong'),p=document.createElement('div');h.textContent=step.title;p.textContent=step.body;div.append(h,p);box.appendChild(div);}}
+function completeQuestion(status,submittedValue=null){
+ if(!session||!currentQuestion||currentQuestion.finished)return;
+ currentQuestion.finished=true;
+ const hints=currentQuestion.hintsRevealed;
+ const points=status==='correct'?Math.max(0,LEVELS[session.settings.level].points-hints):0;
+ session.points+=points;session.hintsUsed+=hints;
+ if(status==='correct'){session.streak++;session.bestStreak=Math.max(session.bestStreak,session.streak);}else session.streak=0;
+ session.history.push({number:questionSerial,level:session.settings.level,topology:currentCircuit.topology,kind:currentQuestion.type,resistors:currentCircuit.resistors.map(r=>`${r.id}=${r.value}Ω`).join('; '),target:currentQuestion.targetResistor||'',unit:currentQuestion.unit,answer:currentQuestion.answer,submitted:submittedValue,status,hints,points});
+ const text=`${fmt(currentQuestion.answer)} ${currentQuestion.unit}`;
+ const feedback=$('feedback');feedback.className='feedback '+(status==='correct'?'correct':status==='skipped'?'skipped':'incorrect');
+ feedback.textContent=status==='correct'?`✓ Correct! ${text}. ${points} ${points===1?'point':'points'} earned${hints?` (${hints} hint${hints===1?'':'s'} used)`:''}.`:status==='skipped'?`Skipped. The answer is ${text}.`:`Not quite. The correct answer is ${text}.`;
+ feedback.hidden=false;$('submitBtn').hidden=true;$('skipBtn').hidden=true;$('nextBtn').hidden=false;
+ const last=session.settings.length!=='endless'&&session.history.length>=session.settings.length;
+ $('nextBtn').textContent=last?'View results →':'Next question →';$('answerInput').disabled=true;$('hintBtn').disabled=true;
+ $('solutionTools').hidden=false;renderSolution();updateBoard();
+}
+function submitAnswer(){
+ if(!currentQuestion||currentQuestion.finished)return;
+ const input=$('answerInput'),raw=input.value.trim(),value=Number(raw);
+ if(!raw||!Number.isFinite(value)||value<0){const f=$('feedback');f.className='feedback incorrect';f.textContent='Enter a valid non-negative number before checking your answer.';f.hidden=false;return;}
+ completeQuestion(currentQuestion.checkAnswer(value)?'correct':'incorrect',value);
+}
+function makePerformanceRow(label,rows){const correct=rows.filter(r=>r.status==='correct').length,percent=rows.length?Math.round(100*correct/rows.length):0;const wrap=document.createElement('div');wrap.className='performance-row';const upper=document.createElement('div');upper.className='performance-top';const left=document.createElement('span');left.textContent=label;const right=document.createElement('strong');right.textContent=`${correct}/${rows.length} · ${percent}%`;upper.append(left,right);const track=document.createElement('div');track.className='bar-track';const fill=document.createElement('div');fill.className='bar-fill';fill.style.width=percent+'%';track.appendChild(fill);wrap.append(upper,track);return wrap;}
+function showResults(){
+ if(!session)return;const history=session.history,attempted=history.filter(r=>r.status!=='skipped'),correct=history.filter(r=>r.status==='correct'),skipped=history.length-attempted.length;
+ const percent=history.length?Math.round(100*correct.length/history.length):0;
+ $('resultsTitle').textContent=session.settings.length==='endless'?'Your practice summary':'Practice complete!';$('resultsIntro').textContent=`${LEVELS[session.settings.level].label} level · ${history.length} question${history.length===1?'':'s'} completed`;
+ $('rAccuracy').textContent=percent+'%';$('rCorrect').textContent=`${correct.length}/${history.length}`;$('rPoints').textContent=String(session.points);$('rStreak').textContent=String(session.bestStreak);
+ for(const [id,entries,names,field] of [['topologyBreakdown',Object.keys(TOPOLOGY_NAMES),TOPOLOGY_NAMES,'topology'],['typeBreakdown',Object.keys(TYPE_NAMES),TYPE_NAMES,'kind']]){
+  const block=$(id);block.replaceChildren();const keys=entries.filter(k=>history.some(r=>r[field]===k));
+  if(!keys.length){block.textContent='No questions completed yet.';continue;}
+  keys.forEach(k=>block.appendChild(makePerformanceRow(names[k],history.filter(r=>r[field]===k))));
+ }
+ $('resultsFootnote').textContent=`${skipped} skipped · ${session.hintsUsed} hints used · Accuracy includes skipped questions. Skipped questions earn no points.`;
+ showView('resultsView');
+}
+function downloadCSV(){
+ if(!session)return;const keys=['number','level','topology','kind','resistors','target','unit','answer','submitted','status','hints','points'];
+ const escapeCsv=value=>'"'+String(value??'').replace(/"/g,'""')+'"';
+ const lines=[keys.join(','),...session.history.map(row=>keys.map(key=>escapeCsv(row[key])).join(','))];
+ const file=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8;'});
+ const url=URL.createObjectURL(file),link=document.createElement('a');link.href=url;link.download='resistor-quiz-results.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$('levelCards').addEventListener('click',e=>{const button=e.target.closest('[data-level]');if(button)chooseLevel(button.dataset.level);});
+$('lengthChoices').addEventListener('click',e=>{const button=e.target.closest('[data-count]');if(button)chooseLength(button.dataset.count==='endless'?'endless':Number(button.dataset.count));});
+$('customDetails').addEventListener('change',refreshSummary);
+$('startBtn').addEventListener('click',startSession);
+$('expandBtn').addEventListener('click',()=>{const isExpanded=$('gameArea').classList.toggle('expanded');$('expandBtn').setAttribute('aria-expanded',String(isExpanded));$('expandBtn').textContent=isExpanded?'⊟ Collapse diagram':'⤢ Expand diagram';requestAnimationFrame(updateDiagramHint);});
+$('answerInput').addEventListener('keydown',e=>{if(e.key==='Enter')submitAnswer();});
+$('submitBtn').addEventListener('click',submitAnswer);
+$('skipBtn').addEventListener('click',()=>completeQuestion('skipped'));
+$('nextBtn').addEventListener('click',nextQuestion);
+$('hintBtn').addEventListener('click',revealHint);
+$('solutionToggle').addEventListener('click',()=>{const hidden=!$('solutionCard').hidden;$('solutionCard').hidden=hidden;$('solutionToggle').setAttribute('aria-expanded',String(!hidden));$('solutionToggle').textContent=hidden?'Show worked solution ▼':'Hide worked solution ▲';});
+$('finishBtn').addEventListener('click',()=>{if(session&&session.history.length===0&&!currentQuestion.finished){if(!confirm('Finish without answering any questions?'))return;}else if(currentQuestion&&!currentQuestion.finished){if(!confirm('Finish now? Your current unanswered question will not count.'))return;}showResults();});
+$('retryBtn').addEventListener('click',()=>{if(!session)return;const settings=session.settings;session={settings,history:[],points:0,streak:0,bestStreak:0,hintsUsed:0};questionSerial=0;showView('quizView');nextQuestion();});
+$('settingsBtn').addEventListener('click',()=>showView('setupView'));
+$('csvBtn').addEventListener('click',downloadCSV);
+$('printBtn').addEventListener('click',()=>window.print());
+window.addEventListener('resize',updateDiagramHint);
+chooseLevel('easy');chooseLength(10);
+</script>
+</body>
 </html>

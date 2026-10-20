@@ -109,6 +109,9 @@ units:
     }
 </script>
 
+## Download the Additional Worksheet:
+[Download Worksheet](https://engineeringshare.github.io/engineering-resources/worksheets/Dimensional Analysis Worksheet PDF.pdf)
+
 ## Other Materials:
 
 * [YouTube: Dimensional Analysis](https://youtu.be/vWovdihteqs?si=77iziw5kXnqq7i6q)
