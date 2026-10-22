@@ -2,7 +2,7 @@
   "version": 1,
   "id": "electronics-basics",
   "name": "Electronics Basics",
-  "description": "From atomic structure to electric power. For calculations, enter only the number in the unit requested.",
+  "description": "From atomic structure to electric power. Choose the correct answer for each question.",
   "reward": 30,
   "questions": [
     {
@@ -67,9 +67,9 @@
       "answer": "It contains dissolved ions"
     },
     {
-      "prompt": "Is the statement 'plastic contains no electrons' correct?",
-      "choices": ["No", "Yes"],
-      "answer": "No"
+      "prompt": "Which statement about plastic is correct?",
+      "choices": ["It has electrons, but very few can move freely", "It contains no electrons", "All its electrons flow freely", "It has no charged particles"],
+      "answer": "It has electrons, but very few can move freely"
     },
     {
       "prompt": "In a metal circuit, which way do electrons drift through the external wires?",
@@ -102,9 +102,9 @@
       "answer": "1 C"
     },
     {
-      "prompt": "Does a resistor use up the electrons flowing through it?",
-      "choices": ["No", "Yes"],
-      "answer": "No"
+      "prompt": "What happens to charge carriers as they pass through a resistor?",
+      "choices": ["They continue through while transferring energy", "They are destroyed", "They are converted into protons", "They permanently stop at its entrance"],
+      "answer": "They continue through while transferring energy"
     },
     {
       "prompt": "How should an ammeter be connected to measure current through a resistor?",
@@ -162,9 +162,9 @@
       "answer": "V = I × R"
     },
     {
-      "prompt": "Can a voltage exist across an open switch when no current flows?",
-      "choices": ["Yes", "No"],
-      "answer": "Yes"
+      "prompt": "What can exist across an open switch in a powered circuit?",
+      "choices": ["Voltage without current", "Current without any voltage", "Destroyed electrons", "A guaranteed short circuit"],
+      "answer": "Voltage without current"
     },
     {
       "prompt": "What is the SI unit of electric charge?",

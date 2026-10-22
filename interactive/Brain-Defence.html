@@ -21,9 +21,9 @@
         linear-gradient(90deg, #ffffff05 1px, transparent 1px);
       background-size: 32px 32px;
     }
-    button, input, select { font: inherit; }
+    button, select { font: inherit; }
     button, select { cursor: pointer; }
-    button:focus-visible, input:focus-visible, select:focus-visible, canvas:focus-visible {
+    button:focus-visible, select:focus-visible, canvas:focus-visible {
       outline: 3px solid var(--cyan); outline-offset: 3px;
     }
     button:disabled { cursor: not-allowed; opacity: .45; }
@@ -84,7 +84,7 @@
     .panel-title { margin: 0; font-size: 20px; letter-spacing: -.03em; }
     .panel-desc { color: var(--muted); font-size: 12px; margin: 5px 0 14px; }
     label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 5px; font-weight: bold; }
-    select, .answer-input {
+    select {
       width: 100%; padding: 11px 10px; border: 2px solid var(--line);
       background: #0e192a; color: var(--text); border-radius: 0;
     }
@@ -93,11 +93,19 @@
     .question-box { background: #101d2e; border: 2px solid #50617e; margin-top: 15px; padding: 16px; box-shadow: inset 0 0 0 3px #ffffff07; }
     .question-counter { font-size: 10px; color: var(--green); letter-spacing: .13em; font-weight: bold; }
     .question-text { font-size: 20px; font-weight: 900; margin: 12px 0 15px; line-height: 1.35; min-height: 65px; overflow-wrap: anywhere; }
-    .answer-form { display: flex; gap: 8px; }
-    .answer-input { flex: 1; min-width: 0; font-weight: bold; font-size: 17px; }
-    .answer-form .pixel-button { padding: 8px 12px; }
-    .choices { display: grid; gap: 8px; }
-    .choice { padding: 11px; font-size: 13px; font-weight: bold; text-align: left; width: 100%; }
+    .choices { display: grid; gap: 9px; }
+    .choice {
+      display: flex; align-items: center; gap: 11px; padding: 10px 12px;
+      font-size: 13px; line-height: 1.3; font-weight: bold; text-align: left;
+      width: 100%; min-height: 53px; overflow-wrap: anywhere;
+    }
+    .choice-key {
+      display: grid; flex: 0 0 29px; width: 29px; height: 29px; place-items: center;
+      color: var(--cyan); background: #0e192a; border: 1px solid #54728b;
+    }
+    .choice:disabled { opacity: 1; }
+    .choice.is-correct { border-color: var(--green); background: #1d584e; }
+    .choice.is-wrong { border-color: var(--pink); background: #663544; }
     .feedback { min-height: 44px; display: flex; align-items: center; font-size: 13px; font-weight: bold; }
     .feedback.ok { color: var(--green); } .feedback.bad { color: var(--pink); }
     .quiz-tip { font-size: 11px; color: var(--muted); background: #23354a; padding: 12px; border-left: 4px solid var(--gold); }
@@ -203,14 +211,10 @@
           <div class="question-box">
             <div class="question-counter" id="questionCounter">QUESTION 001 · +25 COINS</div>
             <div class="question-text" id="questionText">Loading question…</div>
-            <form class="answer-form" id="answerForm" autocomplete="off">
-              <input class="answer-input" id="answerInput" name="answer" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" required>
-              <button class="pixel-button primary" type="submit" id="answerSubmit">GO ↵</button>
-            </form>
-            <div class="choices" id="choices" hidden></div>
+            <div class="choices" id="choices" aria-label="Answer choices"></div>
           </div>
           <div class="feedback" id="feedback" aria-live="polite"></div>
-          <div class="quiz-tip"><strong>NO PAUSE!</strong> Each right answer gives coins; every 5 in a row earns a bonus. You can swap question sets at any time.</div>
+          <div class="quiz-tip"><strong>NO PAUSE!</strong> Choose A–D or click an answer. Wrong answers incur a 3-second cooldown. Every 5 correct in a row earns bonus coins.</div>
           <div class="utility">
             <span>ANSWER STREAK: <strong id="streakValue">0</strong></span>
             <span>ACCURACY: <strong id="accuracyValue">—</strong></span>
@@ -363,7 +367,12 @@
         return { prompt: "What is " + n + "²?", answer: n * n };
       }
     };
-    const goodQuestion = (q) => q && typeof q.prompt === "string" && q.prompt.trim() && (typeof q.answer === "string" || typeof q.answer === "number");
+    const goodQuestion = (q) => {
+      if (!q || typeof q.prompt !== "string" || !q.prompt.trim()) return false;
+      if (typeof q.answer === "number") return Number.isFinite(q.answer);
+      return typeof q.answer === "string" && Array.isArray(q.choices) && q.choices.length >= 2 &&
+        q.choices.some((choice) => String(choice).trim().toLowerCase() === q.answer.trim().toLowerCase());
+    };
     function validateBank(data) {
       if (!data || typeof data !== "object") return null;
       const questions = (Array.isArray(data.questions) ? data.questions : []).filter(goodQuestion).slice(0, 500);
@@ -386,7 +395,7 @@
       placing: null, selected: null, hover: null, over: false, shake: 0
     };
     let bestScore = 0, indexData = embeddedIndex, activeBank = validateBank(embeddedBanks.arithmetic);
-    let activeQuestion = null, currentQuestionNumber = 0, answerPending = false;
+    let activeQuestion = null, currentQuestionNumber = 0, answerPending = false, fixedDeck = [];
     let questionSerial = 0, bankRequest = 0, toastUntil = 0, previousFrame = 0, hudAccumulator = 0;
     try { bestScore = Number(localStorage.getItem("engineering-brain-defence-best") || 0) || 0; } catch (_) { /* Private browsing. */ }
 
@@ -423,7 +432,6 @@
       $("shopPanel").hidden = quiz;
       $("quizTab").setAttribute("aria-selected", String(quiz));
       $("shopTab").setAttribute("aria-selected", String(!quiz));
-      if (quiz && !answerPending && !($("answerForm").hidden)) $("answerInput").focus({ preventScroll: true });
       if (!quiz) refreshShop();
     }
     $("quizTab").addEventListener("click", () => setTab("quiz"));
@@ -478,6 +486,7 @@
       $("setDescription").textContent = (bank.description || set.description || "Questions ready.") + " · " + source;
       questionSerial++;
       answerPending = false;
+      fixedDeck = [];
       nextQuestion();
       renderHUD();
     }
@@ -497,11 +506,22 @@
     }
     $("setSelect").addEventListener("change", (event) => selectBank(event.target.value));
 
+    function shuffle(items) {
+      for (let i = items.length - 1; i > 0; i--) {
+        const j = randomInt(0, i);
+        [items[i], items[j]] = [items[j], items[i]];
+      }
+      return items;
+    }
+    function takeFixedQuestion() {
+      if (!fixedDeck.length) fixedDeck = shuffle([...activeBank.questions]);
+      return { ...fixedDeck.pop() };
+    }
     function makeQuestion() {
       if (!activeBank) return null;
       const hasGenerators = activeBank.generators.length > 0;
       const hasFixed = activeBank.questions.length > 0;
-      if (hasFixed && (!hasGenerators || Math.random() < 0.2)) return { ...choose(activeBank.questions) };
+      if (hasFixed && (!hasGenerators || Math.random() < 0.2)) return takeFixedQuestion();
       if (hasGenerators) {
         for (let tries = 0; tries < 10; tries++) {
           const spec = choose(activeBank.generators);
@@ -511,36 +531,88 @@
           } catch (_) { /* An invalid generator should not crash the game. */ }
         }
       }
-      return hasFixed ? { ...choose(activeBank.questions) } : null;
+      return hasFixed ? takeFixedQuestion() : null;
+    }
+    function formatNumber(number) {
+      return String(Number(number.toPrecision(6)));
+    }
+    function numericChoices(question) {
+      const answer = question.answer, candidates = [answer];
+      const step = Number.isInteger(answer)
+        ? Math.max(1, Math.round(Math.abs(answer) * 0.1))
+        : Math.max(0.1, Math.abs(answer) * 0.1);
+      const unitConversion = /\b(mA|kΩ|minutes?|milliseconds?|centimetres?|millimetres?)\b/i.test(question.prompt);
+      // Large scaling errors make sense for unit conversions, not basic arithmetic.
+      const groups = unitConversion ? [
+        [answer * 1000, answer / 1000, answer * 60, answer / 60],
+        [answer + step, answer - step],
+        [answer * 2, answer / 2, -answer]
+      ] : [
+        [answer + step, answer - step, answer + 1, answer - 1],
+        [answer * 2, answer / 2, -answer],
+        [answer + 2 * step, answer - 2 * step, answer + 2, answer - 2]
+      ];
+      const add = (candidate) => {
+        if (!Number.isFinite(candidate) || Math.abs(candidate) > 1e12) return false;
+        const rounded = Number(formatNumber(candidate));
+        if (isCorrectAnswer(String(rounded), question)) return false;
+        if (candidates.some((n) => formatNumber(n) === formatNumber(rounded))) return false;
+        candidates.push(rounded);
+        return true;
+      };
+      for (const group of groups) {
+        for (const candidate of shuffle(group)) if (add(candidate)) break;
+      }
+      let bump = 1;
+      while (candidates.length < 4 && bump <= 100) { add(answer + bump); bump++; }
+      const match = question.prompt.match(/\bin\s+(mA|kΩ|Ω|V|A|C|J|W|s)\s*[?.!]*$/i);
+      const unit = question.unit || (match ? match[1] : "");
+      return shuffle(candidates.slice(0, 4).map((n) => ({
+        label: formatNumber(n) + (unit ? " " + unit : ""),
+        value: formatNumber(n)
+      })));
+    }
+    function optionsForQuestion(question) {
+      if (typeof question.answer === "number" && (!Array.isArray(question.choices) ||
+        !question.choices.some((option) => isCorrectAnswer(String(option), question)))) {
+        return numericChoices(question);
+      }
+      const correct = question.choices.find((option) => isCorrectAnswer(String(option), question));
+      const incorrect = shuffle(question.choices.filter((option) => !isCorrectAnswer(String(option), question)));
+      return shuffle([correct, ...incorrect.slice(0, 3)].map((option) => ({
+        label: String(option), value: String(option)
+      })));
     }
     function nextQuestion() {
       activeQuestion = makeQuestion();
       answerPending = false;
+      $("setSelect").disabled = false;
       currentQuestionNumber++;
       $("questionCounter").textContent = "QUESTION " + String(currentQuestionNumber).padStart(3, "0") + " · +" + (activeBank ? activeBank.reward : 25) + " COINS";
       $("questionText").textContent = activeQuestion ? activeQuestion.prompt : "No questions available.";
       $("feedback").textContent = "";
       $("feedback").className = "feedback";
-      $("answerInput").value = "";
       const choices = $("choices");
       choices.replaceChildren();
-      const options = activeQuestion && Array.isArray(activeQuestion.choices) &&
-        activeQuestion.choices.length >= 2 ? activeQuestion.choices.slice(0, 6) : null;
-      $("answerForm").hidden = Boolean(options);
-      choices.hidden = !options;
-      if (options) {
-        for (const option of options) {
+      if (activeQuestion) {
+        const options = optionsForQuestion(activeQuestion);
+        for (let i = 0; i < options.length; i++) {
+          const option = options[i];
           const button = document.createElement("button");
           button.type = "button";
           button.className = "choice";
-          button.textContent = String(option);
-          button.addEventListener("click", () => submitAnswer(String(option)));
+          button.dataset.correct = String(isCorrectAnswer(option.value, activeQuestion));
+          const key = document.createElement("span");
+          key.className = "choice-key";
+          key.textContent = String.fromCharCode(65 + i);
+          key.setAttribute("aria-hidden", "true");
+          const label = document.createElement("span");
+          label.textContent = option.label;
+          button.append(key, label);
+          button.addEventListener("click", () => submitAnswer(option.value, button));
           choices.append(button);
         }
       }
-      $("answerInput").disabled = !activeQuestion;
-      $("answerSubmit").disabled = !activeQuestion;
-      if (!$("quizPanel").hidden && !options) $("answerInput").focus({ preventScroll: true });
     }
     function isCorrectAnswer(value, question) {
       const expected = question.answer;
@@ -552,9 +624,10 @@
       }
       return String(value).trim().toLowerCase() === expected.trim().toLowerCase();
     }
-    function submitAnswer(value) {
+    function submitAnswer(value, selectedButton) {
       if (answerPending || !activeQuestion || state.over) return;
       answerPending = true;
+      $("setSelect").disabled = true;
       state.attempted++;
       const correct = isCorrectAnswer(value, activeQuestion);
       const feedback = $("feedback");
@@ -569,22 +642,22 @@
         floater(WIDTH - 80, 44, "+" + reward + " ◈", "#ffcf66");
       } else {
         state.streak = 0;
-        feedback.textContent = "✕ NOT QUITE · Answer: " + activeQuestion.answer;
+        const winning = $("choices").querySelector('[data-correct="true"]');
+        const label = winning ? winning.lastElementChild.textContent : String(activeQuestion.answer);
+        feedback.textContent = "✕ CORRECT: " + label + " · 3s COOLDOWN";
         feedback.className = "feedback bad";
       }
-      $("answerInput").disabled = true;
-      $("answerSubmit").disabled = true;
-      for (const btn of $("choices").querySelectorAll("button")) btn.disabled = true;
+      for (const btn of $("choices").querySelectorAll("button")) {
+        btn.disabled = true;
+        btn.classList.toggle("is-correct", btn.dataset.correct === "true");
+        btn.classList.toggle("is-wrong", btn === selectedButton && !correct);
+      }
       updateBest();
       renderHUD();
       refreshShop();
       const serial = ++questionSerial;
-      setTimeout(() => { if (serial === questionSerial && !state.over) nextQuestion(); }, correct ? 600 : 1200);
+      setTimeout(() => { if (serial === questionSerial && !state.over) nextQuestion(); }, correct ? 500 : 3000);
     }
-    $("answerForm").addEventListener("submit", (event) => {
-      event.preventDefault();
-      submitAnswer($("answerInput").value);
-    });
 
     function refreshShop() {
       const list = $("shopList");
@@ -682,6 +755,12 @@
     window.addEventListener("keydown", (event) => {
       const tag = event.target && event.target.tagName;
       if (["INPUT", "SELECT", "TEXTAREA"].includes(tag) || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (/^[a-d]$/i.test(event.key) && !$("quizPanel").hidden && !answerPending) {
+        const buttons = $("choices").querySelectorAll("button");
+        const button = buttons[event.key.toLowerCase().charCodeAt(0) - 97];
+        if (button && !button.disabled) { button.click(); event.preventDefault(); }
+        return;
+      }
       if (event.key === "Escape") { state.placing = null; state.selected = null; refreshShop(); setHint("Selection cancelled."); }
       if (event.key === "1" || event.key === "2" || event.key === "3") {
         const id = TOWER_IDS[Number(event.key) - 1];
@@ -835,7 +914,8 @@
       updateBest();
       $("finalStats").textContent = "WAVE " + state.wave + " · " + state.score + " POINTS · " + state.correct + " CORRECT ANSWERS";
       $("gameover").hidden = false;
-      $("answerInput").disabled = true; $("answerSubmit").disabled = true;
+      $("setSelect").disabled = true;
+      for (const btn of $("choices").querySelectorAll("button")) btn.disabled = true;
       refreshShop();
     }
     function restart() {
