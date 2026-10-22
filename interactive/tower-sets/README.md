@@ -7,6 +7,7 @@ Place these files in the Engineering Share repository:
     interactive/tower-sets/arithmetic.json
     interactive/tower-sets/algebra.json
     interactive/tower-sets/percentages.json
+    interactive/tower-sets/electronics-basics.json
 
 The HTML is standalone: all graphics, CSS and game logic are embedded. When
 hosted, it tries to load the question list from:
@@ -28,12 +29,44 @@ Remote data can take a few seconds to update after a GitHub push.
       "id": "circuits",
       "name": "Electrical Circuits",
       "description": "Voltage, current and resistance",
+      "category": "electronics",
       "difficulty": "Level 3",
+      "difficultyRank": 1,
       "file": "circuits.json"
     }
 
-3. The HTML will show the new option automatically after the JSON files
-   are published. No HTML edit is needed for static question banks.
+3. The HTML will show the set in its category automatically after the JSON
+   files are published. No HTML edit is needed for static question banks.
+
+## Question library categories and favourites
+
+The question-set dropdown has been replaced by **OPEN QUESTION LIBRARY**.
+The library pauses the waves, enemy movement and answer cooldowns until it
+is closed. Students can browse categories, search names/descriptions, sort
+by name or difficulty and mark any set as a favourite (star button). Favourites
+are saved in the student's browser using localStorage, so they persist when
+the student returns on the same browser/profile. This does not sync between
+devices and can be erased by clearing site data.
+
+The index.json file owns the list of available sets and their categories:
+
+    "categories": [
+      { "id": "mathematics", "name": "Mathematics", "icon": "∑" },
+      { "id": "science", "name": "Science", "icon": "⚗" },
+      { "id": "electronics", "name": "Electronics", "icon": "⚡" },
+      { "id": "mechatronics", "name": "Mechatronics", "icon": "⚙" }
+    ]
+
+Every set should specify a "category" matching one of those IDs. Additional
+categories can be declared in that same array. The four standard categories
+always appear, even when empty. Older indexes without "category" fields
+still work, with known electronics/mechatronics/science names inferred and
+everything else treated as Mathematics for backwards compatibility.
+
+The optional "difficultyRank" controls difficulty sorting (1 = easiest,
+5 = hardest); the visible "difficulty" label can be whatever suits your
+students. Missing ranks use a best-effort ordering from labels like Starter,
+Intermediate and Advanced.
 
 ## Question set schema
 
@@ -67,11 +100,14 @@ Remote data can take a few seconds to update after a GitHub push.
 
 Each set needs at least one valid fixed question or generator.
 
-- Numeric answers use a free-text field. Students can type negative or decimal
-  answers. The default tolerance is 0.000001, or override with tolerance.
-- String answers are compared without case sensitivity.
-- Questions with a choices array show multiple-choice buttons. The answer
-  must match one of the choices exactly (ignoring case).
+- All questions appear as clickable multiple-choice answers in the game.
+- Numeric answers automatically receive four choices: the correct value and
+  plausible distractors based on unit scaling or common calculation errors.
+  The default checking tolerance is 0.000001, or override with tolerance.
+- Questions with a choices array display the correct answer and up to three
+  supplied distractors in a random order. For a string answer, the choices
+  array is required and must contain the correct answer (ignoring case).
+- Answers are shuffled each time. Wrong answers trigger a 3-second cooldown.
 - Question explanation is reserved for future feedback enhancements.
 - The set's reward defaults to 25 and is capped between 5 and 100 coins.
 - If both questions and generators exist, about 20% of questions come from

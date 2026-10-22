@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#101827">
-  <meta name="description" content="Defend your brain by answering maths questions to earn towers. A pixel-art learning game for Engineering Share.">
+  <meta name="description" content="Defend your brain by answering engineering, science and maths questions to earn towers. A pixel-art learning game for Engineering Share.">
   <title>Brain Defence | Engineering Share</title>
   <style>
     :root {
@@ -21,9 +21,10 @@
         linear-gradient(90deg, #ffffff05 1px, transparent 1px);
       background-size: 32px 32px;
     }
-    button, select { font: inherit; }
+    body.library-open { overflow: hidden; }
+    button, select, input { font: inherit; }
     button, select { cursor: pointer; }
-    button:focus-visible, select:focus-visible, canvas:focus-visible {
+    button:focus-visible, select:focus-visible, input:focus-visible, canvas:focus-visible {
       outline: 3px solid var(--cyan); outline-offset: 3px;
     }
     button:disabled { cursor: not-allowed; opacity: .45; }
@@ -90,6 +91,19 @@
     }
     select { appearance: auto; }
     .set-description { min-height: 36px; font-size: 11px; color: var(--muted); margin: 8px 0 0; }
+    .library-launch { margin-top: 1px; }
+    .library-label { font-size: 11px; color: var(--muted); letter-spacing: .08em; font-weight: bold; }
+    .library-launch-button {
+      width: 100%; margin-top: 7px; padding: 12px; display: flex; align-items: center; gap: 12px;
+      border: 2px solid var(--cyan); border-radius: 0; text-align: left; cursor: pointer;
+      background: #20384e; color: var(--text); box-shadow: 4px 4px 0 var(--shadow);
+    }
+    .library-launch-button:hover { background: #2b5069; }
+    .library-launch-icon { color: var(--cyan); font-size: 30px; line-height: 1; }
+    .library-launch-copy { flex: 1; min-width: 0; }
+    .library-launch-copy strong { display: block; font-size: 14px; overflow-wrap: anywhere; }
+    .library-launch-copy small { display: block; color: var(--cyan); font-size: 10px; margin-top: 2px; letter-spacing: .06em; }
+    .library-launch-arrow { color: var(--gold); font-size: 20px; }
     .question-box { background: #101d2e; border: 2px solid #50617e; margin-top: 15px; padding: 16px; box-shadow: inset 0 0 0 3px #ffffff07; }
     .question-counter { font-size: 10px; color: var(--green); letter-spacing: .13em; font-weight: bold; }
     .question-text { font-size: 20px; font-weight: 900; margin: 12px 0 15px; line-height: 1.35; min-height: 65px; overflow-wrap: anywhere; }
@@ -135,6 +149,100 @@
     .gameover h2 { color: var(--pink); font-size: clamp(29px, 5vw, 55px); margin: 0; text-shadow: 5px 5px #111; }
     .gameover p { font-weight: bold; margin: 0 0 10px; }
     .gameover .pixel-button { padding: 12px 22px; }
+    .library-overlay {
+      position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center;
+      padding: 16px; background: #050a13e9; backdrop-filter: blur(3px);
+    }
+    .library-overlay[hidden] { display: none; }
+    .library-dialog {
+      width: min(1050px, 100%); height: min(760px, calc(100dvh - 32px));
+      background: #142139; border: 3px solid var(--cyan); box-shadow: 10px 10px 0 #02060d;
+      display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+    }
+    .library-header {
+      display: flex; align-items: center; justify-content: space-between; gap: 15px;
+      padding: 17px 19px; border-bottom: 2px solid var(--line); background: #1b2e46;
+    }
+    .library-header h2 { font-size: clamp(21px, 3vw, 29px); margin: 2px 0 0; line-height: 1.15; }
+    .library-header .eyebrow { font-size: 10px; }
+    .library-toolbar {
+      display: flex; gap: 12px; padding: 14px 18px; border-bottom: 2px solid var(--line); align-items: end;
+    }
+    .library-field { flex: 1; min-width: 0; }
+    .library-field.sort { flex: 0 0 205px; }
+    .library-field input, .library-field select {
+      width: 100%; height: 42px; border: 2px solid var(--line); border-radius: 0;
+      padding: 8px 10px; background: #0a1628; color: var(--text);
+    }
+    .library-content { display: grid; grid-template-columns: 220px minmax(0, 1fr); min-height: 0; flex: 1; }
+    .library-sidebar { overflow-y: auto; border-right: 2px solid var(--line); background: #101c30; padding: 13px 10px; }
+    .library-sidebar-heading { color: var(--muted); font-size: 10px; font-weight: bold; letter-spacing: .16em; margin: 4px 9px 10px; }
+    .library-category {
+      display: flex; align-items: center; gap: 9px; width: 100%; margin-bottom: 5px; padding: 10px;
+      text-align: left; border: 2px solid transparent; background: transparent; color: var(--muted);
+      cursor: pointer; font-size: 12px; font-weight: bold;
+    }
+    .library-category:hover { background: #263951; color: var(--text); }
+    .library-category.active { color: var(--cyan); border-color: var(--cyan); background: #21374f; }
+    .library-category-icon { font-size: 17px; width: 23px; text-align: center; }
+    .library-category-count { margin-left: auto; font-size: 10px; color: var(--gold); }
+    .library-main { padding: 17px 18px; min-width: 0; overflow-y: auto; }
+    .library-section-header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 13px; }
+    .library-section-header h3 { margin: 0; font-size: 19px; color: var(--text); }
+    .library-section-header span { font-size: 11px; color: var(--muted); }
+    .library-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .library-card {
+      display: flex; flex-direction: column; min-width: 0; padding: 14px;
+      background: #1e3048; border: 2px solid #46607b; box-shadow: 3px 3px 0 #081222;
+    }
+    .library-card.current { border-color: var(--green); }
+    .library-card-head { display: flex; align-items: start; justify-content: space-between; gap: 8px; }
+    .library-card h4 { margin: 0; font-size: 15px; line-height: 1.35; overflow-wrap: anywhere; }
+    .library-favourite {
+      flex: 0 0 36px; width: 36px; height: 36px; border: 2px solid var(--line);
+      background: #101d2e; color: var(--muted); cursor: pointer; font-size: 23px; line-height: 1;
+    }
+    .library-favourite:hover, .library-favourite.saved { border-color: var(--gold); color: var(--gold); }
+    .library-card-description { color: var(--muted); font-size: 12px; flex: 1; margin: 12px 0 14px; line-height: 1.5; }
+    .library-card-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
+    .library-chip { font-size: 10px; padding: 3px 7px; background: #101d2e; color: var(--cyan); border: 1px solid #48627d; }
+    .library-chip.difficulty { color: var(--gold); }
+    .library-select { width: 100%; padding: 9px 11px; font-size: 12px; }
+    .library-select.current { border-color: var(--green); color: var(--green); }
+    .library-empty {
+      border: 2px dashed var(--line); background: #1b2b42; color: var(--muted);
+      text-align: center; padding: 37px 18px; font-size: 13px; line-height: 1.7;
+      grid-column: 1 / -1;
+    }
+    .library-empty strong { display: block; color: var(--text); font-size: 16px; margin-bottom: 7px; }
+    .library-status { color: var(--pink); font-size: 12px; min-height: 17px; margin: 11px 0 0; }
+    .library-footer {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      border-top: 2px solid var(--line); padding: 11px 18px; background: #1b2e46;
+      color: var(--green); font-size: 11px; font-weight: bold;
+    }
+    @media (max-width: 760px) {
+      .library-content { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
+      .library-sidebar {
+        display: flex; gap: 7px; border-right: 0; border-bottom: 2px solid var(--line);
+        padding: 9px; overflow-x: auto; overflow-y: hidden;
+      }
+      .library-sidebar-heading { display: none; }
+      .library-category { flex: 0 0 auto; width: auto; margin: 0; padding: 8px; }
+      .library-category-count { margin-left: 5px; }
+      .library-cards { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 520px) {
+      .library-overlay { padding: 5px; }
+      .library-dialog { height: calc(100dvh - 10px); }
+      .library-header { padding: 11px; }
+      .library-toolbar { padding: 9px 11px; gap: 8px; }
+      .library-field.sort { flex-basis: 137px; }
+      .library-field label { font-size: 10px; }
+      .library-field input, .library-field select { font-size: 12px; }
+      .library-main { padding: 12px; }
+      .library-footer { padding: 9px 11px; }
+    }
     @media (max-width: 1080px) { .layout { grid-template-columns: minmax(0, 1fr) 310px; } .tab-content { padding: 13px; } }
     @media (max-width: 860px) {
       .layout { grid-template-columns: 1fr; } .tab-content { min-height: 0; }
@@ -205,8 +313,17 @@
         <div class="tab-content" id="quizPanel" role="tabpanel" aria-labelledby="quizTab">
           <h2 class="panel-title">EARN YOUR DEFENCES</h2>
           <p class="panel-desc">Correct answers earn coins. The enemies keep moving while you solve!</p>
-          <label for="setSelect">QUESTION SET</label>
-          <select id="setSelect" aria-label="Choose a question set"><option value="arithmetic">Core Arithmetic</option></select>
+          <div class="library-launch">
+            <span class="library-label">ACTIVE QUESTION SET</span>
+            <button class="library-launch-button" id="openLibrary" type="button" aria-haspopup="dialog" aria-controls="libraryOverlay">
+              <span class="library-launch-icon" aria-hidden="true">▦</span>
+              <span class="library-launch-copy">
+                <strong id="currentSetName">Core Arithmetic</strong>
+                <small>OPEN QUESTION LIBRARY →</small>
+              </span>
+              <span class="library-launch-arrow" aria-hidden="true">›</span>
+            </button>
+          </div>
           <p class="set-description" id="setDescription">Loading question banks…</p>
           <div class="question-box">
             <div class="question-counter" id="questionCounter">QUESTION 001 · +25 COINS</div>
@@ -214,7 +331,7 @@
             <div class="choices" id="choices" aria-label="Answer choices"></div>
           </div>
           <div class="feedback" id="feedback" aria-live="polite"></div>
-          <div class="quiz-tip"><strong>NO PAUSE!</strong> Choose A–D or click an answer. Wrong answers incur a 3-second cooldown. Every 5 correct in a row earns bonus coins.</div>
+          <div class="quiz-tip"><strong>LIVE WAVES!</strong> Choose A–D or click an answer. Wrong answers incur a 3-second cooldown. Every 5 correct in a row earns bonus coins.</div>
           <div class="utility">
             <span>ANSWER STREAK: <strong id="streakValue">0</strong></span>
             <span>ACCURACY: <strong id="accuracyValue">—</strong></span>
@@ -240,7 +357,48 @@
         </div>
       </aside>
     </main>
-    <p class="footer-note">Runs entirely in your browser. Question sets are loaded from the Engineering Share JSON index when available, with built-in maths questions as an offline fallback. Progress resets when you restart; personal best is saved on this device where supported.</p>
+    <p class="footer-note">Runs entirely in your browser. Question sets are loaded from the Engineering Share JSON index when available, with built-in maths questions as an offline fallback. Progress resets when you restart; personal best and favourite sets are saved on this device where supported.</p>
+  </div>
+  <div class="library-overlay" id="libraryOverlay" hidden>
+    <div class="library-dialog" role="dialog" aria-modal="true" aria-labelledby="libraryTitle" tabindex="-1">
+      <div class="library-header">
+        <div>
+          <div class="eyebrow">ENGINEERING SHARE // KNOWLEDGE ARCHIVE</div>
+          <h2 id="libraryTitle">QUESTION LIBRARY</h2>
+        </div>
+        <button class="pixel-button" id="closeLibrary" type="button" aria-label="Close question library">✕ CLOSE</button>
+      </div>
+      <div class="library-toolbar">
+        <div class="library-field">
+          <label for="librarySearch">FIND A QUESTION SET</label>
+          <input id="librarySearch" type="search" placeholder="Search by name or topic…" autocomplete="off">
+        </div>
+        <div class="library-field sort">
+          <label for="librarySort">SORT BY</label>
+          <select id="librarySort">
+            <option value="az">Name: A–Z</option>
+            <option value="za">Name: Z–A</option>
+            <option value="easy">Difficulty: easiest</option>
+            <option value="hard">Difficulty: hardest</option>
+          </select>
+        </div>
+      </div>
+      <div class="library-content">
+        <nav class="library-sidebar" id="libraryCategories" aria-label="Question categories"></nav>
+        <section class="library-main" aria-labelledby="libraryCategoryTitle">
+          <div class="library-section-header">
+            <h3 id="libraryCategoryTitle">All question sets</h3>
+            <span id="libraryCount">0 SETS</span>
+          </div>
+          <div class="library-cards" id="libraryCards"></div>
+          <p class="library-status" id="libraryStatus" role="status" aria-live="polite"></p>
+        </section>
+      </div>
+      <div class="library-footer">
+        <span>⏸ GAME PAUSED · ENEMIES AND TIMERS FROZEN</span>
+        <span id="libraryFavouriteCount">0 FAVOURITES ★</span>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -283,11 +441,18 @@
       }
     }
 
+    const defaultCategories = [
+      { id: "mathematics", name: "Mathematics", icon: "∑" },
+      { id: "science", name: "Science", icon: "⚗" },
+      { id: "electronics", name: "Electronics", icon: "⚡" },
+      { id: "mechatronics", name: "Mechatronics", icon: "⚙" }
+    ];
     const embeddedIndex = {
+      categories: defaultCategories,
       sets: [
-        { id: "arithmetic", name: "Core Arithmetic", file: "arithmetic.json", description: "Addition, subtraction, multiplication and division." },
-        { id: "algebra", name: "Algebra & Negatives", file: "algebra.json", description: "Signed numbers and simple equations." },
-        { id: "percentages", name: "Percentages & Powers", file: "percentages.json", description: "Percentages, squares and substitution." }
+        { id: "arithmetic", name: "Core Arithmetic", file: "arithmetic.json", category: "mathematics", difficulty: "Starter", difficultyRank: 1, description: "Addition, subtraction, multiplication and division." },
+        { id: "algebra", name: "Algebra & Negatives", file: "algebra.json", category: "mathematics", difficulty: "Intermediate", difficultyRank: 2, description: "Signed numbers and simple equations." },
+        { id: "percentages", name: "Percentages & Powers", file: "percentages.json", category: "mathematics", difficulty: "Intermediate", difficultyRank: 2, description: "Percentages, squares and substitution." }
       ]
     };
     // These embedded sets make the HTML playable even when opened with file://.
@@ -395,8 +560,19 @@
       placing: null, selected: null, hover: null, over: false, shake: 0
     };
     let bestScore = 0, indexData = embeddedIndex, activeBank = validateBank(embeddedBanks.arithmetic);
+    const FAVOURITES_KEY = "engineering-brain-defence-favourites-v1";
+    const favourites = new Set();
+    try {
+      const saved = JSON.parse(localStorage.getItem(FAVOURITES_KEY) || "[]");
+      if (Array.isArray(saved)) {
+        for (const id of saved.slice(0, 100)) {
+          if (typeof id === "string" && /^[a-z0-9_-]{1,40}$/i.test(id)) favourites.add(id);
+        }
+      }
+    } catch (_) { /* Favourites still work within this session. */ }
+    let activeSetId = "arithmetic", libraryOpen = false, libraryCategory = "all", libraryLoading = null;
     let activeQuestion = null, currentQuestionNumber = 0, answerPending = false, fixedDeck = [];
-    let questionSerial = 0, bankRequest = 0, toastUntil = 0, previousFrame = 0, hudAccumulator = 0;
+    let answerDelay = 0, bankRequest = 0, toastUntil = 0, previousFrame = 0, hudAccumulator = 0;
     try { bestScore = Number(localStorage.getItem("engineering-brain-defence-best") || 0) || 0; } catch (_) { /* Private browsing. */ }
 
     function pointAt(distance) {
@@ -453,24 +629,51 @@
       return null;
     }
     function legalFile(file) { return typeof file === "string" && /^[a-z0-9][a-z0-9_-]*\.json$/i.test(file); }
-    function updateSetOptions() {
-      const select = $("setSelect"), previous = select.value || "arithmetic";
-      select.replaceChildren();
-      for (const set of indexData.sets) {
-        const option = document.createElement("option");
-        option.value = set.id;
-        option.textContent = set.name;
-        select.append(option);
+    function categoryFromName(set) {
+      const text = (set.id + " " + set.name).toLowerCase();
+      if (/electron|circuit|electrical|resistor|ohm/.test(text)) return "electronics";
+      if (/mechatron|robot|plc|actuator|sensor/.test(text)) return "mechatronics";
+      if (/science|physics|chemistry|biology|thermo/.test(text)) return "science";
+      return "mathematics"; // Legacy maths banks have no category field.
+    }
+    function normalisedCategories(source) {
+      const result = defaultCategories.map((category) => ({ ...category }));
+      if (Array.isArray(source)) {
+        for (const entry of source.slice(0, 40)) {
+          if (!entry || typeof entry.id !== "string" || !/^[a-z0-9_-]{1,40}$/i.test(entry.id) ||
+              ["all", "favourites"].includes(entry.id) ||
+              typeof entry.name !== "string") continue;
+          const details = { id: entry.id, name: entry.name.slice(0, 50), icon: String(entry.icon || "▦").slice(0, 3) };
+          const existing = result.find((category) => category.id === entry.id);
+          if (existing) Object.assign(existing, details);
+          else result.push(details);
+        }
       }
-      select.value = indexData.sets.some((s) => s.id === previous) ? previous : indexData.sets[0].id;
+      return result;
+    }
+    function normalisedSet(set) {
+      const category = typeof set.category === "string" && /^[a-z0-9_-]{1,40}$/i.test(set.category) &&
+        !["all", "favourites"].includes(set.category)
+        ? set.category : categoryFromName(set);
+      return {
+        id: set.id, file: set.file, name: set.name.slice(0, 80),
+        description: String(set.description || "").slice(0, 200), category,
+        difficulty: String(set.difficulty || "General").slice(0, 40),
+        difficultyRank: Number.isInteger(set.difficultyRank) && set.difficultyRank >= 1 &&
+          set.difficultyRank <= 5 ? set.difficultyRank : null
+      };
+    }
+    function currentSetLabel() {
+      const set = indexData.sets.find((entry) => entry.id === activeSetId);
+      $("currentSetName").textContent = set ? set.name : activeBank.name;
     }
     async function selectBank(id) {
       const set = indexData.sets.find((item) => item.id === id);
-      if (!set) return;
+      if (!set) return false;
       const requested = ++bankRequest;
       $("setDescription").textContent = "Loading " + set.name + "…";
       let data = await firstJSON([RAW_ROOT + encodeURIComponent(set.file), "tower-sets/" + set.file]);
-      if (requested !== bankRequest) return;
+      if (requested !== bankRequest) return false;
       let source = "LIVE JSON";
       let bank = validateBank(data);
       if (!bank && embeddedBanks[id]) {
@@ -480,31 +683,224 @@
       if (!bank) {
         $("setDescription").textContent = "This question set could not be loaded. Choose another set.";
         showToast("QUESTION SET UNAVAILABLE", 2600);
-        return;
+        return false;
       }
       activeBank = bank;
+      activeSetId = id;
+      currentSetLabel();
       $("setDescription").textContent = (bank.description || set.description || "Questions ready.") + " · " + source;
-      questionSerial++;
-      answerPending = false;
+      answerPending = false; answerDelay = 0;
       fixedDeck = [];
       nextQuestion();
       renderHUD();
+      return true;
     }
     async function loadIndex() {
       indexData = embeddedIndex;
-      updateSetOptions();
+      currentSetLabel();
+      const startedWithRequest = bankRequest;
       const loaded = await firstJSON([RAW_ROOT + "index.json", "tower-sets/index.json"]);
-      if (!loaded || !Array.isArray(loaded.sets)) return;
-      const sets = loaded.sets
-        .filter((s) => s && typeof s.id === "string" && /^[a-z0-9_-]{1,40}$/i.test(s.id) && legalFile(s.file) && typeof s.name === "string")
-        .slice(0, 40).map((s) => ({ id: s.id, file: s.file, name: s.name.slice(0, 80), description: String(s.description || "").slice(0, 140) }));
-      if (sets.length) {
-        indexData = { sets };
-        updateSetOptions();
-        selectBank($("setSelect").value);
+      if (loaded && Array.isArray(loaded.sets)) {
+        const sets = loaded.sets.filter((s) => s && typeof s.id === "string" &&
+          /^[a-z0-9_-]{1,40}$/i.test(s.id) && legalFile(s.file) && typeof s.name === "string")
+          .slice(0, 40).map(normalisedSet);
+        if (sets.length) {
+          const categories = normalisedCategories(loaded.categories);
+          for (const set of sets) {
+            if (!categories.some((category) => category.id === set.category)) {
+              categories.push({ id: set.category, name: set.category.replace(/[-_]/g, " "), icon: "▦" });
+            }
+          }
+          indexData = { sets, categories };
+        }
+      }
+      currentSetLabel();
+      if (libraryOpen) renderLibrary();
+      // Do not undo a manual selection made while the catalogue was loading.
+      if (startedWithRequest !== bankRequest) return;
+      const nextId = indexData.sets.some((set) => set.id === activeSetId)
+        ? activeSetId : indexData.sets[0].id;
+      await selectBank(nextId);
+    }
+
+    function libraryElement(tag, className, label) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      if (label !== undefined) element.textContent = label;
+      return element;
+    }
+    function categoryName(id) {
+      return (indexData.categories || defaultCategories).find((item) => item.id === id)?.name ||
+        id.replace(/[-_]/g, " ");
+    }
+    function saveFavourites() {
+      try { localStorage.setItem(FAVOURITES_KEY, JSON.stringify([...favourites])); }
+      catch (_) { /* Browser storage can be disabled; session favourites still work. */ }
+    }
+    function toggleFavourite(id) {
+      if (favourites.has(id)) favourites.delete(id);
+      else favourites.add(id);
+      saveFavourites();
+      renderLibrary();
+      const sameButton = [...$("libraryCards").querySelectorAll("[data-favourite-id]")]
+        .find((button) => button.dataset.favouriteId === id);
+      if (sameButton) sameButton.focus();
+      else $("libraryCategories").querySelector('[data-category="favourites"]')?.focus();
+    }
+    function difficultyScore(set) {
+      if (set.difficultyRank !== null && set.difficultyRank !== undefined) return set.difficultyRank;
+      if (/starter|beginner|intro/i.test(set.difficulty)) return 1;
+      if (/intermediate|level 4/i.test(set.difficulty)) return 3;
+      if (/advanced|level 5/i.test(set.difficulty)) return 5;
+      return 2;
+    }
+    function filteredLibrarySets() {
+      const search = $("librarySearch").value.trim().toLowerCase();
+      const result = indexData.sets.filter((set) => {
+        if (libraryCategory === "favourites" && !favourites.has(set.id)) return false;
+        if (libraryCategory !== "favourites" && libraryCategory !== "all" && set.category !== libraryCategory) return false;
+        return !search || [set.name, set.description, set.difficulty, categoryName(set.category)]
+          .some((field) => field.toLowerCase().includes(search));
+      });
+      const sorting = $("librarySort").value;
+      result.sort((a, b) => {
+        if (sorting === "easy" || sorting === "hard") {
+          const difference = difficultyScore(a) - difficultyScore(b);
+          if (difference) return sorting === "easy" ? difference : -difference;
+        }
+        const comparison = a.name.localeCompare(b.name, "en", { sensitivity: "base" });
+        return sorting === "za" ? -comparison : comparison;
+      });
+      return result;
+    }
+    function renderLibrary() {
+      if (!libraryOpen) return;
+      const categoryItems = [
+        { id: "all", name: "All Sets", icon: "▤" },
+        { id: "favourites", name: "Favourites", icon: "★" },
+        ...(indexData.categories || defaultCategories)
+      ];
+      const categories = $("libraryCategories");
+      categories.replaceChildren(libraryElement("div", "library-sidebar-heading", "BROWSE CATEGORIES"));
+      for (const category of categoryItems) {
+        const count = category.id === "all" ? indexData.sets.length
+          : category.id === "favourites" ? indexData.sets.filter((set) => favourites.has(set.id)).length
+          : indexData.sets.filter((set) => set.category === category.id).length;
+        const button = libraryElement("button", "library-category" + (libraryCategory === category.id ? " active" : ""));
+        button.type = "button";
+        button.dataset.category = category.id;
+        button.setAttribute("aria-pressed", String(libraryCategory === category.id));
+        button.append(libraryElement("span", "library-category-icon", category.icon),
+          libraryElement("span", "", category.name),
+          libraryElement("span", "library-category-count", String(count)));
+        button.addEventListener("click", () => {
+          libraryCategory = category.id;
+          renderLibrary();
+          $("libraryCategories").querySelector('[data-category="' + category.id + '"]')?.focus();
+        });
+        categories.append(button);
+      }
+      const sets = filteredLibrarySets();
+      $("libraryCategoryTitle").textContent = categoryItems.find((item) => item.id === libraryCategory)?.name || "Question sets";
+      $("libraryCount").textContent = sets.length + (sets.length === 1 ? " SET" : " SETS");
+      const availableFavourites = indexData.sets.filter((set) => favourites.has(set.id)).length;
+      $("libraryFavouriteCount").textContent = availableFavourites +
+        (availableFavourites === 1 ? " FAVOURITE ★" : " FAVOURITES ★");
+      const cards = $("libraryCards");
+      cards.replaceChildren();
+      if (!sets.length) {
+        const noSets = libraryElement("div", "library-empty");
+        const heading = libraryElement("strong", "",
+          libraryCategory === "favourites" && favourites.size === 0 ? "NO FAVOURITES YET" : "NO MATCHING QUESTION SETS");
+        const message = libraryElement("span", "", libraryCategory === "favourites" && favourites.size === 0
+          ? "Select the star on any question set to save it here for next time."
+          : $("librarySearch").value.trim() ? "Try another search, or choose a different category."
+          : "No question banks are listed here yet. New sets will appear when they are added to index.json.");
+        noSets.append(heading, message);
+        cards.append(noSets);
+      }
+      for (const set of sets) {
+        const current = set.id === activeSetId, saved = favourites.has(set.id);
+        const card = libraryElement("article", "library-card" + (current ? " current" : ""));
+        const head = libraryElement("div", "library-card-head");
+        const heading = libraryElement("h4", "", set.name);
+        const favourite = libraryElement("button", "library-favourite" + (saved ? " saved" : ""), saved ? "★" : "☆");
+        favourite.type = "button";
+        favourite.dataset.favouriteId = set.id;
+        favourite.title = saved ? "Remove from favourites" : "Add to favourites";
+        favourite.setAttribute("aria-label", (saved ? "Remove " : "Add ") + set.name +
+          (saved ? " from favourites" : " to favourites"));
+        favourite.setAttribute("aria-pressed", String(saved));
+        favourite.addEventListener("click", () => toggleFavourite(set.id));
+        head.append(heading, favourite);
+        const description = libraryElement("p", "library-card-description", set.description || "Practice questions in " + set.name + ".");
+        const meta = libraryElement("div", "library-card-meta");
+        meta.append(libraryElement("span", "library-chip", categoryName(set.category)),
+          libraryElement("span", "library-chip difficulty", set.difficulty));
+        const action = libraryElement("button", "pixel-button library-select" +
+          (current ? " current" : " primary"), current ? "✓ CURRENT SET · RESUME" :
+          libraryLoading === set.id ? "LOADING QUESTION SET…" : "▶ SELECT THIS SET");
+        action.type = "button";
+        action.disabled = libraryLoading !== null;
+        action.addEventListener("click", () => {
+          if (current) closeLibrary();
+          else chooseLibrarySet(set.id);
+        });
+        card.append(head, description, meta, action);
+        cards.append(card);
+      }
+      $("libraryStatus").textContent = libraryLoading ? "Loading the selected question bank. The game remains paused…" : "";
+    }
+    async function chooseLibrarySet(id) {
+      if (libraryLoading) return;
+      libraryLoading = id;
+      renderLibrary();
+      const success = await selectBank(id);
+      libraryLoading = null;
+      if (success) closeLibrary();
+      else {
+        renderLibrary();
+        $("libraryStatus").textContent = "Could not load this set. Please choose another.";
       }
     }
-    $("setSelect").addEventListener("change", (event) => selectBank(event.target.value));
+    function openLibrary() {
+      if (libraryOpen) return;
+      libraryOpen = true;
+      $("libraryOverlay").hidden = false;
+      document.querySelector(".page").inert = true;
+      document.body.classList.add("library-open");
+      renderLibrary();
+      renderHUD();
+      $("librarySearch").focus();
+    }
+    function closeLibrary() {
+      if (!libraryOpen) return;
+      libraryOpen = false;
+      $("libraryOverlay").hidden = true;
+      document.querySelector(".page").inert = false;
+      document.body.classList.remove("library-open");
+      renderHUD();
+      $("openLibrary").focus();
+    }
+    $("openLibrary").addEventListener("click", openLibrary);
+    $("closeLibrary").addEventListener("click", closeLibrary);
+    $("libraryOverlay").addEventListener("click", (event) => {
+      if (event.target === $("libraryOverlay")) closeLibrary();
+    });
+    $("librarySearch").addEventListener("input", renderLibrary);
+    $("librarySort").addEventListener("change", renderLibrary);
+    $("libraryOverlay").addEventListener("keydown", (event) => {
+      if (event.key === "Escape") { closeLibrary(); event.preventDefault(); event.stopPropagation(); return; }
+      if (event.key !== "Tab") return;
+      const focusable = [...$("libraryOverlay").querySelectorAll("button:not(:disabled), input:not(:disabled), select:not(:disabled)")]
+        .filter((element) => element.getClientRects().length);
+      if (!focusable.length) return;
+      if (event.shiftKey && document.activeElement === focusable[0]) {
+        focusable[focusable.length - 1].focus(); event.preventDefault();
+      } else if (!event.shiftKey && document.activeElement === focusable[focusable.length - 1]) {
+        focusable[0].focus(); event.preventDefault();
+      }
+    });
 
     function shuffle(items) {
       for (let i = items.length - 1; i > 0; i--) {
@@ -586,7 +982,7 @@
     function nextQuestion() {
       activeQuestion = makeQuestion();
       answerPending = false;
-      $("setSelect").disabled = false;
+      answerDelay = 0;
       currentQuestionNumber++;
       $("questionCounter").textContent = "QUESTION " + String(currentQuestionNumber).padStart(3, "0") + " · +" + (activeBank ? activeBank.reward : 25) + " COINS";
       $("questionText").textContent = activeQuestion ? activeQuestion.prompt : "No questions available.";
@@ -601,6 +997,7 @@
           const button = document.createElement("button");
           button.type = "button";
           button.className = "choice";
+          button.disabled = state.over;
           button.dataset.correct = String(isCorrectAnswer(option.value, activeQuestion));
           const key = document.createElement("span");
           key.className = "choice-key";
@@ -625,9 +1022,8 @@
       return String(value).trim().toLowerCase() === expected.trim().toLowerCase();
     }
     function submitAnswer(value, selectedButton) {
-      if (answerPending || !activeQuestion || state.over) return;
+      if (answerPending || !activeQuestion || state.over || libraryOpen) return;
       answerPending = true;
-      $("setSelect").disabled = true;
       state.attempted++;
       const correct = isCorrectAnswer(value, activeQuestion);
       const feedback = $("feedback");
@@ -655,8 +1051,8 @@
       updateBest();
       renderHUD();
       refreshShop();
-      const serial = ++questionSerial;
-      setTimeout(() => { if (serial === questionSerial && !state.over) nextQuestion(); }, correct ? 500 : 3000);
+      // Advance on the gameplay clock so opening the library also freezes quiz cooldowns.
+      answerDelay = correct ? .5 : 3;
     }
 
     function refreshShop() {
@@ -731,7 +1127,7 @@
     });
     canvas.addEventListener("pointerleave", () => { state.hover = null; });
     canvas.addEventListener("pointerdown", (event) => {
-      if (state.over || event.button !== 0) return;
+      if (state.over || libraryOpen || event.button !== 0) return;
       const pos = getCanvasPoint(event), cell = tileAt(pos.x, pos.y);
       if (cell.col < 0 || cell.col > 19 || cell.row < 0 || cell.row > 11) return;
       const existing = towerAt(cell.col, cell.row);
@@ -753,6 +1149,7 @@
       }
     });
     window.addEventListener("keydown", (event) => {
+      if (libraryOpen) return;
       const tag = event.target && event.target.tagName;
       if (["INPUT", "SELECT", "TEXTAREA"].includes(tag) || event.altKey || event.ctrlKey || event.metaKey) return;
       if (/^[a-d]$/i.test(event.key) && !$("quizPanel").hidden && !answerPending) {
@@ -886,7 +1283,12 @@
       state.shake = Math.max(0, state.shake - dt);
     }
     function step(dt) {
+      if (libraryOpen) return;
       if (state.over) { stepEffects(dt); return; }
+      if (answerPending) {
+        answerDelay -= dt;
+        if (answerDelay <= 0) nextQuestion();
+      }
       state.phaseTime -= dt;
       if (state.phase === "combat") {
         state.spawnTime -= dt;
@@ -914,7 +1316,6 @@
       updateBest();
       $("finalStats").textContent = "WAVE " + state.wave + " · " + state.score + " POINTS · " + state.correct + " CORRECT ANSWERS";
       $("gameover").hidden = false;
-      $("setSelect").disabled = true;
       for (const btn of $("choices").querySelectorAll("button")) btn.disabled = true;
       refreshShop();
     }
@@ -927,7 +1328,7 @@
       };
       Object.assign(state, reset);
       $("gameover").hidden = true;
-      questionSerial++; answerPending = false; nextQuestion();
+      answerPending = false; answerDelay = 0; nextQuestion();
       setHint("Earn coins with the quiz, then use the ARMOURY to place towers.");
       renderHUD(); refreshShop(); showToast("NEW DEFENCE STARTED", 1200);
     }
@@ -1066,8 +1467,8 @@
     }
     function renderHUD() {
       const phase = state.phase === "combat" ? "WAVE ACTIVE" : state.phase === "cooldown" ? "COOLDOWN" : "PREPARATION";
-      $("phaseName").textContent = phase;
-      $("phaseDetail").textContent = state.phase === "combat"
+      $("phaseName").textContent = libraryOpen ? "PAUSED" : phase;
+      $("phaseDetail").textContent = libraryOpen ? "— question library open" : state.phase === "combat"
         ? "— keep defending!" : "— next wave " + (state.wave + 1);
       $("healthValue").textContent = "♥ " + state.health + " / " + STARTING_HEALTH;
       $("coinsValue").textContent = "◈ " + state.coins;
@@ -1093,15 +1494,13 @@
     }
 
     // Boot immediately with playable embedded questions; fetch JSON in the background.
-    updateSetOptions();
+    currentSetLabel();
     nextQuestion();
     renderHUD();
     refreshShop();
     requestAnimationFrame(loop);
     // This will also load and prefer local/remote JSON when available.
-    loadIndex().then(() => {
-      if (bankRequest === 0) selectBank($("setSelect").value);
-    });
+    loadIndex();
   })();
   </script>
 </body>
