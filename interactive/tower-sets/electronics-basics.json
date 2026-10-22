@@ -1,0 +1,405 @@
+{
+  "version": 1,
+  "id": "electronics-basics",
+  "name": "Electronics Basics",
+  "description": "From atomic structure to electric power. For calculations, enter only the number in the unit requested.",
+  "reward": 30,
+  "questions": [
+    {
+      "prompt": "Which particle has a negative electric charge?",
+      "choices": ["Electron", "Proton", "Neutron", "Nucleus"],
+      "answer": "Electron",
+      "explanation": "Electrons carry negative charge."
+    },
+    {
+      "prompt": "Which particle has a positive electric charge?",
+      "choices": ["Electron", "Neutron", "Proton", "Photon"],
+      "answer": "Proton"
+    },
+    {
+      "prompt": "What does the valence band contain?",
+      "choices": ["Outer bound electrons", "Only protons", "Free neutrons", "Electrical power"],
+      "answer": "Outer bound electrons"
+    },
+    {
+      "prompt": "In which band can electrons move freely through a material?",
+      "choices": ["Conduction band", "Valence band", "Forbidden band", "Magnetic band"],
+      "answer": "Conduction band"
+    },
+    {
+      "prompt": "What is the band gap?",
+      "choices": ["An energy separation between bands", "A gap between two wires", "The width of an atom", "A measure of current"],
+      "answer": "An energy separation between bands"
+    },
+    {
+      "prompt": "What happens to the valence and conduction bands in a typical metal?",
+      "choices": ["They overlap", "They are separated by a large gap", "Both are empty", "They contain only protons"],
+      "answer": "They overlap"
+    },
+    {
+      "prompt": "Why is copper a good conductor?",
+      "choices": ["Its electrons can move through the material", "It has no electrons", "It stops charge moving", "Its protons flow between atoms"],
+      "answer": "Its electrons can move through the material"
+    },
+    {
+      "prompt": "With no applied voltage, what is the net current in an ordinary copper wire?",
+      "choices": ["Zero", "Maximum", "Always 1 A", "It flows both ways at 1 A"],
+      "answer": "Zero"
+    },
+    {
+      "prompt": "Why does rubber normally act as an insulator?",
+      "choices": ["Very few electrons are free to move", "It has no charged particles", "Its protons move quickly", "It stores a constant current"],
+      "answer": "Very few electrons are free to move"
+    },
+    {
+      "prompt": "Which material is normally a good electrical conductor?",
+      "choices": ["Graphite", "Dry wood", "Glass", "Rubber"],
+      "answer": "Graphite"
+    },
+    {
+      "prompt": "Which material is normally an electrical insulator?",
+      "choices": ["Glass", "Copper", "Aluminium", "Steel"],
+      "answer": "Glass"
+    },
+    {
+      "prompt": "Why can ordinary tap water conduct electricity?",
+      "choices": ["It contains dissolved ions", "Water contains no electrons", "Its protons are free in metal", "It has zero resistance"],
+      "answer": "It contains dissolved ions"
+    },
+    {
+      "prompt": "Is the statement 'plastic contains no electrons' correct?",
+      "choices": ["No", "Yes"],
+      "answer": "No"
+    },
+    {
+      "prompt": "In a metal circuit, which way do electrons drift through the external wires?",
+      "choices": ["Negative to positive", "Positive to negative", "From earth to both terminals", "Only upwards"],
+      "answer": "Negative to positive"
+    },
+    {
+      "prompt": "Which direction represents conventional current in the external circuit?",
+      "choices": ["Positive to negative", "Negative to positive", "Both directions at once", "Towards earth only"],
+      "answer": "Positive to negative"
+    },
+    {
+      "prompt": "Which current direction is normally shown on circuit diagrams?",
+      "choices": ["Conventional current", "Electron drift", "Proton drift", "Random electron motion"],
+      "answer": "Conventional current"
+    },
+    {
+      "prompt": "What does electric current measure?",
+      "choices": ["Charge passing a point per second", "Energy stored in a battery", "Resistance per metre", "Force per electron"],
+      "answer": "Charge passing a point per second"
+    },
+    {
+      "prompt": "What is the SI unit of electric current?",
+      "choices": ["Ampere", "Volt", "Ohm", "Coulomb"],
+      "answer": "Ampere"
+    },
+    {
+      "prompt": "A current of 1 A means how much charge passes each second?",
+      "choices": ["1 C", "1 J", "1 V", "1 Ω"],
+      "answer": "1 C"
+    },
+    {
+      "prompt": "Does a resistor use up the electrons flowing through it?",
+      "choices": ["No", "Yes"],
+      "answer": "No"
+    },
+    {
+      "prompt": "How should an ammeter be connected to measure current through a resistor?",
+      "choices": ["In series with it", "Across it in parallel", "Across the power supply only", "Disconnected from the circuit"],
+      "answer": "In series with it"
+    },
+    {
+      "prompt": "How should a voltmeter be connected to measure voltage across a resistor?",
+      "choices": ["In parallel across it", "In series with it", "Only across an open switch", "In place of the power supply"],
+      "answer": "In parallel across it"
+    },
+    {
+      "prompt": "Before measuring resistance with a multimeter, what should you do?",
+      "choices": ["Disconnect the circuit power", "Increase the supply voltage", "Put the meter in current mode", "Short the supply terminals"],
+      "answer": "Disconnect the circuit power"
+    },
+    {
+      "prompt": "A meter is set to DC A. What is it measuring?",
+      "choices": ["Direct current", "Alternating voltage", "Resistance", "Electrical energy"],
+      "answer": "Direct current"
+    },
+    {
+      "prompt": "What does voltage measure?",
+      "choices": ["Energy transferred per unit charge", "Charge passing per second", "Opposition to current", "Force per square metre"],
+      "answer": "Energy transferred per unit charge"
+    },
+    {
+      "prompt": "Which is equivalent to 1 volt?",
+      "choices": ["1 joule per coulomb", "1 coulomb per second", "1 joule per second", "1 ohm per ampere"],
+      "answer": "1 joule per coulomb"
+    },
+    {
+      "prompt": "What does electrical resistance describe?",
+      "choices": ["Opposition to current", "Stored electric charge", "Energy per second", "Charge per second"],
+      "answer": "Opposition to current"
+    },
+    {
+      "prompt": "What is the SI unit of resistance?",
+      "choices": ["Ohm", "Ampere", "Watt", "Joule"],
+      "answer": "Ohm"
+    },
+    {
+      "prompt": "With voltage held constant, what happens to current if resistance doubles?",
+      "choices": ["It halves", "It doubles", "It stays the same", "It becomes four times as large"],
+      "answer": "It halves"
+    },
+    {
+      "prompt": "With resistance held constant, what happens to current if voltage doubles?",
+      "choices": ["It doubles", "It halves", "It stays the same", "It becomes zero"],
+      "answer": "It doubles"
+    },
+    {
+      "prompt": "Which equation is Ohm's law for a resistor?",
+      "choices": ["V = I × R", "V = I / R", "V = R / I", "V = I + R"],
+      "answer": "V = I × R"
+    },
+    {
+      "prompt": "Can a voltage exist across an open switch when no current flows?",
+      "choices": ["Yes", "No"],
+      "answer": "Yes"
+    },
+    {
+      "prompt": "What is the SI unit of electric charge?",
+      "choices": ["Coulomb", "Ampere", "Watt", "Volt"],
+      "answer": "Coulomb"
+    },
+    {
+      "prompt": "Which equation calculates charge from current and time?",
+      "choices": ["Q = I × t", "Q = I / t", "Q = V × R", "Q = P / t"],
+      "answer": "Q = I × t"
+    },
+    {
+      "prompt": "What happens between two positive charges?",
+      "choices": ["They repel", "They attract", "They cancel each other", "They become neutral"],
+      "answer": "They repel"
+    },
+    {
+      "prompt": "What happens between a positive and a negative charge?",
+      "choices": ["They attract", "They repel", "They stop producing a field", "They both become positive"],
+      "answer": "They attract"
+    },
+    {
+      "prompt": "What normally happens to electric force as two charges move closer together?",
+      "choices": ["It becomes stronger", "It becomes weaker", "It always disappears", "It reverses direction every second"],
+      "answer": "It becomes stronger"
+    },
+    {
+      "prompt": "What exerts the force that makes electrons drift through a conductor?",
+      "choices": ["An electric field", "Gravity alone", "The resistor colour bands", "Air pressure"],
+      "answer": "An electric field"
+    },
+    {
+      "prompt": "What is the SI unit of energy?",
+      "choices": ["Joule", "Watt", "Ampere", "Ohm"],
+      "answer": "Joule"
+    },
+    {
+      "prompt": "What does electrical power measure?",
+      "choices": ["Rate of energy transfer", "Total stored charge", "Resistance per second", "Charge per volt"],
+      "answer": "Rate of energy transfer"
+    },
+    {
+      "prompt": "What is the SI unit of power?",
+      "choices": ["Watt", "Joule", "Coulomb", "Volt"],
+      "answer": "Watt"
+    },
+    {
+      "prompt": "Which is equivalent to 1 watt?",
+      "choices": ["1 joule per second", "1 coulomb per second", "1 joule per coulomb", "1 volt per ampere"],
+      "answer": "1 joule per second"
+    },
+    {
+      "prompt": "Which expression gives electrical power?",
+      "choices": ["P = V × I", "P = V / I", "P = I / V", "P = V + I"],
+      "answer": "P = V × I"
+    },
+    {
+      "prompt": "Which expression gives electrical energy transferred over time?",
+      "choices": ["E = V × I × t", "E = V / (I × t)", "E = V + I + t", "E = R / t"],
+      "answer": "E = V × I × t"
+    },
+    {
+      "prompt": "A resistor carries 3 A and has resistance 7 Ω. Find its voltage in V.",
+      "answer": 21,
+      "explanation": "V = IR = 3 × 7 = 21 V."
+    },
+    {
+      "prompt": "A 15 Ω resistor carries 2 A. What is the voltage in V?",
+      "answer": 30,
+      "explanation": "V = IR = 15 × 2."
+    },
+    {
+      "prompt": "A 9 V battery supplies a 3 Ω resistor. What current flows in A?",
+      "answer": 3,
+      "explanation": "I = V/R = 9/3."
+    },
+    {
+      "prompt": "A 24 V supply drives 0.5 A through a resistor. Find its resistance in Ω.",
+      "answer": 48,
+      "explanation": "R = V/I = 24/0.5."
+    },
+    {
+      "prompt": "A 150 Ω resistor carries 0.2 A. Find the voltage in V.",
+      "answer": 30,
+      "explanation": "V = 150 × 0.2."
+    },
+    {
+      "prompt": "A 2 kΩ resistor carries 3 mA. Find the voltage in V.",
+      "answer": 6,
+      "explanation": "2000 Ω × 0.003 A = 6 V."
+    },
+    {
+      "prompt": "A 5 V supply is connected across a 250 Ω resistor. Find the current in mA.",
+      "answer": 20,
+      "explanation": "5/250 = 0.02 A = 20 mA."
+    },
+    {
+      "prompt": "An 18 V supply drives 6 mA through a resistor. Find the resistance in kΩ.",
+      "answer": 3,
+      "explanation": "18/0.006 = 3000 Ω = 3 kΩ."
+    },
+    {
+      "prompt": "A 40 Ω resistor carries 0.75 A. What voltage is across it in V?",
+      "answer": 30,
+      "explanation": "V = IR = 40 × 0.75."
+    },
+    {
+      "prompt": "A 6 V battery causes 0.25 A through a resistor. What is its resistance in Ω?",
+      "answer": 24,
+      "explanation": "R = V/I = 6/0.25."
+    },
+    {
+      "prompt": "A current of 3 A flows for 20 s. How much charge passes in C?",
+      "answer": 60,
+      "explanation": "Q = It = 3 × 20."
+    },
+    {
+      "prompt": "A current of 0.4 A flows for 50 s. Find the charge in C.",
+      "answer": 20,
+      "explanation": "Q = 0.4 × 50."
+    },
+    {
+      "prompt": "A current of 50 mA flows for 2 minutes. Find the charge in C.",
+      "answer": 6,
+      "explanation": "0.05 A × 120 s = 6 C."
+    },
+    {
+      "prompt": "A current of 1.5 A flows for 4 minutes. How much charge passes in C?",
+      "answer": 360,
+      "explanation": "1.5 × 240 = 360 C."
+    },
+    {
+      "prompt": "A circuit transfers 240 C in 80 s. Find the average current in A.",
+      "answer": 3,
+      "explanation": "I = Q/t = 240/80."
+    },
+    {
+      "prompt": "At 0.25 A, how many seconds are needed for 10 C to pass?",
+      "answer": 40,
+      "explanation": "t = Q/I = 10/0.25."
+    },
+    {
+      "prompt": "A charge of 5 C transfers 40 J. Find the potential difference in V.",
+      "answer": 8,
+      "explanation": "V = E/Q = 40/5."
+    },
+    {
+      "prompt": "A potential difference of 12 V transfers how many J for each 3 C?",
+      "answer": 36,
+      "explanation": "E = VQ = 12 × 3."
+    },
+    {
+      "prompt": "A 6 V supply transfers 90 J. How much charge passes in C?",
+      "answer": 15,
+      "explanation": "Q = E/V = 90/6."
+    },
+    {
+      "prompt": "A charge of 25 C transfers 100 J. What is the voltage in V?",
+      "answer": 4,
+      "explanation": "V = E/Q = 100/25."
+    },
+    {
+      "prompt": "A device uses 12 V at 2 A for 10 s. How much energy transfers in J?",
+      "answer": 240,
+      "explanation": "E = VIt = 12 × 2 × 10."
+    },
+    {
+      "prompt": "A 5 V device draws 0.5 A for 4 minutes. Find energy in J.",
+      "answer": 600,
+      "explanation": "E = 5 × 0.5 × 240."
+    },
+    {
+      "prompt": "A 24 V motor draws 1.5 A for 30 s. Find energy transferred in J.",
+      "answer": 1080,
+      "explanation": "E = 24 × 1.5 × 30."
+    },
+    {
+      "prompt": "A 9 V circuit carries 100 mA for 2 minutes. Find the energy in J.",
+      "answer": 108,
+      "explanation": "E = 9 × 0.1 × 120."
+    },
+    {
+      "prompt": "A 10 W lamp operates for 3 minutes. How much energy does it transfer in J?",
+      "answer": 1800,
+      "explanation": "E = Pt = 10 × 180."
+    },
+    {
+      "prompt": "A 60 W device runs for 30 seconds. Find the energy transferred in J.",
+      "answer": 1800,
+      "explanation": "E = Pt = 60 × 30."
+    },
+    {
+      "prompt": "A 12 V lamp draws 3 A. What power does it use in W?",
+      "answer": 36,
+      "explanation": "P = VI = 12 × 3."
+    },
+    {
+      "prompt": "A 9 V battery supplies 0.5 A. Find the power in W.",
+      "answer": 4.5,
+      "explanation": "P = VI = 9 × 0.5."
+    },
+    {
+      "prompt": "A USB-C charger supplies 9 V and 2 A. Find its power in W.",
+      "answer": 18,
+      "explanation": "P = VI = 9 × 2."
+    },
+    {
+      "prompt": "A 24 V load draws 0.25 A. Find its power in W.",
+      "answer": 6,
+      "explanation": "P = 24 × 0.25."
+    },
+    {
+      "prompt": "An appliance draws 8 A from 230 V. What is its power in W?",
+      "answer": 1840,
+      "explanation": "P = VI = 230 × 8."
+    },
+    {
+      "prompt": "A device transfers 150 J over 5 s. Find its average power in W.",
+      "answer": 30,
+      "explanation": "P = E/t = 150/5."
+    },
+    {
+      "prompt": "A 60 W lamp runs from 12 V. Find the current in A.",
+      "answer": 5,
+      "explanation": "I = P/V = 60/12."
+    },
+    {
+      "prompt": "A 4 Ω resistor carries 3 A. Find its power in W.",
+      "answer": 36,
+      "explanation": "P = I²R = 3² × 4."
+    },
+    {
+      "prompt": "A 12 Ω resistor is connected across 24 V. What power does it dissipate in W?",
+      "answer": 48,
+      "explanation": "P = V²/R = 24²/12."
+    }
+  ]
+}

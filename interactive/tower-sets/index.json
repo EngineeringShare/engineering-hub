@@ -3,25 +3,11 @@
   "title": "Engineering Share · Brain Defence Question Bank",
   "sets": [
     {
-      "id": "arithmetic",
-      "name": "Core Arithmetic",
-      "description": "Addition, subtraction, multiplication and division.",
-      "difficulty": "Starter",
-      "file": "arithmetic.json"
-    },
-    {
-      "id": "algebra",
-      "name": "Algebra & Negatives",
-      "description": "Signed numbers, substitution and solving for x.",
-      "difficulty": "Intermediate",
-      "file": "algebra.json"
-    },
-    {
-      "id": "percentages",
-      "name": "Percentages & Powers",
-      "description": "Percentages, squares and simple numeric reasoning.",
-      "difficulty": "Intermediate",
-      "file": "percentages.json"
+      "id": "electronics-basics",
+      "name": "Electronics Basics",
+      "description": "Conductors, current, voltage, Ohm's law, charge, energy and power.",
+      "difficulty": "Level 3 Starter",
+      "file": "electronics-basics.json"
     }
   ]
 }
