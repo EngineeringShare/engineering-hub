@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Electronics workbench · V1.04</title><style>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Electronics workbench · V1.08</title><style>
 
 :root { --cream:#f4f2e8; --muted:#91a7a3; --cyan:#8ce5cf; --yellow:#ffe18b; --success:#a7ebad; --surface:#182524; --copper:#bf754c; --ink:#10201c; }
 * { box-sizing:border-box; }
@@ -129,6 +129,46 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
 @media(max-width:850px) and (min-width:591px){.right-column>#editor-context-nav,.right-column>#properties-panel,.right-column>#board-parts-panel,.right-column>#project-panel{grid-column:1/-1;}}
 .supply-card{margin-top:16px;padding-top:14px;border-top:1px solid #40574b;}.supply-card input,#new-wire-colour,#wire-colour-select{width:100%;box-sizing:border-box;padding:8px;border:1px solid #516a57;border-radius:7px;background:#0d1b15;color:#dae9d3;margin-top:6px;}#wire-custom-colour{width:100%;height:35px;border:1px solid #516a57;border-radius:7px;background:#0d1b15;}.rail-reading{position:absolute;left:100%;font:8px monospace;width:34px;padding-left:5px;border:0;background:none;text-align:left;cursor:pointer;z-index:5;}.axis-label.rail-axis{border:0;background:none;font-weight:700;}
 .supply-list-row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr) 38px;gap:7px;margin-top:12px;padding:10px 0;border-bottom:1px solid #3a5142;}.supply-list-field span{display:block;font-size:9px;color:#9db5a2;}.supply-list-field input{width:100%;min-width:0;box-sizing:border-box;margin-top:5px;padding:7px 5px;border:1px solid #516a57;border-radius:6px;background:#0d1b15;color:#e4eddb;font-size:11px;}.supply-list-field input[type="color"]{height:31px;padding:2px;cursor:pointer;}.supply-row-note{grid-column:1/-1;font:9px monospace;color:#94ac9a;margin:0;}.supply-remove{grid-column:1/-1;justify-self:end;}.focused-supply{border-color:#aed0ae;}.supply-terminal{position:absolute;z-index:18;width:20px;height:20px;transform:translate(-50%,-50%);border:2px solid #e4eee0;border-radius:50%;background:var(--supply-colour);font:bold 11px monospace;padding:0;cursor:grab;touch-action:none;}.focused-terminal{box-shadow:0 0 0 3px #e8f2df66;}.supply-terminal-label{position:absolute;z-index:17;transform:translate(-50%,-100%);font:9px monospace;white-space:nowrap;pointer-events:none;background:#14221fdd;padding:2px 4px;border-radius:3px;}.supply-drag-preview{pointer-events:none;opacity:.8;z-index:31;outline:2px dashed #d6edc9;}.supply-drag-preview.invalid{outline-color:#ff7869;background:#713b37;}.moving-component .supply-terminal{cursor:grabbing;}
+
+
+/* V1.08: readable board zoom and panels that reflow in short/narrow viewports. */
+.workspace { padding-bottom:80px; }
+.side-column,.panel { min-width:0;overflow-wrap:anywhere; }
+.side-column { max-height:max(180px,calc(100dvh - 148px)); }
+.panel select,.panel input { max-width:100%; }
+.sim-board { overflow:auto;scrollbar-width:thin;scrollbar-color:#708c7a #1b2b25; }
+.board-stage { width:calc(var(--board-width,642px) * var(--board-scale));min-width:100%; }
+.board-zoom-controls { display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin:0 0 12px;color:#b8d0bd;font-size:11px; }
+.board-zoom-controls .action-button { padding:6px 10px;min-height:32px; }
+.board-zoom-controls output { min-width:42px;text-align:center;font:12px ui-monospace,monospace; }
+.board-zoom-controls [aria-pressed="true"] { background:#37533b;border-color:#a8c99d; }
+@media(max-width:1100px) {
+ .workspace { display:grid;grid-template-columns:minmax(170px,210px) minmax(0,1fr);padding:18px 16px 80px;gap:16px; }
+ .left-column { display:flex;grid-column:1;grid-row:1 / span 2;width:auto; }
+ .board-column { grid-column:2;grid-row:1; }
+ .right-column { display:flex;grid-column:2;grid-row:2;max-height:none;width:auto; }
+ .side-column { max-height:none;overflow:visible; }
+}
+@media(max-width:850px) {
+ .app-header { height:auto;min-height:76px;flex-wrap:wrap;padding:12px 16px;gap:10px; }
+ .brand { white-space:normal; }
+ .workspace { display:flex;flex-direction:column;padding:16px 12px 85px;gap:16px; }
+ .left-column { display:flex;width:100%;order:0; }
+ .left-column>.panel { width:100%; }
+ .board-column { width:100%;order:1; }
+ .right-column { display:flex;width:100%;order:2; }
+ .tool-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+ .tool-button { height:47px;min-height:47px; }
+ .board-toolbar { flex-wrap:wrap; }
+ .board-footer { flex-wrap:wrap;gap:8px; }
+}
+@media(max-width:590px) {
+ .tool-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+ .right-column { flex-direction:column; }
+ .mode-switch { order:2;width:100%; }
+ .supply-badge { margin-left:auto; }
+}
+
 </style></head>
 <body data-mode="build">
 <header class="app-header">
@@ -169,6 +209,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         <div class="supply-card"><h3>Add supply</h3><label class="field-label" for="new-supply-name">Name</label><input id="new-supply-name" maxlength="40" placeholder="Supply name"><label class="field-label" for="new-supply-voltage">Voltage / V</label><input id="new-supply-voltage" type="number" min="-1000" max="1000" step="any" value="-12"><button id="add-dc-supply" class="action-button full-width">Add supply</button></div>
       </div>
     </section>
+    <section id="live-time-panel" class="panel" data-view="simulation"><div class="section-head"><span class="eyebrow">SIMULATE / TIME</span><output id="live-time-clock" class="quiet-label">0.000 s</output></div><h2>Time simulation</h2><label class="toggle-row"><span>Capacitor charge / discharge</span><input id="live-time-enabled" type="checkbox"></label><div id="live-time-controls" hidden><p id="live-time-status" class="fine-print">Ready</p><div class="small-actions"><button id="live-time-play" class="action-button primary-button">Start</button><button id="live-time-step" class="action-button" title="Advance up to 0.1 simulated seconds">Step</button></div><div class="small-actions"><button id="live-time-reset" class="action-button">Reset time</button><button id="live-time-precharge" class="action-button">Precharge from DC</button></div><label class="field-label" for="live-time-speed">Simulation pace</label><select id="live-time-speed"><option value="0.01">0.01×</option><option value="0.1">0.1×</option><option value="1" selected>1×</option><option value="10">10×</option><option value="100">100×</option></select><label class="field-label" for="live-time-step-ms">Maximum time step / ms</label><input id="live-time-step-ms" type="number" min="0.001" max="100" step="any" value="5"><p class="fine-print">Start, then open a switch: stored charge is preserved. A load discharges the capacitor; an isolated ideal capacitor holds its charge. Reset uses each capacitor’s initial voltage. Build edits restart time. The clock shows simulated time; demanding circuits may run more slowly.</p></div></section>
     <section id="sim-scope-controls" class="panel" data-view="simulation"><div class="section-head"><span class="eyebrow">INSTRUMENT</span><span class="quiet-label">SCOPE</span></div><h2>Oscilloscope</h2><label class="field-label" for="analysis-scope">Choose scope</label><select id="analysis-scope"></select><button id="run-analysis" class="action-button primary-button full-width">Refresh scope</button><p id="scope-selection-note" class="fine-print">Place a Scope in Build mode. Its first lead measures the signal; its second is the reference.</p></section>
     <section class="panel" data-view="simulation">
       <div class="section-head"><span class="eyebrow">SIMULATE</span><span class="quiet-label">01</span></div>
@@ -178,7 +219,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       <input id="flow-speed" type="range" min="0.25" max="3" step="0.25" value="1">
       <label class="toggle-row"><span><span id="conductor-flow-label">Copper track arrows</span></span><input id="show-copper-flow" type="checkbox" checked></label>
       <label class="toggle-row"><span>Component arrows</span><input id="show-component-flow" type="checkbox" checked></label>
-      <label class="toggle-row"><span>AC source direction</span><input id="show-ac-flow" type="checkbox" checked></label><p class="fine-print">AC chevrons alternate to mark sine/square source drive. They are an AC indicator; branch readings remain DC.</p><label class="toggle-row"><span>Hole voltage labels</span><input id="show-node-voltage" type="checkbox"></label>
+      <label class="toggle-row"><span>AC source direction</span><input id="show-ac-flow" type="checkbox" checked></label><p id="ac-flow-note" class="fine-print">AC chevrons alternate to mark sine/square source drive. They are an AC indicator; branch readings remain DC.</p><label class="toggle-row"><span>Hole voltage labels</span><input id="show-node-voltage" type="checkbox"></label>
       <p class="fine-print">Animation speed changes the display only.</p>
     </section>
     <section class="panel" data-view="simulation">
@@ -193,13 +234,14 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     <div class="board-toolbar"><div><span class="eyebrow" id="board-mode-label">LAYOUT / COPPER SIDE</span><h2 id="board-heading">Stripboard</h2></div><div class="board-chips"><span><strong id="component-count">0</strong> parts</span><span><strong id="cuts-count">0</strong> cuts</span></div></div>
     <div class="board-surface">
       <div class="board-instruction"><span class="instruction-dot"></span><span id="board-hint">Select a component to edit it. Click empty board space to see the component list.</span></div>
-      <div id="sim-board" class="sim-board" aria-label="Interactive stripboard">
+      <div class="board-zoom-controls" role="group" aria-label="Board zoom"><span>Board zoom</span><button id="board-zoom-out" type="button" class="action-button" aria-label="Zoom board out">−</button><output id="board-zoom-value" aria-live="polite">100%</output><button id="board-zoom-in" type="button" class="action-button" aria-label="Zoom board in">+</button><button id="board-zoom-reset" type="button" class="action-button">100%</button><button id="board-zoom-fit" type="button" class="action-button" aria-pressed="false">Fit width</button></div>
+      <div id="sim-board" class="sim-board" tabindex="0" aria-label="Interactive stripboard">
         <div id="board-stage" class="board-stage"><div class="board-inner"><span id="board-face-label" class="board-print" style="top:19px;left:42px">18 × 10 / COPPER SIDE</span><span class="board-print" style="bottom:16px;right:42px">2.54 mm PITCH</span><div id="board-grid" aria-label="Stripboard grid"></div><div id="component-layer" class="component-layer" aria-label="Placed components"></div></div></div>
       </div>
       <div class="board-footer"><div class="legend"><span><i class="legend-dot positive"></i> Supply +</span><span><i class="legend-dot negative"></i> 0 V</span><span id="board-feature-legend"><i class="legend-dot cut"></i> Track cut</span></div><span id="board-size-label" class="quiet-label">18 × 10 holes</span></div>
     </div>
     <div class="workspace-footnote" data-view="build"><span><span id="board-wiring-footnote">Two clicks connect leads. Crossing lines do not join.</span></span><span>Esc: deselect · Ctrl / ⌘ Z: undo</span></div>
-    <div class="workspace-footnote" data-view="simulation"><span>Live DC readings · use the scope for waveforms; click switches to operate.</span><span>First lead → second lead</span></div>
+    <div class="workspace-footnote" data-view="simulation"><span id="simulation-reading-note">Live DC readings · use the scope for waveforms; click switches to operate.</span><span>First lead → second lead</span></div>
   </section>
   <aside class="right-column side-column" aria-label="Component editor, project and readings">
     <section id="editor-context-nav" class="panel" data-view="build"><div class="context-nav editor-context-nav"><button id="show-board-editor" class="action-button" aria-pressed="true">Board</button><button id="show-project" class="action-button" aria-pressed="false">Project</button></div></section>
@@ -224,7 +266,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       <div class="small-actions"><button id="save-project" class="action-button">↓ Save circuit</button><button id="load-project" class="action-button">↑ Load circuit</button></div>
       <button id="export-board-png" class="action-button full-width">↓ Export board PNG</button><input id="project-file" type="file" accept=".json,application/json" hidden>
       <p class="fine-print" id="autosave-note">Saved automatically in this browser.</p>
-      <details class="project-details"><summary>Examples &amp; export</summary><p class="fine-print">Examples use layouts sized to the circuit. Undo returns to your board.</p><div class="small-actions"><button id="series-example" class="action-button">Series + cuts</button><button id="parallel-example" class="action-button">Parallel</button></div><button id="led-example" class="action-button full-width">LED + resistor example</button><button id="diode-example" class="action-button full-width">Diode + resistor example</button><button id="rectifier-example" class="action-button full-width">Bridge rectifier example</button><button id="smoothed-rectifier-example" class="action-button full-width">Bridge + smoothing capacitor</button><button id="switch-example" class="action-button full-width">Switch + LED example</button><button id="ic-example" class="action-button full-width">74x08 AND gate example</button><button id="dff-example" class="action-button full-width">D flip-flop example</button><button id="jk-example" class="action-button full-width">JK toggle example</button><button id="counter-example" class="action-button full-width">Decade counter example</button><label class="field-label" for="opamp-example">LM741 circuits · ±15 V</label><select id="opamp-example"><option value="non-inverting">Non-inverting amplifier</option><option value="inverting">Inverting amplifier</option><option value="follower">Voltage follower</option><option value="summing">Summing amplifier</option><option value="difference">Difference amplifier</option><option value="low-pass">Low-pass filter</option><option value="high-pass">High-pass filter</option><option value="integrator">Integrator</option><option value="differentiator">Differentiator</option></select><button id="load-opamp-example" class="action-button full-width">Load LM741 example</button><p class="fine-print">LM741 examples use a 24 × 18 board. Undo restores your circuit.</p><button id="export-netlist" class="action-button full-width">Export DC SPICE netlist</button></details>
+      <details class="project-details"><summary>Examples &amp; export</summary><p class="fine-print">Examples use layouts sized to the circuit. Undo returns to your board.</p><div class="small-actions"><button id="series-example" class="action-button">Series + cuts</button><button id="parallel-example" class="action-button">Parallel</button></div><button id="led-example" class="action-button full-width">LED + resistor example</button><button id="diode-example" class="action-button full-width">Diode + resistor example</button><button id="rectifier-example" class="action-button full-width">Bridge rectifier example</button><button id="smoothed-rectifier-example" class="action-button full-width">Bridge + smoothing capacitor</button><button id="capacitor-example" class="action-button full-width">Capacitor charge / discharge</button><button id="switch-example" class="action-button full-width">Switch + LED example</button><button id="ic-example" class="action-button full-width">74x08 AND gate example</button><button id="dff-example" class="action-button full-width">D flip-flop example</button><button id="jk-example" class="action-button full-width">JK toggle example</button><button id="counter161-example" class="action-button full-width">74x161 binary counter example</button><button id="ac-amplifier-example" class="action-button full-width">AC amplifier · LM741 ×−10</button><button id="counter-example" class="action-button full-width">Decade counter example</button><label class="field-label" for="opamp-example">LM741 circuits · ±15 V</label><select id="opamp-example"><option value="non-inverting">Non-inverting amplifier</option><option value="inverting">Inverting amplifier</option><option value="follower">Voltage follower</option><option value="summing">Summing amplifier</option><option value="difference">Difference amplifier</option><option value="low-pass">Low-pass filter</option><option value="high-pass">High-pass filter</option><option value="integrator">Integrator</option><option value="differentiator">Differentiator</option></select><button id="load-opamp-example" class="action-button full-width">Load LM741 example</button><p class="fine-print">LM741 examples use 24 × 12 breadboard or 24 × 18 stripboard. Undo restores your circuit.</p><button id="export-netlist" class="action-button full-width">Export DC SPICE netlist</button></details>
     </section>
 
     <section id="board-parts-panel" class="panel parts-panel" data-view="build"><div class="section-head"><span class="eyebrow">ON THE BOARD</span><span id="parts-total" class="quiet-label">0 parts</span></div><div id="build-component-list" class="parts-list"></div></section>
@@ -241,10 +283,10 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       <p class="fine-print">Signed readings follow first lead → second lead. Component power is shown in mW.</p>
     </section>
 
-    <details class="panel model-details" data-view="simulation"><summary>About the simulation</summary><p class="fine-print">DC resistors, LEDs, diodes, ideal switches, copper, wire links and meters. Open switches disconnect their leads; closed switches have zero resistance. Ammeters close a circuit in series; voltmeters draw no current. Ideal parallel conductors can have indeterminate current splits. LEDs and diodes use approximate forward thresholds with 20 Ω and 1 Ω slope resistance respectively; reverse current is blocked. Diodes default to 0.7 V. The gate and flip-flop ICs use an HC-style electrical approximation: high-impedance inputs, 2–6 V supply, approximate LOW/HIGH thresholds at 30%/70% of VCC (25%/75% near 2 V), and 50 Ω output drivers. Floating inputs read X; undefined or unpowered outputs are undriven. The 74x90 uses LS-style input thresholds (LOW ≤0.8 V, HIGH ≥2 V) and a 4.75–5.25 V supply; its output drivers are approximate. Flip-flops and counters respond to wired clock edges in Simulate mode and store their state. Reset/preset inputs act immediately in either mode. Power loss clears stored state to X. No propagation delay, setup/hold timing, switch bounce, input clamp diodes, quiescent IC current, reverse breakdown, damage or thermal models for digital parts. LM741 circuits support DC, small-signal AC and backward-Euler time analysis. The one-pole analog approximation includes finite gain, bandwidth, slew, input/output resistance, output swing and current limits. It does not model offset-null pins, temperature, noise, recovery from overload or device damage. Its parameters describe a typical educational approximation, not a transistor-level SPICE macromodel. <a class="ic-link" href="https://www.ti.com/lit/ds/symlink/sn74hc08.pdf" target="_blank" rel="noopener">74HC08 datasheet</a>.</p></details>
+    <details class="panel model-details" data-view="simulation"><summary>About the simulation</summary><p class="fine-print">DC resistors, LEDs, diodes, ideal switches, copper, wire links and meters. Open switches disconnect their leads; closed switches have zero resistance. Ammeters close a circuit in series; voltmeters draw no current. Ideal parallel conductors can have indeterminate current splits. LEDs and diodes use approximate forward thresholds with 20 Ω and 1 Ω slope resistance respectively; reverse current is blocked. Diodes default to 0.7 V. The gate and flip-flop ICs use an HC-style electrical approximation: high-impedance inputs, 2–6 V supply, approximate LOW/HIGH thresholds at 30%/70% of VCC (25%/75% near 2 V), and 50 Ω output drivers. Floating inputs read X; undefined or unpowered outputs are undriven. The 74x90 uses LS-style input thresholds (LOW ≤0.8 V, HIGH ≥2 V) and a 4.75–5.25 V supply; its output drivers are approximate. Flip-flops and counters respond to wired clock edges in Simulate mode and store their state. Reset/preset inputs act immediately in either mode. Power loss clears stored state to X. No propagation delay, setup/hold timing, switch bounce, input clamp diodes, quiescent IC current, reverse breakdown, damage or thermal models for digital parts. Analogue time simulation preserves capacitor voltage across switch operations and updates current, voltage and stored energy as time advances. Live time mode supports analogue parts and LM741s; digital ICs use the DC logic mode. An isolated ideal capacitor retains charge; no capacitor leakage, ESR or dielectric losses are modelled. LM741 circuits support DC, small-signal AC and backward-Euler time analysis. The one-pole analog approximation includes finite gain, bandwidth, slew, input/output resistance, output swing and current limits. It does not model offset-null pins, temperature, noise, recovery from overload or device damage. Its parameters describe a typical educational approximation, not a transistor-level SPICE macromodel. <a class="ic-link" href="https://www.ti.com/lit/ds/symlink/sn74hc08.pdf" target="_blank" rel="noopener">74HC08 datasheet</a>.</p></details>
   </aside>
 </main>
-<footer class="status-bar"><span id="mode-status" class="mode-status">BUILD</span><p id="tool-message" aria-live="polite">Select a component or choose a building tool.</p><span class="quiet-label">V1.06 / LOCAL WORKBENCH</span></footer>
+<footer class="status-bar"><span id="mode-status" class="mode-status">BUILD</span><p id="tool-message" aria-live="polite">Select a component or choose a building tool.</p><span class="quiet-label">V1.08 / LOCAL WORKBENCH</span></footer>
 <script>
 
     let ROWS = 10;
@@ -324,13 +366,14 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       '74x74': {name:'74x74',description:'Dual D flip-flop · rising edge',kind:'dff',pins:['1/CLR','1D','1CLK','1/PRE','1Q','1Q̅','GND','2Q̅','2Q','2/PRE','2CLK','2D','2/CLR','VCC'],units:[{clear:1,d:2,clock:3,pre:4,q:5,qb:6},{clear:13,d:12,clock:11,pre:10,q:9,qb:8}],notes:'Capture D on a LOW→HIGH clock edge. /PRE and /CLR act immediately when LOW. Both LOW forces Q and Q̅ HIGH; simultaneous release is undefined. Use a wired reset or preset to initialise.'},
       '74HC76': {name:'74HC76',description:'Dual JK flip-flop · falling edge · DIP-16',kind:'jkff',vcc:5,gnd:13,pins:['1CLK','1/PRE','1/CLR','1J','VCC','2CLK','2/PRE','2/CLR','2J','2Q̅','2Q','2K','GND','1Q̅','1Q','1K'],units:[{clock:1,pre:2,clear:3,j:4,q:15,qb:14,k:16},{clock:6,pre:7,clear:8,j:9,q:11,qb:10,k:12}],notes:'ST M74HC76-style logic. On HIGH→LOW: JK=00 hold, 01 reset, 10 set, 11 toggle. /PRE and /CLR are asynchronous and active LOW. Both LOW forces both outputs HIGH; simultaneous release is undefined.'},
       '74x86': {name:'74x86',description:'Quad 2-input XOR',op:'XOR',pins:['1A','1B','1Y','2A','2B','2Y','GND','3Y','3A','3B','4Y','4A','4B','VCC'],gates:[{a:1,b:2,y:3},{a:4,b:5,y:6},{a:9,b:10,y:8},{a:12,b:13,y:11}]},
+      '74x161': {name:'74x161',description:'4-bit synchronous binary counter · DIP-16',kind:'counter161',family:'HC',vcc:16,gnd:8,pins:['/CLR','CLK','A','B','C','D','ENP','GND','/LOAD','ENT','QD','QC','QB','QA','RCO','VCC'],inputPins:[1,2,3,4,5,6,7,9,10],outputPins:[14,13,12,11,15],datasheet:'https://www.ti.com/lit/ds/symlink/sn74hc161.pdf',notes:'SN74HC161-style logic. /CLR LOW clears immediately. On LOW→HIGH CLK: /LOAD LOW loads D C B A; otherwise count 0–15 when ENP and ENT are both HIGH. RCO = ENT AND QA AND QB AND QC AND QD, independent of ENP. Unknown power-up state: apply /CLR or load a known word. HC electrical approximation; no propagation or setup/hold timing.'},
       '74x90': {name:'74x90',description:'Decade counter · LS-style inputs',kind:'counter90',family:'LS',vcc:5,gnd:10,minV:4.75,maxV:5.25,pins:['CKB','R0(1)','R0(2)','NC','VCC','R9(1)','R9(2)','QC','QB','GND','QD','QA','NC','CKA'],outputPins:[12,9,8,11],inputPins:[1,2,3,6,7,14],notes:'Falling-edge divide-by-2 (CKA) and divide-by-5 (CKB) sections. Wire QA pin 12 to CKB pin 1 for BCD 0–9 counting. R0(1) AND R0(2) HIGH clears to 0; R9(1) AND R9(2) HIGH sets to 9 and takes priority. VCC=pin 5, GND=pin 10; NC pins stay isolated.'}
     };
     for(const m of Object.values(IC_MODELS)){
       m.kind=m.kind||'gates';m.family=m.family||'HC';m.vcc=m.vcc||14;m.gnd=m.gnd||7;m.minV=m.minV||2;m.maxV=m.maxV||6;m.packagePins=m.pins.length;
       if(m.gates){m.gates=m.gates.map(g=>({...g,inputs:[g.a,g.b,g.c].filter(Boolean)}));m.inputPins=m.gates.flatMap(g=>g.inputs);m.outputPins=m.gates.map(g=>g.y);}
       if(m.units){m.inputPins=m.units.flatMap(u=>[u.pre,u.clear,u.clock,u.d,u.j,u.k].filter(Boolean));m.outputPins=m.units.flatMap(u=>[u.q,u.qb]);}
-      m.datasheet=m.kind==='opamp'?'https://www.ti.com/lit/ds/symlink/lm741.pdf':m.kind==='jkff'?'https://media.digikey.com/pdf/Data%20Sheets/ST%20Microelectronics%20PDFS/M74HC76.pdf':`https://www.ti.com/lit/ds/symlink/sn74${m.family.toLowerCase()}${m.name.slice(-2)}.pdf`;
+      m.datasheet=m.datasheet||(m.kind==='opamp'?'https://www.ti.com/lit/ds/symlink/lm741.pdf':m.kind==='jkff'?'https://media.digikey.com/pdf/Data%20Sheets/ST%20Microelectronics%20PDFS/M74HC76.pdf':`https://www.ti.com/lit/ds/symlink/sn74${m.family.toLowerCase()}${m.name.slice(-2)}.pdf`);
     }
     function isIC(c){return ['dip8','dip14','dip16'].includes(c?.type);}
     function packagePins(c){return c.type==='dip8'?8:c.type==='dip16'?16:14;}
@@ -338,7 +381,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     function cloneLogic(value){return value?JSON.parse(JSON.stringify(value)):null;}
     function logicSnapshot(){return components.filter(isIC).map(c=>({id:c.id,memory:cloneLogic(c.memory)}));}
     function restoreLogicSnapshot(snapshot){for(const saved of snapshot||[]){const c=components.find(c=>c.id===saved.id);if(c){if(saved.memory)c.memory=cloneLogic(saved.memory);else delete c.memory;}}}
-    function blankMemory(model){return {version:1,model, powered:false,q:['X','X'],qb:['X','X'],clocks:[null,null],illegal:[false,false],qa:'X',divide5:null};}
+    function blankMemory(model){return {version:1,model, powered:false,q:['X','X'],qb:['X','X'],clocks:[null,null],illegal:[false,false],qa:'X',divide5:null,...(IC_MODELS[model]?.kind==='counter161'?{binary:['X','X','X','X']}:{} )};}
     function gateValue(op,inputs){
       let result;
       if(op==='NOT')return inputs[0]==='X'?'X':inputs[0]==='1'?'0':'1';
@@ -444,6 +487,11 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       else if(model.units){
         units=model.units.map((u,i)=>({...u,number:i+1,clockValue:level(u.clock),preValue:level(u.pre),clearValue:level(u.clear),data:u.d?level(u.d):undefined,jValue:u.j?level(u.j):undefined,kValue:u.k?level(u.k):undefined,qValue:powered?mem.q[i]:'X',qbValue:powered?mem.qb[i]:'X',illegal:mem.illegal[i]}));
         gates=units.flatMap(u=>[{y:u.q,number:u.number,label:`FF${u.number} Q`,output:u.qValue},{y:u.qb,number:u.number,label:`FF${u.number} Q̅`,output:u.qbValue}]);
+      }else if(model.kind==='counter161'){
+        const bits=powered?(mem.binary||['X','X','X','X']):['X','X','X','X'];
+        gates=model.outputPins.slice(0,4).map((y,i)=>({y,number:i+1,label:model.pins[y-1],output:bits[i]}));
+        gates.push({y:15,number:5,label:'RCO',output:powered?gateValue('AND',[level(10),...bits]):'X'});
+        count=bits.every(v=>v!=='X')?bits.reduce((sum,v,i)=>sum+(Number(v)<<i),0):null;
       }else{
         const qa=powered?mem.qa:'X',b=powered?mem.divide5:null;
         gates=model.outputPins.map((y,i)=>({y,number:i+1,label:model.pins[y-1],output:i===0?qa:b===null?'X':String((b>>(i-1))&1)}));
@@ -490,6 +538,23 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
           }
           next.q[i]=mergeBit(qs);next.qb[i]=mergeBit(qbs);next.illegal[i]=illegal;next.clocks[i]=clock;
         });
+      }else if(model.kind==='counter161'){
+        const bits=old.powered?(old.binary||['X','X','X','X']):['X','X','X','X'];
+        const expand=values=>values.reduce((words,bit,i)=>words.flatMap(word=>possibleBit(bit).map(v=>word+(v<<i))),[0]);
+        const clock=level(2),previous=old.powered?old.clocks[0]:null;
+        const edge=allowEdge&&previous==='0'&&clock==='1';
+        const possibleEdge=allowEdge&&previous!==null&&previous!=='1'&&clock!=='0';
+        const options=[];
+        for(const clear of possibleBit(level(1))){
+          if(!clear){options.push(0);continue;}
+          if(!edge)options.push(...expand(bits));
+          if(edge||possibleEdge)for(const load of possibleBit(level(9))){
+            if(!load)options.push(...expand([3,4,5,6].map(level)));
+            else for(const enp of possibleBit(level(7)))for(const ent of possibleBit(level(10)))for(const word of expand(bits))options.push(enp&&ent?(word+1)&15:word);
+          }
+        }
+        next.binary=[0,1,2,3].map(i=>mergeBit(options.map(word=>String((word>>i)&1))));
+        next.clocks=[clock,null];
       }else{
         const clocks=[level(14),level(1)];let qa=old.powered?old.qa:'X',b=old.powered?old.divide5:null;
         if(clocks[0]==='X')qa='X';else if(allowEdge&&old.powered&&old.clocks[0]==='1'&&clocks[0]==='0')qa=qa==='X'?'X':qa==='1'?'0':'1';
@@ -500,8 +565,9 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       }
       return next;
     }
-    function memoryOutputKey(m){return JSON.stringify([m.powered,m.q,m.qb,m.qa,m.divide5]);}
+    function memoryOutputKey(m){return JSON.stringify([m.powered,m.q,m.qb,m.qa,m.divide5,m.binary]);}
     function solveCircuit() {
+      if(liveTransientActive()){solveLiveTime();return;}
       const chips=components.filter(isIC);
       if(!chips.length){solveAnalogueCircuit();solution.chips={};solution.icDrivers=[];return;}
       for(const c of chips)if(isSequential(c)&&IC_MODELS[c.model]&&(!c.memory||c.memory.model!==c.model))c.memory=blankMemory(c.model);
@@ -579,13 +645,13 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       if(model?.kind==='opamp'){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`IN+ ${formatNumber(state.pins[2].voltage)} V · IN− ${formatNumber(state.pins[1].voltage)} V · OUT ${formatNumber(state.pins[5].voltage)} V · ${state.operating||'Undriven'}`;item.appendChild(row);}
       if(model?.kind==='gates')for(const gate of state.gates){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`Gate ${gate.number}: ${gate.op==='NOT'?'NOT '+gate.inputs[0]:gate.inputs.join(' '+gate.op+' ')} → ${gate.output}${gate.output==='X'?' (undriven)':''}`;item.appendChild(row);}
       for(const u of state.units||[]){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`FF${u.number}: ${model.kind==='dff'?'D='+u.data:'J='+u.jValue+' K='+u.kValue} CLK=${u.clockValue} · Q=${u.qValue} Q̅=${u.qbValue}`;item.appendChild(row);}
-      if(model?.kind==='counter90'){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`Count: ${state.count===null?'X':state.count} · QD QC QB QA: ${[...state.gates].reverse().map(g=>g.output).join(' ')}`;item.appendChild(row);}
+      if(['counter90','counter161'].includes(model?.kind)){const row=document.createElement('p');row.className='ic-gate-reading';row.textContent=`Count: ${state.count===null?'X':state.count} · QD QC QB QA: ${state.gates.slice(0,4).reverse().map(g=>g.output).join(' ')}${model.kind==='counter161'?' · RCO: '+state.gates[4].output:''}`;item.appendChild(row);}
       const detail=document.createElement('details'),summary=document.createElement('summary');summary.textContent=`All ${packagePins(c)} pins`;detail.append(summary,renderICPinTable(c,true));item.appendChild(detail);return item;
     }
     function validICMemory(c){
       const m=c.memory;if(m==null)return true;
       const bits=a=>Array.isArray(a)&&a.length===2&&a.every(v=>['0','1','X'].includes(v));
-      return !!IC_MODELS[c.model]&&IC_MODELS[c.model].kind!=='gates'&&m.version===1&&m.model===c.model&&typeof m.powered==='boolean'&&bits(m.q)&&bits(m.qb)&&Array.isArray(m.clocks)&&m.clocks.length===2&&m.clocks.every(v=>v===null||['0','1','X'].includes(v))&&Array.isArray(m.illegal)&&m.illegal.length===2&&m.illegal.every(v=>typeof v==='boolean')&&['0','1','X'].includes(m.qa)&&(m.divide5===null||Number.isInteger(m.divide5)&&m.divide5>=0&&m.divide5<=4);
+      return !!IC_MODELS[c.model]&&IC_MODELS[c.model].kind!=='gates'&&m.version===1&&m.model===c.model&&typeof m.powered==='boolean'&&bits(m.q)&&bits(m.qb)&&Array.isArray(m.clocks)&&m.clocks.length===2&&m.clocks.every(v=>v===null||['0','1','X'].includes(v))&&Array.isArray(m.illegal)&&m.illegal.length===2&&m.illegal.every(v=>typeof v==='boolean')&&['0','1','X'].includes(m.qa)&&(m.divide5===null||Number.isInteger(m.divide5)&&m.divide5>=0&&m.divide5<=4)&&(IC_MODELS[c.model]?.kind!=='counter161'||Array.isArray(m.binary)&&m.binary.length===4&&m.binary.every(v=>['0','1','X'].includes(v)));
     }
 
     function initializeICControls() {
@@ -1471,12 +1537,12 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     function updateReadings() {
       const good = solution.status === 'complete';
       document.getElementById('status-dot').className = `status-dot ${good ? 'good' : components.length || solution.status === 'short' ? 'warn' : ''}`;
-      document.getElementById('status-value').textContent = solution.status==='open'&&components.some(isACSource)?'AC source / scope ready':solution.status==='open'&&Object.values(solution.chips||{}).some(c=>c.powered)?'Powered / no load current':({ complete: 'Complete DC circuit', short: 'Supply short circuit', open: 'Open / no load current', error: 'Cannot solve circuit' })[solution.status];
+      document.getElementById('status-value').textContent = liveTransientActive()&&!['short','error'].includes(solution.status)?`Time simulation · ${liveTime.running?'running':'paused'}`:solution.status==='open'&&components.some(isACSource)?'AC source / scope ready':solution.status==='open'&&Object.values(solution.chips||{}).some(c=>c.powered)?'Powered / no load current':({ complete: 'Complete DC circuit', short: 'Supply short circuit', open: 'Open / no load current', error: 'Cannot solve circuit' })[solution.status];
       document.getElementById('current-reading').textContent = solution.status === 'short' ? 'Undefined' : formatCurrent(totalCurrent);
       document.getElementById('supply-reading').textContent = `${formatNumber(SUPPLY_VOLTAGE)} V`;
-      document.getElementById('primary-current-label').textContent=benchSupply.name.toUpperCase()+' DC CURRENT';
+      document.getElementById('primary-current-label').textContent=benchSupply.name.toUpperCase()+(liveTransientActive()?' CURRENT':' DC CURRENT');
       document.getElementById('supply-label').textContent = extraSupplies.length?`${extraSupplies.length+1} DC supplies`:`${formatNumber(SUPPLY_VOLTAGE)} V DC`;
-      document.getElementById('equivalent-reading').textContent = solution.status === 'short' ? '0 Ω · short' : Number.isFinite(solution.resistance) ? formatResistance(solution.resistance) : 'Open circuit';
+      document.getElementById('equivalent-reading').textContent = liveTransientActive()?'Time-varying load':solution.status === 'short' ? '0 Ω · short' : Number.isFinite(solution.resistance) ? formatResistance(solution.resistance) : 'Open circuit';
       const warnings = document.getElementById('circuit-notes');
       warnings.replaceChildren();
       solution.warnings.forEach(text => { const p = document.createElement('p'); p.textContent = text; warnings.appendChild(p); });
@@ -1513,6 +1579,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         if ((c.type === 'resistor' || isDiode(c)) && Number.isFinite(solution.power[c.id])) reading += ` · ${formatNumber(solution.power[c.id] * 1000)} mW`;
         if (c.type === 'led') reading += ` · ${ledState(c)}`;
         if (c.type === 'diode') reading += ` · ${diodeState(c)}`;
+        if(c.type==='capacitor'&&Number.isFinite(voltage))reading+=` · stored ${formatEnergy(.5*c.capacitance*voltage*voltage)}`;
         if (c.type === 'switch') reading += ` · ${c.closed ? 'Closed' : 'Open'}`;
         detail.textContent = `${locationLabel(c.a)} → ${locationLabel(c.b)} · ${reading}`;
         item.append(heading, detail);
@@ -1535,7 +1602,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       selectedComponent = null; render(); showMessage('Component removed. Undo restores it.');
     }
     function render() {
-      invalidateAnalysisIfChanged();
+      syncLiveTime();invalidateAnalysisIfChanged();
       solveCircuit(); // Solve before drawing; arrows always use the current board.
       refreshTerminalMarkers();renderVisuals();
       updateReadings();
@@ -1545,7 +1612,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       document.getElementById('voltmeter-count').textContent = meters.filter(m => m.type === 'voltmeter').length;
       updateModeUI();
       persistBoard();
-      refreshAnalysisChoices();
+      refreshAnalysisChoices();renderLiveTimeControls();
     }
 
     function undoLastAction() {
@@ -1586,6 +1653,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     }
 
     function clearBoard() {
+      clearLiveTime(true);
       finishComponentDrag(null,true);
       actionHistory.push({ type: 'snapshot', board: boardData() });
       components = [];extraSupplies=[];movingSupply=null;railConfig.assignments={};breadboardTerminals=null;
@@ -1622,7 +1690,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     }
 
     function boardData() {
-      return { format: 'stripboard-dc', version: 5, rows: ROWS, columns: COLS, voltage: SUPPLY_VOLTAGE, boardType, breadboardBreak,
+      return { timeSimulation:{enabled:liveTime.enabled,speed:liveTime.speed,maxStep:liveTime.maxStep}, format: 'stripboard-dc', version: 5, rows: ROWS, columns: COLS, voltage: SUPPLY_VOLTAGE, boardType, breadboardBreak,
         ...(boardType === 'breadboard' ? {breadboardTopology:'vertical-signal-columns'} : {}),
         stripboardTerminals: boardType === 'stripboard' ? { positiveTerminal, negativeTerminal } : { ...stripboardTerminals },
         railConfig:{top:railConfig.top,bottom:railConfig.bottom},benchSupply:{...benchSupply},groundSupply:{...groundSupply},extraSupplies:extraSupplies.map(s=>({...s})),breadboardTerminals:boardType==='breadboard'?{positiveTerminal,negativeTerminal}:breadboardTerminals,
@@ -1660,10 +1728,12 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
           ids.add(c.id);
         }
       }
+      if(data.timeSimulation){const t=data.timeSimulation;if(typeof t.enabled!=='boolean'||![.01,.1,1,10,100].includes(t.speed)||!Number.isFinite(t.maxStep)||t.maxStep<.000001||t.maxStep>.1)throw new Error('Invalid time simulation settings.');}
       return data;
     }
     function restoreBoard(data) {
       validateBoard(data);data=migrateSupplyBoard(data);validateBoard(data);finishComponentDrag(null,true);benchSupply={name:'Bench',colour:'#d86762',...data.benchSupply};groundSupply={name:'Ground',colour:'#5c91bc',...data.groundSupply};focusedSupplyId='bench';
+      configureLiveTime(data.timeSimulation);
       ROWS=data.rows;COLS=data.columns;
       railConfig=JSON.parse(JSON.stringify(data.railConfig||defaultRailConfig()));extraSupplies=(data.extraSupplies||[]).map(s=>({...s,colour:s.colour||(s.voltage<0?'#9b79c6':'#dc9b46')}));breadboardTerminals=data.breadboardTerminals?{...data.breadboardTerminals}:null;movingSupply=null;
       SUPPLY_VOLTAGE = data.voltage;
@@ -1680,6 +1750,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       buildBoard(); refreshTerminalMarkers(); refreshSelection(); render(); updateBoardScale();
     }
     function persistBoard() {
+      if(window.__WORKBENCH_QA_SANDBOX)return;
       if (restoring) return;
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(boardData())); }
       catch { document.getElementById('autosave-note').textContent = 'Automatic saving is unavailable here. Use Save circuit to keep your work.'; }
@@ -1871,7 +1942,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
     function setWorkbenchMode(mode) {
       if (mode !== 'build' && mode !== 'simulation') return;
       if (workbenchMode === mode) return;
-      finishComponentDrag(null,true);movingSupply=null;
+      finishComponentDrag(null,true);movingSupply=null;if(mode==='build')pauseLiveTime();
       workbenchMode = mode;
       firstPoint = null;
       currentFlowRunning = mode === 'simulation' && canAnimateFlow();
@@ -1997,21 +2068,24 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       document.getElementById('component-value-input').value = n;
       render(); showMessage(`${componentLabel(c)} set to ${formatResistance(n)}.`);
     }
+    let boardZoom=1,boardFit=false;
     function updateBoardScale() {
-      const stage = document.getElementById('board-stage');
-      const width = stage.clientWidth;
-      if (!width) return;
-      let fitHeight = Infinity;
-      if (typeof window !== 'undefined' && window.innerWidth > 850) {
-        fitHeight = Math.max(190, window.innerHeight - stage.getBoundingClientRect().top - 112) / boardHeight();
-      }
-      const scale = Math.max(.05, Math.min(1.25, width / boardWidth(), fitHeight));
-      document.getElementById('sim-board').style.setProperty('--board-scale', String(scale));
+      const surface=document.getElementById('sim-board');
+      if(boardFit&&surface.clientWidth)boardZoom=Math.max(.1,Math.min(2,surface.clientWidth/boardWidth()));
+      surface.style.setProperty('--board-scale',String(boardZoom));
+      const label=document.getElementById('board-zoom-value');if(label)label.textContent=Math.round(boardZoom*100)+'%';
+      const fit=document.getElementById('board-zoom-fit');if(fit)fit.setAttribute('aria-pressed',String(boardFit));
     }
+    function setBoardZoom(value){
+      boardFit=value==='fit';if(!boardFit)boardZoom=Math.max(.1,Math.min(2,Number(value)||1));
+      updateBoardScale();
+    }
+
     function operateSwitch(id) {
       const c=components.find(c=>c.id===id&&c.type==='switch');if(!c)return;
       actionHistory.push({type:'switch-state',id:c.id,previous:c.closed,logicBefore:logicSnapshot()});c.closed=!c.closed;
       selectedComponent=c.id;firstPoint=null;refreshSelection();render();
+      if(liveTransientActive()){liveTime.events.push({time:liveTime.time,label:`${componentLabel(c)} ${c.closed?'closed':'opened'}`});if(liveTime.events.length>50)liveTime.events.shift();renderLiveScope();}
       showMessage(`${componentLabel(c)} ${c.closed ? 'closed' : 'opened'}. Readings updated.`);
     }
 
@@ -2052,14 +2126,15 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
           selectedComponent = null; firstPoint = null; refreshSelection(); render();
         }
       });
-      if (typeof ResizeObserver !== 'undefined') new ResizeObserver(updateBoardScale).observe(document.getElementById('board-stage'));
+      for(const [id,value]of [['board-zoom-out',()=>boardZoom/1.25],['board-zoom-in',()=>boardZoom*1.25],['board-zoom-reset',()=>1],['board-zoom-fit',()=>'fit']])document.getElementById(id).addEventListener('click',()=>setBoardZoom(value()));
+      if (typeof ResizeObserver !== 'undefined') new ResizeObserver(updateBoardScale).observe(document.getElementById('sim-board'));
       if (typeof window !== 'undefined') window.addEventListener('resize', updateBoardScale);
     }
 
     // Analog v1.01: MNA with independent sources, capacitors and a one-pole 741.
     const OPAMP={gain:200000,gbw:1e6,slew:5e5,rin:2e6,rout:75,limit:.025,headroom:2,idle:.0017};
     let analogLast=null,analysisResult=null,analysisFingerprint='',analysisRunning=false;
-    function isSequential(c){return ['dff','jkff','counter90'].includes(IC_MODELS[c.model]?.kind);}
+    function isSequential(c){return ['dff','jkff','counter90','counter161'].includes(IC_MODELS[c.model]?.kind);}
     function formatCapacitance(v){return v>=1e-3?`${formatNumber(v*1e3)} mF`:v>=1e-6?`${formatNumber(v*1e6)} µF`:v>=1e-9?`${formatNumber(v*1e9)} nF`:`${formatNumber(v*1e12)} pF`;}
     function cleanAnalogPart(c){const base={id:c.id,type:c.type,a:c.a,b:c.b};return c.type==='capacitor'?{...base,capacitance:c.capacitance,initialVoltage:c.initialVoltage??0}:{...base,dc:c.dc??0,wave:c.wave??'dc',amplitude:c.amplitude??1,frequency:c.frequency??100,phase:c.phase??0,acAmplitude:c.acAmplitude??1,acPhase:c.acPhase??0,delay:c.delay??0};}
     function validateAnalogPart(c){
@@ -2167,21 +2242,23 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       const a=sys.nodes[probe.a],b=sys.nodes[probe.b],domains=analogDomains(sys,point,mode);
       if(a===undefined||b===undefined||a!==b&&(domains.islands[a]!==domains.islands[b]||!Number.isFinite(point.voltages[a])||!Number.isFinite(point.voltages[b])))throw new Error('The scope probes are on unrelated floating circuits. Put both probes across the same circuit or connect its reference.');
     }
-    function solveAnalogueCircuit(extraDevices=[]){
-      if(!analogRequired()){analogLast=null;return solveLegacyAnalogueCircuit(extraDevices);}
+    function applyAnalogPoint(sys,point,transient=false){
       solution={status:'open',currents:{},drops:{},power:{},islands:{},relativeVoltages:{},warnings:[]};nodeVoltages={};totalCurrent=0;
-      try{
-        const sys=createAnalogSystem(extraDevices);latestNodes=sys.nodes;const point=solveAnalogPoint(sys),domains=analogDomains(sys,point),referenced=domains.referenced;analogLast={sys,point};
+      latestNodes=sys.nodes;const domains=analogDomains(sys,point,transient?'transient':'dc'),referenced=domains.referenced;analogLast={sys,point};
         solution.currents={...point.currents};solution.relativeVoltages={...point.voltages};solution.idealEdges=sys.edges;
         for(const n of sys.all){nodeVoltages[n]=referenced.has(n)?point.voltages[n]:null;solution.islands[n]=domains.islands[n];}
         const injection=Object.fromEntries(Object.keys(sys.nodes).map(p=>[p,0])),inject=(a,b,i)=>{injection[a]-=i;injection[b]+=i;};
         for(const d of [...sys.devices,...sys.sources]){const current=point.currents[d.id],drop=point.voltages[sys.nodes[d.a]]-point.voltages[sys.nodes[d.b]];solution.drops[d.id]=domains.islands[sys.nodes[d.a]]===domains.islands[sys.nodes[d.b]]?drop:null;solution.power[d.id]=drop*current;inject(d.a,d.b,current);if(sys.nodes[d.a]===sys.nodes[d.b]&&d.type!=='source')solution.warnings.push(`${d.label||componentLabel(d)} is bypassed by an ideal conductor.`);}
         for(const o of sys.amps){const i=point.currents[o.c.id],m=point.modes[o.c.id];if(m.powered){inject(o.p[5],i<0?o.p[6]:o.p[3],i);inject(o.p[6],o.p[3],OPAMP.idle);if(o.c.errors){inject(o.p[1],o.p[3],80e-9);inject(o.p[2],o.p[3],80e-9);}}}
-        totalCurrent=-point.currents['ic:bench'];if(Math.abs(totalCurrent)<1e-10)totalCurrent=0;solution.status=Math.abs(totalCurrent)>0||extraSupplies.some(s=>Math.abs(point.currents[supplySourceId(s.id)])>1e-10)?'complete':'open';solution.resistance=Math.abs(totalCurrent)>0?SUPPLY_VOLTAGE/totalCurrent:Infinity;computeIdealCurrents(sys.edges,injection);
+        totalCurrent=-point.currents['ic:bench'];if(Math.abs(totalCurrent)<1e-10)totalCurrent=0;solution.status=(transient?Object.values(point.currents).some(i=>Math.abs(i)>1e-10):sys.sources.some(s=>Math.abs(point.currents[s.id])>1e-10))?'complete':'open';solution.resistance=Math.abs(totalCurrent)>0?SUPPLY_VOLTAGE/totalCurrent:Infinity;computeIdealCurrents(sys.edges,injection);
         for(const c of components.filter(c=>c.type==='switch')){if(!c.closed){solution.currents[c.id]=0;solution.drops[c.id]=meterVoltage(c);}solution.power[c.id]=0;}
         for(const c of components.filter(c=>c.type==='led'))if(solution.currents[c.id]>.02000001)solution.warnings.push(`${componentLabel(c)} is overdriven. Increase its series resistor.`);
         if(meters.some(m=>m.type==='ammeter'&&!Number.isFinite(solution.currents[m.id])))solution.warnings.push('An ammeter has a parallel ideal conductor path. Its current split is indeterminate.');
-      }catch(e){analogLast=null;solution.status='error';solution.warnings.push(e.message==='Circuit matrix is singular.'?'Conflicting or redundant ideal voltage sources. Check sources placed on the same net and parallel source loops.':e.message);nodeVoltages={};totalCurrent=null;}
+    }
+    function solveAnalogueCircuit(extraDevices=[]){
+      if(!analogRequired()){analogLast=null;return solveLegacyAnalogueCircuit(extraDevices);}
+      try{const sys=createAnalogSystem(extraDevices),point=solveAnalogPoint(sys);applyAnalogPoint(sys,point);}
+      catch(e){analogLast=null;solution={status:'error',currents:{},drops:{},power:{},islands:{},relativeVoltages:{},warnings:[e.message==='Circuit matrix is singular.'?'Conflicting or redundant ideal voltage sources. Check sources placed on the same net and parallel source loops.':e.message]};nodeVoltages={};totalCurrent=null;}
     }
     function evaluateOpamp(c){
       const pins=dipPins(c).map(p=>({...p,name:IC_MODELS.LM741.pins[p.number-1],voltage:icPinVoltage(c,p.number),logic:'—'})),hi=pins[6].voltage,lo=pins[3].voltage,supply=hi!==null&&lo!==null?hi-lo:null,mode=analogLast?.point.modes[c.id],powered=!!mode?.powered&&supply!==null;
@@ -2201,7 +2278,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       showMessage(`LM741 ${kind}: ${description} V+ and V− are editable in Supply; ${boardType==='breadboard'?'24 × 12 holes, with two rails at each edge. ':''}Undo restores your circuit.`);document.getElementById('scope-notes').textContent=description;
     }
     function analogFingerprint(){return JSON.stringify({rows:ROWS,cols:COLS,boardType,breadboardBreak,positiveTerminal,negativeTerminal,SUPPLY_VOLTAGE,railConfig,extraSupplies,benchSupply,groundSupply,cuts:[...cuts],components:components.map(c=>{const d={...c};delete d.memory;return d;}),meters});}
-    function invalidateAnalysisIfChanged(){const key=analogFingerprint();if(analysisResult&&key!==analysisFingerprint){analysisResult=null;document.getElementById('scope-state').textContent='CHANGED';document.getElementById('scope-plot').replaceChildren();document.getElementById('scope-reading').textContent='Circuit changed. Refresh the scope.';document.getElementById('scope-cursor').disabled=true;if(workbenchMode==='simulation')queueScopeRefresh();}}
+    function invalidateAnalysisIfChanged(){if(liveTransientActive())return;const key=analogFingerprint();if(analysisResult&&key!==analysisFingerprint){analysisResult=null;document.getElementById('scope-state').textContent='CHANGED';document.getElementById('scope-plot').replaceChildren();document.getElementById('scope-reading').textContent='Circuit changed. Refresh the scope.';document.getElementById('scope-cursor').disabled=true;if(workbenchMode==='simulation')queueScopeRefresh();}}
 
 
     function analysisProbe(id){const meter=meters.find(c=>c.id===id&&c.type==='voltmeter');if(meter)return {a:meter.a,b:meter.b};const amp=components.find(c=>c.id===id&&c.model==='LM741');if(amp)return {a:dipPins(amp)[5].point,b:negativeTerminal};throw new Error('Add a voltmeter or an LM741 to choose an output.');}
@@ -2217,17 +2294,19 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       for(let i=0;i<=steps;i++){const time=i*dt,result=solveAnalogPoint(sys,{dt:i===0?1e-12:dt,time,history,guess});history=result.history;guess=result.values;const voltage=p=>result.voltages[sys.nodes[p]]??0;rows.push({x:time,input:voltage(s.a)-voltage(s.b),output:voltage(probe.a)-voltage(probe.b),limited:Object.values(result.modes).some(m=>m.mode!=='Linear'),outside:Object.values(result.modes).some(m=>m.powered&&(m.commonMode<m.lo+3||m.commonMode>m.hi-3))});}return rows;
     }
     function plotScope(){
-      if(!analysisResult)return;const {mode,rows}=analysisResult,ac=mode==='ac',host=document.getElementById('scope-plot');host.replaceChildren();const legend=document.createElement('div');legend.className='scope-legend';for(const label of ac?['Gain / dB','Phase / °']:['Input / V','Output / V']){const s=document.createElement('span');s.textContent=label;legend.appendChild(s);}host.appendChild(legend);
+      if(!analysisResult)return;const {mode,rows}=analysisResult,ac=mode==='ac',live=mode==='live',host=document.getElementById('scope-plot');host.replaceChildren();const legend=document.createElement('div');legend.className='scope-legend';for(const label of ac?['Gain / dB','Phase / °']:['Input / V','Output / V']){const s=document.createElement('span');s.textContent=label;legend.appendChild(s);}host.appendChild(legend);
       const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 360 240');svg.setAttribute('role','img');svg.setAttribute('aria-label',ac?'Frequency response gain and phase':'Input and output voltage versus time');host.appendChild(svg);
-      const add=(tag,attrs,text)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;svg.appendChild(e);return e;},lo=ac?Math.log10(rows[0].x):rows[0].x,hi=ac?Math.log10(rows.at(-1).x):rows.at(-1).x,x=v=>44+(ac?Math.log10(v)-lo:v-lo)/(hi-lo)*274;
+      const add=(tag,attrs,text)=>{const e=document.createElementNS('http://www.w3.org/2000/svg',tag);for(const [k,v]of Object.entries(attrs))e.setAttribute(k,v);if(text!==undefined)e.textContent=text;svg.appendChild(e);return e;},lo=ac?Math.log10(rows[0].x):rows[0].x,hi=(ac?Math.log10(rows.at(-1).x):rows.at(-1).x)+(rows.length===1?(ac?1:.1):0),x=v=>44+(ac?Math.log10(v)-lo:v-lo)/(hi-lo)*274;
       const values=ac?rows.map(r=>r.gain):rows.flatMap(r=>[r.input,r.output]);let ymin=Math.min(0,...values),ymax=Math.max(0,...values);if(ymin===ymax){ymin-=1;ymax+=1;}const margin=(ymax-ymin)*.08;ymin-=margin;ymax+=margin;const y=v=>200-(v-ymin)/(ymax-ymin)*174;
-      for(let i=0;i<5;i++){const q=ymin+(ymax-ymin)*i/4;add('line',{x1:44,x2:318,y1:y(q),y2:y(q),stroke:'#3a4a43','stroke-width':.6});add('text',{x:40,y:y(q)+3,'text-anchor':'end',fill:'#a4b5aa','font-size':9},formatNumber(q));const xx=44+274*i/4,value=ac?10**(lo+(hi-lo)*i/4):rows.at(-1).x*i/4;add('text',{x:xx,y:219,'text-anchor':'middle',fill:'#a4b5aa','font-size':9},ac?formatNumber(value):formatNumber(value*1000));}
+      for(let i=0;i<5;i++){const q=ymin+(ymax-ymin)*i/4;add('line',{x1:44,x2:318,y1:y(q),y2:y(q),stroke:'#3a4a43','stroke-width':.6});add('text',{x:40,y:y(q)+3,'text-anchor':'end',fill:'#a4b5aa','font-size':9},formatNumber(q));const xx=44+274*i/4,value=ac?10**(lo+(hi-lo)*i/4):lo+(hi-lo)*i/4;add('text',{x:xx,y:219,'text-anchor':'middle',fill:'#a4b5aa','font-size':9},ac||live?formatNumber(value):formatNumber(value*1000));}
       for(const [key,color]of ac?[['gain','#7bd4da'],['phase','#e9b878']]:[['input','#7bd4da'],['output','#e9b878']]){const yy=key==='phase'?v=>200-(v+180)/360*174:y;add('path',{d:rows.map((r,i)=>`${i?'L':'M'}${x(r.x).toFixed(2)},${yy(r[key]).toFixed(2)}`).join(' '),stroke:color,fill:'none','stroke-width':1.7});}
+      if(rows.length===1&&!ac)for(const [key,color]of [['input','#7bd4da'],['output','#e9b878']])add('circle',{cx:x(rows[0].x),cy:y(rows[0][key]),r:2.5,fill:color});
+      if(live)for(const event of liveTime.events.filter(e=>e.time>=lo&&e.time<=hi).slice(-4)){add('line',{x1:x(event.time),x2:x(event.time),y1:26,y2:200,stroke:'#a9b2a6','stroke-width':.7,'stroke-dasharray':'3 3'});add('text',{x:x(event.time),y:18,'text-anchor':'middle',fill:'#c8d5cb','font-size':7},event.label);}
       if(ac)for(const [p,label]of [[180,'+180°'],[0,'0°'],[-180,'−180°']])add('text',{x:323,y:200-(p+180)/360*174+3,fill:'#e9b878','font-size':8},label);
-      add('text',{x:182,y:237,'text-anchor':'middle',fill:'#c8d5cb','font-size':10},ac?'Frequency / Hz · logarithmic':'Time / ms');
-      const cursor=document.getElementById('scope-cursor');cursor.max=rows.length-1;cursor.value=0;cursor.disabled=false;showScopeCursor();
+      add('text',{x:182,y:237,'text-anchor':'middle',fill:'#c8d5cb','font-size':10},ac?'Frequency / Hz · logarithmic':live?'Time / s':'Time / ms');
+      const cursor=document.getElementById('scope-cursor');cursor.max=rows.length-1;cursor.value=live?rows.length-1:0;cursor.disabled=live&&liveTime.running;showScopeCursor();
     }
-    function showScopeCursor(){if(!analysisResult)return;const r=analysisResult.rows[Number(document.getElementById('scope-cursor').value)]||analysisResult.rows[0];document.getElementById('scope-reading').textContent=analysisResult.mode==='ac'?`${formatNumber(r.x)} Hz · gain ${formatNumber(r.gain)} dB · phase ${formatNumber(r.phase)}° · out ${formatNumber(r.output)} V`:`${formatNumber(r.x*1000)} ms · in ${formatNumber(r.input)} V · out ${formatNumber(r.output)} V${r.limited?' · output limited':''}`;}
+    function showScopeCursor(){if(!analysisResult)return;const r=analysisResult.rows[Number(document.getElementById('scope-cursor').value)]||analysisResult.rows[0];document.getElementById('scope-reading').textContent=analysisResult.mode==='ac'?`${formatNumber(r.x)} Hz · gain ${formatNumber(r.gain)} dB · phase ${formatNumber(r.phase)}° · out ${formatNumber(r.output)} V`:`${formatNumber(analysisResult.mode==='live'?r.x:r.x*1000)} ${analysisResult.mode==='live'?'s':'ms'} · in ${formatNumber(r.input)} V · out ${formatNumber(r.output)} V${r.limited?' · output limited':''}`;}
 
 
     function defaultRailConfig(){return {top:1,bottom:1,assignments:{}};}
@@ -2281,20 +2360,20 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       if(boardType==='breadboard')breadboardTerminals={positiveTerminal,negativeTerminal};movingSupply=null;activeTool='select';focusedSupplyId=id;render();return true;
     }
     function drawSupplyList(host,simulation=false,force=false){
-      const key=JSON.stringify({rows:allSupplyRows(),simulation,focusedSupplyId});if(!force&&host.dataset.key===key)return;host.dataset.key=key;host.replaceChildren();
+      const key=JSON.stringify({rows:allSupplyRows(),simulation});if(!force&&host.dataset.key===key)return;host.dataset.key=key;host.replaceChildren();
       for(const s of allSupplyRows()){
         const card=document.createElement('div');card.className='supply-list-row';card.dataset.supplyRow=s.id;card.classList.toggle('focused-supply',s.id===focusedSupplyId);
         const field=(label,type,value,key)=>{const wrapper=document.createElement('label');wrapper.className='supply-list-field';const caption=document.createElement('span');caption.textContent=label;const input=document.createElement('input');input.type=type;input.value=value;input.dataset.supply=s.id;input.dataset.field=key;input.setAttribute('aria-label',`${s.name}: ${label}`);if(type==='number'){input.min=-1000;input.max=1000;input.step='any';input.disabled=s.id==='ground';}if(type==='text')input.maxLength=40;input.addEventListener('focus',()=>{focusedSupplyId=s.id;renderVisuals();});input.addEventListener('change',()=>editSupply(s.id,{[key]:type==='number'?(input.value.trim()===''?NaN:Number(input.value)):input.value.trim()}));input.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();input.dispatchEvent(new Event('change'));}});wrapper.append(caption,input);return wrapper;};
         card.append(field('Name','text',s.name,'name'),field('Voltage / V','number',s.voltage,'voltage'),field('Colour','color',s.colour,'colour'));
         const note=document.createElement('p');note.className='supply-row-note';note.textContent=s.id==='ground'?`0 V reference · ${locationLabel(negativeTerminal)}`:`OUT ${locationLabel(s.a)} · REF ${locationLabel(s.b)}`;card.appendChild(note);
-        if(simulation&&s.id!=='ground'){const current=s.id==='bench'?totalCurrent:Number.isFinite(solution.currents?.[supplySourceId(s.id)])?-solution.currents[supplySourceId(s.id)]:null;const reading=document.createElement('p');reading.className='supply-row-note';reading.textContent=`Current leaving output: ${formatCurrent(current)}`;card.appendChild(reading);}
+        if(simulation&&s.id!=='ground'){const current=s.id==='bench'?totalCurrent:Number.isFinite(solution.currents?.[supplySourceId(s.id)])?-solution.currents[supplySourceId(s.id)]:null;const reading=document.createElement('p');reading.dataset.supplyCurrent=s.id;reading.className='supply-row-note';reading.textContent=`Current leaving output: ${formatCurrent(current)}`;card.appendChild(reading);}
         if(!simulation&&s.id!=='bench'&&s.id!=='ground'){const remove=document.createElement('button');remove.className='text-button supply-remove';remove.textContent='Remove';remove.addEventListener('click',()=>removeDCSupply(s.id));card.appendChild(remove);}
         card.addEventListener('click',e=>{if(!e.target.closest('input,button')){focusedSupplyId=s.id;renderVisuals();drawSupplyList(host,simulation,true);}});host.appendChild(card);
       }
     }
     function renderPowerControls(force=false){
       document.getElementById('rail-configuration').hidden=boardType!=='breadboard';for(const [id,value]of [['rail-top-count',railConfig.top],['rail-bottom-count',railConfig.bottom]])if(document.activeElement!==document.getElementById(id))document.getElementById(id).value=value;
-      drawSupplyList(document.getElementById('supply-list'),false,force);drawSupplyList(document.getElementById('sim-supply-list'),true,true);
+      drawSupplyList(document.getElementById('supply-list'),false,force);drawSupplyList(document.getElementById('sim-supply-list'),true,force);for(const row of document.querySelectorAll('[data-supply-row]'))row.classList.toggle('focused-supply',row.dataset.supplyRow===focusedSupplyId);for(const node of document.querySelectorAll('[data-supply-current]')){const id=node.dataset.supplyCurrent,current=id==='bench'?totalCurrent:Number.isFinite(solution.currents?.[supplySourceId(id)])?-solution.currents[supplySourceId(id)]:null;node.textContent=`Current leaving output: ${formatCurrent(current)}`;}
       const c=components.find(c=>c.id===selectedComponent&&c.type==='wire'),panel=document.getElementById('wire-properties');panel.hidden=!c;if(c){document.getElementById('wire-colour-select').value=Object.hasOwn(WIRE_COLOURS,c.colour||'auto')?(c.colour||'auto'):'custom';document.getElementById('wire-custom-colour').value=wireColour(c);}document.getElementById('wire-placement-controls').hidden=workbenchMode!=='build'||activeTool!=='wire';
     }
     function supplyMarkers(){
@@ -2370,6 +2449,18 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       board.meters=[{id:'output-probe',type:'voltmeter',a:bread?'5-22':'12-23',b:bread?'11-22':'17-23'},{id:'example-scope',type:'scope',a:bread?'3-23':'12-20',b:bread?'11-23':'17-20',...defaultScopeSettings(),source:dynamic?'input-source':'supply:ps-input',mode:['low-pass','high-pass'].includes(kind)?'ac':dynamic?'transient':'dc'}];
       return board;
     }
+    function makeACAmplifierExample(type=boardType){
+      const bread=type==='breadboard',board=makeOpampExample('inverting',type),kit=exampleParts(board);
+      board.extraSupplies=board.extraSupplies.filter(s=>s.id!=='ps-input');
+      const input=kit.source(bread?'9-3':'9-1',bread?'11-3':'17-1',1,'input-source','sine',.2);input.frequency=1000;input.acAmplitude=.2;
+      const rin=board.components.find(c=>c.type==='resistor'&&(c.id==='op-input-r'||c.a==='5-2'&&c.b==='9-2'));
+      const feedback=board.components.find(c=>c.type==='resistor'&&(c.id==='op-feedback'||c.a==='5-4'&&c.b==='12-4'));feedback.resistance=100000;
+      if(bread){rin.a='9-6';rin.b='9-12';kit.cap('8-3','8-6',1e-6,'ac-coupling-cap');}
+      else{rin.b='11-2';kit.cap('9-6','11-6',1e-6,'ac-coupling-cap');}
+      const scope=board.meters.find(m=>m.type==='scope');Object.assign(scope,{mode:'transient',source:'input-source',duration:20,steps:2000,initial:false});
+      return board;
+    }
+    function loadACAmplifierExample(){actionHistory.push({type:'snapshot',board:boardData()});restoreBoard(makeACAmplifierExample());selectComponent('opamp');showMessage('AC amplifier: ±15 V LM741, 1 µF input coupling, 10 kΩ / 100 kΩ feedback (gain −10). A 0.2 Vpk, 1 kHz sine on 1 V DC gives about 2 Vpk inverted output; the DC offset is blocked. Select Simulate to view the scope.');}
     function makePassiveExample(kind,type=boardType){
       const bread=type==='breadboard',board=exampleBase(type,10,18,9),{add,wire,r}=exampleParts(board);board.benchSupply.name='DC supply';
       if(kind==='series'){
@@ -2433,7 +2524,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       fixed(model.vcc,true);fixed(model.gnd,false);
       let control=0;
       const switched=(id,n,pullHigh,closed)=>{
-        const p=pointFromId(pin(n)),label=id.includes('reset')?'RESET':id.includes('clock')?'CLOCK':id.includes('data')?'DATA':`IN ${n}`;
+        const p=pointFromId(pin(n)),label=id.includes('reset')?'RESET':id.includes('clock')?'CLOCK':id.includes('data')?'DATA':id.includes('load')?'LOAD 5':`IN ${n}`;
         if(bread){const upper=p.row<11,base=upper?1:12,rail=upper?2:24,pullRow=base+control*2,switchRow=pullRow+1;control++;
           r(pointId(pullRow,p.col),pointId(pullRow,pullHigh?rail:0),10000,id+'-pull');add('switch',pointId(switchRow,p.col),pointId(switchRow,pullHigh?0:rail),{closed,name:label},id);
           // Each polarity column is fed once and then shared by its contacts.
@@ -2444,6 +2535,7 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       };
       if(isGate){for(const n of [4,5,9,10,12,13])fixed(n,false);for(const n of [1,2])switched('ic-switch-'+n,n,false,false);}
       else if(model.units){const u=model.units[0],unused=model.units[1];fixed(u.pre,true);switched('seq-reset',u.clear,true,true);switched('seq-clock',u.clock,false,false);if(u.d)switched('seq-data',u.d,false,false);else{fixed(u.j,true);fixed(u.k,true);}fixed(unused.pre,true);fixed(unused.clear,false);fixed(unused.clock,false);if(unused.d)fixed(unused.d,false);else{fixed(unused.j,false);fixed(unused.k,false);}}
+      else if(model.kind==='counter161'){switched('seq-reset',1,true,true);switched('seq-clock',2,false,false);switched('seq-load',9,true,false);for(const n of [3,5,7,10])fixed(n,true);for(const n of [4,6])fixed(n,false);}
       else{switched('seq-reset',2,false,true);fixed(6,false);fixed(7,false);switched('seq-clock',14,false,true);
         if(bread){const a=pointFromId(pin(2)),b=pointFromId(pin(3));wire(pointId(19,a.col),pointId(19,b.col),'seq-reset-pair');const qa=pointFromId(pin(12)),ckb=pointFromId(pin(1));wire(pointId(3,qa.col),pointId(3,20));wire('5-20','14-20');wire(pointId(14,ckb.col),'14-20','seq-decade-link');}
         else{const a=pointFromId(pin(2)),b=pointFromId(pin(3));wire(pointId(a.row,6),pointId(b.row,6),'seq-reset-pair');const qa=pointFromId(pin(12)),ckb=pointFromId(pin(1));wire(pointId(qa.row,16),'14-16');wire(pointId(ckb.row,8),'14-8');wire('14-8','14-16','seq-decade-link');}
@@ -2454,10 +2546,10 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         else{const col=bank==='left'?(high?9:0):(high?23:25),rows=[...new Set(list.map(n=>pointFromId(pin(n)).row))].sort((a,b)=>a-b);for(let i=1;i<rows.length;i++)wire(pointId(rows[i-1],col),pointId(rows[i],col));wire(pointId(rows[high?0:rows.length-1],col),pointId(high?0:ground,col));}
       }
       if(bread){if(groups['upper+bus'])wire('0-2','1-2');if(groups['lower+bus'])wire('0-24','12-24');if(groups['upper-bus'])wire('5-0','21-0');if(groups['lower-bus'])wire('12-0','21-0');}
-      const outputs=isGate?[3]:model.kind==='counter90'?model.outputPins:[model.units[0].q];
+      const outputs=isGate?[3]:['counter90','counter161'].includes(model.kind)?model.outputPins.slice(0,4):[model.units[0].q];
       outputs.forEach((n,i)=>{
         const p=pointFromId(pin(n)),id=isGate?'ic-led':`seq-led-${i}`,value=model.family==='LS'?10000:1000;
-        if(bread){const upper=p.row<11,endCol=17+i*2;if(upper){wire(pointId(2+i,p.col),pointId(2+i,endCol));add('led',pointId(5,endCol),pointId(14,endCol),{colour:'red',forwardVoltage:2},id);r(pointId(16,endCol),pointId(21,endCol),value,id+'-r');}else{add('led',pointId(19,p.col),pointId(19,17),{colour:'red',forwardVoltage:2},id);r('19-17','21-17',value,id+'-r');}}
+        if(bread){const upper=p.row<11,endCol=17+i*2;if(upper){wire(pointId(2+i,p.col),pointId(2+i,endCol));add('led',pointId(5,endCol),pointId(14,endCol),{colour:'red',forwardVoltage:2},id);r(pointId(16,endCol),pointId(21,endCol),value,id+'-r');}else{const end=model.kind==='counter161'?endCol:17;add('led',pointId(19,p.col),pointId(19,end),{colour:'red',forwardVoltage:2},id);r(pointId(20,end),pointId(21,end),value,id+'-r');}}
         else{const col=p.col<12?8:18+i*2;const end=pointId(13,col);board.cuts.push(end);add('led',pointId(p.row,col),end,{colour:'red',forwardVoltage:2},id);r(end,pointId(ground,col),value,id+'-r');}
       });
       const first=pointFromId(pin(outputs[0]));if(bread){const upper=first.row<11;if(upper){wire(pointId(1,first.col),'1-25');board.meters=[{id:isGate?'ic-output-v':'seq-output-v',type:'voltmeter',a:'4-25',b:'21-25'}];}else board.meters=[{id:isGate?'ic-output-v':'seq-output-v',type:'voltmeter',a:pointId(20,first.col),b:pointId(21,first.col)}];}
@@ -2465,7 +2557,143 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       return board;
     }
     function loadICExample(){actionHistory.push({type:'snapshot',board:boardData()});restoreBoard(makeDigitalExample('74x08'));selectComponent('ic-demo');showMessage('74x08: two straight switch/pull-down lanes drive gate 1. Close both input switches in Simulate.');}
-    function loadSequentialExample(modelId){actionHistory.push({type:'snapshot',board:boardData()});restoreBoard(makeDigitalExample(modelId));selectComponent('seq-demo');showMessage(modelId==='74x74'?'D flip-flop: release RESET, set DATA, then close CLOCK to capture.':modelId==='74HC76'?'JK flip-flop: release RESET, then close and open CLOCK to toggle.':'Decade counter: release RESET, then close/open CLOCK for each count. QA is linked to CKB through a separate track.');}
+    function loadSequentialExample(modelId){actionHistory.push({type:'snapshot',board:boardData()});restoreBoard(makeDigitalExample(modelId));selectComponent('seq-demo');showMessage(modelId==='74x161'?'74x161: release RESET, then close CLOCK to count on the rising edge. Close LOAD 5 and pulse CLOCK to load 0101; open LOAD to resume counting. ENP and ENT are tied HIGH.':modelId==='74x74'?'D flip-flop: release RESET, set DATA, then close CLOCK to capture.':modelId==='74HC76'?'JK flip-flop: release RESET, then close and open CLOCK to toggle.':'Decade counter: release RESET, then close/open CLOCK for each count. QA is linked to CKB through a separate track.');}
+
+    // Time simulation stores capacitor voltages independently of the current
+    // topology. UI redraws never advance time; only accepted time steps do.
+    let liveTime={enabled:false,running:false,time:0,speed:1,maxStep:.005,history:null,point:null,sys:null,key:'',shape:'',traces:{},events:[],raf:null,lastStamp:null,pending:0,lastPaint:0,pointerDown:false,error:''};
+    const liveTransientActive=()=>liveTime.enabled&&workbenchMode==='simulation';
+    function liveCircuitShape(){return JSON.stringify({rows:ROWS,cols:COLS,boardType,breadboardBreak,railConfig,positiveTerminal,negativeTerminal,cuts:[...cuts],supplies:extraSupplies.map(s=>({id:s.id,a:s.a,b:s.b})),components:components.map(c=>{const v={...c};delete v.memory;delete v.name;if(c.type==='switch')delete v.closed;if(c.type==='wire')delete v.colour;return v;})});}
+    function liveTimeProblem(){return !components.some(c=>c.type==='capacitor')?'Add a capacitor to use time simulation.':components.some(c=>isIC(c)&&c.model&&c.model!=='LM741')?'Time simulation supports analogue circuits and LM741s. Use DC mode for digital ICs.':'';}
+    function pauseLiveTime(){liveTime.running=false;liveTime.lastStamp=null;liveTime.pending=0;if(liveTime.raf!==null)cancelAnimationFrame(liveTime.raf);liveTime.raf=null;}
+    function clearLiveTime(disable=false){pauseLiveTime();Object.assign(liveTime,{time:0,history:null,point:null,sys:null,key:'',shape:'',traces:{},events:[],error:'',lastPaint:0});if(disable)liveTime.enabled=false;}
+    function configureLiveTime(settings){clearLiveTime(true);liveTime.enabled=!!settings?.enabled;liveTime.speed=settings?.speed??1;liveTime.maxStep=settings?.maxStep??.005;}
+    function syncLiveTime(){if(!liveTime.enabled)return;if(workbenchMode!=='simulation')pauseLiveTime();if(liveTime.history&&(liveTime.shape!==liveCircuitShape()||workbenchMode==='build'&&analogFingerprint()!==liveTime.key))clearLiveTime();}
+    function initialiseLiveHistory(sys){const dc=sys.amps.length?solveAnalogPoint(sys):null;return {caps:Object.fromEntries(sys.devices.filter(c=>c.type==='capacitor').map(c=>[c.id,c.initialVoltage??0])),amps:Object.fromEntries(sys.amps.map(o=>[o.c.id,((dc.voltages[sys.nodes[o.p[6]]]??0)+(dc.voltages[sys.nodes[o.p[3]]]??0))/2]))};}
+    function ensureLivePoint(){
+      const problem=liveTimeProblem();if(problem)throw new Error(problem);
+      const key=analogFingerprint();if(liveTime.point&&liveTime.key===key)return;
+      const sys=createAnalogSystem();if(sys.size>100)throw new Error('Time simulation supports up to 100 electrical unknowns. Reduce separate nets or sources.');
+      const history=liveTime.history||initialiseLiveHistory(sys);
+      // Re-establish currents at the same clock time after a switch changes.
+      // Keep the stored voltages; this preview step is never committed.
+      const point=solveAnalogPoint(sys,{dt:1e-8,time:liveTime.time,history});
+      Object.assign(liveTime,{sys,point,history,key,shape:liveCircuitShape(),error:''});
+    }
+    function applyLivePoint(){
+      applyAnalogPoint(liveTime.sys,liveTime.point,true);solution.chips={};solution.icDrivers=[];
+      for(const c of components.filter(c=>c.model==='LM741')){const state=evaluateIC(c);solution.chips[c.id]=state;finishOpampReadings(c,state);}
+    }
+    function failLiveTime(error){pauseLiveTime();liveTime.error=error.message;solution={status:'error',currents:{},drops:{},power:{},islands:{},relativeVoltages:{},warnings:[error.message],chips:{},icDrivers:[]};analogLast=null;nodeVoltages={};totalCurrent=null;}
+    function solveLiveTime(){try{ensureLivePoint();applyLivePoint();captureLiveTrace();}catch(error){failLiveTime(error);}}
+    function liveStepLimit(){
+      let step=liveTime.maxStep;const sys=liveTime.sys;
+      for(const s of sys.sources)if(['sine','square'].includes(s.wave)&&s.amplitude>0)step=Math.min(step,1/(80*s.frequency));
+      // Resolve small RC time constants even if the selected maximum is large.
+      for(const c of sys.devices.filter(c=>c.type==='capacitor')){let conductance=0;for(const r of sys.devices.filter(d=>d.type==='resistor'))if([sys.nodes[c.a],sys.nodes[c.b]].some(n=>n===sys.nodes[r.a]||n===sys.nodes[r.b]))conductance+=1/r.resistance;if(conductance)step=Math.min(step,c.capacitance/conductance/80);}
+      return Math.max(1e-8,step);
+    }
+    function advanceLiveTime(amount,maxSteps=10000,budget=Infinity){
+      if(!liveTransientActive()||!(amount>0)||!Number.isFinite(amount))return 0;
+      const started=performance.now(),startTime=liveTime.time;let elapsed=0;
+      try{
+        ensureLivePoint();const step=liveStepLimit();let count=0;
+        // Calculate each target from its integer step index. Repeated addition
+        // can leave a femtosecond remainder, making C/dt numerically singular.
+        const tolerance=32*Number.EPSILON*amount;
+        while(elapsed<amount&&count<maxSteps&&performance.now()-started<budget){
+          const next=Math.min(amount,(count+1)*step),dt=next-elapsed;
+          if(dt<=tolerance&&count>0){elapsed=amount;liveTime.time=startTime+amount;break;}
+          const point=solveAnalogPoint(liveTime.sys,{dt,time:startTime+next,history:liveTime.history,guess:liveTime.point.values});
+          elapsed=next;liveTime.time=startTime+elapsed;count++;liveTime.point=point;liveTime.history=point.history;
+          captureLiveTrace();
+        }
+        applyLivePoint();
+      }catch(error){failLiveTime(error);}
+      return elapsed;
+    }
+
+    function liveSourceVoltage(scope){const s=liveTime.sys.sources.find(s=>s.id===scopeSource(scope));if(!s)return 0;return liveTime.point.voltages[liveTime.sys.nodes[s.a]]-liveTime.point.voltages[liveTime.sys.nodes[s.b]];}
+    function captureLiveTrace(){
+      if(!liveTime.point||solution.status==='error')return;
+      const scopes=meters.filter(m=>m.type==='scope');if(!scopes.length)return;
+      const sys=liveTime.sys,point=liveTime.point,domains=analogDomains(sys,point,'transient');
+      for(const scope of scopes){
+        const a=sys.nodes[scope.a],b=sys.nodes[scope.b];
+        if(domains.islands[a]===undefined||domains.islands[a]!==domains.islands[b])continue;
+        const output=point.voltages[a]-point.voltages[b];if(!Number.isFinite(output))continue;
+        const rows=liveTime.traces[scope.id]??=[];const row={x:liveTime.time,input:liveSourceVoltage(scope),output};
+        if(rows.length&&rows.at(-1).x===row.x)rows[rows.length-1]=row;else rows.push(row);
+        if(rows.length>1200)rows.splice(0,rows.length-1200);
+      }
+    }
+
+    function renderLiveScope(){
+      const scope=currentScope();if(!scope)return;
+      const value=meterVoltage(scope),saved=liveTime.traces[scope.id]||[];
+      if(value===null||!saved.length){analysisResult=null;document.getElementById('scope-plot').replaceChildren();document.getElementById('scope-cursor').disabled=true;document.getElementById('scope-state').textContent='FLOATING';document.getElementById('scope-reading').textContent='The selected scope probes have no defined voltage.';return;}
+      const rows=saved; // Plot padding is an axis choice, never a measured sample.
+      analysisResult={scopeId:scope.id,mode:'live',rows};analysisFingerprint=analogFingerprint();
+      document.getElementById('scope-title').textContent=`${componentLabel(scope)} · time simulation`;
+      document.getElementById('scope-state').textContent=liveTime.running?'RUNNING':'PAUSED';
+      const last=liveTime.events.at(-1);document.getElementById('scope-notes').textContent='Recorded as the circuit runs. Switches preserve capacitor voltage. '+(last?`${last.label} at ${formatNumber(last.time)} s.`:'Pause to inspect the trace.');plotScope();
+    }
+    function renderLiveTimeControls(){
+      const problem=liveTimeProblem();document.getElementById('live-time-enabled').checked=liveTime.enabled;
+      document.getElementById('live-time-controls').hidden=!liveTime.enabled;
+      document.getElementById('live-time-clock').textContent=`${liveTime.time.toFixed(3)} s`;
+      document.getElementById('live-time-status').textContent=liveTime.error||problem||(liveTime.running?'Running':liveTime.history?'Paused':'Ready · initial capacitor voltages');
+      const start=document.getElementById('live-time-play');start.textContent=liveTime.running?'Pause':liveTime.history?'Resume':'Start';start.disabled=!!problem;
+      document.getElementById('live-time-step').disabled=!!problem||liveTime.running;document.getElementById('live-time-precharge').disabled=!!problem;
+      document.getElementById('live-time-speed').value=liveTime.speed;
+      if(document.activeElement!==document.getElementById('live-time-step-ms'))document.getElementById('live-time-step-ms').value=liveTime.maxStep*1000;
+      document.getElementById('board-mode-label').textContent=`${workbenchMode==='build'?'LAYOUT':liveTransientActive()?'TIME SIMULATION':'LIVE DC / SCOPE'} / ${boardType==='breadboard'?'BREADBOARD':'COPPER SIDE'}`;
+      document.getElementById('ac-flow-note').textContent=liveTransientActive()?'AC chevrons identify the source waveform; branch arrows and readings follow the current time step.':'AC chevrons alternate to mark sine/square source drive. They are an AC indicator; branch readings remain DC.';
+      document.getElementById('simulation-reading-note').textContent=liveTransientActive()?'Instantaneous readings · click switches while time runs; Pause freezes charge.':'Live DC readings · use the scope for waveforms; click switches to operate.';
+    }
+    function paintLiveTime(){
+      if(liveTime.pointerDown)return;
+      renderVisuals();updateReadings();renderLiveTimeControls();renderLiveScope();
+    }
+    function liveTimeFrame(stamp){
+      liveTime.raf=null;if(!liveTime.running||!liveTransientActive())return;
+      if(liveTime.lastStamp!==null)liveTime.pending+=Math.min(.1,Math.max(0,(stamp-liveTime.lastStamp)/1000))*liveTime.speed;
+      liveTime.lastStamp=stamp;liveTime.pending=Math.min(liveTime.pending,liveTime.speed*.25);
+      if(liveTime.pending>1e-12)liveTime.pending=Math.max(0,liveTime.pending-advanceLiveTime(liveTime.pending,80,12));
+      if(stamp-liveTime.lastPaint>=75||!liveTime.running){paintLiveTime();liveTime.lastPaint=stamp;}
+      if(liveTime.running)liveTime.raf=requestAnimationFrame(liveTimeFrame);
+    }
+    function toggleLiveTime(){
+      if(!liveTime.enabled){liveTime.enabled=true;render();}
+      if(liveTime.running){pauseLiveTime();paintLiveTime();return;}
+      solveLiveTime();if(solution.status==='error'){paintLiveTime();showMessage(liveTime.error);return;}
+      liveTime.running=true;liveTime.lastStamp=null;liveTime.lastPaint=0;currentFlowRunning=true;document.getElementById('flow-button').classList.add('playing');paintLiveTime();liveTime.raf=requestAnimationFrame(liveTimeFrame);
+    }
+    function resetLiveTime(precharge=false){
+      clearLiveTime();liveTime.enabled=true;
+      if(precharge)try{const problem=liveTimeProblem();if(problem)throw new Error(problem);const sys=createAnalogSystem(),point=solveAnalogPoint(sys);liveTime.history=point.history;liveTime.point=point;liveTime.sys=sys;liveTime.key=analogFingerprint();liveTime.shape=liveCircuitShape();}catch(error){failLiveTime(error);}
+      render();showMessage(precharge?'Capacitors set to the current DC steady-state voltage. Press Resume, then open a switch.':'Time reset. Capacitors start at their entered initial voltages.');
+    }
+    function formatEnergy(value){return Math.abs(value)>=1?`${formatNumber(value)} J`:Math.abs(value)>=.001?`${formatNumber(value*1000)} mJ`:`${formatNumber(value*1e6)} µJ`;}
+    function initializeLiveTime(){
+      document.getElementById('live-time-enabled').addEventListener('change',e=>{clearLiveTime();liveTime.enabled=e.target.checked;render();if(liveTime.enabled)showMessage('Time mode ready. Start to charge, then open a switch to discharge through the load.');});
+      document.getElementById('live-time-play').addEventListener('click',toggleLiveTime);
+      document.getElementById('live-time-reset').addEventListener('click',()=>resetLiveTime());
+      document.getElementById('live-time-precharge').addEventListener('click',()=>resetLiveTime(true));
+      document.getElementById('live-time-step').addEventListener('click',()=>{solveLiveTime();advanceLiveTime(.1);paintLiveTime();});
+      document.getElementById('live-time-speed').addEventListener('change',e=>{const speed=Number(e.target.value);if([.01,.1,1,10,100].includes(speed)){liveTime.speed=speed;liveTime.pending=0;persistBoard();}});
+      document.getElementById('live-time-step-ms').addEventListener('change',e=>{const step=Number(e.target.value)/1000;if(Number.isFinite(step)&&step>=.000001&&step<=.1){liveTime.maxStep=step;persistBoard();}else showMessage('Use a maximum step from 0.001 to 100 ms.');renderLiveTimeControls();});
+      document.addEventListener('pointerdown',()=>{if(liveTransientActive())liveTime.pointerDown=true;},true);
+      const release=()=>{liveTime.pointerDown=false;};document.addEventListener('pointerup',release,true);document.addEventListener('pointercancel',release,true);window.addEventListener('blur',release);
+      document.addEventListener('visibilitychange',()=>{if(document.hidden&&liveTime.running){pauseLiveTime();paintLiveTime();}});
+    }
+    function makeCapacitorExample(type=boardType){
+      const bread=type==='breadboard',board=exampleBase(type,bread?12:10,24,9),{add,wire,r,cap}=exampleParts(board);board.benchSupply.name='Charge supply';board.timeSimulation={enabled:true,speed:1,maxStep:.005};
+      if(bread){add('switch','0-3','2-3',{closed:true},'charge-switch');r('2-3','2-8',1000,'charge-r');cap('4-8','7-8',470e-6,'storage-cap');r('4-13','7-13',10000,'discharge-r');wire('3-8','3-13',undefined,'#65b978');wire('3-13','3-17',undefined,'#65b978');wire('3-17','3-21',undefined,'#65b978');wire('10-8','11-8',undefined,'#5c91bc');wire('10-13','11-13',undefined,'#5c91bc');board.meters=[{id:'cap-meter',type:'voltmeter',a:'4-17',b:'11-17'},{id:'cap-scope',type:'scope',a:'4-21',b:'11-21',...defaultScopeSettings(),source:'ic:bench'}];}
+      else{board.positiveTerminal='1-0';board.negativeTerminal='8-0';board.stripboardTerminals={positiveTerminal:'1-0',negativeTerminal:'8-0'};add('switch','1-3','3-3',{closed:true},'charge-switch');r('3-6','5-6',1000,'charge-r');cap('5-10','8-10',470e-6,'storage-cap');r('5-15','8-15',10000,'discharge-r');board.meters=[{id:'cap-meter',type:'voltmeter',a:'5-19',b:'8-19'},{id:'cap-scope',type:'scope',a:'5-22',b:'8-22',...defaultScopeSettings(),source:'ic:bench'}];}
+      return board;
+    }
+    function loadCapacitorExample(){actionHistory.push({type:'snapshot',board:boardData()});restoreBoard(makeCapacitorExample());selectComponent('storage-cap');showMessage('Capacitor charge / discharge: enter Simulate and press Start. C1 charges towards 8.18 V through 1 kΩ with the 10 kΩ load attached. Click S1 to open it: the discharge time constant is 4.7 s. Precharge from DC skips the wait.');}
 
     let activeScopeId='',scopeRefreshQueued=false,scopeRefreshTimer=null,showACFlow=true;
     let toolkitTab='tools',editorTab='board';
@@ -2504,23 +2732,24 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
       if(!scopes.some(c=>c.id===activeScopeId))activeScopeId=scopes[0]?.id||'';
       if(select.dataset.choices!==key){select.dataset.choices=key;select.replaceChildren();for(const c of scopes){const o=document.createElement('option');o.value=c.id;o.textContent=`${componentLabel(c)} · ${locationLabel(c.a)} − ${locationLabel(c.b)}`;select.appendChild(o);}}
       select.value=activeScopeId;select.disabled=!scopes.length;document.getElementById('run-analysis').disabled=analysisRunning||!scopes.length;
-      const c=currentScope();document.getElementById('scope-selection-note').textContent=c?`${componentLabel(c)} · ${scopeMode(c)==='ac'?'Frequency response':scopeMode(c)==='dc'?'Live DC':`${c.duration} ms waveform`}. Click the scope in Build to change its settings.`:'Place a Scope in Build mode. Probe + is the signal; probe − is its reference.';
+      const c=currentScope();document.getElementById('scope-selection-note').textContent=c&&liveTransientActive()?'Recording this scope as time runs. Pause to inspect; live mode uses its probe positions.':c?`${componentLabel(c)} · ${scopeMode(c)==='ac'?'Frequency response':scopeMode(c)==='dc'?'Live DC':`${c.duration} ms waveform`}. Click the scope in Build to change its settings.`:'Place a Scope in Build mode. Probe + is the signal; probe − is its reference.';
       if(!c){analysisResult=null;document.getElementById('scope-plot').replaceChildren();document.getElementById('scope-cursor').disabled=true;document.getElementById('scope-reading').textContent='Place a Scope on the board to measure a signal.';document.getElementById('scope-state').textContent='NO SCOPE';}
-      else if(workbenchMode==='simulation'&&scopeMode(c)==='dc')showScopeDC(c);
+      else if(liveTransientActive()){captureLiveTrace();renderLiveScope();}else if(workbenchMode==='simulation'&&scopeMode(c)==='dc')showScopeDC(c);
     }
     function updateAnalysisMode(){const c=meters.find(c=>c.id===selectedComponent&&c.type==='scope');if(c)setScopeFields(c);document.getElementById('run-analysis').textContent='Refresh scope';}
     function selectActiveScope(id,refresh=true){if(!meters.some(m=>m.id===id&&m.type==='scope'))return;activeScopeId=id;document.getElementById('analysis-scope').value=id;analysisResult=null;document.getElementById('scope-plot').replaceChildren();document.getElementById('scope-cursor').disabled=true;if(refresh)queueScopeRefresh();}
-    function queueScopeRefresh(){if(workbenchMode!=='simulation'||!currentScope())return;if(analysisRunning){scopeRefreshQueued=true;return;}clearTimeout(scopeRefreshTimer);scopeRefreshTimer=setTimeout(()=>{scopeRefreshTimer=null;if(workbenchMode==='simulation')runAnalogAnalysis();},0);}
+    function queueScopeRefresh(){if(liveTransientActive()){renderLiveScope();return;}if(workbenchMode!=='simulation'||!currentScope())return;if(analysisRunning){scopeRefreshQueued=true;return;}clearTimeout(scopeRefreshTimer);scopeRefreshTimer=setTimeout(()=>{scopeRefreshTimer=null;if(workbenchMode==='simulation')runAnalogAnalysis();},0);}
     function showScopeDC(c){
       const voltage=meterVoltage(c);if(voltage===null){analysisResult=null;document.getElementById('scope-state').textContent='FLOATING';document.getElementById('scope-plot').replaceChildren();document.getElementById('scope-cursor').disabled=true;document.getElementById('scope-reading').textContent=`${componentLabel(c)} probes are floating / undefined.`;return;}
       const source=components.find(s=>s.id===scopeSource(c)),input=source?source.dc:(extraSupplies.find(s=>supplySourceId(s.id)===scopeSource(c))?.voltage??SUPPLY_VOLTAGE);
       analysisResult={scopeId:c.id,mode:'dc',rows:[{x:0,input,output:voltage},{x:c.duration/1000,input,output:voltage}]};analysisFingerprint=analogFingerprint();document.getElementById('scope-title').textContent=`${componentLabel(c)} · live DC`;document.getElementById('scope-state').textContent='LIVE';document.getElementById('scope-notes').textContent='Live voltage between this scope’s probes. Change its analysis in Build to see a waveform or frequency response.';plotScope();document.getElementById('scope-cursor').disabled=true;document.getElementById('scope-reading').textContent=`${componentLabel(c)} · ${formatNumber(voltage)} V · ${locationLabel(c.a)} − ${locationLabel(c.b)}`;
     }
     async function runAnalogAnalysis(){
+      if(liveTransientActive()){captureLiveTrace();renderLiveScope();return;}
       if(analysisRunning){scopeRefreshQueued=true;return;}const scope=currentScope();if(!scope){showMessage('Place a Scope in Build mode, then select it here.');return;}const config=cleanScopePart(scope),mode=scopeMode(scope),source=scopeSource(scope),fingerprint=analogFingerprint();if(mode==='dc'){showScopeDC(scope);return;}
       const button=document.getElementById('run-analysis');analysisRunning=true;button.disabled=true;button.textContent='Calculating…';await new Promise(resolve=>setTimeout(resolve,20));
       try{
-        if(workbenchMode!=='simulation'||fingerprint!==analogFingerprint()||activeScopeId!==config.id){scopeRefreshQueued=true;return;}
+        if(liveTransientActive()||workbenchMode!=='simulation'||fingerprint!==analogFingerprint()||activeScopeId!==config.id){scopeRefreshQueued=true;return;}
         if(components.some(c=>isIC(c)&&c.model&&c.model!=='LM741'))throw new Error('Waveform / frequency analysis currently supports analog parts and LM741s. Use Automatic or DC for live digital logic voltages.');
         if(solution.status==='error'||solution.status==='short')throw new Error('Resolve the DC circuit error before running this scope.');
         const sys=createAnalogSystem(),point=solveAnalogPoint(sys),probe={a:config.a,b:config.b};
@@ -2549,7 +2778,9 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
 
     function initializeWorkbench() {
       initializeModes();
-      initializeAnalogControls();
+      document.getElementById('counter161-example').addEventListener('click',()=>loadSequentialExample('74x161'));
+      document.getElementById('ac-amplifier-example').addEventListener('click',loadACAmplifierExample);
+      initializeAnalogControls();initializeLiveTime();document.getElementById('capacitor-example').addEventListener('click',loadCapacitorExample);
       document.getElementById('series-example').textContent = 'Series + cuts';
       document.getElementById('rectifier-example').addEventListener('click',()=>loadRectifierExample());document.getElementById('smoothed-rectifier-example').addEventListener('click',()=>loadRectifierExample(true));
       document.getElementById('series-example').addEventListener('click', () => loadExample('series'));
@@ -2575,10 +2806,11 @@ body.moving-component,body.moving-component * { cursor:grabbing !important;user-
         if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') { e.preventDefault(); undoLastAction(); }
       });
       try {
-        const saved = localStorage.getItem(STORAGE_KEY);
+        const saved = window.__WORKBENCH_QA_SANDBOX?null:localStorage.getItem(STORAGE_KEY);
         if (saved) { restoring = true; restoreBoard(validateBoard(JSON.parse(saved))); restoring = false; showMessage(saved && JSON.parse(saved).boardType === 'breadboard' && JSON.parse(saved).breadboardTopology !== 'vertical-signal-columns' ? 'Your breadboard was restored with vertical signal contacts. Check existing lead positions.' : 'Your previous board was restored.'); }
       } catch { restoring = false; showMessage('Starting a new board. Use Save circuit to keep a copy.'); }
     }
+
 
     document.querySelectorAll("[data-tool]").forEach(button => {
       button.addEventListener("click", () => setActiveTool(button.dataset.tool));
