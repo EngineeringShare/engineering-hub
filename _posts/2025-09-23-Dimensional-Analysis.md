@@ -237,9 +237,12 @@ Select a tab to switch between the presentation, worked example and formulae ref
   })();
 </script>
 
-## Additional resources
+## Worksheets:
 
 - [Download the additional worksheet](https://engineeringshare.github.io/engineering-resources/worksheets/Dimensional%20Analysis%20Worksheet%20PDF.pdf)
+
+## Additional resources
+
 - [YouTube: Dimensional Analysis](https://youtu.be/vWovdihteqs?si=77iziw5kXnqq7i6q)
 
 ---

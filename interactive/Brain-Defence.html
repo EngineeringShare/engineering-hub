@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="Defend your brain by answering maths questions to earn towers. A pixel-art learning game for Engineering Share.">
+  <title>Brain Defence | Engineering Share</title>
+  <style>
+    :root {
+      --bg: #0b1220; --surface: #172439; --surface2: #22324b;
+      --line: #3d5672; --text: #edf4ff; --muted: #a4b8d1;
+      --cyan: #69e4ff; --gold: #ffcf66; --green: #78e5ad;
+      --pink: #ff7899; --purple: #c8a5ff; --shadow: #070d17;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-width: 320px; background: var(--bg); color: var(--text);
+      font-family: "Courier New", Courier, monospace; line-height: 1.5;
+      background-image: linear-gradient(#ffffff05 1px, transparent 1px),
+        linear-gradient(90deg, #ffffff05 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+    button:focus-visible, input:focus-visible, select:focus-visible, canvas:focus-visible {
+      outline: 3px solid var(--cyan); outline-offset: 3px;
+    }
+    button:disabled { cursor: not-allowed; opacity: .45; }
+    .page { max-width: 1510px; margin: 0 auto; padding: 22px; }
+    .masthead { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 18px; }
+    .eyebrow { color: var(--cyan); font-weight: bold; font-size: 12px; letter-spacing: .18em; }
+    h1 { margin: 2px 0 2px; font-size: clamp(28px, 4vw, 43px); letter-spacing: -.055em; line-height: 1.15; text-shadow: 4px 4px #0008; }
+    h1 span { color: var(--gold); }
+    .subtitle { color: var(--muted); margin: 4px 0 0; font-size: 13px; }
+    .pixel-button, .tab, .tower-button, .choice {
+      border: 2px solid var(--line); border-radius: 0; color: var(--text);
+      background: var(--surface2); box-shadow: 4px 4px 0 var(--shadow);
+      transition: background .12s, border-color .12s, transform .12s;
+    }
+    .pixel-button:hover:not(:disabled), .tab:hover, .tower-button:hover,
+    .choice:hover:not(:disabled) { border-color: var(--cyan); background: #2c415e; }
+    .pixel-button:active:not(:disabled), .tower-button:active, .choice:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 2px 2px var(--shadow); }
+    .pixel-button { padding: 9px 14px; font-weight: bold; white-space: nowrap; }
+    .pixel-button.primary { background: #31506b; border-color: var(--cyan); }
+    .pixel-button.danger { border-color: var(--pink); }
+    .masthead .right { display: flex; align-items: center; gap: 10px; }
+    .best { color: var(--muted); font-size: 12px; text-align: right; }
+    .best strong { display: block; color: var(--gold); font-size: 17px; }
+    .hud { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; margin: 0 0 15px; }
+    .stat { border: 2px solid var(--line); background: #172439e8; padding: 8px 13px; box-shadow: 4px 4px 0 #070d17; min-width: 0; }
+    .stat-label { display: block; font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: var(--muted); }
+    .stat-value { display: block; line-height: 1.2; font-size: clamp(17px, 2.2vw, 25px); font-weight: 900; margin-top: 2px; overflow-wrap: anywhere; }
+    .stat-value.gold { color: var(--gold); } .stat-value.cyan { color: var(--cyan); }
+    .stat-value.pink { color: var(--pink); } .stat-value.green { color: var(--green); }
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 354px; align-items: start; gap: 16px; }
+    .arena-wrap { min-width: 0; }
+    .arena-header, .arena-footer {
+      background: #18263b; border: 2px solid var(--line);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+      padding: 9px 12px; font-size: 12px;
+    }
+    .arena-header { border-bottom: 0; }
+    .arena-header strong { color: var(--cyan); }
+    .arena-footer { border-top: 0; color: var(--muted); min-height: 43px; }
+    .arena-footer strong { color: var(--gold); }
+    .arena-frame { position: relative; border: 2px solid var(--line); background: #1d3540; overflow: hidden; }
+    canvas { display: block; width: 100%; height: auto; aspect-ratio: 5/3; image-rendering: pixelated; touch-action: manipulation; cursor: crosshair; }
+    .message {
+      position: absolute; left: 50%; top: 19px; transform: translateX(-50%);
+      background: #101a2af0; border: 2px solid var(--gold); color: var(--gold);
+      font-weight: bold; font-size: 13px; padding: 8px 12px; text-align: center;
+      box-shadow: 4px 4px 0 #0008; pointer-events: none; min-width: 180px; max-width: 92%;
+      opacity: 0; transition: opacity .16s;
+    }
+    .message.show { opacity: 1; }
+    .panel { border: 2px solid var(--line); background: var(--surface); box-shadow: 5px 5px 0 var(--shadow); min-width: 0; }
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 2px solid var(--line); }
+    .tab { box-shadow: none; border: 0; border-right: 1px solid var(--line); padding: 14px 6px; font-weight: bold; font-size: 13px; background: #18263a; }
+    .tab:last-child { border-right: 0; }
+    .tab[aria-selected="true"] { color: var(--cyan); background: var(--surface); box-shadow: inset 0 -4px 0 var(--cyan); }
+    .tab-content { padding: 17px; min-height: 481px; }
+    .tab-content[hidden] { display: none; }
+    .panel-title { margin: 0; font-size: 20px; letter-spacing: -.03em; }
+    .panel-desc { color: var(--muted); font-size: 12px; margin: 5px 0 14px; }
+    label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 5px; font-weight: bold; }
+    select, .answer-input {
+      width: 100%; padding: 11px 10px; border: 2px solid var(--line);
+      background: #0e192a; color: var(--text); border-radius: 0;
+    }
+    select { appearance: auto; }
+    .set-description { min-height: 36px; font-size: 11px; color: var(--muted); margin: 8px 0 0; }
+    .question-box { background: #101d2e; border: 2px solid #50617e; margin-top: 15px; padding: 16px; box-shadow: inset 0 0 0 3px #ffffff07; }
+    .question-counter { font-size: 10px; color: var(--green); letter-spacing: .13em; font-weight: bold; }
+    .question-text { font-size: 20px; font-weight: 900; margin: 12px 0 15px; line-height: 1.35; min-height: 65px; overflow-wrap: anywhere; }
+    .answer-form { display: flex; gap: 8px; }
+    .answer-input { flex: 1; min-width: 0; font-weight: bold; font-size: 17px; }
+    .answer-form .pixel-button { padding: 8px 12px; }
+    .choices { display: grid; gap: 8px; }
+    .choice { padding: 11px; font-size: 13px; font-weight: bold; text-align: left; width: 100%; }
+    .feedback { min-height: 44px; display: flex; align-items: center; font-size: 13px; font-weight: bold; }
+    .feedback.ok { color: var(--green); } .feedback.bad { color: var(--pink); }
+    .quiz-tip { font-size: 11px; color: var(--muted); background: #23354a; padding: 12px; border-left: 4px solid var(--gold); }
+    .shop-list { display: grid; gap: 10px; }
+    .tower-button { display: flex; gap: 11px; align-items: center; width: 100%; padding: 10px; text-align: left; }
+    .tower-button.active { border-color: var(--gold); background: #3b3b49; }
+    .tower-button.unaffordable .cost { color: var(--pink); }
+    .tower-swatch { flex: 0 0 48px; width: 48px; height: 48px; display: grid; place-items: center; font-size: 29px; border: 2px solid #ffffff30; background: #112239; }
+    .tower-name { font-weight: bold; font-size: 14px; }
+    .tower-meta { color: var(--muted); font-size: 11px; line-height: 1.5; }
+    .cost { color: var(--gold); font-weight: bold; font-size: 12px; margin-left: auto; text-align: right; }
+    .shop-tip { margin: 14px 0; padding: 11px; background: #263951; color: var(--muted); font-size: 12px; border-left: 4px solid var(--cyan); }
+    .selected-info { border-top: 2px dashed var(--line); padding-top: 14px; margin-top: 18px; }
+    .selected-info h3 { margin: 0 0 6px; font-size: 15px; color: var(--cyan); }
+    .selected-info p { color: var(--muted); font-size: 12px; margin: 5px 0 11px; }
+    .selected-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .selected-actions button { flex: 1; font-size: 12px; padding: 8px; }
+    .utility { display: flex; flex-wrap: wrap; gap: 8px; justify-content: space-between; margin-top: 14px; color: var(--muted); font-size: 11px; }
+    .utility strong { color: var(--green); }
+    .footer-note { font-size: 11px; color: #8ea4be; margin: 16px 0 2px; }
+    .gameover {
+      position: absolute; inset: 0; background: #0a1220de;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 20px; gap: 8px;
+    }
+    .gameover[hidden] { display: none; }
+    .gameover h2 { color: var(--pink); font-size: clamp(29px, 5vw, 55px); margin: 0; text-shadow: 5px 5px #111; }
+    .gameover p { font-weight: bold; margin: 0 0 10px; }
+    .gameover .pixel-button { padding: 12px 22px; }
+    @media (max-width: 1080px) { .layout { grid-template-columns: minmax(0, 1fr) 310px; } .tab-content { padding: 13px; } }
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; } .tab-content { min-height: 0; }
+      .masthead { align-items: center; } .hud { grid-template-columns: repeat(5, 1fr); }
+    }
+    @media (max-width: 580px) {
+      .page { padding: 10px; }
+      .masthead { flex-direction: column; gap: 11px; }
+      .masthead .right { width: 100%; justify-content: space-between; }
+      .hud { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .hud .stat:nth-child(4), .hud .stat:nth-child(5) { grid-column: span 1; }
+      .stat { padding: 7px 9px; } .stat-value { font-size: 19px; }
+      .arena-header, .arena-footer { font-size: 10px; }
+      .message { top: 7px; font-size: 10px; padding: 4px 7px; }
+      .footer-note { line-height: 1.6; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { transition-duration: 0s !important; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="masthead">
+      <div>
+        <div class="eyebrow">ENGINEERING SHARE // LEARNING ARCADE</div>
+        <h1>BRAIN <span>DEFENCE</span></h1>
+        <p class="subtitle">Answer questions. Earn coins. Build towers. Protect your brain.</p>
+      </div>
+      <div class="right">
+        <div class="best">PERSONAL BEST<strong id="bestScore">0 PTS</strong></div>
+        <button class="pixel-button" id="restartTop" type="button">↻ RESTART</button>
+      </div>
+    </header>
+
+    <div class="hud" aria-label="Game statistics">
+      <div class="stat"><span class="stat-label">Brain health</span><span class="stat-value pink" id="healthValue">♥ 12 / 12</span></div>
+      <div class="stat"><span class="stat-label">Coins</span><span class="stat-value gold" id="coinsValue">◈ 75</span></div>
+      <div class="stat"><span class="stat-label">Wave</span><span class="stat-value cyan" id="waveValue">00</span></div>
+      <div class="stat"><span class="stat-label">Next phase in</span><span class="stat-value" id="timerValue">00:18</span></div>
+      <div class="stat"><span class="stat-label">Score / correct</span><span class="stat-value green" id="scoreValue">0 / 0</span></div>
+    </div>
+
+    <main class="layout">
+      <section class="arena-wrap" aria-label="Tower defence playfield">
+        <div class="arena-header">
+          <div><strong id="phaseName">PREPARATION</strong> <span id="phaseDetail">— wave 1 approaching</span></div>
+          <div>ENEMIES ON MAP: <strong id="enemyCount">0</strong></div>
+        </div>
+        <div class="arena-frame">
+          <canvas id="game" width="960" height="576" tabindex="0" aria-label="Tower defence map. Select a tower in the armoury and click a clear grass tile to place it."></canvas>
+          <div class="message" id="toast" role="status" aria-live="polite"></div>
+          <div class="gameover" id="gameover" hidden>
+            <h2>BRAIN OVERRUN</h2>
+            <p id="finalStats">You survived 0 waves.</p>
+            <button class="pixel-button primary" id="restartGame" type="button">TRY AGAIN ↻</button>
+          </div>
+        </div>
+        <div class="arena-footer">
+          <span id="gameHint"><strong>TIP:</strong> Answer a question, then open ARMOURY to build.</span>
+          <span>1 / 2 / 3 = TOWERS · ESC = CANCEL</span>
+        </div>
+      </section>
+
+      <aside class="panel" aria-label="Quiz and armoury">
+        <div class="tabs" role="tablist" aria-label="Game tools">
+          <button class="tab" type="button" role="tab" id="quizTab" aria-selected="true" aria-controls="quizPanel">✦ QUIZ MODE</button>
+          <button class="tab" type="button" role="tab" id="shopTab" aria-selected="false" aria-controls="shopPanel">▣ ARMOURY</button>
+        </div>
+        <div class="tab-content" id="quizPanel" role="tabpanel" aria-labelledby="quizTab">
+          <h2 class="panel-title">EARN YOUR DEFENCES</h2>
+          <p class="panel-desc">Correct answers earn coins. The enemies keep moving while you solve!</p>
+          <label for="setSelect">QUESTION SET</label>
+          <select id="setSelect" aria-label="Choose a question set"><option value="arithmetic">Core Arithmetic</option></select>
+          <p class="set-description" id="setDescription">Loading question banks…</p>
+          <div class="question-box">
+            <div class="question-counter" id="questionCounter">QUESTION 001 · +25 COINS</div>
+            <div class="question-text" id="questionText">Loading question…</div>
+            <form class="answer-form" id="answerForm" autocomplete="off">
+              <input class="answer-input" id="answerInput" name="answer" type="text" inputmode="decimal" placeholder="Your answer" aria-label="Your answer" required>
+              <button class="pixel-button primary" type="submit" id="answerSubmit">GO ↵</button>
+            </form>
+            <div class="choices" id="choices" hidden></div>
+          </div>
+          <div class="feedback" id="feedback" aria-live="polite"></div>
+          <div class="quiz-tip"><strong>NO PAUSE!</strong> Each right answer gives coins; every 5 in a row earns a bonus. You can swap question sets at any time.</div>
+          <div class="utility">
+            <span>ANSWER STREAK: <strong id="streakValue">0</strong></span>
+            <span>ACCURACY: <strong id="accuracyValue">—</strong></span>
+          </div>
+        </div>
+        <div class="tab-content" id="shopPanel" role="tabpanel" aria-labelledby="shopTab" hidden>
+          <h2 class="panel-title">THE ARMOURY</h2>
+          <p class="panel-desc">Choose a tower, then click a free grass tile on the map.</p>
+          <div class="shop-list" id="shopList"></div>
+          <div class="shop-tip" id="shopTip">Select a tower to see its range on the map. You cannot build on the road.</div>
+          <div class="selected-info" id="selectedInfo" hidden>
+            <h3 id="selectedName">SELECTED TOWER</h3>
+            <p id="selectedStats"></p>
+            <div class="selected-actions">
+              <button class="pixel-button primary" id="upgradeBtn" type="button">UPGRADE</button>
+              <button class="pixel-button" id="sellBtn" type="button">SELL</button>
+            </div>
+          </div>
+          <div class="utility">
+            <span>PLACED: <strong id="towersCount">0</strong></span>
+            <span>KILLS: <strong id="killsCount">0</strong></span>
+          </div>
+        </div>
+      </aside>
+    </main>
+    <p class="footer-note">Runs entirely in your browser. Question sets are loaded from the Engineering Share JSON index when available, with built-in maths questions as an offline fallback. Progress resets when you restart; personal best is saved on this device where supported.</p>
+  </div>
+
+  <script>
+  "use strict";
+  (() => {
+    // Upload this HTML to /interactive/ and the JSON files to /interactive/tower-sets/.
+    // The remote index can list more sets without changing the HTML.
+    const RAW_ROOT = "https://raw.githubusercontent.com/EngineeringShare/engineering-hub/refs/heads/main/interactive/tower-sets/";
+    const TILE = 48, WIDTH = 960, HEIGHT = 576;
+    const STARTING_COINS = 75, STARTING_HEALTH = 12;
+    const PREP_SECONDS = 18, COMBAT_SECONDS = 30, COOLDOWN_SECONDS = 15;
+    const $ = (id) => document.getElementById(id);
+    const canvas = $("game"), ctx = canvas.getContext("2d");
+    if (!ctx) { $("gameHint").textContent = "Your browser does not support the canvas required to play."; return; }
+    ctx.imageSmoothingEnabled = false;
+
+    const TOWERS = {
+      bolt: { key: "1", name: "PULSE TURRET", icon: "⚡", color: "#74e9ff", cost: 70, damage: 15, range: 122, interval: 0.52, shotSpeed: 420, description: "Rapid, reliable single-target shots." },
+      cannon: { key: "2", name: "BLAST CANNON", icon: "✹", color: "#ffc96b", cost: 120, damage: 44, range: 148, interval: 1.55, shotSpeed: 300, splash: 60, description: "Slow explosive shots that hit groups." },
+      frost: { key: "3", name: "CRYO COIL", icon: "❄", color: "#c8acff", cost: 100, damage: 7, range: 132, interval: 0.9, shotSpeed: 360, slow: 0.48, description: "Chills enemies, slowing their movement." }
+    };
+    const TOWER_IDS = Object.keys(TOWERS);
+    const PATH = [
+      [-1, 5], [3, 5], [3, 2], [7, 2], [7, 8],
+      [11, 8], [11, 3], [15, 3], [15, 6], [19, 6]
+    ].map((p) => ({ x: p[0] * TILE + TILE / 2, y: p[1] * TILE + TILE / 2 }));
+    const pathCells = new Set(), pathLengths = [0];
+    let pathTotal = 0;
+    for (let i = 1; i < PATH.length; i++) {
+      const a = PATH[i - 1], b = PATH[i];
+      pathTotal += Math.hypot(b.x - a.x, b.y - a.y);
+      pathLengths.push(pathTotal);
+      const x1 = Math.round((a.x - TILE / 2) / TILE), y1 = Math.round((a.y - TILE / 2) / TILE);
+      const x2 = Math.round((b.x - TILE / 2) / TILE), y2 = Math.round((b.y - TILE / 2) / TILE);
+      const count = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1));
+      for (let j = 0; j <= count; j++) {
+        const x = x1 + Math.round((x2 - x1) * j / Math.max(count, 1));
+        const y = y1 + Math.round((y2 - y1) * j / Math.max(count, 1));
+        if (x >= 0 && x < 20 && y >= 0 && y < 12) pathCells.add(x + "," + y);
+      }
+    }
+
+    const embeddedIndex = {
+      sets: [
+        { id: "arithmetic", name: "Core Arithmetic", file: "arithmetic.json", description: "Addition, subtraction, multiplication and division." },
+        { id: "algebra", name: "Algebra & Negatives", file: "algebra.json", description: "Signed numbers and simple equations." },
+        { id: "percentages", name: "Percentages & Powers", file: "percentages.json", description: "Percentages, squares and substitution." }
+      ]
+    };
+    // These embedded sets make the HTML playable even when opened with file://.
+    // Hosted versions prefer the remote JSON and pick up edits without an HTML change.
+    const embeddedBanks = {
+      arithmetic: {
+        name: "Core Arithmetic", reward: 25,
+        generators: [{ type: "addition", min: 2, max: 45 }, { type: "subtraction", min: 3, max: 55, nonNegative: true }, { type: "multiplication", min: 2, max: 12 }, { type: "division", min: 2, max: 12 }]
+      },
+      algebra: {
+        name: "Algebra & Negatives", reward: 30,
+        generators: [{ type: "linear", minX: -9, maxX: 12, minA: 2, maxA: 8, minB: -15, maxB: 15 }, { type: "substitution", minX: -8, maxX: 8, minA: 2, maxA: 7, minB: -9, maxB: 9 }, { type: "addition", min: -25, max: 25 }, { type: "multiplication", min: -9, max: 9 }]
+      },
+      percentages: {
+        name: "Percentages & Powers", reward: 30,
+        generators: [{ type: "percentage", percentages: [5, 10, 20, 25, 50, 75], minBase: 2, maxBase: 30 }, { type: "square", min: 2, max: 16 }, { type: "division", min: 3, max: 18 }, { type: "substitution", minX: 1, maxX: 12, minA: 2, maxA: 5, minB: 0, maxB: 12 }]
+      }
+    };
+
+    const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const choose = (array) => array[Math.floor(Math.random() * array.length)];
+    const bound = (value, low, high) => Math.max(low, Math.min(high, value));
+    const validNum = (value, fallback, min = -1000, max = 1000) =>
+      Number.isFinite(Number(value)) && value !== null ? bound(Math.trunc(Number(value)), min, max) : fallback;
+    const nrange = (g, lowKey, highKey, lowDefault, highDefault) => {
+      const low = validNum(g[lowKey], lowDefault), high = validNum(g[highKey], highDefault);
+      return [Math.min(low, high), Math.max(low, high)];
+    };
+    const signValue = (n) => n < 0 ? "− " + Math.abs(n) : "+ " + n;
+    const generatorRegistry = {
+      addition(g) {
+        const [low, high] = nrange(g, "min", "max", 1, 20);
+        const a = randomInt(low, high), b = randomInt(low, high);
+        return { prompt: a + " + (" + b + ") = ?", answer: a + b };
+      },
+      subtraction(g) {
+        const [low, high] = nrange(g, "min", "max", 2, 40);
+        let a = randomInt(low, high), b = randomInt(low, high);
+        if (g.nonNegative && a < b) [a, b] = [b, a];
+        return { prompt: a + " − (" + b + ") = ?", answer: a - b };
+      },
+      multiplication(g) {
+        const [low, high] = nrange(g, "min", "max", 2, 12);
+        const a = randomInt(low, high), b = randomInt(low, high);
+        return { prompt: a + " × " + b + " = ?", answer: a * b };
+      },
+      division(g) {
+        const [low, high] = nrange(g, "min", "max", 2, 12);
+        const divisor = randomInt(Math.max(1, low), Math.max(1, high));
+        const quotient = randomInt(Math.max(1, low), Math.max(1, high));
+        return { prompt: (divisor * quotient) + " ÷ " + divisor + " = ?", answer: quotient };
+      },
+      linear(g) {
+        const [xl, xh] = nrange(g, "minX", "maxX", -5, 10);
+        const [al, ah] = nrange(g, "minA", "maxA", 2, 6);
+        const [bl, bh] = nrange(g, "minB", "maxB", -10, 10);
+        const x = randomInt(xl, xh), a = randomInt(Math.max(1, al), Math.max(1, ah)), b = randomInt(bl, bh);
+        return { prompt: "Solve for x: " + a + "x " + signValue(b) + " = " + (a * x + b), answer: x };
+      },
+      substitution(g) {
+        const [xl, xh] = nrange(g, "minX", "maxX", -5, 10);
+        const [al, ah] = nrange(g, "minA", "maxA", 2, 6);
+        const [bl, bh] = nrange(g, "minB", "maxB", -10, 10);
+        const x = randomInt(xl, xh), a = randomInt(al, ah), b = randomInt(bl, bh);
+        return { prompt: "If x = " + x + ", find " + a + "x " + signValue(b) + ".", answer: a * x + b };
+      },
+      percentage(g) {
+        const pct = choose((Array.isArray(g.percentages) ? g.percentages : [10, 20, 25, 50]).filter((v) => Number.isFinite(v) && v > 0 && v <= 100)) || 25;
+        const [low, high] = nrange(g, "minBase", "maxBase", 2, 30);
+        const multiplier = randomInt(Math.max(1, low), Math.max(1, high));
+        const base = multiplier * 20; // All provided percentages produce whole-number answers.
+        return { prompt: "What is " + pct + "% of " + base + "?", answer: +(base * pct / 100).toFixed(4) };
+      },
+      square(g) {
+        const [low, high] = nrange(g, "min", "max", 2, 15);
+        const n = randomInt(low, high);
+        return { prompt: "What is " + n + "²?", answer: n * n };
+      }
+    };
+    const goodQuestion = (q) => q && typeof q.prompt === "string" && q.prompt.trim() && (typeof q.answer === "string" || typeof q.answer === "number");
+    function validateBank(data) {
+      if (!data || typeof data !== "object") return null;
+      const questions = (Array.isArray(data.questions) ? data.questions : []).filter(goodQuestion).slice(0, 500);
+      const generators = (Array.isArray(data.generators) ? data.generators : [])
+        .filter((g) => g && Object.hasOwn(generatorRegistry, g.type)).slice(0, 60);
+      if (!questions.length && !generators.length) return null;
+      return {
+        name: String(data.name || "Question set").slice(0, 80),
+        description: String(data.description || "").slice(0, 220),
+        reward: bound(validNum(data.reward, 25), 5, 100),
+        questions, generators
+      };
+    }
+
+    const state = {
+      health: STARTING_HEALTH, coins: STARTING_COINS, wave: 0, phase: "prep",
+      phaseTime: PREP_SECONDS, score: 0, kills: 0, correct: 0, attempted: 0, streak: 0,
+      towers: [], enemies: [], shots: [], particles: [], floaters: [],
+      remaining: 0, spawnTime: 0, spawnInterval: 2.5, nextEnemyId: 0,
+      placing: null, selected: null, hover: null, over: false, shake: 0
+    };
+    let bestScore = 0, indexData = embeddedIndex, activeBank = validateBank(embeddedBanks.arithmetic);
+    let activeQuestion = null, currentQuestionNumber = 0, answerPending = false;
+    let questionSerial = 0, bankRequest = 0, toastUntil = 0, previousFrame = 0, hudAccumulator = 0;
+    try { bestScore = Number(localStorage.getItem("engineering-brain-defence-best") || 0) || 0; } catch (_) { /* Private browsing. */ }
+
+    function pointAt(distance) {
+      for (let i = 1; i < PATH.length; i++) {
+        if (distance <= pathLengths[i]) {
+          const a = PATH[i - 1], b = PATH[i], span = pathLengths[i] - pathLengths[i - 1];
+          const t = bound((distance - pathLengths[i - 1]) / span, 0, 1);
+          return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+        }
+      }
+      return { ...PATH[PATH.length - 1] };
+    }
+    function tileAt(x, y) { return { col: Math.floor(x / TILE), row: Math.floor(y / TILE) }; }
+    function towerAt(col, row) { return state.towers.find((t) => t.col === col && t.row === row) || null; }
+    function canBuild(col, row) {
+      return col >= 0 && col < 20 && row >= 0 && row < 12 &&
+        !pathCells.has(col + "," + row) && !towerAt(col, row);
+    }
+    function towerRange(t) { return TOWERS[t.type].range + (t.level - 1) * 12; }
+    function towerDamage(t) { return TOWERS[t.type].damage * Math.pow(1.4, t.level - 1); }
+    function upgradeCost(t) { return Math.round(TOWERS[t.type].cost * (0.75 + 0.25 * (t.level - 1))); }
+    function sellValue(t) { return Math.round(t.invested * 0.6); }
+    function showToast(message, duration = 2000) {
+      $("toast").textContent = message;
+      $("toast").classList.add("show");
+      toastUntil = performance.now() + duration;
+    }
+    function setHint(message) { $("gameHint").textContent = message; }
+
+    function setTab(name) {
+      const quiz = name === "quiz";
+      $("quizPanel").hidden = !quiz;
+      $("shopPanel").hidden = quiz;
+      $("quizTab").setAttribute("aria-selected", String(quiz));
+      $("shopTab").setAttribute("aria-selected", String(!quiz));
+      if (quiz && !answerPending && !($("answerForm").hidden)) $("answerInput").focus({ preventScroll: true });
+      if (!quiz) refreshShop();
+    }
+    $("quizTab").addEventListener("click", () => setTab("quiz"));
+    $("shopTab").addEventListener("click", () => setTab("shop"));
+
+    async function fetchJSON(url) {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      try {
+        const response = await fetch(url, { signal: controller.signal, cache: "no-store" });
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        return await response.json();
+      } finally { clearTimeout(timeout); }
+    }
+    async function firstJSON(urls) {
+      for (const url of urls) {
+        try { return await fetchJSON(url); } catch (_) { /* Try the next source. */ }
+      }
+      return null;
+    }
+    function legalFile(file) { return typeof file === "string" && /^[a-z0-9][a-z0-9_-]*\.json$/i.test(file); }
+    function updateSetOptions() {
+      const select = $("setSelect"), previous = select.value || "arithmetic";
+      select.replaceChildren();
+      for (const set of indexData.sets) {
+        const option = document.createElement("option");
+        option.value = set.id;
+        option.textContent = set.name;
+        select.append(option);
+      }
+      select.value = indexData.sets.some((s) => s.id === previous) ? previous : indexData.sets[0].id;
+    }
+    async function selectBank(id) {
+      const set = indexData.sets.find((item) => item.id === id);
+      if (!set) return;
+      const requested = ++bankRequest;
+      $("setDescription").textContent = "Loading " + set.name + "…";
+      let data = await firstJSON([RAW_ROOT + encodeURIComponent(set.file), "tower-sets/" + set.file]);
+      if (requested !== bankRequest) return;
+      let source = "LIVE JSON";
+      let bank = validateBank(data);
+      if (!bank && embeddedBanks[id]) {
+        bank = validateBank(embeddedBanks[id]);
+        source = "BUILT-IN FALLBACK";
+      }
+      if (!bank) {
+        $("setDescription").textContent = "This question set could not be loaded. Choose another set.";
+        showToast("QUESTION SET UNAVAILABLE", 2600);
+        return;
+      }
+      activeBank = bank;
+      $("setDescription").textContent = (bank.description || set.description || "Questions ready.") + " · " + source;
+      questionSerial++;
+      answerPending = false;
+      nextQuestion();
+      renderHUD();
+    }
+    async function loadIndex() {
+      indexData = embeddedIndex;
+      updateSetOptions();
+      const loaded = await firstJSON([RAW_ROOT + "index.json", "tower-sets/index.json"]);
+      if (!loaded || !Array.isArray(loaded.sets)) return;
+      const sets = loaded.sets
+        .filter((s) => s && typeof s.id === "string" && /^[a-z0-9_-]{1,40}$/i.test(s.id) && legalFile(s.file) && typeof s.name === "string")
+        .slice(0, 40).map((s) => ({ id: s.id, file: s.file, name: s.name.slice(0, 80), description: String(s.description || "").slice(0, 140) }));
+      if (sets.length) {
+        indexData = { sets };
+        updateSetOptions();
+        selectBank($("setSelect").value);
+      }
+    }
+    $("setSelect").addEventListener("change", (event) => selectBank(event.target.value));
+
+    function makeQuestion() {
+      if (!activeBank) return null;
+      const hasGenerators = activeBank.generators.length > 0;
+      const hasFixed = activeBank.questions.length > 0;
+      if (hasFixed && (!hasGenerators || Math.random() < 0.2)) return { ...choose(activeBank.questions) };
+      if (hasGenerators) {
+        for (let tries = 0; tries < 10; tries++) {
+          const spec = choose(activeBank.generators);
+          try {
+            const result = generatorRegistry[spec.type](spec);
+            if (goodQuestion(result)) return result;
+          } catch (_) { /* An invalid generator should not crash the game. */ }
+        }
+      }
+      return hasFixed ? { ...choose(activeBank.questions) } : null;
+    }
+    function nextQuestion() {
+      activeQuestion = makeQuestion();
+      answerPending = false;
+      currentQuestionNumber++;
+      $("questionCounter").textContent = "QUESTION " + String(currentQuestionNumber).padStart(3, "0") + " · +" + (activeBank ? activeBank.reward : 25) + " COINS";
+      $("questionText").textContent = activeQuestion ? activeQuestion.prompt : "No questions available.";
+      $("feedback").textContent = "";
+      $("feedback").className = "feedback";
+      $("answerInput").value = "";
+      const choices = $("choices");
+      choices.replaceChildren();
+      const options = activeQuestion && Array.isArray(activeQuestion.choices) &&
+        activeQuestion.choices.length >= 2 ? activeQuestion.choices.slice(0, 6) : null;
+      $("answerForm").hidden = Boolean(options);
+      choices.hidden = !options;
+      if (options) {
+        for (const option of options) {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.className = "choice";
+          button.textContent = String(option);
+          button.addEventListener("click", () => submitAnswer(String(option)));
+          choices.append(button);
+        }
+      }
+      $("answerInput").disabled = !activeQuestion;
+      $("answerSubmit").disabled = !activeQuestion;
+      if (!$("quizPanel").hidden && !options) $("answerInput").focus({ preventScroll: true });
+    }
+    function isCorrectAnswer(value, question) {
+      const expected = question.answer;
+      if (typeof expected === "number") {
+        const trimmed = String(value).trim().replace(/,/g, "");
+        if (!trimmed || !Number.isFinite(Number(trimmed))) return false;
+        const tolerance = typeof question.tolerance === "number" && question.tolerance >= 0 ? question.tolerance : 0.000001;
+        return Math.abs(Number(trimmed) - expected) <= tolerance;
+      }
+      return String(value).trim().toLowerCase() === expected.trim().toLowerCase();
+    }
+    function submitAnswer(value) {
+      if (answerPending || !activeQuestion || state.over) return;
+      answerPending = true;
+      state.attempted++;
+      const correct = isCorrectAnswer(value, activeQuestion);
+      const feedback = $("feedback");
+      if (correct) {
+        state.correct++; state.streak++;
+        const bonus = state.streak % 5 === 0 ? 15 : 0;
+        const reward = activeBank.reward + bonus;
+        state.coins += reward;
+        state.score += 5 + (bonus ? 10 : 0);
+        feedback.textContent = "✓ CORRECT! +" + reward + " COINS" + (bonus ? " · STREAK BONUS!" : "");
+        feedback.className = "feedback ok";
+        floater(WIDTH - 80, 44, "+" + reward + " ◈", "#ffcf66");
+      } else {
+        state.streak = 0;
+        feedback.textContent = "✕ NOT QUITE · Answer: " + activeQuestion.answer;
+        feedback.className = "feedback bad";
+      }
+      $("answerInput").disabled = true;
+      $("answerSubmit").disabled = true;
+      for (const btn of $("choices").querySelectorAll("button")) btn.disabled = true;
+      updateBest();
+      renderHUD();
+      refreshShop();
+      const serial = ++questionSerial;
+      setTimeout(() => { if (serial === questionSerial && !state.over) nextQuestion(); }, correct ? 600 : 1200);
+    }
+    $("answerForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      submitAnswer($("answerInput").value);
+    });
+
+    function refreshShop() {
+      const list = $("shopList");
+      if (!list.children.length) {
+        for (const id of TOWER_IDS) {
+          const item = TOWERS[id], btn = document.createElement("button");
+          btn.type = "button"; btn.className = "tower-button"; btn.dataset.type = id;
+          btn.innerHTML =
+            '<span class="tower-swatch" style="color:' + item.color + '">' + item.icon + '</span>' +
+            '<span style="flex:1;min-width:0"><span class="tower-name">' + item.key + ' · ' + item.name + '</span>' +
+            '<br><span class="tower-meta">' + item.description + '</span></span>' +
+            '<span class="cost">◈ ' + item.cost + '</span>';
+          btn.addEventListener("click", () => {
+            if (state.over) return;
+            state.selected = null;
+            state.placing = id;
+            refreshShop();
+            setHint("Click a green grass tile to place your " + item.name + ". Press ESC to cancel.");
+          });
+          list.append(btn);
+        }
+      }
+      for (const button of list.children) {
+        button.classList.toggle("active", state.placing === button.dataset.type);
+        button.classList.toggle("unaffordable", state.coins < TOWERS[button.dataset.type].cost);
+      }
+      const t = state.selected;
+      $("selectedInfo").hidden = !t;
+      if (t) {
+        const spec = TOWERS[t.type], maxed = t.level >= 4, cost = upgradeCost(t);
+        $("selectedName").textContent = spec.name + " · LV " + t.level;
+        $("selectedStats").textContent = "DMG " + Math.round(towerDamage(t)) + " · RANGE " + Math.round(towerRange(t)) + " · " + spec.description;
+        $("upgradeBtn").textContent = maxed ? "MAX LEVEL" : "UPGRADE ◈ " + cost;
+        $("upgradeBtn").disabled = maxed || state.coins < cost || state.over;
+        $("sellBtn").textContent = "SELL ◈ " + sellValue(t);
+        $("sellBtn").disabled = state.over;
+      }
+      $("shopTip").textContent = state.placing
+        ? "Placing " + TOWERS[state.placing].name + " · Price " + TOWERS[state.placing].cost + " coins. Click clear grass on the map."
+        : "Select any placed tower to inspect, upgrade or sell it.";
+      $("towersCount").textContent = state.towers.length;
+      $("killsCount").textContent = state.kills;
+    }
+    function upgradeSelected() {
+      const t = state.selected;
+      if (!t || t.level >= 4 || state.over) return;
+      const cost = upgradeCost(t);
+      if (state.coins < cost) return;
+      state.coins -= cost; t.invested += cost; t.level++;
+      showToast("TOWER UPGRADED · LV " + t.level);
+      refreshShop(); renderHUD();
+    }
+    function sellSelected() {
+      const t = state.selected;
+      if (!t || state.over) return;
+      state.coins += sellValue(t);
+      state.towers = state.towers.filter((item) => item !== t);
+      state.selected = null;
+      showToast("TOWER SOLD");
+      refreshShop(); renderHUD();
+    }
+    $("upgradeBtn").addEventListener("click", upgradeSelected);
+    $("sellBtn").addEventListener("click", sellSelected);
+
+    function getCanvasPoint(event) {
+      const rect = canvas.getBoundingClientRect();
+      return { x: (event.clientX - rect.left) * WIDTH / rect.width, y: (event.clientY - rect.top) * HEIGHT / rect.height };
+    }
+    canvas.addEventListener("pointermove", (event) => {
+      const pos = getCanvasPoint(event); state.hover = tileAt(pos.x, pos.y);
+    });
+    canvas.addEventListener("pointerleave", () => { state.hover = null; });
+    canvas.addEventListener("pointerdown", (event) => {
+      if (state.over || event.button !== 0) return;
+      const pos = getCanvasPoint(event), cell = tileAt(pos.x, pos.y);
+      if (cell.col < 0 || cell.col > 19 || cell.row < 0 || cell.row > 11) return;
+      const existing = towerAt(cell.col, cell.row);
+      if (existing) {
+        state.selected = existing; state.placing = null; setTab("shop");
+        setHint("Tower selected. Upgrade or sell it from the ARMOURY panel.");
+      } else if (state.placing) {
+        const type = state.placing, spec = TOWERS[type];
+        if (!canBuild(cell.col, cell.row)) { showToast("BUILD ON EMPTY GRASS"); return; }
+        if (state.coins < spec.cost) { showToast("NOT ENOUGH COINS · VISIT QUIZ MODE"); return; }
+        state.coins -= spec.cost;
+        state.towers.push({ type, col: cell.col, row: cell.row, x: (cell.col + .5) * TILE,
+          y: (cell.row + .5) * TILE, level: 1, cooldown: .2, invested: spec.cost, rotation: 0 });
+        showToast(spec.name + " DEPLOYED", 1300);
+        renderHUD();
+        refreshShop();
+      } else {
+        state.selected = null; refreshShop();
+      }
+    });
+    window.addEventListener("keydown", (event) => {
+      const tag = event.target && event.target.tagName;
+      if (["INPUT", "SELECT", "TEXTAREA"].includes(tag) || event.altKey || event.ctrlKey || event.metaKey) return;
+      if (event.key === "Escape") { state.placing = null; state.selected = null; refreshShop(); setHint("Selection cancelled."); }
+      if (event.key === "1" || event.key === "2" || event.key === "3") {
+        const id = TOWER_IDS[Number(event.key) - 1];
+        state.placing = id; state.selected = null; setTab("shop"); refreshShop();
+        setHint("Click a clear grass tile to place " + TOWERS[id].name + ".");
+      }
+    });
+
+    function beginWave() {
+      state.phase = "combat"; state.phaseTime = COMBAT_SECONDS; state.wave++;
+      state.remaining = 6 + state.wave * 2;
+      state.spawnInterval = 25 / state.remaining;
+      state.spawnTime = 0.25;
+      showToast("WAVE " + state.wave + " INCOMING!", 1700);
+      state.score += state.wave * 5;
+      updateBest();
+    }
+    function changePhase() {
+      if (state.phase === "prep" || state.phase === "cooldown") beginWave();
+      else {
+        state.phase = "cooldown";
+        state.phaseTime = COOLDOWN_SECONDS;
+        state.remaining = 0;
+        showToast("COOLDOWN · NEXT WAVE IN 15s", 1900);
+      }
+    }
+    function spawnEnemy() {
+      const number = ++state.nextEnemyId;
+      const kind = state.wave > 3 && number % 8 === 0 ? "tank" : state.wave > 1 && number % 5 === 0 ? "fast" : "normal";
+      const hpBase = kind === "tank" ? 83 : kind === "fast" ? 18 : 29;
+      const hp = Math.round(hpBase * Math.pow(1.21, state.wave - 1));
+      const speed = kind === "tank" ? 46 : kind === "fast" ? 118 : 76;
+      const enemy = { id: number, kind, hp, maxHp: hp, progress: 0, speed,
+        slowTime: 0, slowFactor: 1, dead: false, ...pointAt(0) };
+      state.enemies.push(enemy);
+    }
+    function floater(x, y, label, color) { state.floaters.push({ x, y, label, color, life: .9 }); }
+    function particles(x, y, color, count = 8) {
+      for (let n = 0; n < count; n++) {
+        state.particles.push({ x, y, vx: (Math.random() - .5) * 145, vy: (Math.random() - .5) * 145,
+          color, life: .35 + Math.random() * .35, size: randomInt(3, 7) });
+      }
+    }
+    function killEnemy(enemy) {
+      if (enemy.dead) return;
+      enemy.dead = true; state.kills++; state.score += 10 + state.wave * 2;
+      particles(enemy.x, enemy.y, enemy.kind === "tank" ? "#d1a0fb" : "#ff7899", 10);
+      floater(enemy.x, enemy.y, "+12", "#78e5ad");
+      updateBest();
+    }
+    function damageEnemy(enemy, amount) {
+      if (enemy.dead) return;
+      enemy.hp -= amount;
+      if (enemy.hp <= 0) killEnemy(enemy);
+    }
+    function hitBrain(enemy) {
+      if (enemy.dead) return;
+      enemy.dead = true;
+      state.health = Math.max(0, state.health - (enemy.kind === "tank" ? 2 : 1));
+      state.shake = .35; particles(PATH[PATH.length - 1].x, PATH[PATH.length - 1].y, "#ff7899", 15);
+      floater(PATH[PATH.length - 1].x - 30, PATH[PATH.length - 1].y - 40,
+        enemy.kind === "tank" ? "−2 ♥" : "−1 ♥", "#ff7899");
+      if (state.health <= 0) endGame();
+    }
+    function stepEnemies(dt) {
+      for (const enemy of state.enemies) {
+        if (enemy.dead) continue;
+        if (enemy.slowTime > 0) enemy.slowTime -= dt;
+        else enemy.slowFactor = 1;
+        enemy.progress += enemy.speed * enemy.slowFactor * dt;
+        if (enemy.progress >= pathTotal) { hitBrain(enemy); continue; }
+        const point = pointAt(enemy.progress);
+        enemy.x = point.x; enemy.y = point.y;
+      }
+      state.enemies = state.enemies.filter((enemy) => !enemy.dead);
+    }
+    function stepTowers(dt) {
+      for (const tower of state.towers) {
+        tower.cooldown -= dt;
+        if (tower.cooldown > 0) continue;
+        const range = towerRange(tower);
+        const targets = state.enemies.filter((e) => !e.dead && Math.hypot(tower.x - e.x, tower.y - e.y) <= range);
+        targets.sort((a, b) => b.progress - a.progress);
+        if (!targets.length) { tower.cooldown = 0; continue; }
+        const enemy = targets[0], spec = TOWERS[tower.type];
+        tower.rotation = Math.atan2(enemy.y - tower.y, enemy.x - tower.x);
+        state.shots.push({ x: tower.x, y: tower.y, tx: enemy.x, ty: enemy.y, target: enemy,
+          type: tower.type, damage: towerDamage(tower), speed: spec.shotSpeed, color: spec.color });
+        tower.cooldown = spec.interval * Math.pow(.93, tower.level - 1);
+      }
+    }
+    function stepShots(dt) {
+      for (const shot of state.shots) {
+        if (shot.hit) continue;
+        if (!shot.target.dead) { shot.tx = shot.target.x; shot.ty = shot.target.y; }
+        const distance = Math.hypot(shot.tx - shot.x, shot.ty - shot.y);
+        if (distance < Math.max(14, shot.speed * dt)) {
+          shot.hit = true;
+          const spec = TOWERS[shot.type];
+          if (spec.splash) {
+            particles(shot.tx, shot.ty, spec.color, 8);
+            for (const enemy of state.enemies) {
+              if (!enemy.dead && Math.hypot(enemy.x - shot.tx, enemy.y - shot.ty) < spec.splash)
+                damageEnemy(enemy, shot.damage * (enemy === shot.target ? 1 : .65));
+            }
+          } else if (!shot.target.dead) {
+            damageEnemy(shot.target, shot.damage);
+            if (spec.slow && !shot.target.dead) { shot.target.slowFactor = spec.slow; shot.target.slowTime = 2.3; }
+          }
+        } else {
+          shot.x += (shot.tx - shot.x) / distance * shot.speed * dt;
+          shot.y += (shot.ty - shot.y) / distance * shot.speed * dt;
+        }
+      }
+      state.shots = state.shots.filter((shot) => !shot.hit);
+      state.enemies = state.enemies.filter((enemy) => !enemy.dead);
+    }
+    function stepEffects(dt) {
+      for (const item of state.particles) { item.x += item.vx * dt; item.y += item.vy * dt; item.life -= dt; }
+      state.particles = state.particles.filter((p) => p.life > 0);
+      for (const item of state.floaters) { item.y -= 32 * dt; item.life -= dt; }
+      state.floaters = state.floaters.filter((p) => p.life > 0);
+      state.shake = Math.max(0, state.shake - dt);
+    }
+    function step(dt) {
+      if (state.over) { stepEffects(dt); return; }
+      state.phaseTime -= dt;
+      if (state.phase === "combat") {
+        state.spawnTime -= dt;
+        while (state.spawnTime <= 0 && state.remaining > 0) {
+          spawnEnemy(); state.remaining--; state.spawnTime += state.spawnInterval;
+        }
+      }
+      while (state.phaseTime <= 0 && !state.over) {
+        const overtime = -state.phaseTime;
+        changePhase();
+        state.phaseTime -= overtime;
+      }
+      stepEnemies(dt);
+      if (!state.over) { stepTowers(dt); stepShots(dt); }
+      stepEffects(dt);
+    }
+    function updateBest() {
+      if (state.score <= bestScore) return;
+      bestScore = state.score;
+      try { localStorage.setItem("engineering-brain-defence-best", String(bestScore)); } catch (_) { /* Optional. */ }
+    }
+    function endGame() {
+      if (state.over) return;
+      state.over = true; state.placing = null;
+      updateBest();
+      $("finalStats").textContent = "WAVE " + state.wave + " · " + state.score + " POINTS · " + state.correct + " CORRECT ANSWERS";
+      $("gameover").hidden = false;
+      $("answerInput").disabled = true; $("answerSubmit").disabled = true;
+      refreshShop();
+    }
+    function restart() {
+      const reset = {
+        health: STARTING_HEALTH, coins: STARTING_COINS, wave: 0, phase: "prep", phaseTime: PREP_SECONDS,
+        score: 0, kills: 0, correct: 0, attempted: 0, streak: 0, towers: [], enemies: [],
+        shots: [], particles: [], floaters: [], remaining: 0, spawnTime: 0, spawnInterval: 2.5,
+        nextEnemyId: 0, placing: null, selected: null, hover: null, over: false, shake: 0
+      };
+      Object.assign(state, reset);
+      $("gameover").hidden = true;
+      questionSerial++; answerPending = false; nextQuestion();
+      setHint("Earn coins with the quiz, then use the ARMOURY to place towers.");
+      renderHUD(); refreshShop(); showToast("NEW DEFENCE STARTED", 1200);
+    }
+    $("restartTop").addEventListener("click", restart);
+    $("restartGame").addEventListener("click", restart);
+
+    // Canvas artwork: procedurally drawn, deliberately blocky/pixelated.
+    function block(x, y, w, h, fill) { ctx.fillStyle = fill; ctx.fillRect(Math.round(x), Math.round(y), w, h); }
+    function drawFloor() {
+      block(0, 0, WIDTH, HEIGHT, "#294a46");
+      for (let row = 0; row < 12; row++) for (let col = 0; col < 20; col++) {
+        const check = (row + col) % 2 === 0;
+        block(col * TILE, row * TILE, TILE, TILE, check ? "#2b554e" : "#2a514d");
+        block(col * TILE, row * TILE, TILE, 2, "#ffffff09");
+        const seed = (col * 193 + row * 71 + col * row * 97) % 23;
+        if (seed < 7 && !pathCells.has(col + "," + row)) {
+          const x = col * TILE + 9 + (seed * 5) % 26, y = row * TILE + 10 + (seed * 7) % 27;
+          block(x, y, 4, 7, seed % 2 ? "#4e8771" : "#397363");
+          block(x + 6, y + 4, 3, 4, "#427762");
+        }
+      }
+    }
+    function drawPath() {
+      ctx.beginPath(); ctx.moveTo(PATH[0].x, PATH[0].y);
+      for (let i = 1; i < PATH.length; i++) ctx.lineTo(PATH[i].x, PATH[i].y);
+      ctx.lineJoin = "miter"; ctx.lineCap = "butt";
+      ctx.lineWidth = 58; ctx.strokeStyle = "#182c34"; ctx.stroke();
+      ctx.lineWidth = 48; ctx.strokeStyle = "#60717b"; ctx.stroke();
+      ctx.lineWidth = 40; ctx.strokeStyle = "#536672"; ctx.stroke();
+      ctx.setLineDash([11, 23]); ctx.lineDashOffset = 0; ctx.strokeStyle = "#83919a";
+      ctx.lineWidth = 3; ctx.stroke(); ctx.setLineDash([]);
+      for (let i = 0; i < PATH.length; i++) {
+        const p = PATH[i];
+        block(p.x - 3, p.y - 3, 6, 6, "#97a7ac");
+      }
+      // Portal at entrance.
+      block(0, 5 * TILE + 1, 17, 46, "#20243e");
+      block(0, 5 * TILE + 1, 17, 6, "#d584f5");
+      block(0, 5 * TILE + 40, 17, 6, "#d584f5");
+      block(9, 5 * TILE + 10, 5, 26, "#b77ee7");
+    }
+    function drawBrain() {
+      const x = 19 * TILE + 24, y = 6 * TILE + 24;
+      block(x - 29, y - 31, 55, 61, "#172b38");
+      block(x - 23, y - 26, 44, 51, "#437c8b");
+      block(x - 18, y - 21, 33, 42, "#132b39");
+      const pink = state.shake > 0 ? "#fff2f5" : "#ff9bb8";
+      block(x - 11, y - 16, 13, 11, pink); block(x + 2, y - 13, 12, 10, pink);
+      block(x - 14, y - 5, 26, 17, "#fb84ac"); block(x - 10, y + 11, 20, 7, "#e56e99");
+      block(x - 3, y - 15, 3, 27, "#b35b8c"); block(x + 4, y - 5, 3, 13, "#b35b8c");
+      block(x - 23, y + 27, 46, 5, "#67dbce");
+      ctx.fillStyle = "#f8cad8"; ctx.font = "bold 9px monospace"; ctx.textAlign = "center";
+      ctx.fillText("BRAIN", x, y - 36);
+    }
+    function drawTower(tower, ghost = false, valid = true) {
+      const x = tower.x, y = tower.y, spec = TOWERS[tower.type];
+      ctx.save();
+      if (ghost) ctx.globalAlpha = .75;
+      block(x - 19, y - 16, 38, 36, "#142436");
+      block(x - 17, y - 19, 34, 33, valid ? "#50647c" : "#9b455e");
+      block(x - 13, y - 16, 26, 26, "#263e56");
+      block(x - 13, y + 12, 26, 5, "#1a2b3e");
+      ctx.translate(x, y - 3);
+      ctx.rotate(tower.rotation || 0);
+      const color = valid ? spec.color : "#ff7899";
+      if (tower.type === "bolt") {
+        block(-1, -8, 24, 16, "#152d40"); block(11, -5, 14, 9, color);
+        block(-12, -12, 23, 24, color); block(-7, -7, 13, 14, "#17374b"); block(-3, -3, 6, 7, "#f5ffff");
+      } else if (tower.type === "cannon") {
+        block(-1, -9, 26, 18, "#273342"); block(16, -6, 13, 12, color);
+        block(-13, -14, 26, 28, "#e5a95d"); block(-8, -9, 17, 18, "#684950"); block(-3, -4, 7, 8, "#ffedbb");
+      } else {
+        block(-2, -8, 21, 16, "#3a3963"); block(13, -5, 10, 10, color);
+        block(-14, -15, 28, 30, "#9177cf"); block(-6, -12, 12, 24, "#d6c8ff");
+        block(-12, -4, 24, 8, "#5d549d"); block(-3, -3, 6, 6, "#ffffff");
+      }
+      ctx.restore();
+      if (!ghost) {
+        for (let i = 0; i < tower.level; i++) block(x - 12 + i * 8, y + 24, 5, 4, "#ffda70");
+      }
+    }
+    function drawEnemy(enemy) {
+      const x = Math.round(enemy.x), y = Math.round(enemy.y);
+      const fast = enemy.kind === "fast", tank = enemy.kind === "tank";
+      const size = tank ? 30 : fast ? 18 : 23, half = Math.floor(size / 2);
+      block(x - half - 2, y - half + 4, size + 4, size + 3, "#152335");
+      block(x - half, y - half, size, size, tank ? "#ac81d5" : fast ? "#f6c66b" : "#f07791");
+      block(x - half + 4, y - half + 4, size - 8, size - 8, tank ? "#65548e" : fast ? "#a57749" : "#99465d");
+      block(x - 7, y - 4, 5, 5, "#ffffff");
+      block(x + 3, y - 4, 5, 5, "#ffffff");
+      block(x - 6, y - 3, 2, 2, "#111a2d");
+      block(x + 4, y - 3, 2, 2, "#111a2d");
+      if (enemy.slowTime > 0) {
+        block(x - half, y - half - 5, size, 3, "#c8acff");
+      }
+      block(x - half, y - half - 12, size, 5, "#182535");
+      block(x - half, y - half - 12, Math.max(0, size * enemy.hp / enemy.maxHp), 5, "#78e5ad");
+    }
+    function drawSelection() {
+      const t = state.selected;
+      if (t) {
+        ctx.beginPath(); ctx.arc(t.x, t.y, towerRange(t), 0, Math.PI * 2);
+        ctx.fillStyle = "#69e4ff16"; ctx.fill(); ctx.strokeStyle = "#69e4ffad"; ctx.lineWidth = 2; ctx.stroke();
+        ctx.strokeStyle = "#ffdb7a"; ctx.lineWidth = 3;
+        ctx.strokeRect(t.col * TILE + 3, t.row * TILE + 3, TILE - 6, TILE - 6);
+      }
+      if (state.placing && state.hover && !state.over) {
+        const h = state.hover, spec = TOWERS[state.placing], valid = canBuild(h.col, h.row) && state.coins >= spec.cost;
+        if (h.col < 0 || h.col >= 20 || h.row < 0 || h.row >= 12) return;
+        const x = (h.col + .5) * TILE, y = (h.row + .5) * TILE;
+        ctx.beginPath(); ctx.arc(x, y, spec.range, 0, Math.PI * 2);
+        ctx.fillStyle = valid ? "#74e9ff1c" : "#ff78991c"; ctx.fill();
+        ctx.strokeStyle = valid ? "#74e9ffa0" : "#ff7899a0"; ctx.setLineDash([7, 7]); ctx.lineWidth = 2; ctx.stroke(); ctx.setLineDash([]);
+        ctx.strokeStyle = valid ? "#78e5ad" : "#ff7899"; ctx.lineWidth = 3;
+        ctx.strokeRect(h.col * TILE + 3, h.row * TILE + 3, TILE - 6, TILE - 6);
+        drawTower({ type: state.placing, x, y, level: 1, rotation: 0 }, true, valid);
+      }
+    }
+    function drawScene() {
+      ctx.save();
+      if (state.shake > 0) ctx.translate(Math.round((Math.random() - .5) * 7), Math.round((Math.random() - .5) * 7));
+      drawFloor(); drawPath(); drawBrain();
+      for (const tower of state.towers) drawTower(tower);
+      for (const enemy of state.enemies) drawEnemy(enemy);
+      for (const shot of state.shots) block(shot.x - 4, shot.y - 4, 8, 8, shot.color);
+      for (const item of state.particles) block(item.x, item.y, item.size, item.size, item.color);
+      drawSelection();
+      ctx.font = "bold 16px monospace"; ctx.textAlign = "center";
+      for (const item of state.floaters) {
+        ctx.globalAlpha = Math.min(1, item.life * 1.4);
+        ctx.fillStyle = "#101827"; ctx.fillText(item.label, item.x + 2, item.y + 2);
+        ctx.fillStyle = item.color; ctx.fillText(item.label, item.x, item.y);
+      }
+      ctx.globalAlpha = 1;
+      ctx.restore();
+    }
+    function renderHUD() {
+      const phase = state.phase === "combat" ? "WAVE ACTIVE" : state.phase === "cooldown" ? "COOLDOWN" : "PREPARATION";
+      $("phaseName").textContent = phase;
+      $("phaseDetail").textContent = state.phase === "combat"
+        ? "— keep defending!" : "— next wave " + (state.wave + 1);
+      $("healthValue").textContent = "♥ " + state.health + " / " + STARTING_HEALTH;
+      $("coinsValue").textContent = "◈ " + state.coins;
+      $("waveValue").textContent = String(state.wave).padStart(2, "0");
+      const seconds = Math.ceil(Math.max(0, state.phaseTime));
+      $("timerValue").textContent = String(Math.floor(seconds / 60)).padStart(2, "0") + ":" + String(seconds % 60).padStart(2, "0");
+      $("scoreValue").textContent = state.score + " / " + state.correct;
+      $("enemyCount").textContent = state.enemies.length;
+      $("streakValue").textContent = state.streak;
+      $("accuracyValue").textContent = state.attempted ? Math.round(100 * state.correct / state.attempted) + "%" : "—";
+      $("bestScore").textContent = bestScore + " PTS";
+      $("killsCount").textContent = state.kills;
+      $("towersCount").textContent = state.towers.length;
+      if (performance.now() > toastUntil) $("toast").classList.remove("show");
+    }
+    function loop(now) {
+      const dt = previousFrame ? Math.min(.1, (now - previousFrame) / 1000) : 0;
+      previousFrame = now;
+      step(dt); drawScene();
+      hudAccumulator += dt;
+      if (hudAccumulator > .12) { renderHUD(); hudAccumulator = 0; }
+      requestAnimationFrame(loop);
+    }
+
+    // Boot immediately with playable embedded questions; fetch JSON in the background.
+    updateSetOptions();
+    nextQuestion();
+    renderHUD();
+    refreshShop();
+    requestAnimationFrame(loop);
+    // This will also load and prefer local/remote JSON when available.
+    loadIndex().then(() => {
+      if (bankRequest === 0) selectBank($("setSelect").value);
+    });
+  })();
+  </script>
+</body>
+</html>
