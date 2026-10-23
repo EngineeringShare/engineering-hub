@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "id": "resistors-ohms-law",
+  "name": "Resistors & Ohm's Law",
+  "description": "Ohm's law, resistor networks, current, voltage and electrical power.",
+  "reward": 32,
+  "questions": [
+    {
+      "prompt": "Which equation is Ohm's law?",
+      "choices": ["V = I × R", "V = I / R", "V = R / I", "V = I + R"],
+      "answer": "V = I × R"
+    },
+    {
+      "prompt": "What is the SI unit of resistance?",
+      "choices": ["Ohm (Ω)", "Ampere (A)", "Volt (V)", "Watt (W)"],
+      "answer": "Ohm (Ω)"
+    },
+    {
+      "prompt": "Which meter connection measures voltage across a resistor?",
+      "choices": ["Voltmeter in parallel", "Voltmeter in series", "Ammeter in parallel", "Ohmmeter across a live circuit"],
+      "answer": "Voltmeter in parallel"
+    },
+    {
+      "prompt": "Which meter connection measures current through a resistor?",
+      "choices": ["Ammeter in series", "Ammeter in parallel", "Voltmeter in series", "Ohmmeter across a live circuit"],
+      "answer": "Ammeter in series"
+    },
+    {
+      "prompt": "For an ohmic resistor at constant temperature, what is the shape of its V–I graph?",
+      "choices": ["Straight line through the origin", "Horizontal line", "Parabola", "Circle"],
+      "answer": "Straight line through the origin"
+    },
+    {
+      "prompt": "At constant resistance, doubling the voltage causes the current to...",
+      "choices": ["Double", "Halve", "Remain constant", "Quadruple"],
+      "answer": "Double"
+    },
+    {
+      "prompt": "At constant voltage, doubling the resistance causes the current to...",
+      "choices": ["Halve", "Double", "Remain constant", "Quadruple"],
+      "answer": "Halve"
+    },
+    {
+      "prompt": "In a series circuit, which quantity is the same through every resistor?",
+      "choices": ["Current", "Voltage drop", "Power dissipated", "Resistance"],
+      "answer": "Current"
+    },
+    {
+      "prompt": "In a parallel circuit, which quantity is the same across every branch?",
+      "choices": ["Voltage", "Branch current", "Branch resistance", "Power"],
+      "answer": "Voltage"
+    },
+    {
+      "prompt": "What happens to total resistance when a second resistor is added in series?",
+      "choices": ["It increases", "It decreases", "It always stays the same", "It becomes zero"],
+      "answer": "It increases"
+    },
+    {
+      "prompt": "What happens to total resistance when another finite positive resistor is added in parallel?",
+      "choices": ["It decreases", "It increases", "It becomes infinite", "It remains unchanged"],
+      "answer": "It decreases"
+    },
+    {
+      "prompt": "The equivalent resistance of positive resistors in parallel is...",
+      "choices": ["Less than the smallest branch resistance", "Greater than the largest branch resistance", "Their sum", "Always equal to their average"],
+      "answer": "Less than the smallest branch resistance"
+    },
+    {
+      "prompt": "Two equal resistors R connected in parallel have an equivalent resistance of...",
+      "choices": ["R / 2", "2R", "R", "R²"],
+      "answer": "R / 2"
+    },
+    {
+      "prompt": "Which power equation is correct for a resistor?",
+      "choices": ["P = I²R", "P = I/R", "P = R/I²", "P = V/R²"],
+      "answer": "P = I²R"
+    },
+    {
+      "prompt": "Which other power expression is correct for a resistor?",
+      "choices": ["P = V²/R", "P = V/R²", "P = R/V²", "P = R²/V"],
+      "answer": "P = V²/R"
+    },
+    {
+      "prompt": "If current doubles through the same resistor, its power dissipation becomes...",
+      "choices": ["Four times as large", "Twice as large", "Half as large", "Unchanged"],
+      "answer": "Four times as large"
+    },
+    {
+      "prompt": "What does a resistor's wattage rating describe?",
+      "choices": ["Maximum power it can safely dissipate under rated conditions", "Its resistance in watts", "Its maximum voltage in all circuits", "The number of bands it has"],
+      "answer": "Maximum power it can safely dissipate under rated conditions"
+    },
+    {
+      "prompt": "A resistor marked 1 kΩ has a resistance of...",
+      "choices": ["1000 Ω", "100 Ω", "0.001 Ω", "1,000,000 Ω"],
+      "answer": "1000 Ω"
+    },
+    {
+      "prompt": "Which resistor property is mainly affected by conductor length in R = ρL/A?",
+      "choices": ["Longer length increases resistance", "Longer length decreases resistance", "Length does not matter", "Resistance is always zero"],
+      "answer": "Longer length increases resistance"
+    },
+    {
+      "prompt": "For the same material and length, doubling cross-sectional area causes resistance to...",
+      "choices": ["Halve", "Double", "Quadruple", "Stay the same"],
+      "answer": "Halve"
+    },
+    {
+      "prompt": "A 12 V supply is connected across a 4 Ω resistor. Find the current in A.",
+      "answer": 3,
+      "explanation": "I = V/R = 12/4 = 3 A."
+    },
+    {
+      "prompt": "A 6 Ω resistor carries 2 A. Find its voltage in V.",
+      "answer": 12,
+      "explanation": "V = IR = 2 × 6 = 12 V."
+    },
+    {
+      "prompt": "A component has 24 V across it and carries 3 A. Find its resistance in Ω.",
+      "answer": 8,
+      "explanation": "R = V/I = 24/3 = 8 Ω."
+    },
+    {
+      "prompt": "A 5 V supply is connected to a 250 Ω resistor. Find the current in mA.",
+      "answer": 20,
+      "explanation": "I = 5/250 = 0.020 A = 20 mA."
+    },
+    {
+      "prompt": "A 2 kΩ resistor carries 4 mA. Find its voltage in V.",
+      "answer": 8,
+      "explanation": "V = 2000 × 0.004 = 8 V."
+    },
+    {
+      "prompt": "A 15 V source drives 5 mA through a resistor. Find its resistance in kΩ.",
+      "answer": 3,
+      "explanation": "R = 15/0.005 = 3000 Ω = 3 kΩ."
+    },
+    {
+      "prompt": "A 10 Ω and a 15 Ω resistor are connected in series. Find total resistance in Ω.",
+      "answer": 25,
+      "explanation": "Series resistances add."
+    },
+    {
+      "prompt": "Two 12 Ω resistors are connected in parallel. Find equivalent resistance in Ω.",
+      "answer": 6,
+      "explanation": "For two equal branches, R_eq = R/2."
+    },
+    {
+      "prompt": "A 6 Ω and a 3 Ω resistor are connected in parallel. Find equivalent resistance in Ω.",
+      "answer": 2,
+      "explanation": "R_eq = 6 × 3 / (6 + 3) = 2 Ω."
+    },
+    {
+      "prompt": "A 4 Ω resistor and an 8 Ω resistor are in series across 24 V. Find circuit current in A.",
+      "answer": 2,
+      "explanation": "I = 24 / (4 + 8) = 2 A."
+    },
+    {
+      "prompt": "A series pair of 2 Ω and 4 Ω resistors carries 3 A. Find the voltage across the 4 Ω resistor in V.",
+      "answer": 12,
+      "explanation": "V = IR = 3 × 4."
+    },
+    {
+      "prompt": "A 12 V supply is connected across a 6 Ω and 3 Ω parallel network. Find total current in A.",
+      "answer": 6,
+      "explanation": "R_eq = 2 Ω, so I = 12/2 = 6 A."
+    },
+    {
+      "prompt": "A 4 Ω resistor carries 3 A. Find its power in W.",
+      "answer": 36,
+      "explanation": "P = I²R = 3² × 4."
+    },
+    {
+      "prompt": "A 10 Ω resistor has 20 V across it. Find its power in W.",
+      "answer": 40,
+      "explanation": "P = V²/R = 400/10."
+    },
+    {
+      "prompt": "A 5 Ω resistor dissipates 20 W. Find the current in A.",
+      "answer": 2,
+      "explanation": "I = sqrt(P/R) = sqrt(20/5) = 2 A."
+    },
+    {
+      "prompt": "A 100 Ω and 200 Ω resistor are in series. Find total resistance in Ω.",
+      "answer": 300,
+      "explanation": "Series resistances add."
+    },
+    {
+      "prompt": "Two 100 Ω resistors are connected in parallel. Find equivalent resistance in Ω.",
+      "answer": 50,
+      "explanation": "For equal resistors in parallel, R_eq = R/2."
+    },
+    {
+      "prompt": "A 230 V heater draws 5 A. Find its operating resistance in Ω.",
+      "answer": 46,
+      "explanation": "R = 230/5 = 46 Ω."
+    },
+    {
+      "prompt": "A 12 V lamp draws 0.5 A. Find the electrical power in W.",
+      "answer": 6,
+      "explanation": "P = VI = 12 × 0.5."
+    },
+    {
+      "prompt": "A 12 Ω resistor has 24 V across it. Find the current in A.",
+      "answer": 2,
+      "explanation": "I = 24/12."
+    }
+  ],
+  "generators": [
+    { "type": "ohmsVoltage", "minR": 2, "maxR": 50, "minI": 1, "maxI": 8 },
+    { "type": "ohmsCurrent", "minR": 2, "maxR": 25, "minI": 1, "maxI": 8 },
+    { "type": "ohmsResistance", "minR": 2, "maxR": 60, "minI": 1, "maxI": 6 },
+    { "type": "seriesResistors", "minR": 5, "maxR": 100 },
+    { "type": "parallelEqualResistors", "minR": 2, "maxR": 50 },
+    { "type": "resistorPower", "minR": 2, "maxR": 30, "minI": 1, "maxI": 5 }
+  ]
+}

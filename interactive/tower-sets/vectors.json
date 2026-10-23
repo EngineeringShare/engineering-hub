@@ -1,0 +1,192 @@
+{
+  "version": 1,
+  "id": "vectors",
+  "name": "Vectors",
+  "description": "Cartesian components, displacement, magnitudes, unit vectors, dot and cross products.",
+  "reward": 35,
+  "questions": [
+    {
+      "prompt": "Which quantity is a vector?",
+      "choices": ["Velocity", "Speed", "Mass", "Temperature"],
+      "answer": "Velocity"
+    },
+    {
+      "prompt": "Which quantity is a scalar?",
+      "choices": ["Distance", "Displacement", "Force", "Acceleration"],
+      "answer": "Distance"
+    },
+    {
+      "prompt": "What information does a vector contain?",
+      "choices": ["Magnitude and direction", "Magnitude only", "Direction only", "Unit only"],
+      "answer": "Magnitude and direction"
+    },
+    {
+      "prompt": "Which operation adds two vectors written in Cartesian form?",
+      "choices": ["Add corresponding components", "Multiply their magnitudes", "Add only their x-components", "Subtract their directions"],
+      "answer": "Add corresponding components"
+    },
+    {
+      "prompt": "What is the magnitude of a unit vector?",
+      "choices": ["1", "0", "10", "It must be negative"],
+      "answer": "1"
+    },
+    {
+      "prompt": "A unit vector points in which direction?",
+      "choices": ["The same direction as the original nonzero vector", "Always along the x-axis", "The opposite direction", "Always upwards"],
+      "answer": "The same direction as the original nonzero vector"
+    },
+    {
+      "prompt": "What is the vector from A to B if position vectors are a and b?",
+      "choices": ["b − a", "a + b", "a − b", "a × b"],
+      "answer": "b − a"
+    },
+    {
+      "prompt": "What does the dot product of two vectors produce?",
+      "choices": ["A scalar", "A 3D vector", "Always a unit vector", "A matrix"],
+      "answer": "A scalar"
+    },
+    {
+      "prompt": "What does the cross product of two 3D vectors produce?",
+      "choices": ["A vector perpendicular to both", "A scalar", "Their sum", "A vector parallel to both"],
+      "answer": "A vector perpendicular to both"
+    },
+    {
+      "prompt": "What is the dot product of two perpendicular nonzero vectors?",
+      "choices": ["Zero", "One", "Their combined magnitude", "Always negative"],
+      "answer": "Zero"
+    },
+    {
+      "prompt": "What is the angle between two nonzero vectors pointing in the same direction?",
+      "choices": ["0°", "90°", "180°", "270°"],
+      "answer": "0°"
+    },
+    {
+      "prompt": "What is the angle between two nonzero vectors pointing in exactly opposite directions?",
+      "choices": ["180°", "0°", "45°", "90°"],
+      "answer": "180°"
+    },
+    {
+      "prompt": "Which expression gives the dot product of a = (ax, ay) and b = (bx, by)?",
+      "choices": ["ax × bx + ay × by", "ax × by − ay × bx", "ax + ay + bx + by", "ax × bx − ay × by"],
+      "answer": "ax × bx + ay × by"
+    },
+    {
+      "prompt": "Which expression gives the z-component of a × b for two xy-plane vectors?",
+      "choices": ["ax × by − ay × bx", "ax × bx + ay × by", "ax × bx − ay × by", "ax + by"],
+      "answer": "ax × by − ay × bx"
+    },
+    {
+      "prompt": "For a nonzero vector a, what is a · a?",
+      "choices": ["|a|²", "0", "|a|", "−|a|²"],
+      "answer": "|a|²"
+    },
+    {
+      "prompt": "What is a × a for any 3D vector a?",
+      "choices": ["The zero vector", "The unit vector", "a", "2a"],
+      "answer": "The zero vector"
+    },
+    {
+      "prompt": "When scaling a vector by −2, what happens?",
+      "choices": ["Its magnitude doubles and its direction reverses", "Only the x-component changes", "Its magnitude halves", "It becomes a scalar"],
+      "answer": "Its magnitude doubles and its direction reverses"
+    },
+    {
+      "prompt": "Which trigonometric function gives the x-component of a vector of magnitude F at angle θ measured from +x?",
+      "choices": ["F cos θ", "F sin θ", "F tan θ", "F / cos θ"],
+      "answer": "F cos θ"
+    },
+    {
+      "prompt": "Which trigonometric function gives the y-component of a vector of magnitude F at angle θ measured from +x?",
+      "choices": ["F sin θ", "F cos θ", "F tan θ", "F / sin θ"],
+      "answer": "F sin θ"
+    },
+    {
+      "prompt": "What is the magnitude of a zero vector?",
+      "choices": ["0", "1", "Undefined", "Infinity"],
+      "answer": "0"
+    },
+    {
+      "prompt": "What is the vector sum of a = (3, 2) and b = (−1, 4)?",
+      "choices": ["(2, 6)", "(4, −2)", "(−3, 8)", "(2, −2)"],
+      "answer": "(2, 6)"
+    },
+    {
+      "prompt": "What is a − b for a = (5, 7) and b = (2, 3)?",
+      "choices": ["(3, 4)", "(7, 10)", "(−3, −4)", "(3, 10)"],
+      "answer": "(3, 4)"
+    },
+    {
+      "prompt": "What is 3a when a = (2, −4)?",
+      "choices": ["(6, −12)", "(5, −1)", "(6, 12)", "(2, −12)"],
+      "answer": "(6, −12)"
+    },
+    {
+      "prompt": "A drone moves 4 m east and 3 m north. Find its straight-line displacement magnitude in m.",
+      "answer": 5,
+      "explanation": "Pythagoras: sqrt(4² + 3²) = 5 m."
+    },
+    {
+      "prompt": "A force has components (6, 8) N. Find its magnitude in N.",
+      "answer": 10,
+      "explanation": "sqrt(6² + 8²) = 10 N."
+    },
+    {
+      "prompt": "A vector a = (−5, 12) m. Find its magnitude in m.",
+      "answer": 13,
+      "explanation": "sqrt(25 + 144) = 13 m."
+    },
+    {
+      "prompt": "Find the dot product of a = (2, 3) and b = (4, −1).",
+      "answer": 5,
+      "explanation": "2×4 + 3×(−1) = 5."
+    },
+    {
+      "prompt": "Find the dot product of a = (−3, 2) and b = (1, 5).",
+      "answer": 7,
+      "explanation": "(−3)×1 + 2×5 = 7."
+    },
+    {
+      "prompt": "Find the dot product of a = (3, 4) and b = (4, −3).",
+      "answer": 0,
+      "explanation": "3×4 + 4×(−3) = 0, so the vectors are perpendicular."
+    },
+    {
+      "prompt": "For a = (2, 3, 0) and b = (4, 1, 0), find the z-component of a × b.",
+      "answer": -10,
+      "explanation": "2×1 − 3×4 = −10."
+    },
+    {
+      "prompt": "For a = (1, 4, 0) and b = (3, 2, 0), find the z-component of a × b.",
+      "answer": -10,
+      "explanation": "1×2 − 4×3 = −10."
+    },
+    {
+      "prompt": "A vector a = (−4, 3) is normalised. What is its x-component?",
+      "answer": -0.8,
+      "explanation": "The magnitude is 5; −4/5 = −0.8."
+    },
+    {
+      "prompt": "A vector a = (−4, 3) is normalised. What is its y-component?",
+      "answer": 0.6,
+      "explanation": "The magnitude is 5; 3/5 = 0.6."
+    },
+    {
+      "prompt": "A position changes from (2, −1) m to (8, 7) m. Find displacement magnitude in m.",
+      "answer": 10,
+      "explanation": "Displacement = (6, 8), magnitude = 10 m."
+    },
+    {
+      "prompt": "Two forces of 3 N east and 4 N north act together. Find resultant magnitude in N.",
+      "answer": 5,
+      "explanation": "Perpendicular forces combine by Pythagoras."
+    }
+  ],
+  "generators": [
+    { "type": "vectorAdd", "min": -9, "max": 9 },
+    { "type": "vectorSubtract", "min": -9, "max": 9 },
+    { "type": "vectorScale", "min": -7, "max": 7, "minK": 2, "maxK": 5 },
+    { "type": "vectorDot", "min": -7, "max": 7 },
+    { "type": "vectorMagnitude", "minScale": 1, "maxScale": 4 },
+    { "type": "vectorCross2D", "min": -6, "max": 6 }
+  ]
+}

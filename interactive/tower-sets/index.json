@@ -1,6 +1,7 @@
 {
-  "version": 2,
+  "version": 3,
   "title": "Engineering Share · Brain Defence Question Bank",
+  "leaderboardApi": "",
   "categories": [
     { "id": "mathematics", "name": "Mathematics", "icon": "∑" },
     { "id": "science", "name": "Science", "icon": "⚗" },
@@ -43,6 +44,24 @@
       "difficulty": "Level 3 Starter",
       "difficultyRank": 1,
       "file": "electronics-basics.json"
+    },
+    {
+      "id": "resistors-ohms-law",
+      "name": "Resistors & Ohm's Law",
+      "description": "Ohm's law, resistance, series/parallel networks and resistor power.",
+      "category": "electronics",
+      "difficulty": "Level 3–4",
+      "difficultyRank": 2,
+      "file": "resistors-ohms-law.json"
+    },
+    {
+      "id": "vectors",
+      "name": "Vectors",
+      "description": "Components, addition, subtraction, magnitudes, dot and cross products.",
+      "category": "mathematics",
+      "difficulty": "Level 3–4",
+      "difficultyRank": 3,
+      "file": "vectors.json"
     }
   ]
 }

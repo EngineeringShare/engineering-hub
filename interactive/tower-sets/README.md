@@ -8,6 +8,8 @@ Place these files in the Engineering Share repository:
     interactive/tower-sets/algebra.json
     interactive/tower-sets/percentages.json
     interactive/tower-sets/electronics-basics.json
+    interactive/tower-sets/resistors-ohms-law.json
+    interactive/tower-sets/vectors.json
 
 The HTML is standalone: all graphics, CSS and game logic are embedded. When
 hosted, it tries to load the question list from:
@@ -129,7 +131,36 @@ Supported generator types:
 | substitution | Same as linear | Evaluate ax + b with supplied x |
 | percentage | percentages, minBase, maxBase | Percentage of a quantity |
 | square | min, max | Square an integer |
+| ohmsVoltage | minR, maxR, minI, maxI | Find V = IR |
+| ohmsCurrent | minR, maxR, minI, maxI | Find I = V/R |
+| ohmsResistance | minR, maxR, minI, maxI | Find R = V/I |
+| seriesResistors | minR, maxR | Sum three series resistances |
+| parallelEqualResistors | minR, maxR | Find equivalent resistance of two identical parallel resistors |
+| resistorPower | minR, maxR, minI, maxI | Calculate P = I²R |
+| vectorAdd | min, max | Add Cartesian components |
+| vectorSubtract | min, max | Subtract Cartesian components |
+| vectorScale | min, max, minK, maxK | Multiply a vector by a scalar |
+| vectorDot | min, max | Calculate the dot product of two 2D vectors |
+| vectorMagnitude | min, max | Calculate a vector's magnitude |
+| vectorCross2D | min, max | Find the z component of a 2D cross product |
 
-All answer checking happens locally in the student's browser. This is a
-practice game rather than a secured assessment: students can inspect the
-JSON answers, and the game does not submit results to a teacher or server.
+All answer checking happens locally in the student's browser. The new
+**Resistors & Ohm's Law** and **Vectors** sets combine fixed conceptual
+questions with the generators above, so the calculations change on each
+playthrough.
+
+## Leaderboard
+
+The **SCORES** button pauses the game and opens the rankings. Students can
+filter by question set and all-time/current week. After game over, they can
+submit a nickname. By default, rankings are stored only in localStorage on
+that device.
+
+For a **shared leaderboard**, deploy the optional Cloudflare Worker and D1
+database described in \`leaderboard-backend/README.md\`. Then set the
+\`leaderboardApi\` string in \`index.json\` to your HTTPS Worker URL and
+publish the JSON. Leave it as an empty string for local-only operation.
+
+Leaderboard results are for motivation and practice, not a secure graded
+assessment: the browser's score can be manipulated by technically confident
+students.

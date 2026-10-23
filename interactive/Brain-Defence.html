@@ -45,7 +45,7 @@
     .pixel-button { padding: 9px 14px; font-weight: bold; white-space: nowrap; }
     .pixel-button.primary { background: #31506b; border-color: var(--cyan); }
     .pixel-button.danger { border-color: var(--pink); }
-    .masthead .right { display: flex; align-items: center; gap: 10px; }
+    .masthead .right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .best { color: var(--muted); font-size: 12px; text-align: right; }
     .best strong { display: block; color: var(--gold); font-size: 17px; }
     .hud { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 9px; margin: 0 0 15px; }
@@ -66,6 +66,7 @@
     .arena-footer { border-top: 0; color: var(--muted); min-height: 43px; }
     .arena-footer strong { color: var(--gold); }
     .arena-frame { position: relative; border: 2px solid var(--line); background: #1d3540; overflow: hidden; }
+    .arena-frame.show-gameover { min-height: 520px; }
     canvas { display: block; width: 100%; height: auto; aspect-ratio: 5/3; image-rendering: pixelated; touch-action: manipulation; cursor: crosshair; }
     .message {
       position: absolute; left: 50%; top: 19px; transform: translateX(-50%);
@@ -143,12 +144,26 @@
     .gameover {
       position: absolute; inset: 0; background: #0a1220de;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 20px; gap: 8px;
+      text-align: center; padding: 20px; gap: 8px; overflow-y: auto;
     }
     .gameover[hidden] { display: none; }
     .gameover h2 { color: var(--pink); font-size: clamp(29px, 5vw, 55px); margin: 0; text-shadow: 5px 5px #111; }
     .gameover p { font-weight: bold; margin: 0 0 10px; }
     .gameover .pixel-button { padding: 12px 22px; }
+    .score-submission {
+      background: #162840ec; border: 2px solid var(--line);
+      padding: 12px; width: min(370px, 96%); text-align: left; margin: 3px 0 9px;
+    }
+    .score-submission[hidden] { display: none; }
+    .score-submission label { margin-bottom: 6px; color: var(--cyan); }
+    .score-submission input {
+      display: block; width: 100%; padding: 9px; border: 2px solid var(--line);
+      background: #0d192b; color: var(--text); margin-bottom: 9px; border-radius: 0;
+    }
+    .score-submission .pixel-button { width: 100%; font-size: 12px; }
+    .score-submission-status { min-height: 14px; font-size: 11px; line-height: 1.4; color: var(--gold); margin: 8px 0 0; }
+    .gameover .gameover-actions { display: flex; justify-content: center; gap: 9px; flex-wrap: wrap; }
+    .gameover .gameover-actions .pixel-button { font-size: 12px; padding: 10px 12px; }
     .library-overlay {
       position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center;
       padding: 16px; background: #050a13e9; backdrop-filter: blur(3px);
@@ -221,6 +236,24 @@
       border-top: 2px solid var(--line); padding: 11px 18px; background: #1b2e46;
       color: var(--green); font-size: 11px; font-weight: bold;
     }
+    .leaderboard-dialog { width: min(870px, 100%); height: min(700px, calc(100dvh - 32px)); }
+    .leaderboard-controls {
+      display: flex; gap: 12px; padding: 14px 18px; align-items: end;
+      border-bottom: 2px solid var(--line); flex-wrap: wrap;
+    }
+    .leaderboard-controls .library-field { min-width: 195px; }
+    .leaderboard-controls .library-field.period { flex: 0 0 180px; }
+    .leaderboard-results { flex: 1; overflow-y: auto; min-height: 0; padding: 13px 18px; }
+    .leaderboard-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .leaderboard-table th { color: var(--cyan); font-size: 11px; text-align: left; padding: 10px 9px; background: #0d1a2d; }
+    .leaderboard-table td { padding: 11px 9px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    .leaderboard-table tr:nth-child(even) td { background: #1b3048; }
+    .leaderboard-table .numeric { text-align: right; font-weight: bold; font-variant-numeric: tabular-nums; }
+    .leaderboard-table .nickname { color: var(--text); font-weight: bold; overflow-wrap: anywhere; }
+    .leaderboard-table .set-name { display: block; font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .leaderboard-mode { color: var(--muted); }
+    .leaderboard-empty { padding: 65px 15px; text-align: center; color: var(--muted); }
+    .leaderboard-empty strong { display: block; color: var(--gold); font-size: 18px; margin-bottom: 10px; }
     @media (max-width: 760px) {
       .library-content { grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr); }
       .library-sidebar {
@@ -242,6 +275,11 @@
       .library-field input, .library-field select { font-size: 12px; }
       .library-main { padding: 12px; }
       .library-footer { padding: 9px 11px; }
+      .leaderboard-controls { padding: 10px 11px; gap: 8px; }
+      .leaderboard-controls .library-field { flex: 1 1 100%; }
+      .leaderboard-controls .library-field.period { flex: 1 1 100%; }
+      .leaderboard-results { padding: 7px; }
+      .leaderboard-table th, .leaderboard-table td { padding: 8px 5px; font-size: 11px; }
     }
     @media (max-width: 1080px) { .layout { grid-template-columns: minmax(0, 1fr) 310px; } .tab-content { padding: 13px; } }
     @media (max-width: 860px) {
@@ -272,6 +310,7 @@
       </div>
       <div class="right">
         <div class="best">PERSONAL BEST<strong id="bestScore">0 PTS</strong></div>
+        <button class="pixel-button" id="openLeaderboard" type="button" aria-haspopup="dialog" aria-controls="leaderboardOverlay">🏆 SCORES</button>
         <button class="pixel-button" id="restartTop" type="button">↻ RESTART</button>
       </div>
     </header>
@@ -296,7 +335,16 @@
           <div class="gameover" id="gameover" hidden>
             <h2>BRAIN OVERRUN</h2>
             <p id="finalStats">You survived 0 waves.</p>
-            <button class="pixel-button primary" id="restartGame" type="button">TRY AGAIN ↻</button>
+            <div class="score-submission" id="scoreSubmission">
+              <label for="playerNickname">NICKNAME FOR LEADERBOARD</label>
+              <input id="playerNickname" type="text" maxlength="16" autocomplete="nickname" placeholder="Your gamer nickname">
+              <button class="pixel-button primary" id="submitScore" type="button">SAVE MY SCORE 🏆</button>
+              <p class="score-submission-status" id="scoreSubmitStatus" role="status"></p>
+            </div>
+            <div class="gameover-actions">
+              <button class="pixel-button primary" id="restartGame" type="button">TRY AGAIN ↻</button>
+              <button class="pixel-button" id="viewFinalScores" type="button">VIEW SCORES 🏆</button>
+            </div>
           </div>
         </div>
         <div class="arena-footer">
@@ -357,7 +405,7 @@
         </div>
       </aside>
     </main>
-    <p class="footer-note">Runs entirely in your browser. Question sets are loaded from the Engineering Share JSON index when available, with built-in maths questions as an offline fallback. Progress resets when you restart; personal best and favourite sets are saved on this device where supported.</p>
+    <p class="footer-note">Runs entirely in your browser. Question sets are loaded from the Engineering Share JSON index when available, with built-in maths questions as an offline fallback. Progress resets when you restart; personal best, favourites and submitted local scores are saved on this device where supported. Shared scores require a connected leaderboard service.</p>
   </div>
   <div class="library-overlay" id="libraryOverlay" hidden>
     <div class="library-dialog" role="dialog" aria-modal="true" aria-labelledby="libraryTitle" tabindex="-1">
@@ -397,6 +445,37 @@
       <div class="library-footer">
         <span>⏸ GAME PAUSED · ENEMIES AND TIMERS FROZEN</span>
         <span id="libraryFavouriteCount">0 FAVOURITES ★</span>
+      </div>
+    </div>
+  </div>
+  <div class="library-overlay leaderboard-overlay" id="leaderboardOverlay" hidden>
+    <div class="library-dialog leaderboard-dialog" role="dialog" aria-modal="true" aria-labelledby="leaderboardTitle" tabindex="-1">
+      <div class="library-header">
+        <div>
+          <div class="eyebrow">ENGINEERING SHARE // HIGH SCORES</div>
+          <h2 id="leaderboardTitle">🏆 LEADERBOARD</h2>
+        </div>
+        <button class="pixel-button" id="closeLeaderboard" type="button" aria-label="Close leaderboard">✕ CLOSE</button>
+      </div>
+      <div class="leaderboard-controls">
+        <div class="library-field">
+          <label for="leaderboardSet">QUESTION SET</label>
+          <select id="leaderboardSet"><option value="all">All question sets</option></select>
+        </div>
+        <div class="library-field period">
+          <label for="leaderboardPeriod">RANKING PERIOD</label>
+          <select id="leaderboardPeriod">
+            <option value="all">All time</option>
+            <option value="week">This week</option>
+          </select>
+        </div>
+      </div>
+      <div class="leaderboard-results">
+        <div id="leaderboardRows" aria-live="polite"></div>
+      </div>
+      <div class="library-footer">
+        <span id="leaderboardMode" class="leaderboard-mode">SCORES ON THIS DEVICE</span>
+        <span>⏸ GAME PAUSED</span>
       </div>
     </div>
   </div>
@@ -482,6 +561,17 @@
       return [Math.min(low, high), Math.max(low, high)];
     };
     const signValue = (n) => n < 0 ? "− " + Math.abs(n) : "+ " + n;
+    function vectorPairQuestion(prompt, x, y, alternatives = []) {
+      const label = (a, b) => "(" + a + ", " + b + ")";
+      const answer = label(x, y), choices = [answer];
+      const candidates = [...alternatives, [y, x], [-x, y], [x, -y], [x + 1, y - 1], [x - 1, y + 1]];
+      for (const [a, b] of candidates) {
+        const candidate = label(a, b);
+        if (!choices.includes(candidate)) choices.push(candidate);
+        if (choices.length === 4) break;
+      }
+      return { prompt, answer, choices };
+    }
     const generatorRegistry = {
       addition(g) {
         const [low, high] = nrange(g, "min", "max", 1, 20);
@@ -530,6 +620,95 @@
         const [low, high] = nrange(g, "min", "max", 2, 15);
         const n = randomInt(low, high);
         return { prompt: "What is " + n + "²?", answer: n * n };
+      },
+      ohmsVoltage(g) {
+        const [rl, rh] = nrange(g, "minR", "maxR", 2, 40);
+        const [il, ih] = nrange(g, "minI", "maxI", 1, 7);
+        const r = randomInt(Math.max(1, rl), Math.max(1, rh));
+        const i = randomInt(Math.max(1, il), Math.max(1, ih));
+        return { prompt: "A " + r + " Ω resistor carries " + i + " A. Find the voltage in V.",
+          answer: r * i, explanation: "V = IR." };
+      },
+      ohmsCurrent(g) {
+        const [rl, rh] = nrange(g, "minR", "maxR", 2, 20);
+        const [il, ih] = nrange(g, "minI", "maxI", 1, 8);
+        const r = randomInt(Math.max(1, rl), Math.max(1, rh));
+        const i = randomInt(Math.max(1, il), Math.max(1, ih));
+        return { prompt: "A " + r + " Ω resistor has " + (i * r) + " V across it. Find current in A.",
+          answer: i, explanation: "I = V/R." };
+      },
+      ohmsResistance(g) {
+        const [rl, rh] = nrange(g, "minR", "maxR", 2, 60);
+        const [il, ih] = nrange(g, "minI", "maxI", 1, 7);
+        const r = randomInt(Math.max(1, rl), Math.max(1, rh));
+        const i = randomInt(Math.max(1, il), Math.max(1, ih));
+        return { prompt: "A circuit carries " + i + " A with " + (i * r) + " V across its resistor. Find resistance in Ω.",
+          answer: r, explanation: "R = V/I." };
+      },
+      seriesResistors(g) {
+        const [low, high] = nrange(g, "minR", "maxR", 5, 100);
+        const a = randomInt(Math.max(1, low), Math.max(1, high));
+        const b = randomInt(Math.max(1, low), Math.max(1, high));
+        const c = randomInt(Math.max(1, low), Math.max(1, high));
+        return { prompt: "Resistors of " + a + " Ω, " + b + " Ω and " + c +
+          " Ω are in series. Find the equivalent resistance in Ω.", answer: a + b + c };
+      },
+      parallelEqualResistors(g) {
+        const [low, high] = nrange(g, "minR", "maxR", 2, 50);
+        const r = 2 * randomInt(Math.max(1, low), Math.max(1, high));
+        return { prompt: "Two " + r + " Ω resistors are connected in parallel. Find equivalent resistance in Ω.", answer: r / 2 };
+      },
+      resistorPower(g) {
+        const [rl, rh] = nrange(g, "minR", "maxR", 2, 30);
+        const [il, ih] = nrange(g, "minI", "maxI", 1, 5);
+        const r = randomInt(Math.max(1, rl), Math.max(1, rh));
+        const i = randomInt(Math.max(1, il), Math.max(1, ih));
+        return { prompt: "A " + r + " Ω resistor carries " + i + " A. Find power dissipated in W.", answer: i * i * r };
+      },
+      vectorAdd(g) {
+        const [low, high] = nrange(g, "min", "max", -8, 8);
+        const ax = randomInt(low, high), ay = randomInt(low, high);
+        const bx = randomInt(low, high), by = randomInt(low, high);
+        return vectorPairQuestion("Add a = (" + ax + ", " + ay + ") and b = (" + bx + ", " + by + ").",
+          ax + bx, ay + by, [[ax - bx, ay - by], [ax + by, ay + bx]]);
+      },
+      vectorSubtract(g) {
+        const [low, high] = nrange(g, "min", "max", -8, 8);
+        const ax = randomInt(low, high), ay = randomInt(low, high);
+        const bx = randomInt(low, high), by = randomInt(low, high);
+        return vectorPairQuestion("Find a − b for a = (" + ax + ", " + ay + ") and b = (" + bx + ", " + by + ").",
+          ax - bx, ay - by, [[ax + bx, ay + by], [bx - ax, by - ay]]);
+      },
+      vectorScale(g) {
+        const [low, high] = nrange(g, "min", "max", -7, 7);
+        const [kl, kh] = nrange(g, "minK", "maxK", 2, 5);
+        const ax = randomInt(low, high), ay = randomInt(low, high);
+        const k = randomInt(Math.max(1, kl), Math.max(1, kh)) * (Math.random() < .3 ? -1 : 1);
+        return vectorPairQuestion("Find " + k + "a if a = (" + ax + ", " + ay + ").",
+          k * ax, k * ay, [[k + ax, k + ay], [ax, ay]]);
+      },
+      vectorDot(g) {
+        const [low, high] = nrange(g, "min", "max", -7, 7);
+        const ax = randomInt(low, high), ay = randomInt(low, high);
+        const bx = randomInt(low, high), by = randomInt(low, high);
+        return { prompt: "Find a · b for a = (" + ax + ", " + ay + ") and b = (" + bx + ", " + by + ").",
+          answer: ax * bx + ay * by };
+      },
+      vectorMagnitude(g) {
+        const triples = [[3, 4, 5], [5, 12, 13], [8, 15, 17]];
+        const [a, b, c] = choose(triples);
+        const [low, high] = nrange(g, "minScale", "maxScale", 1, 4);
+        const factor = randomInt(Math.max(1, low), Math.max(1, high));
+        const x = a * factor * (Math.random() < .5 ? -1 : 1);
+        const y = b * factor * (Math.random() < .5 ? -1 : 1);
+        return { prompt: "Find the magnitude of vector a = (" + x + ", " + y + ").", answer: c * factor };
+      },
+      vectorCross2D(g) {
+        const [low, high] = nrange(g, "min", "max", -6, 6);
+        const ax = randomInt(low, high), ay = randomInt(low, high);
+        const bx = randomInt(low, high), by = randomInt(low, high);
+        return { prompt: "Find the z-component of a × b for a = (" + ax + ", " + ay +
+          ", 0) and b = (" + bx + ", " + by + ", 0).", answer: ax * by - ay * bx };
       }
     };
     const goodQuestion = (q) => {
@@ -573,6 +752,77 @@
     let activeSetId = "arithmetic", libraryOpen = false, libraryCategory = "all", libraryLoading = null;
     let activeQuestion = null, currentQuestionNumber = 0, answerPending = false, fixedDeck = [];
     let answerDelay = 0, bankRequest = 0, toastUntil = 0, previousFrame = 0, hudAccumulator = 0;
+    const LOCAL_SCORES_KEY = "engineering-brain-defence-scores-v1";
+    const NICKNAME_KEY = "engineering-brain-defence-nickname-v1";
+    // Duplicated intentionally: the HTML remains standalone, but the Worker
+    // repeats these checks authoritatively before accepting any online score.
+    const RESERVED_NAMES = new Set([
+      "admin", "administrator", "teacher", "staff", "moderator", "mod",
+      "support", "system", "official", "engineeringshare", "engineeringhub",
+      "yorkcollege", "headteacher", "owner"
+    ]);
+    const UNSAFE_PARTS = [
+      "fuck", "shit", "bitch", "wanker", "asshole", "arsehole",
+      "dickhead", "motherf", "nigger", "nigga", "faggot", "cocksuck",
+      "porn", "hentai"
+    ];
+    const UNSAFE_WORDS = new Set([
+      "cunt", "twat", "dick", "cock", "pussy", "slut", "whore",
+      "bastard", "nonce", "arse", "ass", "prick", "wank", "fag", "fuk",
+      "retard", "nazi", "hitler", "kkk", "rape", "rapist", "sex"
+    ]);
+    function nicknameKey(value) {
+      const substitutions = {
+        "0": "o", "1": "i", "3": "e", "4": "a", "5": "s",
+        "6": "g", "7": "t", "8": "b", "9": "g", "@": "a",
+        "$": "s", "!": "i", "+": "t", "|": "i"
+      };
+      const text = String(value || "").normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      return Array.from(text, (letter) => substitutions[letter] || letter)
+        .join("").replace(/[^a-z0-9]/g, "");
+    }
+    function nicknameIssue(value) {
+      if (typeof value !== "string" ||
+          !/^[a-zA-Z0-9][a-zA-Z0-9 _-]{1,15}$/.test(value) ||
+          value !== value.trim() || / {2,}/.test(value)) return "format";
+      const plain = value.toLowerCase().replace(/[^a-z0-9]/g, "");
+      if (RESERVED_NAMES.has(plain) ||
+          [...RESERVED_NAMES].some((name) => plain.startsWith(name) &&
+            /^[0-9]{1,3}$/.test(plain.slice(name.length)))) return "reserved";
+      const fullKey = nicknameKey(value);
+      const tokens = value.split(/[ _-]+/).map(nicknameKey).filter(Boolean);
+      const forms = [...new Set([fullKey, ...tokens].flatMap((key) => [
+        key, key.replace(/([a-z])\1{2,}/g, "$1"), key.replace(/([a-z])\1+/g, "$1")
+      ]))];
+      if (forms.some((form) =>
+        UNSAFE_PARTS.some((part) => form.includes(part)) ||
+        UNSAFE_WORDS.has(form) ||
+        /^(?:cunt|twat|slut|whore|rapist|nonce)[a-z]{1,8}$/.test(form)
+      )) return "inappropriate";
+      return null;
+    }
+    function nicknameMessage(issue) {
+      if (issue === "format") return "Use 2–16 characters: letters, numbers, spaces, hyphens or underscores.";
+      if (issue === "reserved") return "That nickname is reserved. Please choose another.";
+      if (issue === "inappropriate") return "Please choose a classroom-appropriate nickname.";
+      if (issue === "blocked") return "That nickname is not permitted on this leaderboard.";
+      return "Please choose a different nickname.";
+    }
+    let localScores = [], leaderboardOpen = false, leaderboardRequest = 0;
+    let runSetId = "arithmetic", runMixed = false, runId = makeRunId();
+    let completedRun = null, scoreSubmitted = false, scoreSubmitting = false;
+    function makeRunId() {
+      return typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+        ? crypto.randomUUID() : Date.now().toString(36) + "-" + Math.random().toString(36).slice(2).padEnd(16, "0");
+    }
+    try {
+      const rows = JSON.parse(localStorage.getItem(LOCAL_SCORES_KEY) || "[]");
+      if (Array.isArray(rows)) localScores = rows.filter((row) => row && typeof row.run_id === "string" &&
+        Number.isFinite(row.score) && nicknameIssue(row.nickname) === null).slice(-200);
+    } catch (_) { /* Local scores are optional. */ }
+    try { $("playerNickname").value = String(localStorage.getItem(NICKNAME_KEY) || "").slice(0, 16); }
+    catch (_) { /* Private browser sessions can disable storage. */ }
     try { bestScore = Number(localStorage.getItem("engineering-brain-defence-best") || 0) || 0; } catch (_) { /* Private browsing. */ }
 
     function pointAt(distance) {
@@ -686,6 +936,10 @@
         return false;
       }
       activeBank = bank;
+      if (id !== activeSetId) {
+        if (state.attempted > 0 || state.wave > 0) runMixed = true;
+        else runSetId = id;
+      }
       activeSetId = id;
       currentSetLabel();
       $("setDescription").textContent = (bank.description || set.description || "Questions ready.") + " · " + source;
@@ -711,11 +965,15 @@
               categories.push({ id: set.category, name: set.category.replace(/[-_]/g, " "), icon: "▦" });
             }
           }
-          indexData = { sets, categories };
+          indexData = {
+            sets, categories,
+            leaderboardApi: typeof loaded.leaderboardApi === "string" ? loaded.leaderboardApi : ""
+          };
         }
       }
       currentSetLabel();
       if (libraryOpen) renderLibrary();
+      if (leaderboardOpen) { updateLeaderboardOptions(); refreshLeaderboard(); }
       // Do not undo a manual selection made while the catalogue was loading.
       if (startedWithRequest !== bankRequest) return;
       const nextId = indexData.sets.some((set) => set.id === activeSetId)
@@ -902,6 +1160,214 @@
       }
     });
 
+    function leaderboardApi() {
+      const supplied = indexData.leaderboardApi;
+      if (typeof supplied !== "string" || !supplied.trim()) return "";
+      try {
+        const url = new URL(supplied.trim());
+        if (url.protocol !== "https:" && !(url.protocol === "http:" &&
+          ["localhost", "127.0.0.1"].includes(url.hostname))) return "";
+        return url.href.replace(/\/+$/, "");
+      } catch (_) { return ""; }
+    }
+    function scoreSetName(id) {
+      if (id === "mixed") return "Mixed question sets";
+      return indexData.sets.find((set) => set.id === id)?.name || id;
+    }
+    function weekStartTimestamp() {
+      const start = new Date();
+      const mondayOffset = (start.getUTCDay() + 6) % 7;
+      start.setUTCDate(start.getUTCDate() - mondayOffset);
+      start.setUTCHours(0, 0, 0, 0);
+      return start.getTime();
+    }
+    function localLeaderboard(setId, period) {
+      const firstDay = weekStartTimestamp();
+      return localScores.filter((row) => (setId === "all" || row.set_id === setId) &&
+        (period !== "week" || new Date(row.created_at).getTime() >= firstDay))
+        .sort((a, b) => b.score - a.score || b.wave - a.wave || b.correct - a.correct)
+        .slice(0, 20);
+    }
+    function updateLeaderboardOptions() {
+      const select = $("leaderboardSet"), previous = select.value || "all";
+      select.replaceChildren();
+      const options = [
+        { id: "all", name: "All question sets" },
+        ...indexData.sets,
+        { id: "mixed", name: "Mixed question sets" }
+      ];
+      for (const item of options) {
+        const option = document.createElement("option");
+        option.value = item.id;
+        option.textContent = item.name;
+        select.append(option);
+      }
+      select.value = options.some((item) => item.id === previous) ? previous : "all";
+    }
+    function renderLeaderboardRows(rows) {
+      const container = $("leaderboardRows");
+      container.replaceChildren();
+      if (!rows.length) {
+        const empty = libraryElement("div", "leaderboard-empty");
+        empty.append(libraryElement("strong", "", "NO SCORES YET"),
+          libraryElement("span", "", "Be the first to survive a few waves and put a score on the board."));
+        container.append(empty);
+        return;
+      }
+      const table = libraryElement("table", "leaderboard-table");
+      const header = document.createElement("thead"), headingRow = document.createElement("tr");
+      for (const title of ["RANK", "PLAYER", "SCORE", "WAVE", "CORRECT"]) {
+        const cell = libraryElement("th", title === "SCORE" || title === "WAVE" ||
+          title === "CORRECT" ? "numeric" : "", title);
+        headingRow.append(cell);
+      }
+      header.append(headingRow); table.append(header);
+      const tbody = document.createElement("tbody");
+      rows.forEach((entry, index) => {
+        const tr = document.createElement("tr");
+        tr.append(libraryElement("td", "", index < 3 ? ["🥇", "🥈", "🥉"][index] : String(index + 1)));
+        const player = libraryElement("td");
+        player.append(libraryElement("span", "nickname", String(entry.nickname).slice(0, 16)),
+          libraryElement("span", "set-name", scoreSetName(entry.set_id)));
+        tr.append(player, libraryElement("td", "numeric", Number(entry.score).toLocaleString("en-GB")),
+          libraryElement("td", "numeric", String(entry.wave)),
+          libraryElement("td", "numeric", String(entry.correct)));
+        tbody.append(tr);
+      });
+      table.append(tbody); container.append(table);
+    }
+    async function refreshLeaderboard() {
+      if (!leaderboardOpen) return;
+      const request = ++leaderboardRequest;
+      const setId = $("leaderboardSet").value, period = $("leaderboardPeriod").value;
+      const api = leaderboardApi();
+      if (!api) {
+        $("leaderboardMode").textContent = "LOCAL ONLY · SCORES SAVED ON THIS DEVICE";
+        renderLeaderboardRows(localLeaderboard(setId, period));
+        return;
+      }
+      $("leaderboardMode").textContent = "LOADING ONLINE SCORES…";
+      $("leaderboardRows").replaceChildren(libraryElement("div", "leaderboard-empty", "Fetching the top players…"));
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 6000);
+      try {
+        const params = new URLSearchParams({ set: setId, period, limit: "20" });
+        const response = await fetch(api + "/leaderboard?" + params, { signal: controller.signal, cache: "no-store" });
+        if (!response.ok) throw new Error("Leaderboard unavailable");
+        const result = await response.json();
+        if (!result || !Array.isArray(result.scores)) throw new Error("Invalid leaderboard response");
+        if (request !== leaderboardRequest || !leaderboardOpen) return;
+        $("leaderboardMode").textContent = "ONLINE · ENGINEERING SHARE LEADERBOARD";
+        renderLeaderboardRows(result.scores.slice(0, 20));
+      } catch (_) {
+        if (request !== leaderboardRequest || !leaderboardOpen) return;
+        $("leaderboardMode").textContent = "ONLINE UNAVAILABLE · SHOWING THIS DEVICE'S SCORES";
+        renderLeaderboardRows(localLeaderboard(setId, period));
+      } finally { clearTimeout(timeout); }
+    }
+    function openLeaderboard() {
+      if (leaderboardOpen || libraryOpen) return;
+      leaderboardOpen = true;
+      $("leaderboardOverlay").hidden = false;
+      document.querySelector(".page").inert = true;
+      document.body.classList.add("library-open");
+      updateLeaderboardOptions();
+      renderHUD();
+      $("closeLeaderboard").focus();
+      refreshLeaderboard();
+    }
+    function closeLeaderboard() {
+      if (!leaderboardOpen) return;
+      leaderboardOpen = false;
+      leaderboardRequest++;
+      $("leaderboardOverlay").hidden = true;
+      document.querySelector(".page").inert = false;
+      document.body.classList.remove("library-open");
+      renderHUD();
+      $("openLeaderboard").focus();
+    }
+    $("openLeaderboard").addEventListener("click", openLeaderboard);
+    $("viewFinalScores").addEventListener("click", openLeaderboard);
+    $("closeLeaderboard").addEventListener("click", closeLeaderboard);
+    $("leaderboardOverlay").addEventListener("click", (event) => {
+      if (event.target === $("leaderboardOverlay")) closeLeaderboard();
+    });
+    $("leaderboardSet").addEventListener("change", refreshLeaderboard);
+    $("leaderboardPeriod").addEventListener("change", refreshLeaderboard);
+    $("leaderboardOverlay").addEventListener("keydown", (event) => {
+      if (event.key === "Escape") { closeLeaderboard(); event.preventDefault(); event.stopPropagation(); return; }
+      if (event.key !== "Tab") return;
+      const focusable = [...$("leaderboardOverlay").querySelectorAll("button:not(:disabled), select:not(:disabled)")]
+        .filter((element) => element.getClientRects().length);
+      if (!focusable.length) return;
+      if (event.shiftKey && document.activeElement === focusable[0]) {
+        focusable[focusable.length - 1].focus(); event.preventDefault();
+      } else if (!event.shiftKey && document.activeElement === focusable[focusable.length - 1]) {
+        focusable[0].focus(); event.preventDefault();
+      }
+    });
+    function saveLocalScore(score) {
+      if (nicknameIssue(score.nickname)) return;
+      if (localScores.some((item) => item.run_id === score.run_id)) return;
+      localScores.push({ ...score, created_at: new Date().toISOString() });
+      localScores = localScores.slice(-200);
+      try { localStorage.setItem(LOCAL_SCORES_KEY, JSON.stringify(localScores)); }
+      catch (_) { /* The current browser session still keeps the score. */ }
+    }
+    async function submitFinalScore() {
+      if (!state.over || !completedRun || scoreSubmitted || scoreSubmitting) return;
+      const nickname = $("playerNickname").value.trim().replace(/\s+/g, " ");
+      const issue = nicknameIssue(nickname);
+      if (issue) {
+        $("scoreSubmitStatus").textContent = nicknameMessage(issue);
+        return;
+      }
+      try { localStorage.setItem(NICKNAME_KEY, nickname); } catch (_) { /* Optional. */ }
+      const score = { ...completedRun, nickname };
+      const api = leaderboardApi();
+      if (!api) {
+        saveLocalScore(score);
+        scoreSubmitted = true;
+        $("submitScore").disabled = true;
+        $("scoreSubmitStatus").textContent = "Saved on this device. Connect the leaderboard API for shared scores.";
+        return;
+      }
+      scoreSubmitting = true;
+      $("submitScore").disabled = true;
+      $("scoreSubmitStatus").textContent = "Submitting to the Engineering Share leaderboard…";
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 6000);
+      try {
+        const response = await fetch(api + "/scores", {
+          method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(score), signal: controller.signal
+        });
+        const result = await response.json();
+        if (response.status === 422 && result.code === "nickname_rejected") {
+          $("scoreSubmitStatus").textContent = String(result.error || nicknameMessage("blocked")).slice(0, 150);
+          $("submitScore").disabled = false;
+          return;
+        }
+        if (!response.ok || !result.ok) throw new Error("Submission rejected");
+        saveLocalScore(score);
+        scoreSubmitted = true;
+        $("scoreSubmitStatus").textContent = "Score saved online! Open SCORES to see the rankings.";
+      } catch (_) {
+        saveLocalScore(score);
+        $("scoreSubmitStatus").textContent = "Online submission failed. Saved locally; retry to send your score.";
+        $("submitScore").disabled = false;
+      } finally {
+        clearTimeout(timeout); scoreSubmitting = false;
+      }
+    }
+    $("submitScore").addEventListener("click", submitFinalScore);
+    $("playerNickname").addEventListener("input", () => {
+      if (scoreSubmitted || scoreSubmitting) return;
+      const nickname = $("playerNickname").value.trim().replace(/\s+/g, " ");
+      const issue = nickname ? nicknameIssue(nickname) : null;
+      $("scoreSubmitStatus").textContent = issue ? nicknameMessage(issue) : "";
+    });
+
     function shuffle(items) {
       for (let i = items.length - 1; i > 0; i--) {
         const j = randomInt(0, i);
@@ -1022,7 +1488,7 @@
       return String(value).trim().toLowerCase() === expected.trim().toLowerCase();
     }
     function submitAnswer(value, selectedButton) {
-      if (answerPending || !activeQuestion || state.over || libraryOpen) return;
+      if (answerPending || !activeQuestion || state.over || libraryOpen || leaderboardOpen) return;
       answerPending = true;
       state.attempted++;
       const correct = isCorrectAnswer(value, activeQuestion);
@@ -1127,7 +1593,7 @@
     });
     canvas.addEventListener("pointerleave", () => { state.hover = null; });
     canvas.addEventListener("pointerdown", (event) => {
-      if (state.over || libraryOpen || event.button !== 0) return;
+      if (state.over || libraryOpen || leaderboardOpen || event.button !== 0) return;
       const pos = getCanvasPoint(event), cell = tileAt(pos.x, pos.y);
       if (cell.col < 0 || cell.col > 19 || cell.row < 0 || cell.row > 11) return;
       const existing = towerAt(cell.col, cell.row);
@@ -1149,7 +1615,7 @@
       }
     });
     window.addEventListener("keydown", (event) => {
-      if (libraryOpen) return;
+      if (libraryOpen || leaderboardOpen) return;
       const tag = event.target && event.target.tagName;
       if (["INPUT", "SELECT", "TEXTAREA"].includes(tag) || event.altKey || event.ctrlKey || event.metaKey) return;
       if (/^[a-d]$/i.test(event.key) && !$("quizPanel").hidden && !answerPending) {
@@ -1283,7 +1749,7 @@
       state.shake = Math.max(0, state.shake - dt);
     }
     function step(dt) {
-      if (libraryOpen) return;
+      if (libraryOpen || leaderboardOpen) return;
       if (state.over) { stepEffects(dt); return; }
       if (answerPending) {
         answerDelay -= dt;
@@ -1314,8 +1780,18 @@
       if (state.over) return;
       state.over = true; state.placing = null;
       updateBest();
+      completedRun = {
+        run_id: runId,
+        set_id: runMixed ? "mixed" : runSetId,
+        score: state.score, wave: state.wave, kills: state.kills,
+        correct: state.correct, attempted: state.attempted
+      };
+      scoreSubmitted = false; scoreSubmitting = false;
+      $("scoreSubmitStatus").textContent = "";
+      $("submitScore").disabled = false;
       $("finalStats").textContent = "WAVE " + state.wave + " · " + state.score + " POINTS · " + state.correct + " CORRECT ANSWERS";
       $("gameover").hidden = false;
+      document.querySelector(".arena-frame").classList.add("show-gameover");
       for (const btn of $("choices").querySelectorAll("button")) btn.disabled = true;
       refreshShop();
     }
@@ -1328,6 +1804,9 @@
       };
       Object.assign(state, reset);
       $("gameover").hidden = true;
+      document.querySelector(".arena-frame").classList.remove("show-gameover");
+      completedRun = null; scoreSubmitted = false; scoreSubmitting = false;
+      runId = makeRunId(); runSetId = activeSetId; runMixed = false;
       answerPending = false; answerDelay = 0; nextQuestion();
       setHint("Earn coins with the quiz, then use the ARMOURY to place towers.");
       renderHUD(); refreshShop(); showToast("NEW DEFENCE STARTED", 1200);
@@ -1467,8 +1946,9 @@
     }
     function renderHUD() {
       const phase = state.phase === "combat" ? "WAVE ACTIVE" : state.phase === "cooldown" ? "COOLDOWN" : "PREPARATION";
-      $("phaseName").textContent = libraryOpen ? "PAUSED" : phase;
-      $("phaseDetail").textContent = libraryOpen ? "— question library open" : state.phase === "combat"
+      $("phaseName").textContent = libraryOpen || leaderboardOpen ? "PAUSED" : state.over ? "GAME OVER" : phase;
+      $("phaseDetail").textContent = libraryOpen ? "— question library open" :
+        leaderboardOpen ? "— leaderboard open" : state.phase === "combat"
         ? "— keep defending!" : "— next wave " + (state.wave + 1);
       $("healthValue").textContent = "♥ " + state.health + " / " + STARTING_HEALTH;
       $("coinsValue").textContent = "◈ " + state.coins;
