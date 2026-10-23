@@ -52,7 +52,7 @@ units:
 <div id="example-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="example-frame"
-        src="https://engineeringshare.github.io/engineering-resources/presentations/Example AC Circuit Analysis.pdf" 
+        src="https://engineeringshare.github.io/engineering-resources/worked_examples/Example AC Circuit Analysis.pdf" 
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

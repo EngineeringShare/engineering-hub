@@ -37,10 +37,10 @@ Select a tab to switch between the presentation, worked example and formulae ref
   <section class="da-panel" id="da-panel-example" role="tabpanel" aria-labelledby="da-tab-example" tabindex="0" hidden>
     <p>A worked example applying dimensional analysis to a SUVAT equation. A more complex example will be added in the future.</p>
     <div class="da-pdf-shell">
-      <iframe id="da-pdf-example" title="Worked dimensional analysis example PDF" src="https://engineeringshare.github.io/engineering-resources/presentations/Example%20Solving%20Dimensional%20Analysis.pdf" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
+      <iframe id="da-pdf-example" title="Worked dimensional analysis example PDF" src="https://engineeringshare.github.io/engineering-resources/worked_examples/Example%20Solving%20Dimensional%20Analysis.pdf" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
       <button type="button" class="da-fullscreen" data-frame="da-pdf-example" aria-label="View worked example in fullscreen">⛶ Fullscreen</button>
     </div>
-    <p class="da-pdf-link"><a href="https://engineeringshare.github.io/engineering-resources/presentations/Example%20Solving%20Dimensional%20Analysis.pdf" target="_blank" rel="noopener noreferrer">Open worked example PDF in a new tab ↗</a></p>
+    <p class="da-pdf-link"><a href="https://engineeringshare.github.io/engineering-resources/worked_examples/Example%20Solving%20Dimensional%20Analysis.pdf" target="_blank" rel="noopener noreferrer">Open worked example PDF in a new tab ↗</a></p>
   </section>
 
   <section class="da-panel" id="da-panel-formulae" role="tabpanel" aria-labelledby="da-tab-formulae" tabindex="0" hidden>
