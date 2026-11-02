@@ -1,6 +1,6 @@
 ---
-title: "Transformers"
-date: 2025-06-19
+title: "Transformers 2"
+date: 2025-06-20
 tags: ["Transformers", "Coils", "AC"]
 subject: "electronic devices"
 units:
@@ -21,7 +21,7 @@ Transformers are electrical devices that transfer electrical energy between two 
 <div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
     <iframe 
         id="pdf-frame"
-        src="https://engineeringshare.github.io/engineering-resources/presentations/Transformers.pdf"
+        src="https://engineeringshare.github.io/engineering-resources/presentations/Transformers 2.pdf"
         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
         allowfullscreen
         webkitallowfullscreen

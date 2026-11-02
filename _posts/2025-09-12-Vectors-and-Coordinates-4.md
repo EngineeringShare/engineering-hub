@@ -21,7 +21,7 @@ Select a tab to switch between the presentation, worked example and formulae ref
 <div class="da-resource-tabs" id="da-resource-tabs">
   <div class="da-tab-list" role="tablist" aria-label="Dimensional analysis lesson materials">
     <button type="button" class="da-tab" id="da-tab-presentation" role="tab" aria-controls="da-panel-presentation" aria-selected="true" tabindex="0">Presentation</button>
-    <button type="button" class="da-tab" id="da-tab-example" role="tab" aria-controls="da-panel-example" aria-selected="false" tabindex="-1">Worked Example</button>
+    <button type="button" class="da-tab" id="da-tab-example" role="tab" aria-controls="da-panel-example" aria-selected="false" tabindex="-1">Worked Example - Cross Product</button>
   </div>
 
   <section class="da-panel" id="da-panel-presentation" role="tabpanel" aria-labelledby="da-tab-presentation" tabindex="0">
