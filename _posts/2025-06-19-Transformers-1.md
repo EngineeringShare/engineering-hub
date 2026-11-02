@@ -1,7 +1,7 @@
 ---
 title: "Transformers 1"
 date: 2025-06-19
-tags: ["Transformers", "Coils", "AC"]
+tags: ["Transformers", "Coils", "AC", "Ideal Transformer", "Voltage Ratio", "Current Ratio", "Step-up Transformer", "Step-down Transformer", "Isolation Transformer"]
 subject: "electronic devices"
 units:
   - unit: "HTQ Unit 4019"
@@ -50,6 +50,8 @@ Transformers are electrical devices that transfer electrical energy between two 
 </script>
 
 ## Other Materials:
+
+* [Phet Simulation: Faraday's Electromagnetic Lab](https://phet.colorado.edu/sims/html/faradays-electromagnetic-lab/latest/faradays-electromagnetic-lab_en.html)
 
 ## ---
 

@@ -1,7 +1,7 @@
 ---
 title: "Transformers 2"
 date: 2025-06-20
-tags: ["Transformers", "Coils", "AC"]
+tags: ["Transformers", "Coils", "AC", "Real Transformer", "Voltage Ratio", "Current Ratio", "Shell Type Transformer", "Core Type Transformer", "Efficiency", "Power Losses", "Copper Losses", "Hysteresis Losses", "Eddy Current Losses", "Health and Safety"] 
 subject: "electronic devices"
 units:
   - unit: "HTQ Unit 4019"
@@ -50,6 +50,8 @@ Transformers are electrical devices that transfer electrical energy between two 
 </script>
 
 ## Other Materials:
+
+* [Phet Simulation: Faraday's Electromagnetic Lab](https://phet.colorado.edu/sims/html/faradays-electromagnetic-lab/latest/faradays-electromagnetic-lab_en.html)
 
 ## ---
 
