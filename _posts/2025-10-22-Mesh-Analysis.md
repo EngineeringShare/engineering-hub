@@ -4,10 +4,6 @@ date: 2025-10-22
 tags: ["Kirchoff's Laws", "Circuits", "KVL", "KCL", "Mesh Analysis", "Simultaneous Equations"]
 subject: "electronics"
 units:
-  - unit: "BTEC Unit 56"
-    lo: "LO1 - DC Circuits"
-  - unit: "T-Level Unit 08"
-    lo: "1 - (8.1) DC Circuits"
   - unit: "HTQ Unit 4019"
     lo: "LO1 - DC Circuits"
 ---
