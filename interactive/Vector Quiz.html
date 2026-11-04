@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vector Challenge | Engineering Share</title>
+<style>
+:root{--blue:#3467d5;--deep:#233862;--ink:#243044;--muted:#617188;--line:#dfe6ef;--pale:#f4f7fc;--green:#138453;--red:#b52d3f;--violet:#8b4ac9;--radius:16px}
+*{box-sizing:border-box}
+body{margin:0;padding:20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:var(--ink);background:linear-gradient(135deg,#6476da,#7454a8);min-height:100vh}
+.page{max-width:1250px;margin:auto}.back{display:inline-block;background:#111827;color:white;text-decoration:none;padding:9px 14px;border-radius:9px;font-weight:600;font-size:14px;margin-bottom:12px}
+.shell{background:white;border-radius:20px;padding:30px;box-shadow:0 18px 42px #17255423}
+h1,h2,h3,p{margin-top:0}h1{font-size:clamp(1.65rem,3vw,2.5rem);letter-spacing:-.03em;margin-bottom:7px}h2{font-size:1.45rem}h3{font-size:1.05rem;margin-bottom:14px}.muted{color:var(--muted)}.header{text-align:center;margin:2px 0 25px}.header p{margin:0;font-size:1rem}
+[hidden]{display:none!important}
+.section{background:var(--pale);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:20px}
+.section-title{font-size:1.07rem;font-weight:750;margin-bottom:13px;color:var(--deep)}.subtitle{font-size:13px;color:var(--muted)}
+.levels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.level-card{border:2px solid var(--line);border-radius:13px;background:#fff;padding:16px 12px;text-align:left;cursor:pointer;color:var(--ink);font:inherit;min-height:134px;transition:background .15s,border-color .15s,transform .15s}
+.level-card strong{display:block;font-size:1.03rem;margin-bottom:6px}.level-card span{font-size:.84rem;line-height:1.45;color:var(--muted);display:block}.level-card:hover{border-color:#96b0eb;transform:translateY(-2px)}.level-card.selected{border-color:var(--blue);background:#edf3ff;box-shadow:0 0 0 1px #3467d555}
+.choice-row{display:flex;flex-wrap:wrap;gap:10px}.choice{border:1.5px solid var(--line);background:white;border-radius:10px;padding:10px 17px;cursor:pointer;font-weight:700;color:var(--ink);font:inherit}.choice.selected{background:#edf3ff;border-color:var(--blue);color:#164aab}
+.btn{border:0;border-radius:10px;padding:12px 19px;font-size:1rem;font-weight:700;cursor:pointer;transition:background .15s,transform .15s}.btn:hover:not(:disabled){transform:translateY(-1px)}.btn:disabled{opacity:.45;cursor:default}.btn-primary{background:var(--blue);color:white}.btn-primary:hover:not(:disabled){background:#204eb6}.btn-secondary{background:#e7edf6;color:var(--deep)}.btn-secondary:hover:not(:disabled){background:#d7e2f3}.btn-light{background:white;color:var(--deep);border:1px solid var(--line)}.btn-small{padding:9px 14px;font-size:.9rem}
+.start-row{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}.start-row .btn{min-width:185px}.details{margin-bottom:20px;border-radius:14px;border:1px solid var(--line);background:white}.details summary{padding:16px 19px;cursor:pointer;color:var(--deep);font-weight:750;list-style-position:inside}.details summary:hover{background:#f8faff}.details-body{padding:0 19px 18px}.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.check-grid{display:flex;flex-wrap:wrap;gap:10px 18px;margin:12px 0}.check-option{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:500}.check-option input{width:17px;height:17px;accent-color:var(--blue)}select{padding:9px 12px;border:1px solid #b9c8dd;border-radius:8px;background:white;font:inherit;color:var(--ink);max-width:100%}.setting-foot{margin:10px 0 0;font-size:.85rem;color:var(--muted)}
+.warning{padding:11px 13px;border-radius:9px;background:#fff4e5;border:1px solid #efbd71;color:#865315;margin-top:12px;font-size:.9rem}
+.game-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:15px}.game-meta{font-size:.88rem;color:var(--muted)}.game-top h2{margin:3px 0 0}.progress-track{background:#e4eafa;height:9px;border-radius:9px;overflow:hidden;margin-bottom:18px}.progress-fill{background:var(--blue);width:0;height:100%;border-radius:9px;transition:width .22s}
+.score-board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}.score-item{text-align:center;border:1px solid var(--line);background:#f8faff;border-radius:12px;padding:11px 8px}.score-item strong{font-size:1.5rem;color:var(--blue);display:block}.score-item span{color:var(--muted);font-size:.78rem}
+.game-area{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(345px,1fr);gap:20px}.game-area.expanded{grid-template-columns:1fr}.game-area.expanded .panel:first-child{grid-column:1}.panel{min-width:0;background:#f8fafc;border:1px solid var(--line);padding:19px;border-radius:var(--radius)}
+.diagram-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:13px}.diagram-heading h3{margin:0}.diagram-heading .btn{padding:6px 10px;font-size:.78rem}.diagram-box{background:white;border:1px solid #dbe2ed;border-radius:11px;overflow-x:auto}.vector-svg{width:100%;min-width:500px;height:auto;display:block;aspect-ratio:680/440}.diagram-caption{color:var(--muted);font-size:.83rem;margin-top:9px;line-height:1.5}
+.vector-info{background:white;border:1px solid var(--line);padding:12px 14px;border-radius:9px;margin-top:12px}.vector-info-header{font-weight:750;font-size:.88rem}.vector-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px;margin-top:10px}.vector-item{background:#edf2f8;padding:9px 10px;border-radius:7px;font-weight:650;font-size:.92rem;overflow-wrap:anywhere}.vector-item.blue{border-left:4px solid var(--blue)}.vector-item.violet{border-left:4px solid var(--violet)}
+.question-text{font-size:1.13rem;line-height:1.55;font-weight:670;margin-bottom:17px;color:#273c58}.answer-note{font-size:.86rem;color:var(--muted);margin:0 0 8px}.answer-grid{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:13px}.component-field{flex:1 1 88px;min-width:0;display:flex;align-items:stretch;gap:5px}.component-input{width:100%;min-width:0;border:2px solid #d0dcec;border-radius:9px;padding:12px 10px;font:inherit;font-size:1.09rem}.component-input:focus{outline:none;border-color:var(--blue)}.component-label{display:grid;place-items:center;min-width:39px;background:#e9eef7;color:#2e405a;border-radius:9px;font-weight:800;padding:9px}.question-actions{display:flex;flex-wrap:wrap;gap:9px}.question-actions .btn{font-size:.93rem;padding:11px 14px}
+.hints-box{margin-top:17px;padding-top:14px;border-top:1px solid var(--line)}.hint-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.hint-header p{margin:0;font-size:.88rem;color:var(--muted)}.hint-line{background:#fffbea;border:1px solid #f2dc9f;border-radius:9px;padding:10px 13px;margin-top:9px;font-size:.9rem}.feedback{margin-top:16px;border-radius:10px;padding:13px 14px;font-weight:600;line-height:1.5}.feedback.correct{color:#145c3d;background:#def8e9;border:1px solid #86d7b0}.feedback.incorrect{color:#973343;background:#fce8e8;border:1px solid #e8a9b0}.feedback.skipped{background:#eef2f6;color:#46566a;border:1px solid #cad4e0}
+.solution-card{margin-top:12px;border:1px solid #c7d7ec;background:white;border-radius:11px;padding:15px}.solution-card h4{margin:0 0 11px;color:#223b67}.solution-step{border-left:3px solid #9db6e8;padding:3px 0 3px 12px;margin:11px 0}.solution-step strong{display:block;font-size:.92rem;margin-bottom:3px}.solution-step div{font-size:.9rem;line-height:1.5;color:#45536a;overflow-wrap:anywhere}.solution-step:last-child{border-color:var(--green)}
+.results-head{text-align:center;margin-bottom:20px}.results-head .emoji{font-size:3rem}.results-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}.result-stat{background:#f6f8fc;border:1px solid var(--line);border-radius:12px;padding:15px 8px;text-align:center}.result-stat strong{display:block;font-size:1.85rem;color:#2b59bc}.result-stat span{font-size:.82rem;color:var(--muted)}.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.breakdown{background:#f8fafc;border:1px solid var(--line);border-radius:13px;padding:17px}.breakdown h3{margin-bottom:14px}.performance-row{margin-bottom:13px}.performance-top{display:flex;justify-content:space-between;gap:10px;font-size:.87rem;margin-bottom:6px}.bar-track{height:8px;background:#e4e9f1;border-radius:8px;overflow:hidden}.bar-fill{height:100%;background:var(--blue)}.results-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:23px}.footnote{font-size:.83rem;color:var(--muted);margin-top:13px}
+:focus-visible{outline:3px solid #f8aa25;outline-offset:2px}
+@media(max-width:1050px){.game-area{grid-template-columns:1fr}.levels{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){body{padding:10px}.shell{padding:17px;border-radius:15px}.section,.panel{padding:15px}.settings-grid,.breakdown-grid{grid-template-columns:1fr}.score-board{gap:7px}.score-item{padding:9px 4px}.score-item strong{font-size:1.27rem}.score-item span{font-size:.7rem}.results-grid{grid-template-columns:repeat(2,1fr)}.game-area{gap:12px}.btn{padding:11px 14px}.start-row{align-items:stretch}.start-row .btn{width:100%}.level-card{min-height:124px}.diagram-heading .btn{display:none}}
+@media(max-width:380px){.levels{grid-template-columns:1fr}.score-board{grid-template-columns:repeat(2,1fr)}.component-field{flex-basis:100%}}
+@media print{body{padding:0;background:white}.back,#setupView,#quizView,.results-actions{display:none!important}.shell{box-shadow:none;padding:8px}#resultsView{display:block!important}.result-stat,.breakdown{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="page">
+<a class="back" href="https://engineeringshare.github.io/engineering-hub/interactive-hub/">← Back to Interactive Hub</a>
+<main class="shell">
+<header class="header"><h1>↗ Vector Challenge</h1><p class="muted">Practise vector arithmetic, dot and cross products, and interpreting coordinate diagrams.</p></header>
+
+<section id="setupView" aria-label="Choose your practice">
+ <div class="section"><div class="section-title">1. Choose your level</div>
+  <div class="levels" id="levelCards" role="group" aria-label="Difficulty level">
+   <button type="button" class="level-card" data-level="beginner" aria-pressed="false"><strong>🌱 Beginner</strong><span>2D addition and reading simple vector graphs. Small integer components.</span></button>
+   <button type="button" class="level-card" data-level="easy" aria-pressed="false"><strong>🔹 Easy</strong><span>Add, subtract and read 2D vectors, including negative components.</span></button>
+   <button type="button" class="level-card" data-level="medium" aria-pressed="false"><strong>⚙️ Medium</strong><span>All five skills, including 2D dot products and the z-component of a cross product.</span></button>
+   <button type="button" class="level-card" data-level="hard" aria-pressed="false"><strong>⚡ Hard</strong><span>All five skills, mixing 2D and 3D calculations with larger components.</span></button>
+  </div>
+ </div>
+ <div class="section"><div class="section-title">2. How many questions?</div>
+  <div class="choice-row" id="lengthChoices" role="group" aria-label="Quiz length">
+   <button type="button" class="choice" data-count="5" aria-pressed="false">5</button>
+   <button type="button" class="choice" data-count="10" aria-pressed="false">10</button>
+   <button type="button" class="choice" data-count="20" aria-pressed="false">20</button>
+   <button type="button" class="choice" data-count="endless" aria-pressed="false">Endless practice</button>
+  </div>
+ </div>
+ <details class="details" id="customDetails"><summary>🎛️ Customise your practice (optional)</summary>
+  <div class="details-body"><div class="settings-grid">
+   <div><div class="section-title">Question types</div><div class="check-grid">
+    <label class="check-option"><input type="checkbox" name="questionType" value="add"> Vector addition</label>
+    <label class="check-option"><input type="checkbox" name="questionType" value="sub"> Vector subtraction</label>
+    <label class="check-option"><input type="checkbox" name="questionType" value="dot"> Dot product</label>
+    <label class="check-option"><input type="checkbox" name="questionType" value="cross"> Cross product</label>
+    <label class="check-option"><input type="checkbox" name="questionType" value="graph"> Reading vector graphs</label>
+   </div></div>
+   <div><div class="section-title">Vector settings</div>
+    <label for="dimensions"><strong>Calculation dimensions:</strong></label>
+    <select id="dimensions"><option value="2">2D only</option><option value="mixed">Mixed 2D and 3D</option><option value="3">3D only</option></select>
+    <p class="setting-foot">Graph-reading questions always use a 2D x–y grid.</p>
+    <label for="maxComponent"><strong>Maximum absolute component:</strong></label>
+    <select id="maxComponent"><option value="3">3</option><option value="4">4</option><option value="6">6</option><option value="8">8</option><option value="10">10</option></select>
+   </div>
+  </div><div class="check-grid" style="margin-bottom:0"><label class="check-option"><input type="checkbox" id="allowHints" checked> Show optional hints</label></div></div>
+ </details>
+ <div id="setupWarning" class="warning" role="alert" hidden></div>
+ <div class="start-row"><div><div class="section-title" style="margin-bottom:4px">Ready when you are</div><div class="subtitle" id="setupSummary">Your session summary appears here.</div></div><button type="button" id="startBtn" class="btn btn-primary">Start practice →</button></div>
+</section>
+
+<section id="quizView" aria-label="Vector quiz" hidden>
+ <div class="game-top"><div><div class="game-meta" id="sessionLabel"></div><h2 id="questionNumber">Question 1</h2></div><button type="button" class="btn btn-light btn-small" id="finishBtn">Finish and view results</button></div>
+ <div class="progress-track" role="progressbar" id="progressTrack" aria-label="Questions completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progressFill"></div></div>
+ <div class="score-board">
+  <div class="score-item"><strong id="scoreDisplay">0</strong><span>Points</span></div>
+  <div class="score-item"><strong id="correctDisplay">0</strong><span>Correct</span></div>
+  <div class="score-item"><strong id="streakDisplay">0</strong><span>Streak</span></div>
+  <div class="score-item"><strong id="completedDisplay">0</strong><span>Completed</span></div>
+ </div>
+ <div class="game-area" id="gameArea">
+  <div class="panel"><div class="diagram-heading"><h3 id="diagramTitle">Vector diagram</h3><button type="button" class="btn btn-light btn-small" id="expandBtn" aria-expanded="false">⤢ Expand diagram</button></div>
+   <div class="diagram-box"><svg class="vector-svg" id="vectorSvg" role="img" aria-label="Vectors plotted on coordinate axes" viewBox="0 0 680 440"></svg></div>
+   <div class="diagram-caption" id="diagramCaption"></div>
+   <div class="vector-info"><div class="vector-info-header" id="vectorInfoTitle">Given vectors</div><div class="vector-list" id="vectorList"></div></div>
+  </div>
+  <div class="panel"><h3>Try this question</h3><div class="question-text" id="questionText"></div><p class="answer-note" id="answerNote">Enter each component separately.</p><div class="answer-grid" id="answerGrid"></div>
+   <div class="question-actions"><button type="button" class="btn btn-primary" id="submitBtn">Check answer</button><button type="button" class="btn btn-secondary" id="skipBtn">Skip</button><button type="button" class="btn btn-primary" id="nextBtn" hidden>Next question →</button></div>
+   <div class="hints-box" id="hintsBox"><div class="hint-header"><strong>Need a nudge?</strong><p id="hintCount">0 / 3 hints</p></div><div id="hintList"></div><button type="button" class="btn btn-light btn-small" id="hintBtn" style="margin-top:10px">💡 Show a hint (−1 point)</button></div>
+   <div class="feedback" id="feedback" role="status" aria-live="polite" hidden></div>
+   <div id="solutionTools" hidden><button type="button" class="btn btn-light btn-small" id="solutionToggle" style="margin-top:12px" aria-expanded="false">Show worked solution ▼</button><div id="solutionCard" class="solution-card" hidden><h4>Step-by-step solution</h4><div id="solutionSteps"></div></div></div>
+  </div>
+ </div>
+</section>
+
+<section id="resultsView" aria-label="Your results" hidden>
+ <div class="results-head"><div class="emoji">🎉</div><h2 id="resultsTitle">Practice complete!</h2><p class="muted" id="resultsIntro">Here is how you did.</p></div>
+ <div class="results-grid">
+  <div class="result-stat"><strong id="rAccuracy">0%</strong><span>Accuracy</span></div>
+  <div class="result-stat"><strong id="rCorrect">0/0</strong><span>Correct / completed</span></div>
+  <div class="result-stat"><strong id="rPoints">0</strong><span>Points earned</span></div>
+  <div class="result-stat"><strong id="rStreak">0</strong><span>Best streak</span></div>
+ </div>
+ <div class="breakdown-grid"><div class="breakdown"><h3>By question type</h3><div id="typeBreakdown"></div></div><div class="breakdown"><h3>By dimension</h3><div id="dimensionBreakdown"></div></div></div>
+ <p class="footnote" id="resultsFootnote"></p>
+ <div class="results-actions"><button type="button" class="btn btn-primary" id="retryBtn">Try again</button><button type="button" class="btn btn-secondary" id="settingsBtn">Change settings</button><button type="button" class="btn btn-light" id="csvBtn">Download results (CSV)</button><button type="button" class="btn btn-light" id="printBtn">Print summary</button></div>
+</section>
+</main></div>
+<script>
+'use strict';
+const SVG_NS='http://www.w3.org/2000/svg';
+const LEVELS={
+ beginner:{label:'Beginner',types:['add','graph'],dimensions:'2',maxComponent:3,points:1},
+ easy:{label:'Easy',types:['add','sub','graph'],dimensions:'2',maxComponent:4,points:2},
+ medium:{label:'Medium',types:['add','sub','dot','cross','graph'],dimensions:'2',maxComponent:6,points:3},
+ hard:{label:'Hard',types:['add','sub','dot','cross','graph'],dimensions:'mixed',maxComponent:8,points:4}
+};
+const TYPE_NAMES={add:'Vector addition',sub:'Vector subtraction',dot:'Dot product',cross:'Cross product',graph:'Reading a vector graph'};
+const GRAPH_NAMES={components:'Read the displacement',position:'Read the position vector',resultant:'Read the resultant',magnitude:'Find the magnitude'};
+const $=id=>document.getElementById(id);
+const randint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[randint(0,a.length-1)];
+const fmt=n=>String(Number(n.toFixed(2)));
+const components=['i','j','k'];
+let selections={level:'medium',length:10},session=null,currentQuestion=null,questionSerial=0;
+
+function setCheckboxes(values){document.querySelectorAll('[name="questionType"]').forEach(item=>{item.checked=values.includes(item.value);});}
+function selectedTypes(){return [...document.querySelectorAll('[name="questionType"]:checked')].map(item=>item.value);}
+function chooseLevel(level){
+ if(!LEVELS[level])return;
+ selections.level=level;const preset=LEVELS[level];
+ setCheckboxes(preset.types);$('dimensions').value=preset.dimensions;$('maxComponent').value=String(preset.maxComponent);
+ document.querySelectorAll('[data-level]').forEach(button=>{const active=button.dataset.level===level;button.classList.toggle('selected',active);button.setAttribute('aria-pressed',String(active));});
+ refreshSummary();
+}
+function chooseLength(length){selections.length=length;document.querySelectorAll('[data-count]').forEach(button=>{const active=button.dataset.count===String(length);button.classList.toggle('selected',active);button.setAttribute('aria-pressed',String(active));});refreshSummary();}
+function readSettings(){return{level:selections.level,length:selections.length,types:selectedTypes(),dimensions:$('dimensions').value,maxComponent:Number($('maxComponent').value),hints:$('allowHints').checked};}
+function refreshSummary(){const settings=readSettings(),invalid=!settings.types.length;$('setupWarning').hidden=!invalid;$('setupWarning').textContent=invalid?'Choose at least one question type.':'';$('startBtn').disabled=invalid;$('setupSummary').textContent=`${LEVELS[settings.level].label} · ${settings.types.length} question type${settings.types.length===1?'':'s'} · ${settings.dimensions==='mixed'?'2D & 3D':settings.dimensions+'D'} · ${settings.length==='endless'?'Endless practice':settings.length+' questions'}`;}
+function shuffle(values){const copy=[...values];for(let i=copy.length-1;i>0;i--){const j=randint(0,i);[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
+function nextType(){if(!session.typeDeck.length)session.typeDeck=shuffle(session.settings.types);return session.typeDeck.pop();}
+function vector(dim,limit){let v;do{v=Array.from({length:dim},()=>randint(-limit,limit));}while(v.every(n=>n===0));return v;}
+function dot(a,b){return a.reduce((sum,n,i)=>sum+n*b[i],0);}
+function cross(a,b){const x=[...a,0,0].slice(0,3),y=[...b,0,0].slice(0,3);return[x[1]*y[2]-x[2]*y[1],x[2]*y[0]-x[0]*y[2],x[0]*y[1]-x[1]*y[0]];}
+function vectorText(v){return v.map((n,i)=>`${i===0?(n<0?'−':''):(n<0?' − ':' + ')}${Math.abs(n)}${components[i]}`).join('');}
+function resultText(q){if(q.scalar)return fmt(q.answer[0])+(q.unit?' '+q.unit:'');return vectorText(q.answer);}
+function makeGraph(level){
+ const options=level==='beginner'?['position','components']:level==='easy'?['position','components','resultant']:['position','components','resultant','magnitude'];
+ const subtype=pick(options);let points;
+ if(subtype==='position'){points={O:[0,0],Q:vector(2,4)};}
+ else if(subtype==='resultant'){
+  let p,q,r,tries=0;do{p=vector(2,4);q=vector(2,4);r=vector(2,4);tries++;}while(tries<200&&(JSON.stringify(p)===JSON.stringify(q)||JSON.stringify(q)===JSON.stringify(r)||JSON.stringify(p)===JSON.stringify(r)||Math.abs(p[0]-q[0])+Math.abs(p[1]-q[1])<2||Math.abs(r[0]-q[0])+Math.abs(r[1]-q[1])<2));
+  points={P:p,Q:q,R:r};
+ }else{
+  let p,q;do{p=vector(2,4);q=vector(2,4);}while(Math.abs(p[0]-q[0])+Math.abs(p[1]-q[1])<3);points={P:p,Q:q};
+ }
+ const p=points.P||points.O,finish=points.R||points.Q;
+ const dx=finish[0]-p[0],dy=finish[1]-p[1];
+ const scalar=subtype==='magnitude';const answer=scalar?[Math.hypot(dx,dy)]:[dx,dy];
+ const prompt={position:'What is the position vector of Q relative to the origin O?',components:'What is the displacement vector from P to Q?',resultant:'The two arrows represent P → Q and Q → R. What is the resultant displacement from P to R?',magnitude:'What is the magnitude of the displacement from P to Q? Give your answer to 2 decimal places.'}[subtype];
+ return{type:'graph',dim:2,variant:subtype,points,scalar,answer,prompt,unit:scalar?'units':'',tolerance:scalar?0.011:0.000001};
+}
+function makeQuestion(settings,type){
+ if(type==='graph')return{...makeGraph(settings.level),finished:false,hintsRevealed:0};
+ const dim=settings.dimensions==='mixed'?pick([2,3]):Number(settings.dimensions);
+ let a,b,result;
+ do{
+  a=vector(dim,settings.maxComponent);b=vector(dim,settings.maxComponent);
+  result=type==='cross'?cross(a,b):null;
+ }while((type==='cross'&&result.every(n=>n===0))||(a[0]===b[0]&&a[1]===b[1]));
+ let answer,scalar=false,prompt,unit='';
+ if(type==='add'){answer=a.map((n,i)=>n+b[i]);prompt='Calculate A + B. Enter the components of the resultant vector.';}
+ if(type==='sub'){answer=a.map((n,i)=>n-b[i]);prompt='Calculate A − B. Be careful with negative components.';}
+ if(type==='dot'){answer=[dot(a,b)];scalar=true;prompt='Calculate the scalar (dot) product A · B.';}
+ if(type==='cross'){
+  answer=dim===2?[result[2]]:result;
+  scalar=dim===2;
+  unit=dim===2?'k component':'';
+  prompt=dim===2?'Calculate the z-component of A × B. Both vectors lie in the x–y plane; enter the signed k component.':'Calculate A × B. Enter the i, j and k components.';
+ }
+ return{type,dim,a,b,answer,scalar,prompt,unit,tolerance:0.000001,finished:false,hintsRevealed:0};
+}
+
+// The calculation data is also the source of truth for both diagram and worked solution.
+function svgNode(tag,attrs={},text){const node=document.createElementNS(SVG_NS,tag);Object.entries(attrs).forEach(([key,value])=>node.setAttribute(key,String(value)));if(text!==undefined)node.textContent=text;return node;}
+function svgText(svg,x,y,value,options={}){svg.appendChild(svgNode('text',{x,y,fill:'#37465e','font-size':16,'font-weight':600,'text-anchor':'middle','font-family':'Segoe UI, Arial, sans-serif',...options},value));}
+function line(svg,x1,y1,x2,y2,attrs={}){svg.appendChild(svgNode('line',{x1,y1,x2,y2,stroke:'#cbd5e1','stroke-width':1.2,...attrs}));}
+function buildGrid(svg,range=5){
+ svg.replaceChildren();svg.appendChild(svgNode('rect',{x:0,y:0,width:680,height:440,fill:'#fff'}));
+ const defs=svgNode('defs');for(const [id,color] of [['arrowBlue','#3467d5'],['arrowViolet','#8b4ac9'],['arrowGreen','#14835b'],['axisArrow','#64748b']]){
+  const marker=svgNode('marker',{id,markerWidth:9,markerHeight:9,refX:7,refY:3.5,orient:'auto',markerUnits:'userSpaceOnUse'});marker.appendChild(svgNode('path',{d:'M0,0 L7,3.5 L0,7 Z',fill:color}));defs.appendChild(marker);
+ }svg.appendChild(defs);
+ const cx=340,cy=211,step=175/range,lo=-range,hi=range;
+ for(let n=lo;n<=hi;n++){
+  const x=cx+n*step,y=cy-n*step;
+  line(svg,x,cy-hi*step,x,cy-lo*step,{stroke:n===0?'#708197':'#e6ebf2','stroke-width':n===0?2:1});
+  line(svg,cx+lo*step,y,cx+hi*step,y,{stroke:n===0?'#708197':'#e6ebf2','stroke-width':n===0?2:1});
+  if(n!==0&&(step>=25||n%2===0)){svgText(svg,x,cy+20,String(n),{'font-size':12,fill:'#718096','font-weight':500});svgText(svg,cx-19,y+4,String(n),{'font-size':12,fill:'#718096','font-weight':500});}
+ }
+ line(svg,cx+hi*step-14,cy,cx+hi*step+16,cy,{stroke:'#708197','stroke-width':2,'marker-end':'url(#axisArrow)'});
+ line(svg,cx,cy-hi*step+14,cx,cy-hi*step-14,{stroke:'#708197','stroke-width':2,'marker-end':'url(#axisArrow)'});
+ svgText(svg,cx+hi*step+34,cy+6,'x',{'font-size':18,fill:'#475569'});svgText(svg,cx+8,cy-hi*step-20,'y',{'font-size':18,fill:'#475569'});
+ svgText(svg,cx-15,cy+20,'0',{'font-size':12,fill:'#718096','font-weight':500});
+ return {cx,cy,step};
+}
+function xy(pt,g){return[g.cx+g.step*pt[0],g.cy-g.step*pt[1]];}
+function drawArrow(svg,start,end,g,color='blue',offset=0){
+ let [x1,y1]=xy(start,g),[x2,y2]=xy(end,g);
+ if(offset){const length=Math.hypot(x2-x1,y2-y1)||1;const dx=-(y2-y1)*offset/length,dy=(x2-x1)*offset/length;x1+=dx;y1+=dy;x2+=dx;y2+=dy;}
+ line(svg,x1,y1,x2,y2,{stroke:color==='violet'?'#8b4ac9':color==='green'?'#14835b':'#3467d5','stroke-width':4,'stroke-linecap':'round','marker-end':`url(#${color==='violet'?'arrowViolet':color==='green'?'arrowGreen':'arrowBlue'})`});
+ return[x2,y2];
+}
+function pointLabel(svg,point,name,g,index=0){
+ const [x,y]=xy(point,g),signX=point[0]>=0?1:-1,signY=point[1]>=0?1:-1;
+ svg.appendChild(svgNode('circle',{cx:x,cy:y,r:4,fill:'#273f5c',stroke:'white','stroke-width':1.5}));
+ const offX=point[0]===0?16:signX*17,offY=point[1]===0?-(15+index*2):-signY*(15+index*2);
+ svgText(svg,x+offX,y+offY,name,{'font-size':16,'font-weight':750,fill:'#26374f',stroke:'#fff','stroke-width':4,'paint-order':'stroke'});
+}
+function renderVectorDiagram(q){
+ const svg=$('vectorSvg'),range=q.type==='graph'?5:Math.max(5,...q.a.slice(0,2).map(n=>Math.abs(n)),...q.b.slice(0,2).map(n=>Math.abs(n))),g=buildGrid(svg,range);
+ $('diagramTitle').textContent=q.type==='graph'?'Coordinate graph':'Vector diagram';
+ $('vectorInfoTitle').textContent=q.type==='graph'?'Graph key':'Given vectors';
+ const list=$('vectorList');list.replaceChildren();
+ function badge(text,colour){const item=document.createElement('div');item.className='vector-item '+colour;item.textContent=text;list.appendChild(item);}
+ if(q.type==='graph'){
+  const p=q.points;
+  if(q.variant==='position'){drawArrow(svg,p.O,p.Q,g);pointLabel(svg,p.O,'O',g);pointLabel(svg,p.Q,'Q',g);badge('Each square = 1 unit','blue');badge('Arrow: O → Q','violet');}
+  else if(q.variant==='resultant'){
+   drawArrow(svg,p.P,p.Q,g);drawArrow(svg,p.Q,p.R,g,'violet');
+   pointLabel(svg,p.P,'P',g);pointLabel(svg,p.Q,'Q',g);pointLabel(svg,p.R,'R',g);
+   badge('Blue: P → Q','blue');badge('Purple: Q → R','violet');
+  }else{drawArrow(svg,p.P,p.Q,g);pointLabel(svg,p.P,'P',g);pointLabel(svg,p.Q,'Q',g);badge('Each square = 1 unit','blue');badge('Arrow: P → Q','violet');}
+  $('diagramCaption').textContent='Read positions from the grid; positive y is upwards. The point coordinates are intentionally not given.';
+ }else{
+  const aa=q.a.slice(0,2),bb=q.b.slice(0,2),zero=[0,0];
+  drawArrow(svg,zero,aa,g);drawArrow(svg,zero,bb,g,'violet');
+  pointLabel(svg,aa,'A',g);pointLabel(svg,bb,'B',g);
+  badge('A = '+vectorText(q.a),'blue');badge('B = '+vectorText(q.b),'violet');
+  $('diagramCaption').textContent=q.dim===3?'Diagram shows the x–y projections only. Use all three components given below the graph when calculating.':'Both vectors are drawn from the origin on the x–y grid. The exact components are given below.';
+ }
+ svg.setAttribute('aria-label',q.type==='graph'?`Coordinate graph showing ${Object.keys(q.points).join(', ')}. Read the plotted positions to answer.`:`XY plot of A and B; given components ${vectorText(q.a)} and ${vectorText(q.b)}.`);
+}
+function renderInputs(q){
+ const grid=$('answerGrid');grid.replaceChildren();
+ const labels=q.scalar?[q.unit||'value']:components.slice(0,q.answer.length);
+ labels.forEach((label,index)=>{
+  const outer=document.createElement('label');outer.className='component-field';
+  const input=document.createElement('input');input.className='component-input';input.type='number';input.step='any';input.inputMode='decimal';input.setAttribute('aria-label',q.scalar?'Scalar answer':`${label} component`);input.placeholder=q.scalar?'Enter value':`Component ${index+1}`;input.autocomplete='off';
+  const span=document.createElement('span');span.className='component-label';span.textContent=label;
+  outer.append(input,span);grid.appendChild(outer);
+ });
+ $('answerNote').textContent=q.scalar?(q.type==='graph'&&q.variant==='magnitude'?'Round to two decimal places. Negative answers are accepted where appropriate.':q.type==='cross'?'Enter the signed coefficient of k, without the letter.':'Enter one scalar value; it may be negative.'):'Enter each signed component separately. You do not need to type i, j or k.';
+}
+
+function makeHints(q){
+ if(q.type==='add')return['Add matching components: i with i, j with j, and k with k if present.','Find the x-component by adding the two first numbers. Do the same for y and z.','Keep track of signs: adding a negative number is the same as subtracting its magnitude.'];
+ if(q.type==='sub')return['Subtract matching components, in the order A − B.','For each component, calculate the value from A minus the value from B.','Watch the double negative: subtracting −3 means adding 3.'];
+ if(q.type==='dot')return['A dot product gives a scalar, not a vector.','Multiply corresponding components and add those products.','In 3D, include the k terms too: AxBx + AyBy + AzBz.'];
+ if(q.type==='cross')return q.dim===2?['For vectors in the x–y plane, A × B points along the k axis.','The signed k component is AxBy − AyBx.','Order matters: B × A would reverse the sign.']:['A cross product gives a vector perpendicular to both A and B.','Use the determinant of the i, j, k matrix, keeping the minus sign in the middle.','i = AyBz − AzBy; j = AzBx − AxBz; k = AxBy − AyBx.'];
+ if(q.variant==='magnitude')return['Find the horizontal and vertical changes between P and Q.','Use Pythagoras: magnitude = √(Δx² + Δy²).','Take the positive square root and round to two decimal places.'];
+ if(q.variant==='position')return['A position vector from O ends at point Q.','Count squares right/left for x, and up/down for y.','Left and down are negative; right and up are positive.'];
+ if(q.variant==='resultant')return['The resultant goes directly from the first tail P to the final head R.','Read the x and y coordinates of P and R, not just Q.','Calculate (Rx − Px, Ry − Py).'];
+ return['The arrow starts at P and finishes at Q.','Horizontal change is Qx − Px; vertical change is Qy − Py.','Use the direction of the arrow: left/down are negative, right/up are positive.'];
+}
+function solutionFor(q){
+ const steps=[];
+ const add=(title,body)=>steps.push({title,body});
+ if(q.type==='graph'){
+  const p=q.points,start=p.P||p.O,finish=p.R||p.Q;
+  if(q.variant==='resultant')add('Combine the arrows','P → Q and Q → R form the displacement P → R; the intermediate Q cancels.');
+  if(q.variant==='position')add('Read point Q',`Q is at (${finish[0]}, ${finish[1]}) relative to the origin.`);
+  else add('Read the points',`${p.P?'P = ('+p.P.join(', ')+')':'O = (0, 0)'} and ${q.variant==='resultant'?'R':'Q'} = (${finish.join(', ')}).`);
+  add('Horizontal change',`Δx = ${finish[0]} − (${start[0]}) = ${finish[0]-start[0]}.`);
+  add('Vertical change',`Δy = ${finish[1]} − (${start[1]}) = ${finish[1]-start[1]}.`);
+  if(q.variant==='magnitude')add('Use Pythagoras',`|PQ| = √(${finish[0]-start[0]}² + ${finish[1]-start[1]}²) = ${fmt(q.answer[0])} units (2 d.p.).`);
+  else add('Write the vector',`Result = ${resultText(q)}.`);
+  return steps;
+ }
+ add('Identify components',`A = ${vectorText(q.a)}; B = ${vectorText(q.b)}.`);
+ if(q.type==='add'||q.type==='sub'){
+  const symbol=q.type==='add'?'+':'−';
+  q.answer.forEach((n,i)=>add(`${components[i]} component`,`${q.a[i]} ${symbol} (${q.b[i]}) = ${n}.`));
+  add('Write the resultant',`Answer = ${resultText(q)}.`);
+ }else if(q.type==='dot'){
+  const terms=q.a.map((n,i)=>`(${n} × ${q.b[i]})`);
+  add('Multiply and add',`A · B = ${terms.join(' + ')} = ${q.answer[0]}.`);
+  add('Check answer type','A dot product is a scalar; it has no i, j or k components.');
+ }else if(q.dim===2){
+  add('Find the k component',`AxBy − AyBx = (${q.a[0]} × ${q.b[1]}) − (${q.a[1]} × ${q.b[0]}) = ${q.answer[0]}.`);
+  add('Write the result',`A × B = ${q.answer[0]}k. The i and j components are zero.`);
+ }else{
+  const [a,b]=[q.a,q.b];
+  add('i component',`AyBz − AzBy = (${a[1]} × ${b[2]}) − (${a[2]} × ${b[1]}) = ${q.answer[0]}.`);
+  add('j component',`AzBx − AxBz = (${a[2]} × ${b[0]}) − (${a[0]} × ${b[2]}) = ${q.answer[1]}.`);
+  add('k component',`AxBy − AyBx = (${a[0]} × ${b[1]}) − (${a[1]} × ${b[0]}) = ${q.answer[2]}.`);
+  add('Write the result',`A × B = ${resultText(q)}.`);
+ }
+ return steps;
+}
+
+function showView(view){for(const id of ['setupView','quizView','resultsView'])$(id).hidden=id!==view;window.scrollTo({top:0,behavior:'instant'});}
+function startSession(){const settings=readSettings();if(!settings.types.length){refreshSummary();return;}session={settings,history:[],points:0,streak:0,bestStreak:0,hintsUsed:0,typeDeck:[]};questionSerial=0;showView('quizView');nextQuestion();}
+function updateBoard(){if(!session)return;const rows=session.history;$('scoreDisplay').textContent=String(session.points);$('correctDisplay').textContent=String(rows.filter(r=>r.status==='correct').length);$('streakDisplay').textContent=String(session.streak);$('completedDisplay').textContent=String(rows.length);const pct=session.settings.length==='endless'?0:100*rows.length/session.settings.length;$('progressFill').style.width=pct+'%';$('progressTrack').setAttribute('aria-valuenow',String(Math.round(pct)));}
+function nextQuestion(){
+ if(!session)return;if(session.settings.length!=='endless'&&session.history.length>=session.settings.length){showResults();return;}
+ const type=nextType();currentQuestion=makeQuestion(session.settings,type);questionSerial++;
+ $('sessionLabel').textContent=`${LEVELS[session.settings.level].label} · ${TYPE_NAMES[type]} · ${currentQuestion.dim}D`;
+ $('questionNumber').textContent=`Question ${questionSerial}${session.settings.length==='endless'?'':` of ${session.settings.length}`}`;
+ $('questionText').textContent=currentQuestion.prompt;renderVectorDiagram(currentQuestion);renderInputs(currentQuestion);
+ $('submitBtn').hidden=false;$('skipBtn').hidden=false;$('nextBtn').hidden=true;$('feedback').hidden=true;$('feedback').textContent='';
+ $('solutionTools').hidden=true;$('solutionCard').hidden=true;$('solutionToggle').textContent='Show worked solution ▼';$('solutionToggle').setAttribute('aria-expanded','false');
+ $('hintList').replaceChildren();$('hintCount').textContent='0 / 3 hints';$('hintsBox').hidden=!session.settings.hints;$('hintBtn').disabled=false;$('hintBtn').textContent='💡 Show a hint (−1 point)';
+ updateBoard();
+}
+function revealHint(){if(!currentQuestion||currentQuestion.finished||currentQuestion.hintsRevealed>=3)return;const hints=makeHints(currentQuestion),i=currentQuestion.hintsRevealed++;const line=document.createElement('div');line.className='hint-line';line.textContent=`Hint ${i+1}: ${hints[i]}`;$('hintList').appendChild(line);$('hintCount').textContent=`${currentQuestion.hintsRevealed} / 3 hints`;if(currentQuestion.hintsRevealed===3){$('hintBtn').disabled=true;$('hintBtn').textContent='All hints shown';}}
+function renderSolution(){const box=$('solutionSteps');box.replaceChildren();for(const step of solutionFor(currentQuestion)){const wrapper=document.createElement('div');wrapper.className='solution-step';const heading=document.createElement('strong'),body=document.createElement('div');heading.textContent=step.title;body.textContent=step.body;wrapper.append(heading,body);box.appendChild(wrapper);}}
+function completeQuestion(status,submitted=null){
+ if(!session||!currentQuestion||currentQuestion.finished)return;
+ const q=currentQuestion;q.finished=true;const hints=q.hintsRevealed,points=status==='correct'?Math.max(0,LEVELS[session.settings.level].points-hints):0;
+ session.points+=points;session.hintsUsed+=hints;
+ if(status==='correct'){session.streak++;session.bestStreak=Math.max(session.bestStreak,session.streak);}else session.streak=0;
+ session.history.push({number:questionSerial,level:session.settings.level,dimension:q.dim+'D',kind:q.type,variant:q.variant||'',a:q.a?vectorText(q.a):'',b:q.b?vectorText(q.b):'',graphPoints:q.points?JSON.stringify(q.points):'',answer:resultText(q),submitted:submitted?submitted.join(', '):'',status,hints,points});
+ const answer=resultText(q),message=status==='correct'?`✓ Correct! Answer: ${answer}. ${points} ${points===1?'point':'points'} earned${hints?` (${hints} hint${hints===1?'':'s'} used)`:''}.`:status==='skipped'?`Skipped. The answer is ${answer}.`:`Not quite. The correct answer is ${answer}.`;
+ const fb=$('feedback');fb.className='feedback '+(status==='correct'?'correct':status==='skipped'?'skipped':'incorrect');fb.textContent=message;fb.hidden=false;
+ $('submitBtn').hidden=true;$('skipBtn').hidden=true;$('nextBtn').hidden=false;
+ const last=session.settings.length!=='endless'&&session.history.length>=session.settings.length;$('nextBtn').textContent=last?'View results →':'Next question →';
+ document.querySelectorAll('.component-input').forEach(input=>input.disabled=true);$('hintBtn').disabled=true;$('solutionTools').hidden=false;renderSolution();updateBoard();
+}
+function submitAnswer(){
+ if(!currentQuestion||currentQuestion.finished)return;
+ const fields=[...document.querySelectorAll('.component-input')],raw=fields.map(f=>f.value.trim());
+ if(raw.some(v=>v===''||!Number.isFinite(Number(v)))){const feedback=$('feedback');feedback.className='feedback incorrect';feedback.textContent='Enter a valid number in every answer box. Negative values are allowed.';feedback.hidden=false;return;}
+ const submitted=raw.map(Number),q=currentQuestion;
+ const correct=submitted.length===q.answer.length&&submitted.every((n,i)=>Math.abs(n-q.answer[i])<=q.tolerance);
+ completeQuestion(correct?'correct':'incorrect',submitted);
+}
+function performanceRow(label,rows){const count=rows.filter(r=>r.status==='correct').length,pct=rows.length?Math.round(100*count/rows.length):0,outer=document.createElement('div');outer.className='performance-row';const top=document.createElement('div');top.className='performance-top';const name=document.createElement('span'),score=document.createElement('strong');name.textContent=label;score.textContent=`${count}/${rows.length} · ${pct}%`;top.append(name,score);const track=document.createElement('div');track.className='bar-track';const bar=document.createElement('div');bar.className='bar-fill';bar.style.width=pct+'%';track.appendChild(bar);outer.append(top,track);return outer;}
+function showResults(){
+ if(!session)return;const rows=session.history,correct=rows.filter(r=>r.status==='correct').length,skipped=rows.filter(r=>r.status==='skipped').length,percent=rows.length?Math.round(100*correct/rows.length):0;
+ $('resultsTitle').textContent=session.settings.length==='endless'?'Your practice summary':'Practice complete!';$('resultsIntro').textContent=`${LEVELS[session.settings.level].label} level · ${rows.length} question${rows.length===1?'':'s'} completed`;
+ $('rAccuracy').textContent=percent+'%';$('rCorrect').textContent=`${correct}/${rows.length}`;$('rPoints').textContent=String(session.points);$('rStreak').textContent=String(session.bestStreak);
+ const groups=[['typeBreakdown',Object.entries(TYPE_NAMES).map(([k,v])=>[k,v]),'kind'],['dimensionBreakdown',[['2D','2D vectors'],['3D','3D vectors']],'dimension']];
+ for(const [id,entries,field] of groups){const box=$(id);box.replaceChildren();const used=entries.filter(([key])=>rows.some(r=>r[field]===key));if(!used.length){box.textContent='No questions completed yet.';continue;}used.forEach(([key,label])=>box.appendChild(performanceRow(label,rows.filter(r=>r[field]===key))));}
+ $('resultsFootnote').textContent=`${skipped} skipped · ${session.hintsUsed} hints used · Accuracy includes skipped questions. Skips earn no points.`;
+ showView('resultsView');
+}
+function downloadCSV(){
+ if(!session)return;const keys=['number','level','dimension','kind','variant','a','b','graphPoints','answer','submitted','status','hints','points'];const escapeCsv=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+ const lines=[keys.join(','),...session.history.map(row=>keys.map(key=>escapeCsv(row[key])).join(','))];
+ const file=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(file),link=document.createElement('a');link.href=url;link.download='vector-quiz-results.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+$('levelCards').addEventListener('click',event=>{const button=event.target.closest('[data-level]');if(button)chooseLevel(button.dataset.level);});
+$('lengthChoices').addEventListener('click',event=>{const button=event.target.closest('[data-count]');if(button)chooseLength(button.dataset.count==='endless'?'endless':Number(button.dataset.count));});
+$('customDetails').addEventListener('change',refreshSummary);
+$('startBtn').addEventListener('click',startSession);
+$('expandBtn').addEventListener('click',()=>{const expanded=$('gameArea').classList.toggle('expanded');$('expandBtn').setAttribute('aria-expanded',String(expanded));$('expandBtn').textContent=expanded?'⊟ Collapse diagram':'⤢ Expand diagram';});
+$('answerGrid').addEventListener('keydown',event=>{if(event.key==='Enter')submitAnswer();});
+$('submitBtn').addEventListener('click',submitAnswer);
+$('skipBtn').addEventListener('click',()=>completeQuestion('skipped'));
+$('nextBtn').addEventListener('click',nextQuestion);
+$('hintBtn').addEventListener('click',revealHint);
+$('solutionToggle').addEventListener('click',()=>{const hide=!$('solutionCard').hidden;$('solutionCard').hidden=hide;$('solutionToggle').setAttribute('aria-expanded',String(!hide));$('solutionToggle').textContent=hide?'Show worked solution ▼':'Hide worked solution ▲';});
+$('finishBtn').addEventListener('click',()=>{if(currentQuestion&&!currentQuestion.finished&&!confirm(session.history.length?'Finish now? The current unanswered question will not count.':'Finish without answering any questions?'))return;showResults();});
+$('retryBtn').addEventListener('click',()=>{if(!session)return;const settings=session.settings;session={settings,history:[],points:0,streak:0,bestStreak:0,hintsUsed:0,typeDeck:[]};questionSerial=0;showView('quizView');nextQuestion();});
+$('settingsBtn').addEventListener('click',()=>showView('setupView'));
+$('csvBtn').addEventListener('click',downloadCSV);
+$('printBtn').addEventListener('click',()=>window.print());
+chooseLevel('medium');chooseLength(10);
+</script>
+</body>
+</html>
