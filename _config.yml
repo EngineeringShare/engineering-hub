@@ -1,6 +1,9 @@
-title: Engineering Hub
+title: Engineering Share
 author: James Absolom
-description: Collection of class materials and activities by James Absolom
+tagline: Engineering Learning Resources and Interactive Tools
+description: Free engineering learning resources, revision materials, interactive simulations and teaching activities for T-Level, BTEC, AAQ and HTQ students.
+url: https://engineeringshare.co.uk
+baseurl: ""
 remote_theme: pages-themes/primer@v0.6.0
 
 include:

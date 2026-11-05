@@ -1,11 +1,11 @@
 ---
-title: "Engineering Hub"
-date: 2025-07-23
+description: "Engineering Share provides free engineering learning resources, revision materials, interactive simulations and classroom activities for T-Level, BTEC, AAQ and HTQ students."
+seo:
+  type: WebSite
+  name: Engineering Share
 ---
 
-<head>
-  <link rel="shortcut icon" type="image/png" href="https://engineeringshare.github.io/engineering-hub/favicon.png">
-  <style>
+<style>
     .projects {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -42,12 +42,11 @@ date: 2025-07-23
       border: 1px solid #ccc;
     }
     #results-container { margin-top: 1rem; }
-  </style>
-</head>
+</style>
 
-## Welcome to the Engineering Hub!
+## Welcome to Engineering Share!
 
-This site is your one-stop destination for accessing class slides, assignments, resources, tutorials, and interactive activities.
+Engineering Share provides engineering learning resources, including class slides, assignments, revision materials, tutorials and interactive activities. Explore the unit hubs below for T-Level, BTEC, AAQ and HTQ engineering courses.
 
 ---
 
