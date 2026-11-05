@@ -128,24 +128,48 @@ h1 {
 
   <div class="card">
     <div>
-      <h3>Series and Parallel Resistors Game</h3>
-      <p class="topic">Practice calculating total resistance in series and parallel circuits with our interactive game.</p>
+      <h3>Series and Parallel Resistors Quiz</h3>
+      <p class="topic">Practice calculating total resistance in series and parallel circuits with our interactive quiz.</p>
     </div>
     <div class="downloads">
       <a class="button primary" href="https://engineeringshare.co.uk/interactive/Series and Parallel Resistors Quiz.html" target="_blank">
-         Series and Parallel Resistors Game
+         Series and Parallel Resistors Quiz
       </a>
     </div>
   </div>
 
   <div class="card">
     <div>
-      <h3>Series and Parallel Capacitors Game</h3>
-      <p class="topic">Practice calculating total capacitance in series and parallel circuits with our interactive game.</p>
+      <h3>Series and Parallel Capacitors Quiz</h3>
+      <p class="topic">Practice calculating total capacitance in series and parallel circuits with our interactive quiz.</p>
     </div>
     <div class="downloads">
       <a class="button primary" href="https://engineeringshare.co.uk/interactive/Series and Parallel Capacitors Quiz.html" target="_blank">
-         Series and Parallel Capacitors Game
+         Series and Parallel Capacitors Quiz
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div>
+      <h3>Vectors Quiz</h3>
+      <p class="topic">Practice calculating vector components and resultant vectors with our interactive quiz.</p>
+    </div>
+    <div class="downloads">
+      <a class="button primary" href="https://engineeringshare.co.uk/interactive/Vector Quiz.html" target="_blank">
+         Vectors Quiz
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div>
+      <h3>KCL Node Quiz</h3>
+      <p class="topic">Test your understanding of Kirchhoff's Current Law (KCL) with our interactive node analysis quiz.</p>
+    </div>
+    <div class="downloads">
+      <a class="button primary" href="https://engineeringshare.co.uk/interactive/KCL Node Quiz.html" target="_blank">
+         KCL Node Quiz
       </a>
     </div>
   </div>

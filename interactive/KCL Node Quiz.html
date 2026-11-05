@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KCL Node Challenge | Engineering Share</title>
+<style>
+:root{--blue:#3467d5;--deep:#233862;--ink:#243044;--muted:#617188;--line:#dfe6ef;--pale:#f4f7fc;--green:#138453;--red:#b52d3f;--purple:#8751bd;--radius:16px}
+*{box-sizing:border-box}body{margin:0;padding:20px;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:var(--ink);background:linear-gradient(135deg,#6476da,#7454a8);min-height:100vh}
+.page{max-width:1250px;margin:auto}.back{display:inline-block;background:#111827;color:#fff;text-decoration:none;padding:9px 14px;border-radius:9px;font-weight:600;font-size:14px;margin-bottom:12px}
+.shell{background:#fff;border-radius:20px;padding:30px;box-shadow:0 18px 42px #17255423}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(1.65rem,3vw,2.5rem);letter-spacing:-.03em;margin-bottom:7px}h2{font-size:1.45rem}h3{font-size:1.05rem;margin-bottom:14px}.muted{color:var(--muted)}.header{text-align:center;margin:2px 0 25px}.header p{margin:0}[hidden]{display:none!important}
+.section{background:var(--pale);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:20px}.section-title{font-size:1.07rem;font-weight:750;margin-bottom:13px;color:var(--deep)}.subtitle{font-size:.85rem;color:var(--muted)}
+.levels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.level-card{border:2px solid var(--line);border-radius:13px;background:#fff;padding:16px 12px;text-align:left;cursor:pointer;color:var(--ink);font:inherit;min-height:130px;transition:background .15s,border-color .15s,transform .15s}.level-card strong{display:block;font-size:1.03rem;margin-bottom:6px}.level-card span{font-size:.84rem;line-height:1.45;color:var(--muted);display:block}.level-card:hover{border-color:#96b0eb;transform:translateY(-2px)}.level-card.selected{border-color:var(--blue);background:#edf3ff;box-shadow:0 0 0 1px #3467d555}
+.choice-row{display:flex;flex-wrap:wrap;gap:10px}.choice{border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:10px 17px;cursor:pointer;font-weight:700;color:var(--ink);font:inherit}.choice.selected{background:#edf3ff;border-color:var(--blue);color:#164aab}
+.btn{border:0;border-radius:10px;padding:12px 19px;font-size:1rem;font-weight:700;cursor:pointer;transition:background .15s,transform .15s}.btn:hover:not(:disabled){transform:translateY(-1px)}.btn:disabled{opacity:.45;cursor:default}.btn-primary{background:var(--blue);color:#fff}.btn-primary:hover:not(:disabled){background:#204eb6}.btn-secondary{background:#e7edf6;color:var(--deep)}.btn-secondary:hover:not(:disabled){background:#d7e2f3}.btn-light{background:#fff;color:var(--deep);border:1px solid var(--line)}.btn-small{padding:9px 14px;font-size:.9rem}
+.start-row{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}.start-row .btn{min-width:185px}.details{margin-bottom:20px;border-radius:14px;border:1px solid var(--line);background:#fff}.details summary{padding:16px 19px;cursor:pointer;color:var(--deep);font-weight:750;list-style-position:inside}.details summary:hover{background:#f8faff}.details-body{padding:0 19px 18px}.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.check-grid{display:flex;flex-wrap:wrap;gap:10px 18px;margin:12px 0}.check-option{display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:500}.check-option input{width:17px;height:17px;accent-color:var(--blue)}select{padding:9px 12px;border:1px solid #b9c8dd;border-radius:8px;background:#fff;font:inherit;color:var(--ink);max-width:100%}.setting-foot{margin:10px 0 0;font-size:.85rem;color:var(--muted)}.select-stack{display:grid;gap:11px}.select-stack label{display:flex;flex-wrap:wrap;align-items:center;gap:8px}.warning{padding:11px 13px;border-radius:9px;background:#fff4e5;border:1px solid #efbd71;color:#865315;margin:12px 0;font-size:.9rem}
+.game-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:15px}.game-meta{font-size:.88rem;color:var(--muted)}.game-top h2{margin:3px 0 0}.progress-track{background:#e4eafa;height:9px;border-radius:9px;overflow:hidden;margin-bottom:18px}.progress-fill{background:var(--blue);width:0;height:100%;border-radius:9px;transition:width .22s}.score-board{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}.score-item{text-align:center;border:1px solid var(--line);background:#f8faff;border-radius:12px;padding:11px 8px}.score-item strong{font-size:1.5rem;color:var(--blue);display:block}.score-item span{color:var(--muted);font-size:.78rem}
+.game-area{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(340px,1fr);gap:20px}.game-area.expanded{grid-template-columns:1fr}.panel{min-width:0;background:#f8fafc;border:1px solid var(--line);padding:19px;border-radius:var(--radius)}.diagram-heading{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:13px}.diagram-heading h3{margin:0}.diagram-heading .btn{padding:6px 10px;font-size:.78rem}.diagram-box{background:#fff;border:1px solid #dbe2ed;border-radius:11px;overflow-x:auto}.circuit-svg{width:100%;min-width:510px;height:auto;display:block;aspect-ratio:900/640}.diagram-caption{color:var(--muted);font-size:.83rem;line-height:1.5;margin-top:9px}
+.circuit-info{background:#fff;border:1px solid var(--line);padding:12px 14px;border-radius:9px;margin-top:12px}.circuit-info-header{font-weight:750;font-size:.88rem}.branch-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(163px,1fr));gap:8px;margin-top:10px}.branch-item{background:#edf2f8;padding:8px 10px;border-radius:7px;font-weight:600;font-size:.85rem;line-height:1.4}.branch-item.resistor{border-left:4px solid var(--blue)}.branch-item.source{border-left:4px solid var(--purple)}.branch-item.focus{background:#fff2dd;border-color:#d78a18}
+.question-text{font-size:1.13rem;line-height:1.55;font-weight:670;margin-bottom:16px;color:#273c58}.answer-note{font-size:.87rem;color:var(--muted);line-height:1.5;margin:0 0 10px}.answer-row{display:flex;gap:9px;margin-bottom:12px}.answer-input{width:100%;min-width:0;flex:1;border:2px solid #d0dcec;border-radius:9px;padding:12px 13px;font:inherit;font-size:1.13rem}.answer-input:focus{outline:none;border-color:var(--blue)}.answer-unit{display:grid;place-items:center;min-width:64px;background:#e9eef7;color:#2e405a;border-radius:9px;font-weight:800;padding:10px}.question-actions{display:flex;flex-wrap:wrap;gap:9px}.question-actions .btn{font-size:.93rem;padding:11px 14px}
+.hints-box{margin-top:17px;padding-top:14px;border-top:1px solid var(--line)}.hint-header{display:flex;align-items:center;justify-content:space-between;gap:12px}.hint-header p{margin:0;font-size:.88rem;color:var(--muted)}.hint-line{background:#fffbea;border:1px solid #f2dc9f;border-radius:9px;padding:10px 13px;margin-top:9px;font-size:.9rem}.feedback{margin-top:16px;border-radius:10px;padding:13px 14px;font-weight:600;line-height:1.5}.feedback.correct{color:#145c3d;background:#def8e9;border:1px solid #86d7b0}.feedback.incorrect{color:#973343;background:#fce8e8;border:1px solid #e8a9b0}.feedback.skipped{background:#eef2f6;color:#46566a;border:1px solid #cad4e0}
+.solution-card{margin-top:12px;border:1px solid #c7d7ec;background:#fff;border-radius:11px;padding:15px}.solution-card h4{margin:0 0 11px;color:#223b67}.solution-step{border-left:3px solid #9db6e8;padding:3px 0 3px 12px;margin:11px 0}.solution-step strong{display:block;font-size:.92rem;margin-bottom:3px}.solution-step div{font-size:.9rem;line-height:1.5;color:#45536a;overflow-wrap:anywhere;white-space:pre-line}.solution-step:last-child{border-color:var(--green)}
+.results-head{text-align:center;margin-bottom:20px}.results-head .emoji{font-size:3rem}.results-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}.result-stat{background:#f6f8fc;border:1px solid var(--line);border-radius:12px;padding:15px 8px;text-align:center}.result-stat strong{display:block;font-size:1.85rem;color:#2b59bc}.result-stat span{font-size:.82rem;color:var(--muted)}.breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.breakdown{background:#f8fafc;border:1px solid var(--line);border-radius:13px;padding:17px}.breakdown h3{margin-bottom:14px}.performance-row{margin-bottom:13px}.performance-top{display:flex;justify-content:space-between;gap:10px;font-size:.87rem;margin-bottom:6px}.bar-track{height:8px;background:#e4e9f1;border-radius:8px;overflow:hidden}.bar-fill{height:100%;background:var(--blue)}.results-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:23px}.footnote{font-size:.83rem;color:var(--muted);margin-top:13px}
+:focus-visible{outline:3px solid #f8aa25;outline-offset:2px}@media(max-width:1050px){.game-area{grid-template-columns:1fr}.levels{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:650px){body{padding:10px}.shell{padding:17px;border-radius:15px}.section,.panel{padding:15px}.settings-grid,.breakdown-grid{grid-template-columns:1fr}.score-board{gap:7px}.score-item{padding:9px 4px}.score-item strong{font-size:1.27rem}.score-item span{font-size:.7rem}.results-grid{grid-template-columns:repeat(2,1fr)}.game-area{gap:12px}.btn{padding:11px 14px}.start-row{align-items:stretch}.start-row .btn{width:100%}.level-card{min-height:124px}.diagram-heading .btn{display:none}}@media(max-width:380px){.levels{grid-template-columns:1fr}.score-board{grid-template-columns:repeat(2,1fr)}}@media print{body{padding:0;background:#fff}.back,#setupView,#quizView,.results-actions{display:none!important}.shell{box-shadow:none;padding:8px}#resultsView{display:block!important}.result-stat,.breakdown{break-inside:avoid}}
+</style>
+</head>
+<body>
+<div class="page"><a class="back" href="https://engineeringshare.github.io/engineering-hub/interactive-hub/">← Back to Interactive Hub</a><main class="shell">
+<header class="header"><h1>⚡ KCL Node Challenge</h1><p class="muted">Apply Kirchhoff’s Current Law to find unknown node voltages and resistor currents.</p></header>
+<section id="setupView" aria-label="Choose your KCL practice">
+ <div class="section"><div class="section-title">1. Choose your level</div><div class="levels" id="levelCards" role="group" aria-label="Difficulty level">
+  <button type="button" class="level-card" data-level="beginner" aria-pressed="false"><strong>🌱 Beginner</strong><span>3 branches, simple resistor values and occasionally one current source.</span></button>
+  <button type="button" class="level-card" data-level="easy" aria-pressed="false"><strong>🔹 Easy</strong><span>3–4 branches, current sources entering or leaving the node.</span></button>
+  <button type="button" class="level-card" data-level="medium" aria-pressed="false"><strong>⚙️ Medium</strong><span>4–5 branches with multiple current sources and mixed voltages.</span></button>
+  <button type="button" class="level-card" data-level="hard" aria-pressed="false"><strong>⚡ Hard</strong><span>5–6 branches, opposing current sources and possible negative voltages.</span></button>
+ </div></div>
+ <div class="section"><div class="section-title">2. How many questions?</div><div class="choice-row" id="lengthChoices" role="group" aria-label="Quiz length">
+  <button type="button" class="choice" data-count="5" aria-pressed="false">5</button><button type="button" class="choice" data-count="10" aria-pressed="false">10</button><button type="button" class="choice" data-count="20" aria-pressed="false">20</button><button type="button" class="choice" data-count="endless" aria-pressed="false">Endless practice</button>
+ </div></div>
+ <details class="details" id="customDetails"><summary>🎛️ Customise your practice (optional)</summary><div class="details-body"><div class="settings-grid">
+  <div><div class="section-title">Question types</div><div class="check-grid">
+   <label class="check-option"><input type="checkbox" name="questionType" value="vx"> Find the node voltage Vₓ</label>
+   <label class="check-option"><input type="checkbox" name="questionType" value="current"> Find current through a resistor</label>
+  </div><p class="setting-foot">Resistor-current questions use a signed answer: positive means current flowing outwards from Vₓ.</p></div>
+  <div><div class="section-title">Circuit settings</div><div class="select-stack">
+   <label for="armCount"><strong>Number of branches:</strong> <select id="armCount"><option value="auto">By difficulty</option><option value="3">Exactly 3</option><option value="4">Exactly 4</option><option value="5">Exactly 5</option><option value="6">Exactly 6</option></select></label>
+   <label for="sourceMode"><strong>Current sources:</strong> <select id="sourceMode"><option value="auto">By difficulty</option><option value="one">At least one</option><option value="both">At least two, opposing</option></select></label>
+  </div><p class="setting-foot">Every generated circuit has at least two resistor branches. Two opposing sources require at least four branches.</p></div>
+ </div><div class="check-grid" style="margin-bottom:0"><label class="check-option"><input type="checkbox" id="allowHints" checked> Show optional hints</label></div></div></details>
+ <div class="warning" id="setupWarning" role="alert" hidden></div>
+ <div class="start-row"><div><div class="section-title" style="margin-bottom:4px">Ready when you are</div><div class="subtitle" id="setupSummary">Your session summary appears here.</div></div><button type="button" class="btn btn-primary" id="startBtn">Start practice →</button></div>
+</section>
+
+<section id="quizView" aria-label="KCL quiz" hidden>
+ <div class="game-top"><div><div class="game-meta" id="sessionLabel"></div><h2 id="questionNumber">Question 1</h2></div><button type="button" class="btn btn-light btn-small" id="finishBtn">Finish and view results</button></div>
+ <div class="progress-track" role="progressbar" id="progressTrack" aria-label="Questions completed" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-fill" id="progressFill"></div></div>
+ <div class="score-board"><div class="score-item"><strong id="scoreDisplay">0</strong><span>Points</span></div><div class="score-item"><strong id="correctDisplay">0</strong><span>Correct</span></div><div class="score-item"><strong id="streakDisplay">0</strong><span>Streak</span></div><div class="score-item"><strong id="completedDisplay">0</strong><span>Completed</span></div></div>
+ <div class="game-area" id="gameArea">
+  <div class="panel"><div class="diagram-heading"><h3>Node circuit diagram</h3><button type="button" class="btn btn-light btn-small" id="expandBtn" aria-expanded="false">⤢ Expand diagram</button></div>
+   <div class="diagram-box"><svg class="circuit-svg" id="circuitSvg" viewBox="0 0 900 640" role="img" aria-label="KCL node circuit"></svg></div>
+   <div class="diagram-caption" id="diagramCaption">All branches connect to the same blue node Vₓ.</div>
+   <div class="circuit-info"><div class="circuit-info-header" id="circuitInfoHeader">Circuit information</div><div class="branch-list" id="branchList"></div></div>
+  </div>
+  <div class="panel"><h3>Try this question</h3><div class="question-text" id="questionText"></div><p class="answer-note" id="answerNote"></p>
+   <div class="answer-row"><input type="number" step="any" inputmode="decimal" autocomplete="off" class="answer-input" id="answerInput" aria-label="Your signed numerical answer" placeholder="Enter your answer"><span class="answer-unit" id="answerUnit">V</span></div>
+   <div class="question-actions"><button type="button" class="btn btn-primary" id="submitBtn">Check answer</button><button type="button" class="btn btn-secondary" id="skipBtn">Skip</button><button type="button" class="btn btn-primary" id="nextBtn" hidden>Next question →</button></div>
+   <div class="hints-box" id="hintsBox"><div class="hint-header"><strong>Need a nudge?</strong><p id="hintCount">0 / 3 hints</p></div><div id="hintList"></div><button type="button" class="btn btn-light btn-small" id="hintBtn" style="margin-top:10px">💡 Show a hint (−1 point)</button></div>
+   <div class="feedback" id="feedback" role="status" aria-live="polite" hidden></div>
+   <div id="solutionTools" hidden><button type="button" class="btn btn-light btn-small" id="solutionToggle" style="margin-top:12px" aria-expanded="false">Show worked solution ▼</button><div id="solutionCard" class="solution-card" hidden><h4>Step-by-step solution</h4><div id="solutionSteps"></div></div></div>
+  </div>
+ </div>
+</section>
+
+<section id="resultsView" aria-label="Your results" hidden>
+ <div class="results-head"><div class="emoji">🎉</div><h2 id="resultsTitle">Practice complete!</h2><p class="muted" id="resultsIntro">Here is how you did.</p></div>
+ <div class="results-grid"><div class="result-stat"><strong id="rAccuracy">0%</strong><span>Accuracy</span></div><div class="result-stat"><strong id="rCorrect">0/0</strong><span>Correct / completed</span></div><div class="result-stat"><strong id="rPoints">0</strong><span>Points earned</span></div><div class="result-stat"><strong id="rStreak">0</strong><span>Best streak</span></div></div>
+ <div class="breakdown-grid"><div class="breakdown"><h3>By question type</h3><div id="typeBreakdown"></div></div><div class="breakdown"><h3>By number of branches</h3><div id="armBreakdown"></div></div></div>
+ <p class="footnote" id="resultsFootnote"></p><div class="results-actions"><button type="button" class="btn btn-primary" id="retryBtn">Try again</button><button type="button" class="btn btn-secondary" id="settingsBtn">Change settings</button><button type="button" class="btn btn-light" id="csvBtn">Download results (CSV)</button><button type="button" class="btn btn-light" id="printBtn">Print summary</button></div>
+</section>
+</main></div>
+<script>
+'use strict';
+// Resistances in kΩ and currents in mA: V/kΩ = mA. This avoids unit-conversion errors.
+const LEVELS={
+ beginner:{label:'Beginner',minArms:3,maxArms:3,sourceMin:0,sourceMax:1,points:1,rs:[5,10,20],vs:[0,5,10,12],is:[0.5,1],minV:-1,maxV:18},
+ easy:{label:'Easy',minArms:3,maxArms:4,sourceMin:0,sourceMax:1,points:2,rs:[4,5,8,10,20],vs:[0,3,5,8,10,12],is:[0.5,1,2],minV:-10,maxV:24},
+ medium:{label:'Medium',minArms:4,maxArms:5,sourceMin:1,sourceMax:2,points:3,rs:[4,5,6,8,10,12,20,30],vs:[-5,0,3,5,8,10,12,15],is:[0.5,1,1.5,2,3],minV:-20,maxV:29},
+ hard:{label:'Hard',minArms:5,maxArms:6,sourceMin:2,sourceMax:3,points:4,rs:[2,4,5,6,8,10,12,15,20,30,40],vs:[-12,-5,0,3,5,9,12,15,20],is:[0.5,1,2,3,4],minV:-30,maxV:36}
+};
+const TYPE_NAMES={vx:'Node voltage',current:'Resistor current'};
+const ANGLES={3:[-90,0,180],4:[-90,0,90,180],5:[-90,-18,54,126,198],6:[-90,-30,30,90,150,210]};
+const $=id=>document.getElementById(id),randint=(a,b)=>a+Math.floor(Math.random()*(b-a+1)),pick=list=>list[randint(0,list.length-1)];
+const fmt=(n,digits=2)=>String(Number(n.toFixed(digits)));
+const sign=n=>n>=0?`+ ${fmt(n,3)}`:`− ${fmt(Math.abs(n),3)}`;
+let selections={level:'medium',length:10},session=null,currentQuestion=null,questionSerial=0;
+function shuffle(items){const values=[...items];for(let i=values.length-1;i>0;i--){const j=randint(0,i);[values[i],values[j]]=[values[j],values[i]];}return values;}
+function selectedTypes(){return[...document.querySelectorAll('[name="questionType"]:checked')].map(el=>el.value);}
+function setTypes(types){document.querySelectorAll('[name="questionType"]').forEach(el=>{el.checked=types.includes(el.value);});}
+function chooseLevel(level){if(!LEVELS[level])return;selections.level=level;setTypes(['vx','current']);$('armCount').value='auto';$('sourceMode').value='auto';document.querySelectorAll('[data-level]').forEach(button=>{const active=button.dataset.level===level;button.classList.toggle('selected',active);button.setAttribute('aria-pressed',String(active));});refreshSummary();}
+function chooseLength(length){selections.length=length;document.querySelectorAll('[data-count]').forEach(button=>{const active=button.dataset.count===String(length);button.classList.toggle('selected',active);button.setAttribute('aria-pressed',String(active));});refreshSummary();}
+function readSettings(){return{level:selections.level,length:selections.length,types:selectedTypes(),armCount:$('armCount').value,sourceMode:$('sourceMode').value,hints:$('allowHints').checked};}
+function getArmRange(settings){const p=LEVELS[settings.level];return settings.armCount==='auto'?[p.minArms,p.maxArms]:[Number(settings.armCount),Number(settings.armCount)];}
+function validateSettings(settings){if(!settings.types.length)return'Choose at least one question type.';const [min,max]=getArmRange(settings);if(settings.sourceMode==='both'&&min<4)return'Opposing current sources need at least four branches so that two resistor branches remain.';return null;}
+function refreshSummary(){const settings=readSettings(),warning=validateSettings(settings),[low,high]=getArmRange(settings);$('setupWarning').hidden=!warning;$('setupWarning').textContent=warning||'';$('startBtn').disabled=!!warning;$('setupSummary').textContent=`${LEVELS[settings.level].label} · ${low===high?low:low+'–'+high} branches · ${settings.types.map(k=>TYPE_NAMES[k]).join(' & ')||'No question types'} · ${settings.length==='endless'?'Endless practice':settings.length+' questions'}`;}
+function nextType(){if(!session.deck.length)session.deck=shuffle(session.settings.types);return session.deck.pop();}
+function countSources(settings,arms){const p=LEVELS[settings.level];let min=p.sourceMin,max=p.sourceMax;if(settings.sourceMode==='one')min=Math.max(1,min);if(settings.sourceMode==='both')min=Math.max(2,min);min=Math.min(arms-2,min);max=Math.min(arms-2,Math.max(min,max));return randint(min,max);}
+
+// Conservation of current at Vx: sum((Vx - Vterminal)/Rk) + Iout - Iin = 0.
+// The same branch data drives the question, graphic, checking and solution.
+function analyseCircuit(branches){
+ const resistors=branches.filter(b=>b.kind==='resistor'),sources=branches.filter(b=>b.kind==='source');
+ const conductance=resistors.reduce((sum,b)=>sum+1/b.rk,0);
+ const weightedVoltage=resistors.reduce((sum,b)=>sum+b.voltage/b.rk,0);
+ const incoming=sources.filter(b=>b.into).reduce((sum,b)=>sum+b.ma,0);
+ const outgoing=sources.filter(b=>!b.into).reduce((sum,b)=>sum+b.ma,0);
+ const vx=(weightedVoltage+incoming-outgoing)/conductance;
+ return{vx,conductance,weightedVoltage,incoming,outgoing};
+}
+function buildCandidate(settings){
+ const p=LEVELS[settings.level],[minArms,maxArms]=getArmRange(settings),arms=randint(minArms,maxArms),sourceCount=countSources(settings,arms),resCount=arms-sourceCount;
+ const resistorBranches=Array.from({length:resCount},(_,i)=>({kind:'resistor',id:`R${i+1}`,rk:pick(p.rs),voltage:i===0?0:i===1?pick(p.vs.filter(v=>v!==0)):pick(p.vs)}));
+ const directions=Array.from({length:sourceCount},()=>Math.random()<0.5);
+ if(sourceCount>=2){directions[0]=true;directions[1]=false;}
+ const sourceBranches=Array.from({length:sourceCount},(_,i)=>({kind:'source',id:`I${i+1}`,ma:pick(p.is),into:directions[i]}));
+ const branches=shuffle([...resistorBranches,...sourceBranches]);
+ if(sourceCount>=2){const currents=branches.filter(b=>b.kind==='source');const dir=shuffle(directions);currents.forEach((b,i)=>{b.into=dir[i];});}
+ const analysis=analyseCircuit(branches);
+ return{arms,branches,...analysis};
+}
+function generateCircuit(settings){
+ const limits=LEVELS[settings.level];let last;
+ for(let attempt=0;attempt<1200;attempt++){
+  const c=buildCandidate(settings);last=c;
+  if(!Number.isFinite(c.vx)||c.vx<limits.minV||c.vx>limits.maxV)continue;
+  const currents=c.branches.filter(b=>b.kind==='resistor').map(b=>(c.vx-b.voltage)/b.rk);
+  if(currents.every(i=>Math.abs(i)<0.105))continue;
+  return c;
+ }
+ // Extremely unlikely, but keep the quiz usable even if random sampling is unlucky.
+ return last;
+}
+function makeQuestion(settings,type){
+ let circuit,target;
+ for(let i=0;i<100;i++){
+  circuit=generateCircuit(settings);
+  const suitable=circuit.branches.filter(b=>b.kind==='resistor'&&Math.abs((circuit.vx-b.voltage)/b.rk)>=0.105);
+  if(type==='vx'||suitable.length){target=type==='current'?pick(suitable):null;break;}
+ }
+ if(!circuit)throw Error('Unable to generate a valid KCL circuit.');
+ const answer=type==='vx'?circuit.vx:(circuit.vx-target.voltage)/target.rk;
+ const prompt=type==='vx'?'Apply Kirchhoff’s Current Law to calculate the unknown node voltage Vₓ.':`Calculate the signed current through ${target.id}, taking the direction from Vₓ towards its labelled terminal as positive.`;
+ return{type,circuit,target,answer,prompt,unit:type==='vx'?'V':'mA',tolerance:0.011,finished:false,hintsRevealed:0};
+}
+
+const SVG_NS='http://www.w3.org/2000/svg';
+function el(tag,attrs={},text){const node=document.createElementNS(SVG_NS,tag);for(const [k,v]of Object.entries(attrs))node.setAttribute(k,String(v));if(text!==undefined)node.textContent=text;return node;}
+function line(parent,x1,y1,x2,y2,attrs={}){parent.appendChild(el('line',{x1,y1,x2,y2,stroke:'#4257ad','stroke-width':3,'stroke-linecap':'round',...attrs}));}
+function label(svg,x,y,value,attrs={}){svg.appendChild(el('text',{x,y,'text-anchor':'middle','font-family':'Segoe UI, Arial, sans-serif','font-size':17,'font-weight':700,fill:'#1d3159',stroke:'#fff','stroke-width':4,'paint-order':'stroke',...attrs},value));}
+function createDefs(svg){
+ const defs=el('defs');for(const[id,colour]of[['arrowIn','#4f47ba'],['reference','#d68a16']]){const marker=el('marker',{id,markerWidth:9,markerHeight:9,refX:6.7,refY:3.5,orient:'auto',markerUnits:'userSpaceOnUse'});marker.appendChild(el('path',{d:'M0,0 L7,3.5 L0,7 Z',fill:colour}));defs.appendChild(marker);}svg.appendChild(defs);
+}
+function renderCircuit(q){
+ const svg=$('circuitSvg');svg.replaceChildren();svg.appendChild(el('rect',{width:900,height:640,fill:'#fff'}));createDefs(svg);
+ const x0=450,y0=316,angles=ANGLES[q.circuit.arms];
+ q.circuit.branches.forEach((b,i)=>{
+  const angle=angles[i],radians=angle*Math.PI/180,ux=Math.cos(radians),uy=Math.sin(radians),nx=-uy,ny=ux;
+  const group=el('g',{transform:`translate(${x0} ${y0}) rotate(${angle})`});svg.appendChild(group);
+  const isTarget=q.target?.id===b.id;
+  if(b.kind==='resistor'){
+   line(group,0,0,104,0);line(group,148,0,239,0);
+   group.appendChild(el('rect',{x:104,y:-12,width:44,height:24,rx:2,fill:isTarget?'#fff0ce':'#fff',stroke:isTarget?'#d68a16':'#4257ad','stroke-width':isTarget?4:3}));
+   if(isTarget){line(group,55,-20,95,-20,{stroke:'#d68a16','stroke-width':3,'marker-end':'url(#reference)'});}
+  }else{
+   line(group,0,0,97,0);line(group,145,0,239,0);
+   group.appendChild(el('circle',{cx:121,cy:0,r:24,fill:'#f0ecff',stroke:'#6754b7','stroke-width':3}));
+   const arrowStart=b.into?135:107,arrowEnd=b.into?108:134;
+   line(group,arrowStart,0,arrowEnd,0,{stroke:'#4f47ba','stroke-width':3.4,'marker-end':'url(#arrowIn)'});
+  }
+  if(b.kind==='resistor'&&b.voltage!==0){group.appendChild(el('circle',{cx:244,cy:0,r:5,fill:'#fff',stroke:'#4257ad','stroke-width':2.7}));}
+  else{
+   // Ground symbol, perpendicular to the branch, so its reference is always 0 V.
+   line(group,239,-18,239,18,{'stroke-width':2.6});line(group,246,-12,246,12,{'stroke-width':2.6});line(group,253,-6,253,6,{'stroke-width':2.6});
+  }
+  const labelOffset=b.kind==='source'?68:49;
+  const lx=x0+ux*125+nx*labelOffset,ly=y0+uy*125+ny*labelOffset;
+  label(svg,lx,ly-7,b.id,{fill:isTarget?'#a65f05':b.kind==='source'?'#6847ac':'#1d3159','font-size':19});
+  label(svg,lx,ly+16,b.kind==='resistor'?`${b.rk} kΩ`:`${fmt(b.ma)} mA`,{fill:'#394c69','font-size':17});
+  if(b.kind==='resistor'&&b.voltage!==0){
+   const tx=x0+ux*280,ty=y0+uy*280;
+   label(svg,tx,ty+6,`${fmt(b.voltage)} V`,{'font-size':18});
+  }
+ });
+ svg.appendChild(el('circle',{cx:x0,cy:y0,r:7,fill:'#2d58d3',stroke:'#fff','stroke-width':2}));
+ // Place the node legend outside the circuit to avoid covering diagonal branches.
+ svg.appendChild(el('rect',{x:26,y:25,width:197,height:34,rx:9,fill:'#eaf1ff',stroke:'#bcd0f7','stroke-width':1}));
+ svg.appendChild(el('circle',{cx:44,cy:42,r:6,fill:'#2d58d3'}));
+ label(svg,139,48,'Vₓ · unknown node',{'font-size':15,fill:'#204db7',stroke:'none'});
+ const list=$('branchList');list.replaceChildren();
+ q.circuit.branches.forEach(b=>{
+  const item=document.createElement('div');item.className='branch-item '+b.kind+(q.target?.id===b.id?' focus':'');
+  item.textContent=b.kind==='resistor'?`${b.id}: ${b.rk} kΩ → ${b.voltage===0?'GND (0 V)':fmt(b.voltage)+' V'}`:`${b.id}: ${fmt(b.ma)} mA ${b.into?'entering':'leaving'} Vₓ`;
+  list.appendChild(item);
+ });
+ const sources=q.circuit.branches.filter(b=>b.kind==='source').length;
+ $('circuitInfoHeader').textContent=`${q.circuit.arms} branches · ${q.circuit.arms-sources} resistors · ${sources} current source${sources===1?'':'s'}`;
+ $('diagramCaption').textContent=q.target?`Orange highlighting shows ${q.target.id}. Its orange reference arrow points out of Vₓ; negative current means the actual current flows towards Vₓ.`:'All branches meet at the blue Vₓ node. The arrows inside current sources show whether current enters or leaves this node. Ground symbols are 0 V.';
+ svg.setAttribute('aria-label',`KCL node circuit. ${q.circuit.branches.map(b=>b.kind==='resistor'?`${b.id}, ${b.rk} kiloohms to ${b.voltage} volts`:`${b.id}, ${b.ma} milliamps ${b.into?'entering':'leaving'} the node`).join('; ')}.`);
+}
+
+function makeHints(q){
+ if(q.type==='vx')return[
+  'Choose a consistent sign convention: currents leaving Vₓ are positive.',
+  'For each resistor, current leaving Vₓ is (Vₓ − terminal voltage) ÷ resistance. Using kΩ gives mA.',
+  'Apply Σ(Vₓ − Vᵢ)/Rᵢ + ΣI(leaving sources) − ΣI(entering sources) = 0, then collect the Vₓ terms.'
+ ];
+ return[
+  `Before finding ${q.target.id} current, calculate Vₓ using KCL at the central node.`,
+  `Once you know Vₓ, use I${q.target.id} = (Vₓ − ${fmt(q.target.voltage)} V) ÷ ${q.target.rk} kΩ. The result is in mA.`,
+  'Your answer needs a sign. Positive means from Vₓ outwards; negative means towards Vₓ.'
+ ];
+}
+function solutionFor(q){
+ const c=q.circuit,steps=[],resistors=c.branches.filter(b=>b.kind==='resistor'),sources=c.branches.filter(b=>b.kind==='source');
+ const add=(title,body)=>steps.push({title,body});
+ add('Choose a current convention','Let current leaving Vₓ be positive. A resistor connected to Vᵢ draws (Vₓ − Vᵢ)/Rᵢ mA when Rᵢ is in kΩ. A current source pointing into the node is negative.');
+ const resistorTerms=resistors.map(b=>`(Vₓ − (${fmt(b.voltage)}))/${b.rk}`);
+ const sourceTerms=sources.map(b=>`${b.into?'−':'+'} ${fmt(b.ma)}`);
+ add('Write KCL at Vₓ',`${resistorTerms.join(' + ')}${sourceTerms.length?' '+sourceTerms.join(' '):''} = 0   [mA]`);
+ add('Collect the Vₓ terms',`Σ(1/R) = ${fmt(c.conductance,5)} mA/V\nΣ(Vᵢ/Rᵢ) = ${fmt(c.weightedVoltage,5)} mA\nSources entering = ${fmt(c.incoming,3)} mA; leaving = ${fmt(c.outgoing,3)} mA.`);
+ add('Solve for node voltage',`Vₓ = [Σ(Vᵢ/Rᵢ) + Ienter − Ileave] / Σ(1/R)\n= [${fmt(c.weightedVoltage,5)} + ${fmt(c.incoming,3)} − ${fmt(c.outgoing,3)}] / ${fmt(c.conductance,5)}\n= ${fmt(c.vx,3)} V (approximately).`);
+ if(q.type==='current'){
+  const b=q.target,amps=(c.vx-b.voltage)/b.rk;
+  add(`Current through ${b.id}`,`I${b.id} = (Vₓ − Vterminal) / R${b.id.slice(1)}\n= (${fmt(c.vx,4)} − (${fmt(b.voltage)})) / ${b.rk}\n= ${fmt(amps)} mA (to 2 d.p.).`);
+  add('Interpret the sign',amps>0?`Positive: current flows from Vₓ towards the ${fmt(b.voltage)} V terminal.`:`Negative: current actually flows from the ${fmt(b.voltage)} V terminal towards Vₓ.`);
+ }else add('Final answer',`Vₓ = ${fmt(c.vx)} V to 2 decimal places.`);
+ return steps;
+}
+
+function showView(id){for(const name of['setupView','quizView','resultsView'])$(name).hidden=name!==id;window.scrollTo({top:0,behavior:'instant'});}
+function startSession(){const settings=readSettings(),error=validateSettings(settings);if(error){refreshSummary();return;}session={settings,history:[],points:0,streak:0,bestStreak:0,hintsUsed:0,deck:[]};questionSerial=0;showView('quizView');nextQuestion();}
+function updateBoard(){if(!session)return;const rows=session.history;$('scoreDisplay').textContent=String(session.points);$('correctDisplay').textContent=String(rows.filter(r=>r.status==='correct').length);$('streakDisplay').textContent=String(session.streak);$('completedDisplay').textContent=String(rows.length);const pct=session.settings.length==='endless'?0:rows.length/session.settings.length*100;$('progressFill').style.width=pct+'%';$('progressTrack').setAttribute('aria-valuenow',String(Math.round(pct)));}
+function nextQuestion(){
+ if(!session)return;if(session.settings.length!=='endless'&&session.history.length>=session.settings.length){showResults();return;}
+ const type=nextType();currentQuestion=makeQuestion(session.settings,type);questionSerial++;
+ $('sessionLabel').textContent=`${LEVELS[session.settings.level].label} · ${currentQuestion.circuit.arms} branches · ${TYPE_NAMES[type]}`;
+ $('questionNumber').textContent=`Question ${questionSerial}${session.settings.length==='endless'?'':` of ${session.settings.length}`}`;
+ $('questionText').textContent=currentQuestion.prompt;
+ $('answerNote').textContent=type==='vx'?'Give Vₓ to 2 decimal places. It may be positive or negative.':'Give the current in mA to 2 decimal places. A negative answer means current flows into Vₓ.';
+ $('answerUnit').textContent=currentQuestion.unit;$('answerInput').value='';$('answerInput').disabled=false;
+ renderCircuit(currentQuestion);
+ $('submitBtn').hidden=false;$('skipBtn').hidden=false;$('nextBtn').hidden=true;$('feedback').textContent='';$('feedback').hidden=true;
+ $('solutionTools').hidden=true;$('solutionCard').hidden=true;$('solutionToggle').textContent='Show worked solution ▼';$('solutionToggle').setAttribute('aria-expanded','false');
+ $('hintList').replaceChildren();$('hintCount').textContent='0 / 3 hints';$('hintsBox').hidden=!session.settings.hints;$('hintBtn').disabled=false;$('hintBtn').textContent='💡 Show a hint (−1 point)';updateBoard();
+}
+function revealHint(){const q=currentQuestion;if(!q||q.finished||q.hintsRevealed>=3)return;const hints=makeHints(q),i=q.hintsRevealed++;const d=document.createElement('div');d.className='hint-line';d.textContent=`Hint ${i+1}: ${hints[i]}`;$('hintList').appendChild(d);$('hintCount').textContent=`${q.hintsRevealed} / 3 hints`;if(q.hintsRevealed===3){$('hintBtn').disabled=true;$('hintBtn').textContent='All hints shown';}}
+function renderSolution(){const box=$('solutionSteps');box.replaceChildren();for(const step of solutionFor(currentQuestion)){const section=document.createElement('div');section.className='solution-step';const heading=document.createElement('strong'),body=document.createElement('div');heading.textContent=step.title;body.textContent=step.body;section.append(heading,body);box.appendChild(section);}}
+function completeQuestion(status,submitted=null){
+ if(!session||!currentQuestion||currentQuestion.finished)return;
+ const q=currentQuestion,c=q.circuit,hints=q.hintsRevealed,points=status==='correct'?Math.max(0,LEVELS[session.settings.level].points-hints):0;q.finished=true;
+ session.points+=points;session.hintsUsed+=hints;if(status==='correct'){session.streak++;session.bestStreak=Math.max(session.bestStreak,session.streak);}else session.streak=0;
+ session.history.push({number:questionSerial,level:session.settings.level,arms:c.arms,type:q.type,target:q.target?.id||'',branches:c.branches.map(b=>b.kind==='resistor'?`${b.id}=${b.rk}kΩ @ ${b.voltage}V`:`${b.id}=${b.ma}mA ${b.into?'entering':'leaving'}`).join('; '),vx:c.vx,answer:q.answer,unit:q.unit,submitted,status,hints,points});
+ const answer=`${fmt(q.answer)} ${q.unit}`;
+ const feedback=$('feedback');feedback.className='feedback '+(status==='correct'?'correct':status==='skipped'?'skipped':'incorrect');feedback.textContent=status==='correct'?`✓ Correct! ${answer}. ${points} ${points===1?'point':'points'} earned${hints?` (${hints} hint${hints===1?'':'s'} used)`:''}.`:status==='skipped'?`Skipped. The correct answer is ${answer}.`:`Not quite. The correct answer is ${answer}.`;
+ feedback.hidden=false;$('submitBtn').hidden=true;$('skipBtn').hidden=true;$('nextBtn').hidden=false;$('nextBtn').textContent=session.settings.length!=='endless'&&session.history.length>=session.settings.length?'View results →':'Next question →';
+ $('answerInput').disabled=true;$('hintBtn').disabled=true;$('solutionTools').hidden=false;renderSolution();updateBoard();
+}
+function submitAnswer(){if(!currentQuestion||currentQuestion.finished)return;const input=$('answerInput'),raw=input.value.trim(),n=Number(raw);if(raw===''||!Number.isFinite(n)){const feedback=$('feedback');feedback.className='feedback incorrect';feedback.textContent='Enter a valid number. Negative answers are allowed.';feedback.hidden=false;return;}completeQuestion(Math.abs(n-currentQuestion.answer)<=currentQuestion.tolerance?'correct':'incorrect',n);}
+function performanceRow(label,rows){const hits=rows.filter(r=>r.status==='correct').length,pct=rows.length?Math.round(100*hits/rows.length):0,outer=document.createElement('div');outer.className='performance-row';const top=document.createElement('div');top.className='performance-top';const name=document.createElement('span'),score=document.createElement('strong');name.textContent=label;score.textContent=`${hits}/${rows.length} · ${pct}%`;top.append(name,score);const track=document.createElement('div');track.className='bar-track';const fill=document.createElement('div');fill.className='bar-fill';fill.style.width=pct+'%';track.appendChild(fill);outer.append(top,track);return outer;}
+function showResults(){
+ if(!session)return;const rows=session.history,correct=rows.filter(r=>r.status==='correct').length,skipped=rows.filter(r=>r.status==='skipped').length,pct=rows.length?Math.round(100*correct/rows.length):0;
+ $('resultsTitle').textContent=session.settings.length==='endless'?'Your practice summary':'Practice complete!';$('resultsIntro').textContent=`${LEVELS[session.settings.level].label} level · ${rows.length} question${rows.length===1?'':'s'} completed`;
+ $('rAccuracy').textContent=pct+'%';$('rCorrect').textContent=`${correct}/${rows.length}`;$('rPoints').textContent=String(session.points);$('rStreak').textContent=String(session.bestStreak);
+ const groups=[['typeBreakdown',Object.entries(TYPE_NAMES),'type'],['armBreakdown',[3,4,5,6].map(k=>[k,`${k} branches`]),'arms']];
+ for(const[id,entries,key]of groups){const box=$(id);box.replaceChildren();const used=entries.filter(([k])=>rows.some(r=>r[key]===k));if(!used.length){box.textContent='No questions completed yet.';continue;}used.forEach(([k,label])=>box.appendChild(performanceRow(label,rows.filter(r=>r[key]===k))));}
+ $('resultsFootnote').textContent=`${skipped} skipped · ${session.hintsUsed} hints used · Accuracy includes skipped questions. Skips earn no points.`;showView('resultsView');
+}
+function downloadCSV(){
+ if(!session)return;const keys=['number','level','arms','type','target','branches','vx','answer','unit','submitted','status','hints','points'],csv=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+ const lines=[keys.join(','),...session.history.map(row=>keys.map(k=>csv(row[k])).join(','))],blob=new Blob(['\ufeff'+lines.join('\r\n')],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='kcl-quiz-results.csv';document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+$('levelCards').addEventListener('click',event=>{const button=event.target.closest('[data-level]');if(button)chooseLevel(button.dataset.level);});
+$('lengthChoices').addEventListener('click',event=>{const button=event.target.closest('[data-count]');if(button)chooseLength(button.dataset.count==='endless'?'endless':Number(button.dataset.count));});
+$('customDetails').addEventListener('change',refreshSummary);$('startBtn').addEventListener('click',startSession);
+$('expandBtn').addEventListener('click',()=>{const expanded=$('gameArea').classList.toggle('expanded');$('expandBtn').setAttribute('aria-expanded',String(expanded));$('expandBtn').textContent=expanded?'⊟ Collapse diagram':'⤢ Expand diagram';});
+$('answerInput').addEventListener('keydown',event=>{if(event.key==='Enter')submitAnswer();});$('submitBtn').addEventListener('click',submitAnswer);$('skipBtn').addEventListener('click',()=>completeQuestion('skipped'));$('nextBtn').addEventListener('click',nextQuestion);$('hintBtn').addEventListener('click',revealHint);
+$('solutionToggle').addEventListener('click',()=>{const hide=!$('solutionCard').hidden;$('solutionCard').hidden=hide;$('solutionToggle').setAttribute('aria-expanded',String(!hide));$('solutionToggle').textContent=hide?'Show worked solution ▼':'Hide worked solution ▲';});
+$('finishBtn').addEventListener('click',()=>{if(currentQuestion&&!currentQuestion.finished&&!confirm(session.history.length?'Finish now? The current unanswered question will not count.':'Finish without answering any questions?'))return;showResults();});
+$('retryBtn').addEventListener('click',()=>{if(!session)return;const settings=session.settings;session={settings,history:[],points:0,streak:0,bestStreak:0,hintsUsed:0,deck:[]};questionSerial=0;showView('quizView');nextQuestion();});
+$('settingsBtn').addEventListener('click',()=>showView('setupView'));$('csvBtn').addEventListener('click',downloadCSV);$('printBtn').addEventListener('click',()=>window.print());
+chooseLevel('medium');chooseLength(10);
+</script>
+</body>
+</html>
