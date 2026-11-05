@@ -49,8 +49,9 @@ This is the hub for HTQ Unit 4015: covering automated systems, industrial roboti
 
 {% assign target_unit = "HTQ Unit 4015" %}
 
+{% assign sorted_posts = site.posts | sort: "date" %}
 {% assign lo_list = "" %}
-{% for post in site.posts %}
+{% for post in sorted_posts %}
 {% if post.units %}
 {% for u in post.units %}
 {% if u.unit == target_unit %}
@@ -68,7 +69,7 @@ This is the hub for HTQ Unit 4015: covering automated systems, industrial roboti
 <h2 style="margin-top: 2rem; border-bottom: 2px solid #eee;">{{ lo_clean }}</h2>
 
 <div class="projects">
-{% for post in site.posts %}
+{% for post in sorted_posts %}
 {% assign is_match = false %}
 {% if post.units %}
 {% for u in post.units %}
