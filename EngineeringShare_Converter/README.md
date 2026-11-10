@@ -1,4 +1,4 @@
-# Engineering Share Presentation Converter — v1 prototype
+# Engineering Share Presentation Converter — v1.1
 
 A static browser-based tool to convert a PowerPoint `.pptx` and its matching exported `.pdf` into an HTML slide viewer.
 
@@ -15,6 +15,7 @@ A static browser-based tool to convert a PowerPoint `.pptx` and its matching exp
 
 - Continuous scroll by default
 - Optional presentation mode with keyboard and button navigation
+- Green file boxes confirm that valid PPTX/PDF files have been selected
 - Original animated GIFs placed over PDF slide backgrounds
 - Reading overlays: none, yellow, blue, green, pink, peach; adjustable strength
 - Fullscreen and original PDF download
@@ -42,3 +43,29 @@ A static browser-based tool to convert a PowerPoint `.pptx` and its matching exp
 ## Tests performed
 
 Static file inspection and matching-PDF slide-count checks were completed for five supplied PowerPoints. Results are in `test-results.json`. These are **not** a full interactive browser conversion test; verify GIF placement and export on your college browser before production rollout.
+
+## Embedding on an Engineering Share Jekyll lesson page
+
+The generated viewer already contains its own fullscreen button. **Do not overlay another fullscreen button on the lesson iframe**: it can cover the PDF download and viewer controls. Replace the old iframe container and separate `openFullscreen()` script with this one snippet (edit the URL to match your exported folder):
+
+```html
+<div class="es-presentation-frame">
+  <iframe
+    src="https://engineeringshare.github.io/engineering-resources/presentations/AC-Generators/index.html"
+    title="AC Generators presentation"
+    loading="lazy"
+    allow="fullscreen"
+    allowfullscreen>
+  </iframe>
+</div>
+<style>
+.es-presentation-frame {
+  width: 100%; height: clamp(500px, 76vh, 900px);
+  border: 1px solid #c7d3df; border-radius: 10px; overflow: hidden;
+}
+.es-presentation-frame iframe { display:block; width:100%; height:100%; border:0; }
+@media (max-width: 600px) { .es-presentation-frame { height: 72vh; min-height: 420px; } }
+</style>
+```
+
+Fullscreen is available inside the presentation toolbar, so the external overlaid button and `openFullscreen` JavaScript function are no longer needed.
