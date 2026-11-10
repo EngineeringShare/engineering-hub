@@ -1,0 +1,74 @@
+[
+  {
+    "file": "Control Signals.pptx",
+    "slides": 23,
+    "unique_gifs": 0,
+    "placements": 0,
+    "placement_slides": [],
+    "missing_media": 0,
+    "pdf_pages": 23,
+    "slide_count_match": true,
+    "pdf_size_mb": 0.59
+  },
+  {
+    "file": "Arithmetic and Geometric Progression - Copy.pptx",
+    "slides": 15,
+    "unique_gifs": 0,
+    "placements": 0,
+    "placement_slides": [],
+    "missing_media": 0,
+    "pdf_pages": 15,
+    "slide_count_match": true,
+    "pdf_size_mb": 0.22
+  },
+  {
+    "file": "ES AC Generators.pptx",
+    "slides": 14,
+    "unique_gifs": 5,
+    "placements": 6,
+    "placement_slides": [
+      3,
+      8,
+      9,
+      9,
+      12,
+      13
+    ],
+    "missing_media": 0,
+    "pdf_pages": 14,
+    "slide_count_match": true,
+    "pdf_size_mb": 0.89
+  },
+  {
+    "file": "Encoders.pptx",
+    "slides": 24,
+    "unique_gifs": 2,
+    "placements": 3,
+    "placement_slides": [
+      8,
+      9,
+      11
+    ],
+    "missing_media": 0,
+    "pdf_pages": 24,
+    "slide_count_match": true,
+    "pdf_size_mb": 1.16
+  },
+  {
+    "file": "Advanced Logic Gates.pptx",
+    "slides": 6,
+    "unique_gifs": 5,
+    "placements": 5,
+    "placement_slides": [
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "missing_media": 0,
+    "pdf_pages": 6,
+    "slide_count_match": true,
+    "pdf_size_mb": 0.31
+  }
+]

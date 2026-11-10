@@ -54,10 +54,13 @@ permalink: /changelog/
 
 # ChangeLog
 
-Welcome to the Engineering Hub ChangeLog!
+Welcome to the Engineering Share ChangeLog!
 
-This ChangeLog will detail the changes I make to the Engineering Hub site over time. It will include new features, updates, and improvements to enhance your experience. Note it will not include content additions like new presentations or audio files, just changes to the site itself.
+This ChangeLog will detail the changes I make to the Engineering Share site over time. It will include new features, updates, and improvements to enhance your experience. Note it will not include content additions like new presentations or audio files, just changes to the site itself.
 
+- 10/11/2026: Began working on the engineering share integrated presentation system allowing for gifs, videos, and other media to be embedded into presentations. This will allow for more interactive and engaging presentations for users, based on a HTML5 presentation framework. This is a long-term project and will take some time to complete.
+- 09/11/2026: Began rebranding presentations to "Engineering Share" to better reflect the purpose of the site and to avoid confusion with other sites. This will be a gradual process and will take some time to complete.
+- 05/11/2026: Refactored the main page and site name to "Engineering Share" to fit with the URL. This has also been reflected in the site title and meta description for better SEO.
 - 18/05/2026: Began selfhosting the search script (Simple Jekyll Search) instead of loading it from a CDN to improve site performance and reliability.
 - 18/05/2026: Removed the usage of polyfill.io for loading ES6 features as it was causing issues with some browsers and is no longer necessary for modern browsers.
 - 13/02/2026: Changed the method used for categorising pages by learning outcome from using the "units" field in the front matter to using tags. This allows for more flexible categorisation and easier searching/filtering of content by learning outcome.
