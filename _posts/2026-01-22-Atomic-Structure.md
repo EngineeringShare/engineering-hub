@@ -21,36 +21,39 @@ Atomic structure refers to the arrangement and composition of atoms, which are t
 
 ## Presentation:
 
-<div id="pdf-container" style="position: relative; width: 100%; height: 0; padding-top: 75%;">
-    <iframe 
-        id="pdf-frame"
-        src="https://engineeringshare.github.io/engineering-resources/presentations/Atomic Structure.pdf"
-        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;" 
-        allowfullscreen
-        webkitallowfullscreen
-        mozallowfullscreen>
-    </iframe>
-
-    <!-- Fullscreen button -->
-    <button 
-        onclick="openFullscreen()" 
-        style="position:absolute; top:10px; right:10px; z-index:10; padding:6px 12px; border:none; background:#243040; color:white; border-radius:6px; cursor:pointer;">
-        ⛶ Fullscreen
-    </button>
+<div class="es-presentation-frame">
+  <iframe
+    src="https://engineeringshare.github.io/engineering-resources/presentations/Atomic-Structure/index.html"
+    title="Atomic Structure presentation"
+    loading="lazy"
+    allow="fullscreen"
+    allowfullscreen>
+  </iframe>
 </div>
 
-<script>
-    function openFullscreen() {
-        const elem = document.getElementById("pdf-frame");
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) { // Safari
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { // IE11
-            elem.msRequestFullscreen();
-        }
-    }
-</script>
+<style>
+.es-presentation-frame {
+  width: 100%;
+  height: clamp(500px, 76vh, 900px);
+  border: 1px solid #c7d3df;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.es-presentation-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+@media (max-width: 600px) {
+  .es-presentation-frame {
+    height: 72vh;
+    min-height: 420px;
+  }
+}
+</style>
 
 ## Interactive Tools:
 

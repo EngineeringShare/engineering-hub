@@ -27,17 +27,19 @@ Select a tab to switch between the presentation, worked example and formulae ref
 
   <section class="da-panel" id="da-panel-presentation" role="tabpanel" aria-labelledby="da-tab-presentation" tabindex="0">
     <p>Follow along with the lesson slides.</p>
+    <!-- Replace the HTML URL if you export the presentation under a different folder name. -->
     <div class="da-pdf-shell">
-      <iframe id="da-pdf-presentation" title="Dimensional Analysis presentation PDF" src="https://engineeringshare.github.io/engineering-resources/presentations/Dimensional%20Analysis.pdf" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
-      <button type="button" class="da-fullscreen" data-frame="da-pdf-presentation" aria-label="View presentation in fullscreen">⛶ Fullscreen</button>
+      <iframe id="da-html-presentation" title="Dimensional Analysis interactive presentation" src="https://engineeringshare.github.io/engineering-resources/presentations/Dimensional-Analysis/index.html" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
     </div>
-    <p class="da-pdf-link"><a href="https://engineeringshare.github.io/engineering-resources/presentations/Dimensional%20Analysis.pdf" target="_blank" rel="noopener noreferrer">Open presentation PDF in a new tab ↗</a></p>
+    <p class="da-pdf-link"><a href="https://engineeringshare.github.io/engineering-resources/presentations/Dimensional%20Analysis.pdf" target="_blank" rel="noopener noreferrer">Open original presentation PDF in a new tab ↗</a></p>
   </section>
 
   <section class="da-panel" id="da-panel-example" role="tabpanel" aria-labelledby="da-tab-example" tabindex="0" hidden>
     <p>A worked example applying dimensional analysis to a SUVAT equation. A more complex example will be added in the future.</p>
     <div class="da-pdf-shell">
       <iframe id="da-pdf-example" title="Worked dimensional analysis example PDF" src="https://engineeringshare.github.io/engineering-resources/worked_examples/Example%20Solving%20Dimensional%20Analysis.pdf" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
+    </div>
+    <div class="da-resource-actions">
       <button type="button" class="da-fullscreen" data-frame="da-pdf-example" aria-label="View worked example in fullscreen">⛶ Fullscreen</button>
     </div>
     <p class="da-pdf-link"><a href="https://engineeringshare.github.io/engineering-resources/worked_examples/Example%20Solving%20Dimensional%20Analysis.pdf" target="_blank" rel="noopener noreferrer">Open worked example PDF in a new tab ↗</a></p>
@@ -47,6 +49,8 @@ Select a tab to switch between the presentation, worked example and formulae ref
     <p>A quick reference for the dimensional formulae of common physical quantities.</p>
     <div class="da-pdf-shell">
       <iframe id="da-pdf-formulae" title="Dimensional formulae reference sheet PDF" src="https://engineeringshare.github.io/engineering-resources/presentations/Dimensional%20Formulae%20Reference.pdf" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
+    </div>
+    <div class="da-resource-actions">
       <button type="button" class="da-fullscreen" data-frame="da-pdf-formulae" aria-label="View formulae reference sheet in fullscreen">⛶ Fullscreen</button>
     </div>
     <p class="da-pdf-link"><a href="https://engineeringshare.github.io/engineering-resources/presentations/Dimensional%20Formulae%20Reference.pdf" target="_blank" rel="noopener noreferrer">Open formulae reference PDF in a new tab ↗</a></p>
@@ -118,7 +122,7 @@ Select a tab to switch between the presentation, worked example and formulae ref
 
   .da-resource-tabs .da-pdf-shell {
     position: relative;
-    height: clamp(420px, 70vh, 780px);
+    height: clamp(480px, 76vh, 920px);
     border: 1px solid #d9e1ea;
     border-radius: 8px;
     overflow: hidden;
@@ -132,11 +136,13 @@ Select a tab to switch between the presentation, worked example and formulae ref
     border: 0;
   }
 
+  .da-resource-tabs .da-resource-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 0.65rem;
+  }
+
   .da-resource-tabs .da-fullscreen {
-    position: absolute;
-    top: 0.65rem;
-    right: 0.65rem;
-    z-index: 1;
     padding: 0.45rem 0.7rem;
     border: 0;
     border-radius: 6px;
@@ -176,7 +182,7 @@ Select a tab to switch between the presentation, worked example and formulae ref
     }
 
     .da-resource-tabs .da-pdf-shell {
-      height: 65vh;
+      height: 70vh;
       min-height: 390px;
     }
   }

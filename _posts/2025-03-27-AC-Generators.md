@@ -14,9 +14,6 @@ units:
 
 ## Presentation:
 
-
-## Presentation:
-
 <div class="es-presentation-frame">
   <iframe
     src="https://engineeringshare.github.io/engineering-resources/presentations/AC-Generators/index.html"
