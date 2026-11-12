@@ -16,7 +16,7 @@ units:
 
 <div class="es-presentation-frame">
   <iframe
-    src="https://engineeringshare.github.io/engineering-resources/presentations/DC-Motors-Speed-Control/index.html"
+    src="https://engineeringshare.github.io/engineering-resources/presentations/DC-Motor-Speed-Control/index.html"
     title="DC Motors Speed Control presentation"
     loading="lazy"
     allow="fullscreen"
