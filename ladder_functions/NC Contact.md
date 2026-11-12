@@ -13,12 +13,10 @@ permalink: /PLC-Ladder-Logic/NC-Contact/
 <h2>Normally Closed Contact (NC)</h2>
 <p>
   A Normally Closed (NC) contact is a key part of PLC Ladder Logic programming. It represents a switch or relay contact
-  that is closed (conducting) in its default state. When the associated input condition becomes true (for example, when a
-  button is pressed or a sensor is activated), the contact opens, breaking the circuit and stopping the signal from
+  that is closed (conducting) in its default state. When the associated input condition becomes true (for example, when a button is pressed or a sensor is activated), the contact opens, breaking the circuit and stopping the signal from
   flowing. NC contacts are often used for emergency stop circuits, guard interlocks, and safety-related inputs where a
   loss of power or broken wire should turn the system off.
 </p>
-
 <p>
   In simple terms, a Normally Closed contact is “on” by default and turns “off” when activated (when the input condition
   is true). You can use NC contacts to read inputs such as normally closed push buttons or limit switches, which are held closed until an action causes them to open.
@@ -39,7 +37,7 @@ The table below shows how a Normally Closed contact behaves:
 <table>
   <tr>
     <th>Input Condition</th>
-    <th>Contact State</th>
+    <th>NC Contact</th>
     <th>Output State</th>
   </tr>
   <tr>
@@ -55,9 +53,8 @@ The table below shows how a Normally Closed contact behaves:
 </table>
 
 <p>
-  Normally Closed contacts are useful in fail-safe designs, because if the input device or wiring fails, the contact will
-  open in the ladder logic — de-energising the output and putting the system into a safe state. This is why NC devices are
-  commonly used for emergency stops and guard circuits.
+  NC contacts are useful when an output should operate only while a particular condition is NOT present.
+  For example, an NC instruction could monitor a Tank_Full signal. While the tank is not full (FALSE), the instruction remains closed, allowing a filling pump to operate. When the tank becomes full (TRUE), the instruction opens and prevents the pump from operating.
 </p>
 
 <!-- === NC Contact — single rung with slash symbol === -->
