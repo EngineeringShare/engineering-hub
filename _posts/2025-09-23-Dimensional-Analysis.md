@@ -31,7 +31,6 @@ Select a tab to switch between the presentation, worked example and formulae ref
     <div class="da-pdf-shell">
       <iframe id="da-html-presentation" title="Dimensional Analysis interactive presentation" src="https://engineeringshare.github.io/engineering-resources/presentations/Dimensional-Analysis/index.html" loading="lazy" allow="fullscreen" allowfullscreen></iframe>
     </div>
-    <p class="da-pdf-link"><a href="https://engineeringshare.github.io/engineering-resources/presentations/Dimensional%20Analysis.pdf" target="_blank" rel="noopener noreferrer">Open original presentation PDF in a new tab ↗</a></p>
   </section>
 
   <section class="da-panel" id="da-panel-example" role="tabpanel" aria-labelledby="da-tab-example" tabindex="0" hidden>
