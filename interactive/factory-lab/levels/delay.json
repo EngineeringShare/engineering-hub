@@ -1,0 +1,111 @@
+{
+  "title": "Delayed conveyor",
+  "level": "Timing · TON",
+  "kind": "conveyor",
+  "brief": "Program a conveyor that starts only after a continuous run request has lasted for 5 seconds.",
+  "requirements": [
+    "Initially, the conveyor must be OFF. When Run Request switches ON, begin measuring the time it has been ON.",
+    "Keep Conveyor Motor OFF for the first 5 seconds. Once the request has been ON continuously for 5 seconds, turn the motor ON.",
+    "Keep the motor running while Run Request remains ON.",
+    "If Run Request switches OFF at any point, turn the motor OFF immediately and reset the elapsed time to zero.",
+    "If the request returns, a new full 5-second delay is required. Several short requests must not add together."
+  ],
+  "objective": "Understand on-delay timing and reset behaviour.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Run_Request",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Conveyor_Motor",
+      "d": false
+    }
+  ],
+  "hints": [
+    "A TON accumulates time while IN is TRUE and resets on FALSE.",
+    "Create a TON instance (e.g. Delay_DB) with PT T#5s, then use Delay_DB.Q as an NO contact in a separate output network."
+  ],
+  "tests": [
+    {
+      "name": "Five-second delay",
+      "steps": [
+        {
+          "label": "Request on",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 4900,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Reach the delay",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Request off",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Short pulse resets elapsed time",
+      "steps": [
+        {
+          "label": "Short request",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 3000,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Release",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Request again",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 3000,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Complete delay",
+          "in": {},
+          "ms": 2100,
+          "expect": {
+            "%Q0.0": 1
+          }
+        }
+      ]
+    }
+  ],
+  "id": "delay"
+}

@@ -1,0 +1,856 @@
+{
+  "title": "Automated production line",
+  "level": "Sequences · Capstone",
+  "kind": "production",
+  "brief": "Automate a five-part manufacturing batch. Use the sequence integer and a second integer for the completed part count.",
+  "requirements": [
+    "Step 0: all outputs OFF; Start begins a new batch only when Part Count is 0.",
+    "Step 10: Feed Conveyor ON until Part At Station is ON. Step 20: Clamp ON until Clamp Closed is ON.",
+    "Step 30: keep Clamp ON and Tool ON for 3 seconds. Step 40: keep Clamp ON, Tool OFF; wait for Tool Home.",
+    "Step 50: release Clamp and wait for Clamp Open. Step 60: Exit Conveyor ON until Exit Sensor is ON.",
+    "Step 70: keep Exit Conveyor ON until Exit Sensor is OFF; then increment Part Count exactly once. Return to 10 if count is below 5, otherwise enter step 80.",
+    "Step 80: all actuators OFF, Batch Complete ON. Ignore Start until Reset PB returns the count and step to 0. Reset has no effect during production."
+  ],
+  "objective": "Combine integer sequencing, timed transitions and count arithmetic.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Start_PB",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Part_At_Station",
+      "d": false
+    },
+    {
+      "a": "%I0.2",
+      "n": "Clamp_Closed",
+      "d": false
+    },
+    {
+      "a": "%I0.3",
+      "n": "Tool_Home",
+      "d": false
+    },
+    {
+      "a": "%I0.4",
+      "n": "Clamp_Open",
+      "d": true
+    },
+    {
+      "a": "%I0.5",
+      "n": "Exit_Sensor",
+      "d": false
+    },
+    {
+      "a": "%I0.6",
+      "n": "Reset_PB",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Feed_Conveyor",
+      "d": false
+    },
+    {
+      "a": "%Q0.1",
+      "n": "Clamp",
+      "d": false
+    },
+    {
+      "a": "%Q0.2",
+      "n": "Tool",
+      "d": false
+    },
+    {
+      "a": "%Q0.3",
+      "n": "Exit_Conveyor",
+      "d": false
+    },
+    {
+      "a": "%Q0.4",
+      "n": "Batch_Complete",
+      "d": false
+    }
+  ],
+  "mem": [
+    {
+      "a": "%MW10",
+      "n": "Sequence_Step",
+      "d": 0,
+      "kind": "INT"
+    },
+    {
+      "a": "%MW12",
+      "n": "Step_Snapshot",
+      "d": 0,
+      "kind": "INT"
+    },
+    {
+      "a": "%MW14",
+      "n": "Part_Count",
+      "d": 0,
+      "kind": "INT"
+    }
+  ],
+  "tests": [
+    {
+      "name": "Five-part batch and reset",
+      "steps": [
+        {
+          "label": "Initial",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%MW10": 0,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Start",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Feed part 1",
+          "in": {
+            "%I0.0": 0,
+            "%I0.1": 1,
+            "%I0.4": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Clamp closed",
+          "in": {
+            "%I0.2": 1,
+            "%I0.3": 0,
+            "%I0.1": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Machining",
+          "in": {},
+          "ms": 2500,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Tool retract",
+          "in": {},
+          "ms": 700,
+          "expect": {
+            "%MW10": 40,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Tool home",
+          "in": {
+            "%I0.3": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 50,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Clamp open",
+          "in": {
+            "%I0.2": 0,
+            "%I0.4": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 60,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Exit detected",
+          "in": {
+            "%I0.5": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 70,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Exit clear",
+          "in": {
+            "%I0.5": 0
+          },
+          "ms": 200,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false,
+            "%MW14": 1
+          }
+        },
+        {
+          "label": "Feed part 2",
+          "in": {
+            "%I0.0": 0,
+            "%I0.1": 1,
+            "%I0.4": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Clamp closed",
+          "in": {
+            "%I0.2": 1,
+            "%I0.3": 0,
+            "%I0.1": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Machining",
+          "in": {},
+          "ms": 2500,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Tool retract",
+          "in": {},
+          "ms": 700,
+          "expect": {
+            "%MW10": 40,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Tool home",
+          "in": {
+            "%I0.3": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 50,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Clamp open",
+          "in": {
+            "%I0.2": 0,
+            "%I0.4": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 60,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Exit detected",
+          "in": {
+            "%I0.5": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 70,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Exit clear",
+          "in": {
+            "%I0.5": 0
+          },
+          "ms": 200,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false,
+            "%MW14": 2
+          }
+        },
+        {
+          "label": "Feed part 3",
+          "in": {
+            "%I0.0": 0,
+            "%I0.1": 1,
+            "%I0.4": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Clamp closed",
+          "in": {
+            "%I0.2": 1,
+            "%I0.3": 0,
+            "%I0.1": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Machining",
+          "in": {},
+          "ms": 2500,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Tool retract",
+          "in": {},
+          "ms": 700,
+          "expect": {
+            "%MW10": 40,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Tool home",
+          "in": {
+            "%I0.3": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 50,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Clamp open",
+          "in": {
+            "%I0.2": 0,
+            "%I0.4": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 60,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Exit detected",
+          "in": {
+            "%I0.5": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 70,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Exit clear",
+          "in": {
+            "%I0.5": 0
+          },
+          "ms": 200,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false,
+            "%MW14": 3
+          }
+        },
+        {
+          "label": "Feed part 4",
+          "in": {
+            "%I0.0": 0,
+            "%I0.1": 1,
+            "%I0.4": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Clamp closed",
+          "in": {
+            "%I0.2": 1,
+            "%I0.3": 0,
+            "%I0.1": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Machining",
+          "in": {},
+          "ms": 2500,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Tool retract",
+          "in": {},
+          "ms": 700,
+          "expect": {
+            "%MW10": 40,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Tool home",
+          "in": {
+            "%I0.3": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 50,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Clamp open",
+          "in": {
+            "%I0.2": 0,
+            "%I0.4": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 60,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Exit detected",
+          "in": {
+            "%I0.5": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 70,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Exit clear",
+          "in": {
+            "%I0.5": 0
+          },
+          "ms": 200,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false,
+            "%MW14": 4
+          }
+        },
+        {
+          "label": "Feed part 5",
+          "in": {
+            "%I0.0": 0,
+            "%I0.1": 1,
+            "%I0.4": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Clamp closed",
+          "in": {
+            "%I0.2": 1,
+            "%I0.3": 0,
+            "%I0.1": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Machining",
+          "in": {},
+          "ms": 2500,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Tool retract",
+          "in": {},
+          "ms": 700,
+          "expect": {
+            "%MW10": 40,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Tool home",
+          "in": {
+            "%I0.3": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 50,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Clamp open",
+          "in": {
+            "%I0.2": 0,
+            "%I0.4": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 60,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Exit detected",
+          "in": {
+            "%I0.5": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 70,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Exit clear",
+          "in": {
+            "%I0.5": 0
+          },
+          "ms": 200,
+          "expect": {
+            "%MW10": 80,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": true,
+            "%MW14": 5
+          }
+        },
+        {
+          "label": "Remain complete",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 500,
+          "expect": {
+            "%MW10": 80,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": true
+          }
+        },
+        {
+          "label": "Reset",
+          "in": {
+            "%I0.0": 0,
+            "%I0.6": 1
+          },
+          "ms": 200,
+          "expect": {
+            "%MW10": 0,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false,
+            "%MW14": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wait for station sensor",
+      "steps": [
+        {
+          "label": "Start",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "No part yet",
+          "in": {
+            "%I0.0": 0,
+            "%I0.6": 1
+          },
+          "ms": 3000,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": false
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "Use a step snapshot at the beginning of OB1 if needed to prevent cascading transitions.",
+    "Increment Part Count before leaving step 70; decide the next step from the updated count. Reset only in step 80."
+  ],
+  "sequence": [
+    {
+      "value": 0,
+      "label": "Idle"
+    },
+    {
+      "value": 10,
+      "label": "Feed"
+    },
+    {
+      "value": 20,
+      "label": "Clamp"
+    },
+    {
+      "value": 30,
+      "label": "Machine"
+    },
+    {
+      "value": 40,
+      "label": "Return tool"
+    },
+    {
+      "value": 50,
+      "label": "Release"
+    },
+    {
+      "value": 60,
+      "label": "Discharge"
+    },
+    {
+      "value": 70,
+      "label": "Clear exit"
+    },
+    {
+      "value": 80,
+      "label": "Batch complete"
+    }
+  ],
+  "plant": "production",
+  "id": "production"
+}

@@ -1,0 +1,256 @@
+{
+  "title": "Automatic filling station",
+  "level": "Sequences · Multi-actuator",
+  "kind": "filling",
+  "brief": "Fill bottles on a conveyor using a retractable nozzle.",
+  "requirements": [
+    "Step 0: idle, conveyor and valve OFF, nozzle raised. Start PB begins production.",
+    "Step 10: conveyor ON until Bottle Present is ON. Step 20: stop conveyor and lower nozzle; wait for Nozzle Down.",
+    "Step 30: keep nozzle down and open Fill Valve for 5 seconds. Step 40: close valve and raise nozzle; wait for Nozzle Up.",
+    "Step 50: run conveyor until Bottle Present switches OFF, then return to 10 for the next bottle. Nozzle Down Command is ON only in steps 20 and 30.",
+    "No Stop input is required in this training exercise; use CPU Stop to reset."
+  ],
+  "objective": "Coordinate motion, sensors and a filling timer.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Start_PB",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Bottle_Present",
+      "d": false
+    },
+    {
+      "a": "%I0.2",
+      "n": "Nozzle_Down",
+      "d": false
+    },
+    {
+      "a": "%I0.3",
+      "n": "Nozzle_Up",
+      "d": true
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Conveyor",
+      "d": false
+    },
+    {
+      "a": "%Q0.1",
+      "n": "Nozzle_Down_Command",
+      "d": false
+    },
+    {
+      "a": "%Q0.2",
+      "n": "Fill_Valve",
+      "d": false
+    }
+  ],
+  "mem": [
+    {
+      "a": "%MW10",
+      "n": "Sequence_Step",
+      "d": 0,
+      "kind": "INT"
+    },
+    {
+      "a": "%MW12",
+      "n": "Step_Snapshot",
+      "d": 0,
+      "kind": "INT"
+    }
+  ],
+  "tests": [
+    {
+      "name": "Fill and repeat",
+      "steps": [
+        {
+          "label": "Idle",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%MW10": 0,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Feed",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Waiting",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 2000,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Bottle",
+          "in": {
+            "%I0.1": 1,
+            "%I0.3": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Wait nozzle",
+          "in": {},
+          "ms": 3000,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Down",
+          "in": {
+            "%I0.2": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true
+          }
+        },
+        {
+          "label": "Filling",
+          "in": {},
+          "ms": 4500,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": true
+          }
+        },
+        {
+          "label": "Raise",
+          "in": {},
+          "ms": 700,
+          "expect": {
+            "%MW10": 40,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Wait up",
+          "in": {
+            "%I0.2": 0
+          },
+          "ms": 500,
+          "expect": {
+            "%MW10": 40,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Up",
+          "in": {
+            "%I0.3": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 50,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Clear",
+          "in": {
+            "%I0.1": 0
+          },
+          "ms": 200,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Next bottle",
+          "in": {
+            "%I0.1": 1,
+            "%I0.3": 0
+          },
+          "ms": 200,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "Write one transition for each numbered step.",
+    "Decode the current step into outputs separately; reset the fill timer outside step 30."
+  ],
+  "sequence": [
+    {
+      "value": 0,
+      "label": "Idle"
+    },
+    {
+      "value": 10,
+      "label": "Feed"
+    },
+    {
+      "value": 20,
+      "label": "Lower nozzle"
+    },
+    {
+      "value": 30,
+      "label": "Fill"
+    },
+    {
+      "value": 40,
+      "label": "Raise nozzle"
+    },
+    {
+      "value": 50,
+      "label": "Remove bottle"
+    }
+  ],
+  "plant": "filling",
+  "id": "filling"
+}

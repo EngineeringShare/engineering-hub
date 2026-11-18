@@ -1,0 +1,122 @@
+{
+  "title": "Retained alarm",
+  "level": "Memory · Set / reset",
+  "kind": "alarm",
+  "brief": "Program an alarm that remembers a fault even after the original fault signal disappears.",
+  "requirements": [
+    "Initially, Alarm Memory and Alarm Lamp must both be OFF.",
+    "When Fault Detected switches ON, set Alarm Memory to ON and turn Alarm Lamp ON.",
+    "When Fault Detected switches OFF, keep Alarm Memory and Alarm Lamp ON so the operator can see that a fault occurred.",
+    "When Acknowledge is ON and Fault Detected is OFF, clear Alarm Memory and turn the lamp OFF. The lamp must remain OFF after Acknowledge is released unless another fault occurs.",
+    "If Fault Detected and Acknowledge are both ON, the fault must take priority: Alarm Memory and Alarm Lamp must both remain ON."
+  ],
+  "objective": "Store a fault and manage acknowledge priority.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Fault_Detected",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Acknowledge",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Alarm_Lamp",
+      "d": false
+    }
+  ],
+  "mem": [
+    {
+      "a": "%M0.0",
+      "n": "Alarm_Memory",
+      "d": false
+    }
+  ],
+  "hints": [
+    "A set coil writes TRUE when its rung is true; a reset coil writes FALSE. Otherwise each leaves the bit unchanged.",
+    "For fault priority, execute reset first and set second. Then use the memory bit to drive the output."
+  ],
+  "tests": [
+    {
+      "name": "Fault memory",
+      "steps": [
+        {
+          "label": "Initially clear",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0,
+            "%M0.0": 0
+          }
+        },
+        {
+          "label": "Fault",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1,
+            "%M0.0": 1
+          }
+        },
+        {
+          "label": "Fault clears",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1,
+            "%M0.0": 1
+          }
+        },
+        {
+          "label": "Acknowledge",
+          "in": {
+            "%I0.1": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0,
+            "%M0.0": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fault priority",
+      "steps": [
+        {
+          "label": "Fault and acknowledge",
+          "in": {
+            "%I0.0": 1,
+            "%I0.1": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1,
+            "%M0.0": 1
+          }
+        },
+        {
+          "label": "Acknowledge released",
+          "in": {
+            "%I0.1": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1,
+            "%M0.0": 1
+          }
+        }
+      ]
+    }
+  ],
+  "id": "alarm"
+}

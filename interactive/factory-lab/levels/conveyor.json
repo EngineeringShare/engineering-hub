@@ -1,0 +1,99 @@
+{
+  "title": "Conveyor permissive",
+  "level": "Foundations · AND",
+  "kind": "conveyor",
+  "brief": "Program the conveyor motor using the Run Request and Guard Closed inputs.",
+  "requirements": [
+    "Run Request is ON when the operator wants the conveyor to run. Guard Closed is ON when the machine guard is closed.",
+    "The conveyor motor must be ON only when both inputs are ON at the same time.",
+    "If either input is OFF, the motor must be OFF. If either input switches OFF while the conveyor is running, the motor must stop immediately.",
+    "No memory is required: restoring both inputs to ON should start the motor again."
+  ],
+  "objective": "Combine two conditions.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Run_Request",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Guard_Closed",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Conveyor_Motor",
+      "d": false
+    }
+  ],
+  "hints": [
+    "An NO contact passes logic when its assigned bit is 1. Series contacts implement AND.",
+    "Both input contacts must be in series before the motor coil."
+  ],
+  "tests": [
+    {
+      "name": "Inputs 0 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    }
+  ],
+  "id": "conveyor"
+}

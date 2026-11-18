@@ -41,7 +41,7 @@ permalink: /teaching-tools-hub/
   </style>
 </head>
 
-# Interactive Learning Hub
+# Interactive Teaching Tools Hub
 
 Find interactive teaching tools and games below to help enhance learning experiences.
 

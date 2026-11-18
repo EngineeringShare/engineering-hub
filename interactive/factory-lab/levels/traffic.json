@@ -1,0 +1,178 @@
+{
+  "title": "Traffic light controller",
+  "level": "Sequences · Timed loop",
+  "kind": "traffic",
+  "brief": "Build a repeating four-step traffic-light sequence.",
+  "requirements": [
+    "Use Sequence Step (INT), initially 10. Step 10: red only for 5 s. Step 20: red and amber for 2 s. Step 30: green only for 5 s. Step 40: amber only for 2 s.",
+    "After step 40 return to step 10 and repeat without operator input.",
+    "The lamps must match the current step. Never show green together with red or amber. Use separate timing instances or explicitly reset timing between steps."
+  ],
+  "objective": "Create a continuously repeating integer sequence.",
+  "ins": [],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Red",
+      "d": false
+    },
+    {
+      "a": "%Q0.1",
+      "n": "Amber",
+      "d": false
+    },
+    {
+      "a": "%Q0.2",
+      "n": "Green",
+      "d": false
+    }
+  ],
+  "mem": [
+    {
+      "a": "%MW10",
+      "n": "Sequence_Step",
+      "d": 10,
+      "kind": "INT"
+    },
+    {
+      "a": "%MW12",
+      "n": "Step_Snapshot",
+      "d": 10,
+      "kind": "INT"
+    }
+  ],
+  "tests": [
+    {
+      "name": "Two cycles",
+      "steps": [
+        {
+          "label": "Red",
+          "in": {},
+          "ms": 3000,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Red + amber",
+          "in": {},
+          "ms": 2800,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": true,
+            "%Q0.1": true,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Green",
+          "in": {},
+          "ms": 3000,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": true
+          }
+        },
+        {
+          "label": "Amber",
+          "in": {},
+          "ms": 4500,
+          "expect": {
+            "%MW10": 40,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Red again",
+          "in": {},
+          "ms": 2000,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Red + amber again",
+          "in": {},
+          "ms": 5000,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": true,
+            "%Q0.1": true,
+            "%Q0.2": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "No premature transition",
+      "steps": [
+        {
+          "label": "Before first delay",
+          "in": {},
+          "ms": 4700,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "After first delay",
+          "in": {},
+          "ms": 700,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": true,
+            "%Q0.1": true,
+            "%Q0.2": false
+          }
+        },
+        {
+          "label": "Before second delay",
+          "in": {},
+          "ms": 1300,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": true,
+            "%Q0.1": true,
+            "%Q0.2": false
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "Use comparisons to enable each step timer and each lamp.",
+    "Use timer Q AND current step to MOVE the next step. A snapshot of the step can prevent multiple transitions per scan."
+  ],
+  "sequence": [
+    {
+      "value": 10,
+      "label": "Red"
+    },
+    {
+      "value": 20,
+      "label": "Red + amber"
+    },
+    {
+      "value": 30,
+      "label": "Green"
+    },
+    {
+      "value": 40,
+      "label": "Amber"
+    }
+  ],
+  "id": "traffic"
+}

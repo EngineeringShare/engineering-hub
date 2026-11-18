@@ -1,0 +1,159 @@
+{
+  "title": "Machine operating states",
+  "level": "Integers · MOVE",
+  "kind": "panel",
+  "brief": "Store an operator-selected machine state in an INT tag.",
+  "requirements": [
+    "Machine State starts at 0 (Stopped). Standby PB selects 10 and Run PB selects 20. Stop PB selects 0.",
+    "Keep the selected state when all buttons are released. If Standby and Run are pressed together, Run wins. Stop overrides both.",
+    "Stopped, Standby and Running lamps must show state 0, 10 and 20 respectively. Only one lamp is ON at a time."
+  ],
+  "objective": "Write and compare retained integer values.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Stop_PB",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Standby_PB",
+      "d": false
+    },
+    {
+      "a": "%I0.2",
+      "n": "Run_PB",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Stopped",
+      "d": false
+    },
+    {
+      "a": "%Q0.1",
+      "n": "Standby",
+      "d": false
+    },
+    {
+      "a": "%Q0.2",
+      "n": "Running",
+      "d": false
+    }
+  ],
+  "mem": [
+    {
+      "a": "%MW10",
+      "n": "Machine_State",
+      "d": 0,
+      "kind": "INT"
+    }
+  ],
+  "tests": [
+    {
+      "name": "Select and retain",
+      "steps": [
+        {
+          "label": "Initial",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%MW10": 0,
+            "%Q0.0": 1,
+            "%Q0.1": 0,
+            "%Q0.2": 0
+          }
+        },
+        {
+          "label": "Standby",
+          "in": {
+            "%I0.1": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": 0,
+            "%Q0.1": 1,
+            "%Q0.2": 0
+          }
+        },
+        {
+          "label": "Release",
+          "in": {
+            "%I0.1": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.1": 1
+          }
+        },
+        {
+          "label": "Run",
+          "in": {
+            "%I0.2": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": 0,
+            "%Q0.1": 0,
+            "%Q0.2": 1
+          }
+        },
+        {
+          "label": "Release",
+          "in": {
+            "%I0.2": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.2": 1
+          }
+        },
+        {
+          "label": "Stop all",
+          "in": {
+            "%I0.0": 1,
+            "%I0.1": 1,
+            "%I0.2": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 0,
+            "%Q0.0": 1,
+            "%Q0.1": 0,
+            "%Q0.2": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Run priority",
+      "steps": [
+        {
+          "label": "Both",
+          "in": {
+            "%I0.1": 1,
+            "%I0.2": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": 0,
+            "%Q0.1": 0,
+            "%Q0.2": 1
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "MOVE writes a number only while its rung is true.",
+    "Order the writes by priority, then decode the state with == comparisons."
+  ],
+  "id": "states"
+}

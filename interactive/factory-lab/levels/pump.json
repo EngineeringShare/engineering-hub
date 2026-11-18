@@ -1,0 +1,183 @@
+{
+  "title": "Pumping station",
+  "level": "Capstone · Integration",
+  "kind": "pump",
+  "brief": "Program a pumping station with a stored run request and a delayed pump start. The operator can request the pump to run, but it must wait until the liquid level is suitable.",
+  "requirements": [
+    "Initially, Pump Request memory and Pump Motor must be OFF. Start PB is ON when Start is pressed. Stop Healthy is ON when Stop is released and OFF when Stop is pressed.",
+    "Pressing Start while Stop is released must set Pump Request to ON. Releasing Start must not clear the request.",
+    "Pressing Stop must clear Pump Request and stop the motor immediately, even if Start is pressed. Releasing Stop with Start released must not restart the pump.",
+    "Level OK is ON when the liquid level is suitable. Start the pump only when Pump Request and Level OK have both been ON continuously for 2 seconds.",
+    "If Pump Request or Level OK switches OFF, turn Pump Motor OFF immediately and reset the 2-second delay.",
+    "A drop in Level OK must not clear Pump Request. If the level becomes suitable again while the request is still stored, wait another full 2 seconds before restarting the pump."
+  ],
+  "objective": "Combine memory, timing and machine permissives.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Start_PB",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Stop_Healthy",
+      "d": true
+    },
+    {
+      "a": "%I0.2",
+      "n": "Level_OK",
+      "d": true
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Pump_Motor",
+      "d": false
+    }
+  ],
+  "mem": [
+    {
+      "a": "%M0.0",
+      "n": "Pump_Request",
+      "d": false
+    }
+  ],
+  "hints": [
+    "First implement a stop-dominant seal-in using Pump Request.",
+    "Use Pump Request AND Level OK to enable a TON with PT T#2s; use its Q contact for the pump output."
+  ],
+  "tests": [
+    {
+      "name": "Start, delay, seal-in and stop",
+      "steps": [
+        {
+          "label": "Start",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%M0.0": 1,
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Release Start",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 1800,
+          "expect": {
+            "%M0.0": 1,
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Timer expires",
+          "in": {},
+          "ms": 200,
+          "expect": {
+            "%M0.0": 1,
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Stop takes priority",
+          "in": {
+            "%I0.0": 1,
+            "%I0.1": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%M0.0": 0,
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Release Start",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%M0.0": 0,
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Restore stop",
+          "in": {
+            "%I0.1": 1
+          },
+          "ms": 2100,
+          "expect": {
+            "%M0.0": 0,
+            "%Q0.0": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level interruption",
+      "steps": [
+        {
+          "label": "Start with level bad",
+          "in": {
+            "%I0.0": 1,
+            "%I0.2": 0
+          },
+          "ms": 2500,
+          "expect": {
+            "%M0.0": 1,
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Level good and Start released",
+          "in": {
+            "%I0.0": 0,
+            "%I0.2": 1
+          },
+          "ms": 2100,
+          "expect": {
+            "%M0.0": 1,
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Level drops",
+          "in": {
+            "%I0.2": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%M0.0": 1,
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Level returns",
+          "in": {
+            "%I0.2": 1
+          },
+          "ms": 1900,
+          "expect": {
+            "%M0.0": 1,
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Delay completes",
+          "in": {},
+          "ms": 200,
+          "expect": {
+            "%M0.0": 1,
+            "%Q0.0": 1
+          }
+        }
+      ]
+    }
+  ],
+  "id": "pump"
+}

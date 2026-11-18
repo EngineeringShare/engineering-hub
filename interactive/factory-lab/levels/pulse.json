@@ -1,0 +1,126 @@
+{
+  "title": "Pneumatic press",
+  "level": "Timing · TP",
+  "kind": "pack",
+  "brief": "Create a fixed-length press cycle.",
+  "requirements": [
+    "Initially the press is retracted. Press Request starts a 2-second extension on its rising edge.",
+    "Once started, the output stays ON for the full 2 seconds even if the request is released. Then it switches OFF even if Press Request remains ON.",
+    "A new rising edge after completion starts another pulse; edges during an active pulse must not extend it."
+  ],
+  "objective": "Use a pulse timer.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Press_Request",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Press_Extend",
+      "d": false
+    }
+  ],
+  "mem": [],
+  "tests": [
+    {
+      "name": "Hold request",
+      "steps": [
+        {
+          "label": "Start",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Before end",
+          "in": {},
+          "ms": 1800,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "End",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Still held",
+          "in": {},
+          "ms": 3000,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Release",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "New pulse",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1
+          }
+        }
+      ]
+    },
+    {
+      "name": "Short press",
+      "steps": [
+        {
+          "label": "Start",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Release",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 1800,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "End",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "TP produces a fixed-length pulse after a rising edge.",
+    "Use a TP instance with PT T#2s and its Q bit."
+  ],
+  "id": "pulse"
+}

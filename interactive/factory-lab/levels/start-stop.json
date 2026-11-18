@@ -1,0 +1,129 @@
+{
+  "title": "Start / stop station",
+  "level": "Control · Seal-in",
+  "kind": "conveyor",
+  "brief": "Program a conveyor with a momentary Start button and a momentary Stop button. The operator must not have to hold Start to keep the motor running.",
+  "requirements": [
+    "Initially, the conveyor motor must be OFF. Start PB is ON while the Start button is pressed and OFF when it is released.",
+    "The physical Stop button is normally closed: Stop Healthy is ON when Stop is released and OFF when Stop is pressed.",
+    "Pressing Start while Stop is released must start the conveyor. Releasing Start must leave it running.",
+    "Pressing Stop must switch the motor OFF immediately, even if Start is being held down. Stop must take priority while both buttons are pressed.",
+    "After stopping, releasing Stop with Start released must not restart the motor. Press Start again to start it."
+  ],
+  "objective": "Understand latching, stop priority and physical switch wiring.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Start_PB",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Stop_Healthy",
+      "d": true
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Conveyor_Motor",
+      "d": false
+    }
+  ],
+  "hints": [
+    "Stop Healthy is a TRUE permissive, so use an NO ladder contact for it.",
+    "Place the Start input and motor feedback in parallel, with Stop Healthy outside the branch."
+  ],
+  "tests": [
+    {
+      "name": "Seal-in and stop",
+      "steps": [
+        {
+          "label": "Power-up",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Press Start",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Release Start",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Press Stop",
+          "in": {
+            "%I0.1": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Release Stop",
+          "in": {
+            "%I0.1": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Stop overrides Start",
+      "steps": [
+        {
+          "label": "Both pressed",
+          "in": {
+            "%I0.0": 1,
+            "%I0.1": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Release Start",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Restore stop circuit",
+          "in": {
+            "%I0.1": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        }
+      ]
+    }
+  ],
+  "id": "start-stop"
+}

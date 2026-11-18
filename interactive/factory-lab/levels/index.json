@@ -1,0 +1,55 @@
+{
+  "version": 4,
+  "groups": [
+    {
+      "title": "01 / Logic foundations",
+      "levels": [
+        "conveyor",
+        "cooling",
+        "tank-level",
+        "packing",
+        "panel"
+      ]
+    },
+    {
+      "title": "02 / Machine control",
+      "levels": [
+        "start-stop",
+        "reverse",
+        "mode",
+        "alarm",
+        "guard-bypass"
+      ]
+    },
+    {
+      "title": "03 / Timing and counting",
+      "levels": [
+        "delay",
+        "run-on",
+        "pulse",
+        "flash",
+        "batch",
+        "staged",
+        "pump"
+      ]
+    },
+    {
+      "title": "04 / Integer programming",
+      "levels": [
+        "level-int",
+        "states"
+      ]
+    },
+    {
+      "title": "05 / Sequential programming",
+      "levels": [
+        "traffic",
+        "crossing",
+        "cylinder",
+        "filling",
+        "production"
+      ]
+    }
+  ],
+  "sandbox": "sandbox"
+}

@@ -1,0 +1,109 @@
+{
+  "title": "Flashing warning lamp",
+  "level": "Timing · Repeating cycle",
+  "kind": "panel",
+  "brief": "Make a warning lamp flash while a fault is active.",
+  "requirements": [
+    "With Fault OFF, the lamp must be OFF.",
+    "When Fault switches ON, start an ON phase lasting approximately 1 second, then an OFF phase lasting approximately 1 second. Repeat while Fault stays ON.",
+    "When Fault switches OFF, extinguish the lamp immediately and reset the flashing cycle. A new fault starts with the ON phase. One simulated scan (100 ms) timing tolerance is allowed."
+  ],
+  "objective": "Build a repeating timer feedback circuit.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Fault",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Warning_Lamp",
+      "d": false
+    }
+  ],
+  "mem": [],
+  "tests": [
+    {
+      "name": "Repeated flashing",
+      "steps": [
+        {
+          "label": "No fault",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Fault starts",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 300,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "ON phase",
+          "in": {},
+          "ms": 400,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "OFF phase",
+          "in": {},
+          "ms": 700,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "ON again",
+          "in": {},
+          "ms": 1000,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "OFF again",
+          "in": {},
+          "ms": 1000,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Fault clears",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Restart",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 300,
+          "expect": {
+            "%Q0.0": 1
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "Use two TON blocks to alternate between timing the ON and OFF phases.",
+    "Enable the first timer with Fault AND NOT second timer Q; enable the second with Fault AND first timer Q. Lamp = Fault AND NOT first timer Q."
+  ],
+  "id": "flash"
+}

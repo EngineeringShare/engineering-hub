@@ -1,0 +1,187 @@
+{
+  "title": "Automatic pneumatic cylinder",
+  "level": "Sequences · Sensor transitions",
+  "kind": "pack",
+  "brief": "Move a box using a spring-return cylinder. The sensors can be operated manually or by the virtual plant.",
+  "requirements": [
+    "Step 0: keep the cylinder retracted. Start a cycle when Start PB rises, Box Present is ON and Retracted Sensor is ON.",
+    "Step 10: energise Extend until Extended Sensor becomes ON. Step 20: keep Extend ON for a further 2 seconds.",
+    "Step 30: switch Extend OFF and wait for Retracted Sensor to become ON. Then return to step 0.",
+    "Do not advance just because time passes while waiting for a position sensor. A new cycle requires a new Start press."
+  ],
+  "objective": "Use position sensors as transition conditions.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Start_PB",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Box_Present",
+      "d": true
+    },
+    {
+      "a": "%I0.2",
+      "n": "Retracted_Sensor",
+      "d": true
+    },
+    {
+      "a": "%I0.3",
+      "n": "Extended_Sensor",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Cylinder_Extend",
+      "d": false
+    }
+  ],
+  "mem": [
+    {
+      "a": "%MW10",
+      "n": "Sequence_Step",
+      "d": 0,
+      "kind": "INT"
+    },
+    {
+      "a": "%MW12",
+      "n": "Step_Snapshot",
+      "d": 0,
+      "kind": "INT"
+    }
+  ],
+  "tests": [
+    {
+      "name": "Sensor-driven cycle",
+      "steps": [
+        {
+          "label": "Idle",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%MW10": 0,
+            "%Q0.0": false
+          }
+        },
+        {
+          "label": "Start",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true
+          }
+        },
+        {
+          "label": "Still extending",
+          "in": {
+            "%I0.0": 0,
+            "%I0.2": 0
+          },
+          "ms": 4000,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": true
+          }
+        },
+        {
+          "label": "Extended",
+          "in": {
+            "%I0.3": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": true
+          }
+        },
+        {
+          "label": "Hold",
+          "in": {},
+          "ms": 1500,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": true
+          }
+        },
+        {
+          "label": "Retract",
+          "in": {},
+          "ms": 700,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false
+          }
+        },
+        {
+          "label": "Wait for home",
+          "in": {
+            "%I0.3": 0
+          },
+          "ms": 2000,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": false
+          }
+        },
+        {
+          "label": "Home",
+          "in": {
+            "%I0.2": 1
+          },
+          "ms": 200,
+          "expect": {
+            "%MW10": 0,
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Missing box",
+      "steps": [
+        {
+          "label": "No part",
+          "in": {
+            "%I0.0": 1,
+            "%I0.1": 0
+          },
+          "ms": 500,
+          "expect": {
+            "%MW10": 0,
+            "%Q0.0": false
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "Use rising-edge Start and the two permissives for the first transition.",
+    "Use step comparisons with end sensors and one hold TON; Extend is ON in steps 10 and 20."
+  ],
+  "sequence": [
+    {
+      "value": 0,
+      "label": "Idle"
+    },
+    {
+      "value": 10,
+      "label": "Extend"
+    },
+    {
+      "value": 20,
+      "label": "Hold"
+    },
+    {
+      "value": 30,
+      "label": "Retract"
+    }
+  ],
+  "plant": "cylinder",
+  "id": "cylinder"
+}

@@ -1,0 +1,203 @@
+{
+  "title": "Fault finding: guard bypass",
+  "level": "Diagnostics · Repair",
+  "kind": "pack",
+  "brief": "A faulty pusher program has already been loaded into the editor. Test it using the watch table and correct the program to meet the requirements below.",
+  "requirements": [
+    "The pusher must extend when Auto Demand is ON, Manual Demand is ON, or both are ON, provided Station Ready is ON.",
+    "If neither demand is ON, Pusher Extend must be OFF.",
+    "If Station Ready is OFF, Pusher Extend must always be OFF, even when Auto Demand or Manual Demand is ON.",
+    "The supplied program does not meet all these conditions. Identify which input combinations cause the fault, repair the ladder logic and repeat the commissioning tests."
+  ],
+  "objective": "Diagnose a faulty control program using monitoring.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Auto_Demand",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Manual_Demand",
+      "d": false
+    },
+    {
+      "a": "%I0.2",
+      "n": "Station_Ready",
+      "d": true
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Pusher_Extend",
+      "d": false
+    }
+  ],
+  "starter": [
+    {
+      "groups": [
+        [
+          [
+            {
+              "type": "NO",
+              "a": "%I0.0"
+            },
+            {
+              "type": "NO",
+              "a": "%I0.2"
+            }
+          ],
+          [
+            {
+              "type": "NO",
+              "a": "%I0.1"
+            }
+          ]
+        ]
+      ],
+      "out": {
+        "type": "COIL",
+        "a": "%Q0.0",
+        "p": 0,
+        "r": "FALSE"
+      },
+      "name": "Faulty pusher command"
+    }
+  ],
+  "hints": [
+    "Try Manual Demand TRUE and Station Ready FALSE while monitoring.",
+    "Station Ready must be in series with both alternative demand paths, not only one."
+  ],
+  "tests": [
+    {
+      "name": "Inputs 0 / 0 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false,
+            "%I0.2": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 0 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false,
+            "%I0.2": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 1 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true,
+            "%I0.2": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 1 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true,
+            "%I0.2": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 0 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false,
+            "%I0.2": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 0 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false,
+            "%I0.2": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 1 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true,
+            "%I0.2": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 1 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true,
+            "%I0.2": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    }
+  ],
+  "id": "guard-bypass"
+}

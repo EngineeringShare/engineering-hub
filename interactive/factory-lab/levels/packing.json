@@ -1,0 +1,321 @@
+{
+  "title": "Packing station",
+  "level": "Foundations · Mixed logic",
+  "kind": "pack",
+  "brief": "Program the pneumatic pusher at a packing station. It can be operated automatically or manually.",
+  "requirements": [
+    "Automatic operation: extend the pusher when Part Present and Auto Mode are both ON.",
+    "Manual operation: extend the pusher whenever Manual Jog is ON. Manual operation does not require a part to be present or Auto Mode to be ON.",
+    "Station Ready must be ON for either type of operation. If Station Ready is OFF, the pusher must retract or remain retracted, regardless of the other inputs.",
+    "The Pusher Extend output must be ON while a valid demand exists and the station is ready; otherwise it must be OFF. No latching is required."
+  ],
+  "objective": "Combine automatic and manual control with a shared enable condition.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Part_Present",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Auto_Mode",
+      "d": false
+    },
+    {
+      "a": "%I0.2",
+      "n": "Manual_Jog",
+      "d": false
+    },
+    {
+      "a": "%I0.3",
+      "n": "Station_Ready",
+      "d": true
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Pusher_Extend",
+      "d": false
+    }
+  ],
+  "hints": [
+    "Separate the two alternative demands from the common Station Ready condition.",
+    "A parallel group can contain two series contacts in one path and one in the other; place Station Ready in a separate series group."
+  ],
+  "tests": [
+    {
+      "name": "Inputs 0 / 0 / 0 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false,
+            "%I0.2": false,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 0 / 0 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false,
+            "%I0.2": false,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 1 / 0 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true,
+            "%I0.2": false,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 1 / 0 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true,
+            "%I0.2": false,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 0 / 1 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false,
+            "%I0.2": true,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 0 / 1 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false,
+            "%I0.2": true,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 1 / 1 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true,
+            "%I0.2": true,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 1 / 1 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true,
+            "%I0.2": true,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 0 / 0 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false,
+            "%I0.2": false,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 0 / 0 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false,
+            "%I0.2": false,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 1 / 0 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true,
+            "%I0.2": false,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 1 / 0 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true,
+            "%I0.2": false,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 0 / 1 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false,
+            "%I0.2": true,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 0 / 1 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false,
+            "%I0.2": true,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 1 / 1 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true,
+            "%I0.2": true,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 1 / 1 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true,
+            "%I0.2": true,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    }
+  ],
+  "id": "packing"
+}

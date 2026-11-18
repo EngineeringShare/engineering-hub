@@ -1,0 +1,337 @@
+{
+  "title": "Automatic / manual control",
+  "level": "Control · Mode selection",
+  "kind": "conveyor",
+  "brief": "Control a conveyor using an automatic/manual selector.",
+  "requirements": [
+    "Auto Mode ON selects automatic operation; OFF selects manual operation.",
+    "In automatic mode, the motor runs only while Part Present is ON. In manual mode, the motor runs only while Manual Jog is ON. Ignore the other demand in each mode.",
+    "Guard Closed must be ON regardless of mode. If it is OFF, stop immediately. No memory is required."
+  ],
+  "objective": "Select between mutually exclusive modes.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Auto_Mode",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Part_Present",
+      "d": false
+    },
+    {
+      "a": "%I0.2",
+      "n": "Manual_Jog",
+      "d": false
+    },
+    {
+      "a": "%I0.3",
+      "n": "Guard_Closed",
+      "d": true
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Conveyor_Motor",
+      "d": false
+    }
+  ],
+  "mem": [],
+  "tests": [
+    {
+      "name": "Inputs 0000",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false,
+            "%I0.2": false,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1000",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false,
+            "%I0.2": false,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0100",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true,
+            "%I0.2": false,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1100",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true,
+            "%I0.2": false,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0010",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false,
+            "%I0.2": true,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1010",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false,
+            "%I0.2": true,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0110",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true,
+            "%I0.2": true,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1110",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true,
+            "%I0.2": true,
+            "%I0.3": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0001",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false,
+            "%I0.2": false,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1001",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false,
+            "%I0.2": false,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0101",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true,
+            "%I0.2": false,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1101",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true,
+            "%I0.2": false,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0011",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false,
+            "%I0.2": true,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1011",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false,
+            "%I0.2": true,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0111",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true,
+            "%I0.2": true,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1111",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true,
+            "%I0.2": true,
+            "%I0.3": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "Use two alternative paths with different tests of Auto Mode.",
+    "Put the guard permissive outside the parallel branches."
+  ],
+  "id": "mode"
+}

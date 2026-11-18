@@ -1,0 +1,94 @@
+{
+  "title": "Free programming lab",
+  "level": "Practice \u00b7 Open lab",
+  "kind": "reverse",
+  "brief": "Experiment with Boolean and INT tags, comparisons, timers, counters, arithmetic and MOVE.",
+  "objective": "No automatic marking in free programming mode.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Input_0",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Input_1",
+      "d": false
+    },
+    {
+      "a": "%I0.2",
+      "n": "Input_2",
+      "d": false
+    },
+    {
+      "a": "%I0.3",
+      "n": "Input_3",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Output_0",
+      "d": false
+    },
+    {
+      "a": "%Q0.1",
+      "n": "Output_1",
+      "d": false
+    },
+    {
+      "a": "%Q0.2",
+      "n": "Output_2",
+      "d": false
+    }
+  ],
+  "mem": [
+    {
+      "a": "%M0.0",
+      "n": "Memory_0",
+      "d": false
+    },
+    {
+      "a": "%M0.1",
+      "n": "Memory_1",
+      "d": false
+    },
+    {
+      "a": "%M0.2",
+      "n": "Memory_2",
+      "d": false
+    },
+    {
+      "a": "%M0.3",
+      "n": "Memory_3",
+      "d": false
+    },
+    {
+      "a": "%MW10",
+      "n": "Word_0",
+      "d": 0,
+      "kind": "INT"
+    },
+    {
+      "a": "%MW12",
+      "n": "Word_1",
+      "d": 0,
+      "kind": "INT"
+    },
+    {
+      "a": "%MW14",
+      "n": "Word_2",
+      "d": 0,
+      "kind": "INT"
+    },
+    {
+      "a": "%MW16",
+      "n": "Word_3",
+      "d": 0,
+      "kind": "INT"
+    }
+  ],
+  "tests": [],
+  "id": "sandbox"
+}

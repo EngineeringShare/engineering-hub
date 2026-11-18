@@ -1,0 +1,252 @@
+{
+  "title": "Pedestrian crossing",
+  "level": "Sequences · Event trigger",
+  "kind": "crossing",
+  "brief": "Control a simplified pedestrian crossing (training only).",
+  "requirements": [
+    "Initially step 0: road green and pedestrian red. Wait for Crossing PB to be pressed.",
+    "Step 10: road amber, pedestrian red for 3 s. Step 20: road red, pedestrian red for 2 s. Step 30: road red, pedestrian green for 8 s.",
+    "Step 40: road red, pedestrian red for 2 s. Step 50: road red + amber, pedestrian red for 2 s. Return to step 0.",
+    "Ignore button presses during the sequence. A button held through the end must not start a second sequence; release and press again."
+  ],
+  "objective": "Trigger and complete a timed sequence.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Crossing_PB",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Road_Red",
+      "d": false
+    },
+    {
+      "a": "%Q0.1",
+      "n": "Road_Amber",
+      "d": false
+    },
+    {
+      "a": "%Q0.2",
+      "n": "Road_Green",
+      "d": false
+    },
+    {
+      "a": "%Q0.3",
+      "n": "Ped_Red",
+      "d": false
+    },
+    {
+      "a": "%Q0.4",
+      "n": "Ped_Green",
+      "d": false
+    }
+  ],
+  "mem": [
+    {
+      "a": "%MW10",
+      "n": "Sequence_Step",
+      "d": 0,
+      "kind": "INT"
+    },
+    {
+      "a": "%MW12",
+      "n": "Step_Snapshot",
+      "d": 0,
+      "kind": "INT"
+    }
+  ],
+  "tests": [
+    {
+      "name": "Full crossing",
+      "steps": [
+        {
+          "label": "Idle",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%MW10": 0,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": true,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Request",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 300,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Amber",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 2000,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "All red",
+          "in": {},
+          "ms": 1300,
+          "expect": {
+            "%MW10": 20,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Cross",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 2000,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": true
+          }
+        },
+        {
+          "label": "Still crossing",
+          "in": {},
+          "ms": 5000,
+          "expect": {
+            "%MW10": 30,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false,
+            "%Q0.4": true
+          }
+        },
+        {
+          "label": "Clearance",
+          "in": {},
+          "ms": 4000,
+          "expect": {
+            "%MW10": 40,
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Prepare",
+          "in": {},
+          "ms": 2000,
+          "expect": {
+            "%MW10": 50,
+            "%Q0.0": true,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Idle; button still held",
+          "in": {},
+          "ms": 2500,
+          "expect": {
+            "%MW10": 0,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": true,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "Release",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%MW10": 0,
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": true,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        },
+        {
+          "label": "New press",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 300,
+          "expect": {
+            "%MW10": 10,
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": true,
+            "%Q0.4": false
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "Use a rising-edge contact for the request; it must be evaluated every scan.",
+    "Use a separate timer per timed step, then decode the step into the five signals."
+  ],
+  "sequence": [
+    {
+      "value": 0,
+      "label": "Idle"
+    },
+    {
+      "value": 10,
+      "label": "Road amber"
+    },
+    {
+      "value": 20,
+      "label": "All red"
+    },
+    {
+      "value": 30,
+      "label": "Cross"
+    },
+    {
+      "value": 40,
+      "label": "Clearance"
+    },
+    {
+      "value": 50,
+      "label": "Red + amber"
+    }
+  ],
+  "id": "crossing"
+}

@@ -1,0 +1,200 @@
+{
+  "title": "Batch of three",
+  "level": "Counting · CTU",
+  "kind": "batch",
+  "brief": "Program a packing station to count passing parts and indicate when a batch of three has been completed.",
+  "requirements": [
+    "At the start, the count must be zero and Batch Complete must be OFF.",
+    "Part Sensor switches ON as a part enters the sensor and OFF after it passes. Count one part each time the signal changes from OFF to ON. A part remaining in front of the sensor must count only once.",
+    "Keep Batch Complete OFF after the first and second parts. Turn it ON as soon as the third part is counted, and keep it ON if more parts pass.",
+    "When Reset Batch is ON, clear the count to zero and turn Batch Complete OFF. Reset must take priority over any part signal.",
+    "After reset, count new OFF-to-ON sensor transitions to build the next batch."
+  ],
+  "objective": "Count rising edges and reset a batch.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Part_Sensor",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Reset_Batch",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Batch_Complete",
+      "d": false
+    }
+  ],
+  "hints": [
+    "CTU counts FALSE-to-TRUE transitions at CU, not every scan.",
+    "Set PV to 3 and configure the reset operand R as Reset_Batch. Use the counter instance Q contact to energise the lamp."
+  ],
+  "tests": [
+    {
+      "name": "Three rising edges",
+      "steps": [
+        {
+          "label": "No parts",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Part 1 held",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 1200,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Gap",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Part 2",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Gap",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Part 3",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Reset",
+          "in": {
+            "%I0.1": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Release reset",
+          "in": {
+            "%I0.1": 0,
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "New first part",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reset dominates count",
+      "steps": [
+        {
+          "label": "Reset held",
+          "in": {
+            "%I0.1": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Part while reset",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Release reset and sensor",
+          "in": {
+            "%I0.0": 0,
+            "%I0.1": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "New part",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Gap",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Second part",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        }
+      ]
+    }
+  ],
+  "id": "batch"
+}

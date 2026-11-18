@@ -1,0 +1,103 @@
+{
+  "title": "Tank level control",
+  "level": "Foundations · Signal interpretation",
+  "kind": "pump",
+  "brief": "Control the pump using two digital level switches.",
+  "requirements": [
+    "Low Level Wet is ON when water reaches the lower switch; High Level Wet is ON when water reaches the upper switch.",
+    "Run the pump only when both switches are OFF (water below both). Stop immediately if either switch becomes ON.",
+    "If the switches disagree in an impossible way (upper wet but lower dry), the pump must remain OFF. No latching is required."
+  ],
+  "objective": "Interpret inverted sensor conditions.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Low_Level_Wet",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "High_Level_Wet",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Pump_Motor",
+      "d": false
+    }
+  ],
+  "mem": [],
+  "tests": [
+    {
+      "name": "Inputs 00",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 10",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 01",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 11",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "A sensor being OFF can be tested with an NC LAD contact.",
+    "Use two negated contacts in series."
+  ],
+  "id": "tank-level"
+}

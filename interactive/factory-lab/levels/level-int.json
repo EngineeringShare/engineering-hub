@@ -1,0 +1,286 @@
+{
+  "title": "Storage tank monitoring",
+  "level": "Integers · Comparisons",
+  "kind": "tank",
+  "brief": "Display the current fill level using four indicator lamps.",
+  "requirements": [
+    "Level Percent is an INT input between 0 and 100. Change it using the watch-table slider.",
+    "Turn on Low for 0–19, Normal for 20–79, High for 80–94 and Overflow for 95–100.",
+    "Exactly one lamp must be ON at any valid level. Update the outputs immediately when the level changes."
+  ],
+  "objective": "Use integer comparison instructions.",
+  "ins": [
+    {
+      "a": "%IW2",
+      "n": "Level_Percent",
+      "d": 0,
+      "kind": "INT",
+      "min": 0,
+      "max": 100
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Low",
+      "d": false
+    },
+    {
+      "a": "%Q0.1",
+      "n": "Normal",
+      "d": false
+    },
+    {
+      "a": "%Q0.2",
+      "n": "High",
+      "d": false
+    },
+    {
+      "a": "%Q0.3",
+      "n": "Overflow",
+      "d": false
+    }
+  ],
+  "mem": [],
+  "tests": [
+    {
+      "name": "Level 0",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 10",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 10
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 19",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 19
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 20",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 20
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 21",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 21
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 55",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 55
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 79",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 79
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 80",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 80
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": true,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 81",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 81
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": true,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 94",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 94
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": true,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 95",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 95
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 96",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 96
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Level 100",
+      "steps": [
+        {
+          "label": "Set level",
+          "in": {
+            "%IW2": 100
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": false,
+            "%Q0.3": true
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "Use a comparison in place of a Boolean contact.",
+    "For each bounded interval, combine >= lower and < upper in series."
+  ],
+  "id": "level-int"
+}

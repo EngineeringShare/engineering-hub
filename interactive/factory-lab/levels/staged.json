@@ -1,0 +1,132 @@
+{
+  "title": "Staged process start",
+  "level": "Timing · Cascaded TON",
+  "kind": "staged",
+  "brief": "Program a process with two machines: a mixer followed by a transfer pump. Use the Run Request to start and stop the sequence.",
+  "requirements": [
+    "Initially, both the Mixer Motor and Transfer Pump must be OFF.",
+    "When Run Request switches ON, wait 3 continuous seconds before starting the mixer. The pump must remain OFF during this first stage.",
+    "Once the mixer starts, wait a further 2 seconds before starting the transfer pump (approximately 5 seconds from the original request).",
+    "Keep both machines running after the second delay, provided Run Request stays ON.",
+    "If Run Request switches OFF at any point, stop both machines immediately and reset both delays. A new request must start the entire sequence again."
+  ],
+  "objective": "Coordinate two timed process stages.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Run_Request",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Mixer_Motor",
+      "d": false
+    },
+    {
+      "a": "%Q0.1",
+      "n": "Transfer_Pump",
+      "d": false
+    }
+  ],
+  "hints": [
+    "The first timer is enabled by Run Request; its Q bit controls the mixer and the second timer.",
+    "Use a second instance with PT T#2s. Drive the pump in a network after that timer."
+  ],
+  "tests": [
+    {
+      "name": "Staged sequence",
+      "steps": [
+        {
+          "label": "Request",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 2900,
+          "expect": {
+            "%Q0.0": 0,
+            "%Q0.1": 0
+          }
+        },
+        {
+          "label": "Mixer starts",
+          "in": {},
+          "ms": 200,
+          "expect": {
+            "%Q0.0": 1,
+            "%Q0.1": 0
+          }
+        },
+        {
+          "label": "Before pump",
+          "in": {},
+          "ms": 1600,
+          "expect": {
+            "%Q0.0": 1,
+            "%Q0.1": 0
+          }
+        },
+        {
+          "label": "Pump starts",
+          "in": {},
+          "ms": 500,
+          "expect": {
+            "%Q0.0": 1,
+            "%Q0.1": 1
+          }
+        },
+        {
+          "label": "Stop",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0,
+            "%Q0.1": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Interrupted sequence",
+      "steps": [
+        {
+          "label": "Start",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 3500,
+          "expect": {
+            "%Q0.0": 1,
+            "%Q0.1": 0
+          }
+        },
+        {
+          "label": "Interrupt",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0,
+            "%Q0.1": 0
+          }
+        },
+        {
+          "label": "Start again",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 2000,
+          "expect": {
+            "%Q0.0": 0,
+            "%Q0.1": 0
+          }
+        }
+      ]
+    }
+  ],
+  "id": "staged"
+}

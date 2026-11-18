@@ -1,0 +1,129 @@
+{
+  "title": "Extraction run-on",
+  "level": "Timing · TOF",
+  "kind": "fan",
+  "brief": "Program an extraction fan that starts immediately but continues running briefly after the demand is removed.",
+  "requirements": [
+    "Initially, if Extraction Request is OFF, the fan must be OFF.",
+    "When Extraction Request switches ON, turn Extraction Fan ON immediately and keep it running while the request is ON.",
+    "When Extraction Request switches OFF, keep the fan ON for a further 3 seconds. At the end of those 3 seconds, turn the fan OFF.",
+    "If the request switches ON again before the 3 seconds have expired, keep the fan running without interruption.",
+    "The next time the request switches OFF, begin a fresh 3-second run-on period."
+  ],
+  "objective": "Understand off-delay timing and retriggering.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Extraction_Request",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Extraction_Fan",
+      "d": false
+    }
+  ],
+  "hints": [
+    "A TOF output is TRUE immediately when its IN is TRUE.",
+    "Connect the request to a TOF and use the instance Q contact to drive the fan coil in a later network."
+  ],
+  "tests": [
+    {
+      "name": "Off-delay",
+      "steps": [
+        {
+          "label": "Initially off",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        },
+        {
+          "label": "Request on",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Request off",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 2900,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Delay expires",
+          "in": {},
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        }
+      ]
+    },
+    {
+      "name": "Retrigger during run-on",
+      "steps": [
+        {
+          "label": "On",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Off",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 2000,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "On again",
+          "in": {
+            "%I0.0": 1
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Off again",
+          "in": {
+            "%I0.0": 0
+          },
+          "ms": 2000,
+          "expect": {
+            "%Q0.0": 1
+          }
+        },
+        {
+          "label": "Expires",
+          "in": {},
+          "ms": 1100,
+          "expect": {
+            "%Q0.0": 0
+          }
+        }
+      ]
+    }
+  ],
+  "id": "run-on"
+}

@@ -1,0 +1,130 @@
+{
+  "title": "Multi-output control panel",
+  "level": "Foundations · Multiple networks",
+  "kind": "panel",
+  "brief": "Control a motor and its status indicators.",
+  "requirements": [
+    "Run Request is ON when the operator requests movement. Fault is ON when a fault exists.",
+    "Run the motor only when Run Request is ON and Fault is OFF.",
+    "Green Running lamp is ON exactly when the motor is ON. Red Stopped lamp is ON whenever the motor is OFF. Amber Fault lamp follows Fault."
+  ],
+  "objective": "Use several outputs and networks.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Run_Request",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Fault",
+      "d": false
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Motor",
+      "d": false
+    },
+    {
+      "a": "%Q0.1",
+      "n": "Running_Lamp",
+      "d": false
+    },
+    {
+      "a": "%Q0.2",
+      "n": "Stopped_Lamp",
+      "d": false
+    },
+    {
+      "a": "%Q0.3",
+      "n": "Fault_Lamp",
+      "d": false
+    }
+  ],
+  "mem": [],
+  "tests": [
+    {
+      "name": "Inputs 00",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": true,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 10",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true,
+            "%Q0.1": true,
+            "%Q0.2": false,
+            "%Q0.3": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 01",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": true,
+            "%Q0.3": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 11",
+      "steps": [
+        {
+          "label": "Input combination",
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false,
+            "%Q0.1": false,
+            "%Q0.2": true,
+            "%Q0.3": true
+          }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    "Create a separate network per output.",
+    "Use the motor output to drive the running and stopped lamps."
+  ],
+  "id": "panel"
+}

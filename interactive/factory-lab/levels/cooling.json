@@ -1,0 +1,99 @@
+{
+  "title": "Cooling demand",
+  "level": "Foundations · OR / NOT",
+  "kind": "fan",
+  "brief": "Program the cooling fan so it can be started manually or automatically when cooling is needed.",
+  "requirements": [
+    "Manual Demand is ON when the operator requests the fan. Temperature OK is ON when the temperature is normal and OFF when the temperature is too high.",
+    "Turn the cooling fan ON whenever Manual Demand is ON, regardless of the temperature.",
+    "Also turn the fan ON whenever Temperature OK is OFF, even if Manual Demand is OFF.",
+    "The fan must only be OFF when Manual Demand is OFF and Temperature OK is ON. It must respond immediately to changes in either input."
+  ],
+  "objective": "Use alternative and inverted conditions.",
+  "ins": [
+    {
+      "a": "%I0.0",
+      "n": "Manual_Demand",
+      "d": false
+    },
+    {
+      "a": "%I0.1",
+      "n": "Temperature_OK",
+      "d": true
+    }
+  ],
+  "outs": [
+    {
+      "a": "%Q0.0",
+      "n": "Cooling_Fan",
+      "d": false
+    }
+  ],
+  "hints": [
+    "A normally closed (negated) contact passes logic when its operand is 0.",
+    "Use two parallel paths: one tests manual demand; the other tests NOT Temperature OK."
+  ],
+  "tests": [
+    {
+      "name": "Inputs 0 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 0",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": false
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 0 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": false,
+            "%I0.1": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inputs 1 / 1",
+      "steps": [
+        {
+          "in": {
+            "%I0.0": true,
+            "%I0.1": true
+          },
+          "ms": 100,
+          "expect": {
+            "%Q0.0": true
+          }
+        }
+      ]
+    }
+  ],
+  "id": "cooling"
+}
