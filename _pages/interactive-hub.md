@@ -82,29 +82,64 @@ document.addEventListener("DOMContentLoaded", function () {
 
 ---
 
+
 ## 🎮 All Interactive Games
 
 <div id="hub-cards" class="projects">
   {%- assign games = site.static_files
       | where_exp: "f", "f.path contains '/interactive/'"
       | where_exp: "f", "f.extname == '.html'"
-      | sort: "name" -%}
+      | sort: "path" -%}
+
   {%- for f in games -%}
-    {%- assign title = f.basename 
-   | replace: '-', ' ' 
-   | replace: '_', ' ' 
-   | strip -%}
 
-    {%- assign thumb_path = f.path | replace: f.extname, '.png' -%}
-    {%- assign thumb = site.static_files | where: "path", thumb_path | first -%}
+    {%- assign game_url = f.path -%}
 
-    <a class="card-link" href="{{ f.path | relative_url }}">
+    {%- if f.basename == "index" -%}
+
+      {%- assign folder_path = f.path
+          | remove: '/index.html' -%}
+
+      {%- assign title = folder_path
+          | split: '/'
+          | last
+          | replace: '-', ' '
+          | replace: '_', ' '
+          | capitalize -%}
+
+      {%- assign thumb_path = folder_path
+          | append: '/thumbnail.png' -%}
+
+    {%- else -%}
+
+      {%- assign title = f.basename
+          | replace: '-', ' '
+          | replace: '_', ' '
+          | capitalize -%}
+
+      {%- assign thumb_path = f.path
+          | replace: f.extname, '.png' -%}
+
+    {%- endif -%}
+
+    {%- if title == "Factory lab" -%}
+      {%- assign title = "Ladder Logic Engineer – Factory Lab" -%}
+    {%- endif -%}
+
+    {%- assign thumb = site.static_files
+        | where: "path", thumb_path
+        | first -%}
+
+    <a class="card-link" href="{{ game_url | relative_url }}">
       <div class="card">
         {%- if thumb -%}
-          <img src="{{ thumb.path | relative_url }}" alt="{{title}} thumbnail" style="max-width:100%;height:120px;object-fit:cover;border-radius:6px;">
+          <img src="{{ thumb.path | relative_url }}"
+               alt="{{ title }} thumbnail"
+               style="max-width:100%;height:120px;object-fit:cover;border-radius:6px;">
         {%- endif -%}
-        <h3>{{title}}</h3>
+        <h3>{{ title }}</h3>
       </div>
     </a>
+
   {%- endfor -%}
 </div>
