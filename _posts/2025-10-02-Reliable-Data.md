@@ -24,8 +24,8 @@ Reliable data is essential for advancing scientific knowledge and making evidenc
 
 <div class="es-presentation-frame">
   <iframe
-    src="https://engineeringshare.github.io/engineering-resources/presentations/AC-Generators/index.html"
-    title="AC Generators presentation"
+    src="https://engineeringshare.github.io/engineering-resources/presentations/Reliable-Data/index.html"
+    title="Reliable Data presentation"
     loading="lazy"
     allow="fullscreen"
     allowfullscreen>
