@@ -11,3 +11,32 @@
 /* Sequential training progression */
 .mission-card.locked{opacity:1;background:var(--panel2);box-shadow:none;cursor:not-allowed;transform:none!important;filter:none!important;border-color:var(--line)!important}.mission-card.locked strong,.mission-card.locked .card-arrow{color:var(--muted)}.mission-card.locked .card-desc{opacity:.78}.mission-card.locked .num{opacity:.75}.card-state.locked{display:flex;align-items:center;gap:5px;color:var(--muted)}.card-state.available{color:var(--teal)}.mission-card.available,.mission-card.started{border-color:var(--teal)}.lock-icon{width:12px;height:12px;flex:none}.brief .requirements-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:750;color:var(--muted);margin-top:12px}.brief li{margin:5px 0}.next-locked-note{font-size:11px;color:var(--muted);max-width:220px;text-align:right;flex-basis:100%}.head-buttons .next-locked-note.hidden{display:none}@media(max-width:900px){.next-locked-note{text-align:left;max-width:none}}@media(max-width:440px){.stats{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:14px}.stat:nth-child(3){border:0;padding-left:0}}
 .seq-row{padding:6px 8px;font-size:12px;border-left:3px solid transparent}.seq-row.active{border-color:#20bd91;background:rgba(28,181,133,.15);font-weight:700}.seq-row code{display:inline-block;min-width:32px}.io-row input[type=range]{width:80px;accent-color:#15a987}.tool{flex-shrink:0}.tool svg{min-width:30px}#processHead{transition:transform .4s}
+
+/* V4.3: multiple coils within one network, without creating series coils. */
+.parallel .paths::after{display:none} /* replaced by joins between non-terminated paths only */
+.join-vertical{position:absolute;right:0;width:2px;background:var(--wire);z-index:1;pointer-events:none}
+.parallel.live .join-vertical{background:var(--active)}
+.path-output-slot{align-self:flex-start;margin:24px 5px 0 6px;position:relative;z-index:3;font-size:11px!important;min-width:58px;min-height:26px;border:1px dashed var(--lad-active)!important;color:var(--lad-active)!important;background:var(--lad-insert)!important;white-space:nowrap}
+.path-output-slot:hover{background:var(--lad-hover)!important}
+.branch-terminal{position:relative;flex:none;z-index:2;margin-left:5px;min-width:112px;min-height:76px;display:flex;align-items:flex-start;background:var(--network)}
+.branch-terminal .cell{width:112px}
+.branch-terminal .cell::before{content:'';position:absolute;left:0;right:0;top:36px;height:2px;background:var(--wire);z-index:-1}
+.branch-terminal.live .cell .symbol{color:var(--online);background:var(--lad-live)}
+.branch-terminal .branch-remove{position:absolute;right:3px;top:20px;opacity:0;z-index:4}
+.branch-terminal:hover .branch-remove,.branch-terminal:focus-within .branch-remove{opacity:1}
+.output-bank{flex:none;display:flex;flex-direction:column;position:relative;min-width:158px;align-items:stretch}
+.output-bank .output-row{display:flex;align-items:flex-start;min-height:76px;position:relative;padding-left:18px}
+.output-bank .output-row::before{content:'';position:absolute;left:0;right:0;top:36px;height:2px;background:var(--wire)}
+.output-bank.has-parallel::before{content:'';position:absolute;left:5px;top:36px;bottom:65px;width:2px;background:var(--wire);z-index:1}
+.output-bank.has-parallel .output-row{padding-left:18px}
+.output-bank .terminal{min-width:119px;z-index:2}
+.output-bank .terminal::before{z-index:0}
+.output-bank .extra-terminal{min-width:116px;position:relative;z-index:2;display:flex;justify-content:center}
+.output-bank .extra-terminal::before{content:'';position:absolute;left:0;right:0;top:36px;height:2px;background:var(--wire)}
+.output-bank .extra-terminal .cell{width:115px;z-index:2}
+.output-bank .extra-terminal.live .cell .symbol{color:var(--online);background:var(--lad-live)}
+.output-bank .output-row .branch-remove{position:absolute;right:0;top:17px;opacity:0;z-index:4;padding:2px 5px}
+.output-bank .output-row:hover .branch-remove,.output-bank .output-row:focus-within .branch-remove{opacity:1}
+.output-bank .add-parallel-out{align-self:center;position:relative;z-index:2;margin:3px 0 8px;font-size:10px!important;border-style:dashed!important;white-space:nowrap;padding:4px 6px!important}
+.output-bank .output-row:has(.terminal.live)::before,.output-bank .output-row:has(.extra-terminal.live)::before{background:var(--active)}
+.output-bank.has-parallel:has(.terminal.live)::before{background:var(--active)}

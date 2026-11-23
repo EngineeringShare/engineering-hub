@@ -1,4 +1,4 @@
-# Ladder Logic Engineer — Factory Lab V4
+# Ladder Logic Engineer — Factory Lab V4.3
 
 ## Deploy
 Copy the whole `factory-lab/` directory into a static website such as Engineering Share (GitHub Pages). Link to `factory-lab/` or `factory-lab/index.html`. Keep `assets/` and `levels/` next to the HTML. No build step, CDN, backend or dependencies are required.
@@ -41,3 +41,24 @@ NO/NC; rising/falling operand edge contacts (tracked per instruction); coil, set
 
 ### Progress
 Stable level IDs are used in V4 browser localStorage. The game attempts to migrate V1–V3 programs/passes by ID. New inserted levels must be completed before later levels unlock; migrated later programs are retained. Storage is origin-specific and local to the browser. Hints, tests and code are all client-side; this is a practice environment, not a secure assessment system.
+
+
+## Multiple outputs (V4.3)
+The editor now supports multiple **parallel coil outputs** from the same network, and **path-ending coils** in contact branches. Coils do not create series logic; a coil on a branch **terminates** that path, so it cannot inadvertently bypass downstream conditions. When two or more paths without branch coils continue, they still rejoin using OR logic. Main output slots retain support for IEC timers, counters, and INT operations; additional parallel outputs accept COIL/SET/RESET.
+
+In the editor, click **+ Parallel coil** below the main output to add another coil driven by the final rung result. Click **+ Coil** at the end of an existing parallel contact path to give only that branch its own output. Branch-end output coils can be edited or removed without deleting their contacts. Commissioning tests and run/step/monitor functions include all outputs.
+
+Mission starter programs and older saved programs still work with `net.out`. Optional new starter-program properties on a network are:
+
+```json
+{
+  "groups": [[[ {"type":"NO","a":"%I0.0"} ], [ {"type":"NO","a":"%I0.1"} ]]],
+  "out": {"type":"COIL","a":"%Q0.0"},
+  "branchOutputs": {"0:1":{"type":"COIL","a":"%Q0.1"}},
+  "parallelOutputs": [{"type":"COIL","a":"%Q0.2"}]
+}
+```
+
+Here `branchOutputs["0:1"]` means the *second path* of the *first group*. If it has a coil, that path no longer feeds the main output; only non-terminated paths can pass signal to subsequent series groups. `parallelOutputs` is a list of additional coils driven by the same completed network condition as `out`. The editor maintains branch-output attachments when groups and paths are added/removed. For clarity, use a single write instruction per output tag where practical; multiple writes to the same output bit depend on execution order and produce compiler warnings.
+
+The network editor is a teaching-oriented LAD subset, not a byte-for-byte replica of TIA Portal's placement validation. **No series coils**: multiple coils on a completed rung are drawn as parallel endpoints.

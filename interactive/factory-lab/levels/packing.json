@@ -6,9 +6,9 @@
   "requirements": [
     "Part Present (I0.0) detects a component in position. Auto Mode (I0.1) selects automatic operation. Manual Jog (I0.2) is the operator's manual request. Station Ready (I0.3) shows that the station is available.",
     "In automatic operation, turn Pusher Extend (Q0.0) ON when Part Present (I0.0) AND Auto Mode (I0.1) are both ON.",
-    "In manual operation, Manual Jog (I0.2) can turn Pusher Extend (Q0.0) ON even if there is no part or Auto Mode is OFF.",
+    "In manual operation, Manual Jog (I0.2) must turn Pusher Extend (Q0.0) ON whenever Station Ready (I0.3) is ON, regardless of whether Part Present (I0.0) or Auto Mode (I0.1) are ON or OFF. Neither input must prevent manual operation.",
     "Station Ready (I0.3) must be ON for either type of operation. When Station Ready is OFF, Pusher Extend (Q0.0) must be OFF regardless of the other inputs.",
-    "The pusher must be energised only while a valid request exists. When the request disappears, turn it OFF. Do not use latching."
+    "Pusher Extend (Q0.0) must remain ON only while a valid automatic or manual request exists and Station Ready (I0.3) is ON. When Manual Jog (I0.2) is released, turn Pusher Extend OFF unless the automatic conditions are still satisfied. Do not use latching."
   ],
   "objective": "Combine automatic and manual control with a shared enable condition.",
   "ins": [
