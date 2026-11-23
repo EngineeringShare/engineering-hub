@@ -4,11 +4,12 @@
   "kind": "alarm",
   "brief": "Program an alarm that remembers a fault even after the original fault signal disappears.",
   "requirements": [
-    "Initially, Alarm Memory and Alarm Lamp must both be OFF.",
-    "When Fault Detected switches ON, set Alarm Memory to ON and turn Alarm Lamp ON.",
-    "When Fault Detected switches OFF, keep Alarm Memory and Alarm Lamp ON so the operator can see that a fault occurred.",
-    "When Acknowledge is ON and Fault Detected is OFF, clear Alarm Memory and turn the lamp OFF. The lamp must remain OFF after Acknowledge is released unless another fault occurs.",
-    "If Fault Detected and Acknowledge are both ON, the fault must take priority: Alarm Memory and Alarm Lamp must both remain ON."
+    "Fault Detected (I0.0) becomes ON when the machine detects a fault. Acknowledge (I0.1) is the operator's acknowledgement button. Use Alarm Memory (M0.0) to retain the fault state.",
+    "Initially, Alarm Memory (M0.0) and Alarm Lamp (Q0.0) must both be OFF.",
+    "When Fault Detected (I0.0) switches ON, set Alarm Memory (M0.0) and turn Alarm Lamp (Q0.0) ON.",
+    "When Fault Detected switches OFF again, Alarm Memory and Alarm Lamp must remain ON so the fault is not forgotten.",
+    "When Acknowledge (I0.1) is ON and Fault Detected is OFF, clear Alarm Memory (M0.0) and switch Alarm Lamp (Q0.0) OFF. The lamp must remain OFF when Acknowledge is released.",
+    "If Fault Detected (I0.0) and Acknowledge (I0.1) are ON simultaneously, the fault takes priority: Alarm Memory (M0.0) and Alarm Lamp (Q0.0) must stay ON."
   ],
   "objective": "Store a fault and manage acknowledge priority.",
   "ins": [

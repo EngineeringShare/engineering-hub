@@ -4,11 +4,11 @@
   "kind": "conveyor",
   "brief": "Program a conveyor that starts only after a continuous run request has lasted for 5 seconds.",
   "requirements": [
-    "Initially, the conveyor must be OFF. When Run Request switches ON, begin measuring the time it has been ON.",
-    "Keep Conveyor Motor OFF for the first 5 seconds. Once the request has been ON continuously for 5 seconds, turn the motor ON.",
-    "Keep the motor running while Run Request remains ON.",
-    "If Run Request switches OFF at any point, turn the motor OFF immediately and reset the elapsed time to zero.",
-    "If the request returns, a new full 5-second delay is required. Several short requests must not add together."
+    "Run Request (I0.0) is ON while the operator wants the conveyor to run. Conveyor Motor (Q0.0) must start only after Run Request has been continuously ON for 5 seconds.",
+    "Initially, Conveyor Motor (Q0.0) must be OFF. When Run Request (I0.0) turns ON, begin the 5-second delay but keep the motor OFF.",
+    "Once Run Request has remained ON for the full 5 seconds, switch Conveyor Motor (Q0.0) ON and keep it ON while the request remains active.",
+    "If Run Request (I0.0) turns OFF at any point, stop Conveyor Motor immediately and reset the elapsed delay to zero.",
+    "When Run Request turns ON again, a completely new 5-second delay must begin. Several shorter requests must not add together."
   ],
   "objective": "Understand on-delay timing and reset behaviour.",
   "ins": [

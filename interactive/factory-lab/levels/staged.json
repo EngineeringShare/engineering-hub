@@ -4,11 +4,11 @@
   "kind": "staged",
   "brief": "Program a process with two machines: a mixer followed by a transfer pump. Use the Run Request to start and stop the sequence.",
   "requirements": [
-    "Initially, both the Mixer Motor and Transfer Pump must be OFF.",
-    "When Run Request switches ON, wait 3 continuous seconds before starting the mixer. The pump must remain OFF during this first stage.",
-    "Once the mixer starts, wait a further 2 seconds before starting the transfer pump (approximately 5 seconds from the original request).",
-    "Keep both machines running after the second delay, provided Run Request stays ON.",
-    "If Run Request switches OFF at any point, stop both machines immediately and reset both delays. A new request must start the entire sequence again."
+    "Run Request (I0.0) controls two machines: Mixer Motor (Q0.0) and Transfer Pump (Q0.1). Both outputs must initially be OFF.",
+    "When Run Request (I0.0) turns ON, wait 3 continuous seconds before switching Mixer Motor (Q0.0) ON. Transfer Pump (Q0.1) must remain OFF during this first delay.",
+    "Once Mixer Motor has started, wait a further 2 seconds before switching Transfer Pump (Q0.1) ON (approximately 5 seconds after the original request).",
+    "While Run Request remains ON after both delays, keep Mixer Motor (Q0.0) and Transfer Pump (Q0.1) ON.",
+    "If Run Request (I0.0) turns OFF at any stage, turn both outputs OFF immediately and reset both delays. A later request must start the full sequence again."
   ],
   "objective": "Coordinate two timed process stages.",
   "ins": [

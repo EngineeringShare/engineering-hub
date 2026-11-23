@@ -4,11 +4,11 @@
   "kind": "fan",
   "brief": "Program an extraction fan that starts immediately but continues running briefly after the demand is removed.",
   "requirements": [
-    "Initially, if Extraction Request is OFF, the fan must be OFF.",
-    "When Extraction Request switches ON, turn Extraction Fan ON immediately and keep it running while the request is ON.",
-    "When Extraction Request switches OFF, keep the fan ON for a further 3 seconds. At the end of those 3 seconds, turn the fan OFF.",
-    "If the request switches ON again before the 3 seconds have expired, keep the fan running without interruption.",
-    "The next time the request switches OFF, begin a fresh 3-second run-on period."
+    "Extraction Request (I0.0) is ON when extraction is needed. The Extraction Fan (Q0.0) must start immediately when this input turns ON.",
+    "While Extraction Request (I0.0) remains ON, Extraction Fan (Q0.0) must remain ON.",
+    "When Extraction Request switches OFF, keep Extraction Fan (Q0.0) running for a further 3 seconds, then switch it OFF.",
+    "If Extraction Request (I0.0) turns ON again during the 3-second run-on, the fan must continue running without interruption.",
+    "When the request eventually switches OFF again, start a fresh full 3-second run-on period. If the request is initially OFF, the fan must initially be OFF."
   ],
   "objective": "Understand off-delay timing and retriggering.",
   "ins": [

@@ -4,11 +4,12 @@
   "kind": "batch",
   "brief": "Program a packing station to count passing parts and indicate when a batch of three has been completed.",
   "requirements": [
-    "At the start, the count must be zero and Batch Complete must be OFF.",
-    "Part Sensor switches ON as a part enters the sensor and OFF after it passes. Count one part each time the signal changes from OFF to ON. A part remaining in front of the sensor must count only once.",
-    "Keep Batch Complete OFF after the first and second parts. Turn it ON as soon as the third part is counted, and keep it ON if more parts pass.",
-    "When Reset Batch is ON, clear the count to zero and turn Batch Complete OFF. Reset must take priority over any part signal.",
-    "After reset, count new OFF-to-ON sensor transitions to build the next batch."
+    "Part Sensor (I0.0) is ON while a passing part is in front of the sensor. Reset Batch (I0.1) is the operator's counter-reset command.",
+    "At power-up, the counted number of parts must be zero and Batch Complete (Q0.0) must be OFF.",
+    "Count exactly one part whenever Part Sensor (I0.0) changes from OFF to ON. Keeping a part in front of the sensor must not produce additional counts.",
+    "Keep Batch Complete (Q0.0) OFF after part 1 and part 2. Turn it ON when the third part is counted, and leave it ON even if further parts pass.",
+    "When Reset Batch (I0.1) is ON, clear the count to zero and switch Batch Complete (Q0.0) OFF. Reset takes priority over a simultaneous part signal.",
+    "After Reset Batch returns to OFF, a new OFF-to-ON transition at Part Sensor must start counting the next batch."
   ],
   "objective": "Count rising edges and reset a batch.",
   "ins": [

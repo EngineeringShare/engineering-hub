@@ -4,10 +4,12 @@
   "kind": "pack",
   "brief": "Move a box using a spring-return cylinder. The sensors can be operated manually or by the virtual plant.",
   "requirements": [
-    "Step 0: keep the cylinder retracted. Start a cycle when Start PB rises, Box Present is ON and Retracted Sensor is ON.",
-    "Step 10: energise Extend until Extended Sensor becomes ON. Step 20: keep Extend ON for a further 2 seconds.",
-    "Step 30: switch Extend OFF and wait for Retracted Sensor to become ON. Then return to step 0.",
-    "Do not advance just because time passes while waiting for a position sensor. A new cycle requires a new Start press."
+    "Start PB (I0.0) is the cycle button. Box Present (I0.1) detects a box. Retracted Sensor (I0.2) and Extended Sensor (I0.3) report the cylinder position. Cylinder Extend (Q0.0) energises the spring-return cylinder.",
+    "Use the INT Sequence Step (MW10), initially 0. In step 0, keep Cylinder Extend (Q0.0) OFF. Start a new cycle only when Start PB has a fresh OFF-to-ON transition, Box Present is ON and Retracted Sensor is ON.",
+    "Step 10: turn Cylinder Extend (Q0.0) ON and wait until Extended Sensor (I0.3) becomes ON. Do not advance merely because time has passed.",
+    "Step 20: keep Cylinder Extend (Q0.0) ON for another 2 seconds after the extended position is reached.",
+    "Step 30: switch Cylinder Extend (Q0.0) OFF and wait for Retracted Sensor (I0.2) to become ON. Return Sequence Step (MW10) to 0 when the cylinder has retracted.",
+    "A new cycle requires a new press of Start PB (I0.0). Step Snapshot (MW12) is available if needed to prevent unwanted multiple transitions in one PLC scan."
   ],
   "objective": "Use position sensors as transition conditions.",
   "ins": [

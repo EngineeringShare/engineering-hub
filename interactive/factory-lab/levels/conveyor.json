@@ -4,8 +4,8 @@
   "kind": "conveyor",
   "brief": "Program the conveyor motor using the Run Request and Guard Closed inputs.",
   "requirements": [
-    "Run Request is ON when the operator wants the conveyor to run. Guard Closed is ON when the machine guard is closed.",
-    "The conveyor motor must be ON only when both inputs are ON at the same time.",
+    "Run Request (I0.0) is ON when the operator wants the conveyor to run. Guard Closed (I0.1) is ON when the machine guard is closed.",
+    "The Conveyor Motor (Q0.0) must be ON only when both inputs are ON at the same time.",
     "If either input is OFF, the motor must be OFF. If either input switches OFF while the conveyor is running, the motor must stop immediately.",
     "No memory is required: restoring both inputs to ON should start the motor again."
   ],

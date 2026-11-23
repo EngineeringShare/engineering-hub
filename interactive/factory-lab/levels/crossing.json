@@ -4,10 +4,13 @@
   "kind": "crossing",
   "brief": "Control a simplified pedestrian crossing (training only).",
   "requirements": [
-    "Initially step 0: road green and pedestrian red. Wait for Crossing PB to be pressed.",
-    "Step 10: road amber, pedestrian red for 3 s. Step 20: road red, pedestrian red for 2 s. Step 30: road red, pedestrian green for 8 s.",
-    "Step 40: road red, pedestrian red for 2 s. Step 50: road red + amber, pedestrian red for 2 s. Return to step 0.",
-    "Ignore button presses during the sequence. A button held through the end must not start a second sequence; release and press again."
+    "Crossing PB (I0.0) is the pedestrian request button. The outputs are Road Red (Q0.0), Road Amber (Q0.1), Road Green (Q0.2), Ped Red (Q0.3) and Ped Green (Q0.4).",
+    "Use Sequence Step (MW10), an INT tag initially set to 0. In step 0, show Road Green (Q0.2) and Ped Red (Q0.3). Wait for a new press of Crossing PB (I0.0).",
+    "Step 10: Road Amber (Q0.1) and Ped Red (Q0.3) ON for 3 seconds. Step 20: Road Red (Q0.0) and Ped Red ON for 2 seconds.",
+    "Step 30: Road Red (Q0.0) and Ped Green (Q0.4) ON for 8 seconds. Step 40: Road Red and Ped Red ON for 2 seconds.",
+    "Step 50: Road Red (Q0.0), Road Amber (Q0.1) and Ped Red (Q0.3) ON for 2 seconds. Then return Sequence Step (MW10) to step 0.",
+    "All lamps not mentioned in the current step must be OFF. Ignore button presses while the crossing sequence is running. If Crossing PB is held down through the end, it must not trigger another sequence until released and pressed again.",
+    "Step Snapshot (MW12) is available as an optional helper for scan-safe step transitions. This is a simplified training sequence, not a real road-signal design."
   ],
   "objective": "Trigger and complete a timed sequence.",
   "ins": [

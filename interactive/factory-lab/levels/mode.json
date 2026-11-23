@@ -4,9 +4,10 @@
   "kind": "conveyor",
   "brief": "Control a conveyor using an automatic/manual selector.",
   "requirements": [
-    "Auto Mode ON selects automatic operation; OFF selects manual operation.",
-    "In automatic mode, the motor runs only while Part Present is ON. In manual mode, the motor runs only while Manual Jog is ON. Ignore the other demand in each mode.",
-    "Guard Closed must be ON regardless of mode. If it is OFF, stop immediately. No memory is required."
+    "Auto Mode (I0.0) is ON in automatic mode and OFF in manual mode. Part Present (I0.1) detects a component. Manual Jog (I0.2) is the manual run command. Guard Closed (I0.3) is ON when the guard is closed.",
+    "When Auto Mode (I0.0) is ON, Conveyor Motor (Q0.0) must run only while Part Present (I0.1) is ON. Manual Jog must have no effect in automatic mode.",
+    "When Auto Mode (I0.0) is OFF, Conveyor Motor (Q0.0) must run only while Manual Jog (I0.2) is ON. Part Present must have no effect in manual mode.",
+    "Guard Closed (I0.3) must be ON in either mode. If the guard opens, Conveyor Motor (Q0.0) must switch OFF immediately. Do not use memory or latching."
   ],
   "objective": "Select between mutually exclusive modes.",
   "ins": [

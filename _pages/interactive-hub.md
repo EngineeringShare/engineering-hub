@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
 ---
 
 
-## 🎮 All Interactive Games
+## 🎮 All Interactive Pages
 
 <div id="hub-cards" class="projects">
   {%- assign games = site.static_files

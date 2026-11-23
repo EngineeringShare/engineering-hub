@@ -4,9 +4,10 @@
   "kind": "pump",
   "brief": "Control the pump using two digital level switches.",
   "requirements": [
-    "Low Level Wet is ON when water reaches the lower switch; High Level Wet is ON when water reaches the upper switch.",
-    "Run the pump only when both switches are OFF (water below both). Stop immediately if either switch becomes ON.",
-    "If the switches disagree in an impossible way (upper wet but lower dry), the pump must remain OFF. No latching is required."
+    "Low Level Wet (I0.0) becomes ON when water reaches the lower level switch. High Level Wet (I0.1) becomes ON when water reaches the upper level switch.",
+    "Run Pump Motor (Q0.0) only when Low Level Wet (I0.0) and High Level Wet (I0.1) are both OFF. This means the water is below both switches.",
+    "If either switch becomes ON, switch Pump Motor (Q0.0) OFF immediately. The pump must also remain OFF if the upper switch is ON but the lower switch is OFF.",
+    "No memory is required. When both switches return to OFF, the pump should run again."
   ],
   "objective": "Interpret inverted sensor conditions.",
   "ins": [

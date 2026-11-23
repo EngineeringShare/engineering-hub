@@ -4,9 +4,11 @@
   "kind": "panel",
   "brief": "Make a warning lamp flash while a fault is active.",
   "requirements": [
-    "With Fault OFF, the lamp must be OFF.",
-    "When Fault switches ON, start an ON phase lasting approximately 1 second, then an OFF phase lasting approximately 1 second. Repeat while Fault stays ON.",
-    "When Fault switches OFF, extinguish the lamp immediately and reset the flashing cycle. A new fault starts with the ON phase. One simulated scan (100 ms) timing tolerance is allowed."
+    "Fault (I0.0) is ON while a machine fault exists. Warning Lamp (Q0.0) provides a flashing visual warning.",
+    "When Fault (I0.0) is OFF, Warning Lamp (Q0.0) must be OFF.",
+    "When Fault first switches ON, immediately begin with Warning Lamp (Q0.0) ON for approximately 1 second, followed by OFF for approximately 1 second.",
+    "Continue alternating these ON and OFF phases while Fault (I0.0) remains ON.",
+    "If Fault switches OFF, extinguish Warning Lamp immediately and reset the flashing cycle. A new fault must begin with the ON phase. A 100 ms simulated-scan tolerance is allowed."
   ],
   "objective": "Build a repeating timer feedback circuit.",
   "ins": [

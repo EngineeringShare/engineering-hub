@@ -4,11 +4,11 @@
   "kind": "reverse",
   "brief": "Program a motor that can run in either direction using two direction requests and a common drive enable.",
   "requirements": [
-    "When Drive Enable is ON and only Forward Request is ON, turn Motor Forward ON and Motor Reverse OFF.",
-    "When Drive Enable is ON and only Reverse Request is ON, turn Motor Reverse ON and Motor Forward OFF.",
-    "If neither request is ON, both motor outputs must be OFF. If both requests are ON at the same time, both outputs must also be OFF.",
-    "Drive Enable must be ON for any movement. Switching it OFF must immediately stop the motor in either direction.",
-    "The Forward and Reverse outputs must never be ON together. No latching or timed changeover is required."
+    "Forward Request (I0.0) asks for forward motion; Reverse Request (I0.1) asks for reverse motion. Drive Enable (I0.2) must be ON before the motor can move.",
+    "When Drive Enable (I0.2) is ON and only Forward Request (I0.0) is ON, switch Motor Forward (Q0.0) ON and Motor Reverse (Q0.1) OFF.",
+    "When Drive Enable is ON and only Reverse Request (I0.1) is ON, switch Motor Reverse (Q0.1) ON and Motor Forward (Q0.0) OFF.",
+    "When neither direction is requested, OR both directions are requested simultaneously, both motor outputs must be OFF.",
+    "If Drive Enable (I0.2) changes to OFF, switch both outputs OFF immediately. Motor Forward (Q0.0) and Motor Reverse (Q0.1) must never be ON together. Do not add latching or a changeover delay."
   ],
   "objective": "Prevent conflicting motor commands.",
   "ins": [

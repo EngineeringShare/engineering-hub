@@ -4,10 +4,11 @@
   "kind": "pack",
   "brief": "A faulty pusher program has already been loaded into the editor. Test it using the watch table and correct the program to meet the requirements below.",
   "requirements": [
-    "The pusher must extend when Auto Demand is ON, Manual Demand is ON, or both are ON, provided Station Ready is ON.",
-    "If neither demand is ON, Pusher Extend must be OFF.",
-    "If Station Ready is OFF, Pusher Extend must always be OFF, even when Auto Demand or Manual Demand is ON.",
-    "The supplied program does not meet all these conditions. Identify which input combinations cause the fault, repair the ladder logic and repeat the commissioning tests."
+    "An incorrect ladder program is already loaded. Auto Demand (I0.0) and Manual Demand (I0.1) are two ways to request a push. Station Ready (I0.2) is ON only when the station can operate.",
+    "Pusher Extend (Q0.0) must be ON when Station Ready (I0.2) is ON AND at least one of Auto Demand (I0.0) or Manual Demand (I0.1) is ON.",
+    "When both demand inputs are OFF, Pusher Extend (Q0.0) must be OFF.",
+    "When Station Ready (I0.2) is OFF, Pusher Extend (Q0.0) must be OFF even if one or both demand inputs are ON.",
+    "Use the watch table to find an input combination where the supplied program behaves incorrectly. Repair the ladder logic, then rerun the commissioning tests."
   ],
   "objective": "Diagnose a faulty control program using monitoring.",
   "ins": [

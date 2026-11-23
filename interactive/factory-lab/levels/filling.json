@@ -4,11 +4,13 @@
   "kind": "filling",
   "brief": "Fill bottles on a conveyor using a retractable nozzle.",
   "requirements": [
-    "Step 0: idle, conveyor and valve OFF, nozzle raised. Start PB begins production.",
-    "Step 10: conveyor ON until Bottle Present is ON. Step 20: stop conveyor and lower nozzle; wait for Nozzle Down.",
-    "Step 30: keep nozzle down and open Fill Valve for 5 seconds. Step 40: close valve and raise nozzle; wait for Nozzle Up.",
-    "Step 50: run conveyor until Bottle Present switches OFF, then return to 10 for the next bottle. Nozzle Down Command is ON only in steps 20 and 30.",
-    "No Stop input is required in this training exercise; use CPU Stop to reset."
+    "Start PB (I0.0) starts production. Bottle Present (I0.1) detects the bottle in the filling position; Nozzle Down (I0.2) and Nozzle Up (I0.3) confirm the nozzle position.",
+    "Control Conveyor (Q0.0), Nozzle Down Command (Q0.1) and Fill Valve (Q0.2) using the INT Sequence Step (MW10), initially 0.",
+    "Step 0: keep Conveyor (Q0.0) and Fill Valve (Q0.2) OFF with Nozzle Down Command (Q0.1) OFF, so the nozzle is raised. When Start PB (I0.0) is pressed, move to step 10.",
+    "Step 10: run Conveyor (Q0.0) until Bottle Present (I0.1) is ON. Step 20: stop Conveyor and energise Nozzle Down Command (Q0.1) until Nozzle Down (I0.2) is ON.",
+    "Step 30: keep Nozzle Down Command (Q0.1) ON and open Fill Valve (Q0.2) for 5 seconds. Step 40: close Fill Valve and switch Nozzle Down Command OFF; wait until Nozzle Up (I0.3) is ON.",
+    "Step 50: run Conveyor (Q0.0) until Bottle Present (I0.1) becomes OFF, then return Sequence Step (MW10) to 10 for the next bottle. Nozzle Down Command must be ON only in steps 20 and 30.",
+    "There is no Stop pushbutton input in this exercise; use the CPU Stop control to reset. Step Snapshot (MW12) is provided for optional scan-safe transitions."
   ],
   "objective": "Coordinate motion, sensors and a filling timer.",
   "ins": [

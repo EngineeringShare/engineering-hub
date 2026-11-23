@@ -4,12 +4,14 @@
   "kind": "production",
   "brief": "Automate a five-part manufacturing batch. Use the sequence integer and a second integer for the completed part count.",
   "requirements": [
-    "Step 0: all outputs OFF; Start begins a new batch only when Part Count is 0.",
-    "Step 10: Feed Conveyor ON until Part At Station is ON. Step 20: Clamp ON until Clamp Closed is ON.",
-    "Step 30: keep Clamp ON and Tool ON for 3 seconds. Step 40: keep Clamp ON, Tool OFF; wait for Tool Home.",
-    "Step 50: release Clamp and wait for Clamp Open. Step 60: Exit Conveyor ON until Exit Sensor is ON.",
-    "Step 70: keep Exit Conveyor ON until Exit Sensor is OFF; then increment Part Count exactly once. Return to 10 if count is below 5, otherwise enter step 80.",
-    "Step 80: all actuators OFF, Batch Complete ON. Ignore Start until Reset PB returns the count and step to 0. Reset has no effect during production."
+    "Start PB (I0.0) starts a batch, Reset PB (I0.6) resets it after completion, and Part Count (MW14) is an INT memory tag that records completed parts. Sequence Step (MW10) stores the active stage.",
+    "Step 0: keep all outputs OFF. Begin a batch only when Start PB (I0.0) is pressed and Part Count (MW14) equals 0.",
+    "Step 10: switch Feed Conveyor (Q0.0) ON until Part At Station (I0.1) becomes ON. Step 20: switch Feed Conveyor OFF and Clamp (Q0.1) ON until Clamp Closed (I0.2) becomes ON.",
+    "Step 30: keep Clamp (Q0.1) ON and energise Tool (Q0.2) for 3 seconds. Step 40: keep Clamp ON but switch Tool OFF; wait for Tool Home (I0.3) to become ON.",
+    "Step 50: switch Clamp (Q0.1) OFF and wait for Clamp Open (I0.4) to become ON. Step 60: switch Exit Conveyor (Q0.3) ON until Exit Sensor (I0.5) becomes ON.",
+    "Step 70: keep Exit Conveyor (Q0.3) ON until Exit Sensor (I0.5) switches OFF again. Then increase Part Count (MW14) by exactly 1. If the count is below 5, return Sequence Step (MW10) to 10; otherwise advance to step 80.",
+    "Step 80: switch Feed Conveyor (Q0.0), Clamp (Q0.1), Tool (Q0.2) and Exit Conveyor (Q0.3) OFF; turn Batch Complete (Q0.4) ON. Ignore Start PB until Reset PB (I0.6) resets Part Count (MW14) and Sequence Step (MW10) to 0.",
+    "Batch Complete (Q0.4) must be OFF outside step 80. Reset PB must have no effect while a batch is in progress. Step Snapshot (MW12) can be used to avoid multiple state transitions during one PLC scan."
   ],
   "objective": "Combine integer sequencing, timed transitions and count arithmetic.",
   "ins": [

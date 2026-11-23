@@ -4,9 +4,10 @@
   "kind": "panel",
   "brief": "Control a motor and its status indicators.",
   "requirements": [
-    "Run Request is ON when the operator requests movement. Fault is ON when a fault exists.",
-    "Run the motor only when Run Request is ON and Fault is OFF.",
-    "Green Running lamp is ON exactly when the motor is ON. Red Stopped lamp is ON whenever the motor is OFF. Amber Fault lamp follows Fault."
+    "Run Request (I0.0) is ON when the operator wants the motor to run. Fault (I0.1) is ON when the machine has a fault.",
+    "Motor (Q0.0) must run only when Run Request (I0.0) is ON AND Fault (I0.1) is OFF. A fault must stop the motor immediately.",
+    "Running Lamp (Q0.1) must be ON exactly when Motor (Q0.0) is ON. Stopped Lamp (Q0.2) must be ON whenever the motor is OFF.",
+    "Fault Lamp (Q0.3) must match Fault (I0.1): ON during a fault and OFF when there is no fault. It is possible for both the Stopped and Fault lamps to be ON together."
   ],
   "objective": "Use several outputs and networks.",
   "ins": [

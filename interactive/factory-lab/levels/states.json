@@ -4,9 +4,11 @@
   "kind": "panel",
   "brief": "Store an operator-selected machine state in an INT tag.",
   "requirements": [
-    "Machine State starts at 0 (Stopped). Standby PB selects 10 and Run PB selects 20. Stop PB selects 0.",
-    "Keep the selected state when all buttons are released. If Standby and Run are pressed together, Run wins. Stop overrides both.",
-    "Stopped, Standby and Running lamps must show state 0, 10 and 20 respectively. Only one lamp is ON at a time."
+    "Stop PB (I0.0), Standby PB (I0.1) and Run PB (I0.2) select the machine's operating state. Store the selection in Machine State (MW10), an INT memory tag.",
+    "Machine State (MW10) must initially equal 0 (stopped). Pressing Standby PB (I0.1) sets it to 10; pressing Run PB (I0.2) sets it to 20; pressing Stop PB (I0.0) sets it to 0.",
+    "After any button is released, Machine State (MW10) must keep its last selected value until another button is pressed.",
+    "If Standby PB and Run PB are ON together, Run takes priority (state 20). Stop PB takes priority over both other buttons (state 0).",
+    "Stopped (Q0.0) must be ON only in state 0; Standby (Q0.1) only in state 10; Running (Q0.2) only in state 20. Exactly one indicator should be ON at a time."
   ],
   "objective": "Write and compare retained integer values.",
   "ins": [

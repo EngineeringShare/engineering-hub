@@ -4,12 +4,12 @@
   "kind": "pump",
   "brief": "Program a pumping station with a stored run request and a delayed pump start. The operator can request the pump to run, but it must wait until the liquid level is suitable.",
   "requirements": [
-    "Initially, Pump Request memory and Pump Motor must be OFF. Start PB is ON when Start is pressed. Stop Healthy is ON when Stop is released and OFF when Stop is pressed.",
-    "Pressing Start while Stop is released must set Pump Request to ON. Releasing Start must not clear the request.",
-    "Pressing Stop must clear Pump Request and stop the motor immediately, even if Start is pressed. Releasing Stop with Start released must not restart the pump.",
-    "Level OK is ON when the liquid level is suitable. Start the pump only when Pump Request and Level OK have both been ON continuously for 2 seconds.",
-    "If Pump Request or Level OK switches OFF, turn Pump Motor OFF immediately and reset the 2-second delay.",
-    "A drop in Level OK must not clear Pump Request. If the level becomes suitable again while the request is still stored, wait another full 2 seconds before restarting the pump."
+    "Start PB (I0.0) is ON while Start is pressed. Stop Healthy (I0.1) is ON when the normally-closed Stop button is released and OFF when pressed. Level OK (I0.2) is ON when the water level allows pumping.",
+    "Use Pump Request (M0.0) to remember that the operator wants the pump to run. Initially, Pump Request (M0.0) and Pump Motor (Q0.0) must be OFF.",
+    "Pressing Start PB (I0.0) while Stop Healthy (I0.1) is ON must store Pump Request (M0.0) as ON. Releasing Start must not clear this stored request.",
+    "Pressing Stop changes Stop Healthy (I0.1) to OFF: immediately clear Pump Request (M0.0) and switch Pump Motor (Q0.0) OFF, even if Start is also pressed. Releasing Stop must not restart it by itself.",
+    "Pump Motor (Q0.0) may switch ON only after Pump Request (M0.0) AND Level OK (I0.2) have both remained ON continuously for 2 seconds.",
+    "If Pump Request or Level OK turns OFF, stop the pump immediately and reset the 2-second delay. Losing Level OK must NOT erase Pump Request: when the level becomes acceptable again, wait another full 2 seconds before restarting."
   ],
   "objective": "Combine memory, timing and machine permissives.",
   "ins": [

@@ -4,9 +4,12 @@
   "kind": "tank",
   "brief": "Display the current fill level using four indicator lamps.",
   "requirements": [
-    "Level Percent is an INT input between 0 and 100. Change it using the watch-table slider.",
-    "Turn on Low for 0–19, Normal for 20–79, High for 80–94 and Overflow for 95–100.",
-    "Exactly one lamp must be ON at any valid level. Update the outputs immediately when the level changes."
+    "Level Percent (IW2) is an INT input representing the current tank fill percentage from 0 to 100. Use the watch-table slider to change its value.",
+    "When Level Percent (IW2) is 0–19, switch Low (Q0.0) ON and all other indicator lamps OFF.",
+    "When Level Percent is 20–79, switch Normal (Q0.1) ON and all other lamps OFF.",
+    "When Level Percent is 80–94, switch High (Q0.2) ON and all other lamps OFF.",
+    "When Level Percent is 95–100, switch Overflow (Q0.3) ON and all other lamps OFF.",
+    "For every valid tank level, exactly one of Low (Q0.0), Normal (Q0.1), High (Q0.2) or Overflow (Q0.3) must be ON. Outputs must update as soon as the value changes."
   ],
   "objective": "Use integer comparison instructions.",
   "ins": [

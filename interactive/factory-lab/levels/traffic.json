@@ -4,9 +4,12 @@
   "kind": "traffic",
   "brief": "Build a repeating four-step traffic-light sequence.",
   "requirements": [
-    "Use Sequence Step (INT), initially 10. Step 10: red only for 5 s. Step 20: red and amber for 2 s. Step 30: green only for 5 s. Step 40: amber only for 2 s.",
-    "After step 40 return to step 10 and repeat without operator input.",
-    "The lamps must match the current step. Never show green together with red or amber. Use separate timing instances or explicitly reset timing between steps."
+    "Control three outputs: Red (Q0.0), Amber (Q0.1) and Green (Q0.2). Use the INT memory tag Sequence Step (MW10), initially 10, to determine which stage is active.",
+    "Step 10: switch Red (Q0.0) ON, Amber and Green OFF for 5 seconds. Then change Sequence Step (MW10) to 20.",
+    "Step 20: switch Red (Q0.0) and Amber (Q0.1) ON, Green OFF for 2 seconds. Then change Sequence Step to 30.",
+    "Step 30: switch Green (Q0.2) ON, Red and Amber OFF for 5 seconds. Then change Sequence Step to 40.",
+    "Step 40: switch Amber (Q0.1) ON, Red and Green OFF for 2 seconds. Then return Sequence Step (MW10) to 10 and repeat continuously.",
+    "The lamps must always match the active step. Green must never be ON at the same time as Red or Amber. Step Snapshot (MW12) is available if you need to avoid multiple step changes during one PLC scan."
   ],
   "objective": "Create a continuously repeating integer sequence.",
   "ins": [],

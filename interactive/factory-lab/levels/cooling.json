@@ -4,10 +4,10 @@
   "kind": "fan",
   "brief": "Program the cooling fan so it can be started manually or automatically when cooling is needed.",
   "requirements": [
-    "Manual Demand is ON when the operator requests the fan. Temperature OK is ON when the temperature is normal and OFF when the temperature is too high.",
-    "Turn the cooling fan ON whenever Manual Demand is ON, regardless of the temperature.",
-    "Also turn the fan ON whenever Temperature OK is OFF, even if Manual Demand is OFF.",
-    "The fan must only be OFF when Manual Demand is OFF and Temperature OK is ON. It must respond immediately to changes in either input."
+    "Manual Demand (I0.0) is ON when the operator requests cooling. Temperature OK (I0.1) is ON when the temperature is normal and OFF when it is too high.",
+    "Turn Cooling Fan (Q0.0) ON whenever Manual Demand (I0.0) is ON, regardless of the temperature.",
+    "Cooling Fan (Q0.0) must also be ON whenever Temperature OK (I0.1) is OFF, even when Manual Demand is OFF.",
+    "The fan must be OFF only when Manual Demand is OFF AND Temperature OK is ON. Respond to either input changing without any delay or memory."
   ],
   "objective": "Use alternative and inverted conditions.",
   "ins": [

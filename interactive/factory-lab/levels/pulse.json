@@ -4,9 +4,11 @@
   "kind": "pack",
   "brief": "Create a fixed-length press cycle.",
   "requirements": [
-    "Initially the press is retracted. Press Request starts a 2-second extension on its rising edge.",
-    "Once started, the output stays ON for the full 2 seconds even if the request is released. Then it switches OFF even if Press Request remains ON.",
-    "A new rising edge after completion starts another pulse; edges during an active pulse must not extend it."
+    "Press Request (I0.0) is a momentary command from the operator. Press Extend (Q0.0) controls a spring-return pneumatic press.",
+    "Initially, Press Extend (Q0.0) must be OFF. When Press Request (I0.0) changes from OFF to ON, energise Press Extend for exactly 2 seconds.",
+    "Once the press cycle begins, keep Press Extend (Q0.0) ON for the full 2 seconds even if the button is released early.",
+    "After 2 seconds, switch Press Extend OFF even if Press Request is still being held ON.",
+    "A new OFF-to-ON transition of Press Request can start another cycle after completion. Additional transitions during an active cycle must not extend its length."
   ],
   "objective": "Use a pulse timer.",
   "ins": [

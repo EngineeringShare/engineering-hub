@@ -4,10 +4,11 @@
   "kind": "pack",
   "brief": "Program the pneumatic pusher at a packing station. It can be operated automatically or manually.",
   "requirements": [
-    "Automatic operation: extend the pusher when Part Present and Auto Mode are both ON.",
-    "Manual operation: extend the pusher whenever Manual Jog is ON. Manual operation does not require a part to be present or Auto Mode to be ON.",
-    "Station Ready must be ON for either type of operation. If Station Ready is OFF, the pusher must retract or remain retracted, regardless of the other inputs.",
-    "The Pusher Extend output must be ON while a valid demand exists and the station is ready; otherwise it must be OFF. No latching is required."
+    "Part Present (I0.0) detects a component in position. Auto Mode (I0.1) selects automatic operation. Manual Jog (I0.2) is the operator's manual request. Station Ready (I0.3) shows that the station is available.",
+    "In automatic operation, turn Pusher Extend (Q0.0) ON when Part Present (I0.0) AND Auto Mode (I0.1) are both ON.",
+    "In manual operation, Manual Jog (I0.2) can turn Pusher Extend (Q0.0) ON even if there is no part or Auto Mode is OFF.",
+    "Station Ready (I0.3) must be ON for either type of operation. When Station Ready is OFF, Pusher Extend (Q0.0) must be OFF regardless of the other inputs.",
+    "The pusher must be energised only while a valid request exists. When the request disappears, turn it OFF. Do not use latching."
   ],
   "objective": "Combine automatic and manual control with a shared enable condition.",
   "ins": [
