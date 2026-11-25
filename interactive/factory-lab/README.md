@@ -62,3 +62,57 @@ Mission starter programs and older saved programs still work with `net.out`. Opt
 Here `branchOutputs["0:1"]` means the *second path* of the *first group*. If it has a coil, that path no longer feeds the main output; only non-terminated paths can pass signal to subsequent series groups. `parallelOutputs` is a list of additional coils driven by the same completed network condition as `out`. The editor maintains branch-output attachments when groups and paths are added/removed. For clarity, use a single write instruction per output tag where practical; multiple writes to the same output bit depend on execution order and produce compiler warnings.
 
 The network editor is a teaching-oriented LAD subset, not a byte-for-byte replica of TIA Portal's placement validation. **No series coils**: multiple coils on a completed rung are drawn as parallel endpoints.
+
+---
+
+# V5 — Rebuilt LAD editor (25 November 2026)
+
+The LAD editor now stores each network as an editable tree of series sections and nested parallel paths, instead of fixed contact groups and one prescribed output slot. This allows circuits with multiple coils in a series path, output coils on alternative branches, and branches within branches. Networks execute left to right, from top to bottom, in the simulated PLC scan.
+
+## Using the new editor
+
+1. Open a mission or **Free programming lab** from the main menu.
+2. **Drag** an instruction from the toolbar to a visible wire, or select an instruction and **click a +** on a wire. A dialog assigns its PLC tag, instance or parameters. Dragging onto an existing instruction lets you replace it.
+3. **Drag an existing instruction** to a different wire to move it, including to another network.
+4. Hover an instruction and choose **+ branch** above or below to place a parallel path around it. Drag a new instruction onto the empty wire. **+ parallel path** adds a further alternative path.
+5. To branch around *multiple* instructions, click the first instruction, Shift-click the last instruction in the **same series path**, then choose **Branch selected** in the network header. Populate the new path before compiling.
+6. Compile, run/step scans and then run the mission commissioning tests. **Undo** and **Redo** remain available from the toolbar and Ctrl+Z / Ctrl+Y.
+7. In **Free programming lab**, select **Load sample LAD network** to see two coils in series on one branch, an alternative coil on a second branch, and a shared output after the branch.
+
+## Stored program format
+
+Network programs use the following general structure (example operands abbreviated):
+
+```json
+{
+  "name": "Example",
+  "tree": {
+    "kind": "series",
+    "id": "e1",
+    "items": [
+      { "kind": "contact", "id": "e2", "type": "NO", "a": "%I0.0" },
+      { "kind": "parallel", "id": "e3", "paths": [
+        { "kind": "series", "id": "e4", "items": [
+          { "kind": "output", "id": "e5", "type": "COIL", "a": "%Q0.0" },
+          { "kind": "output", "id": "e6", "type": "COIL", "a": "%Q0.1" }
+        ]},
+        { "kind": "series", "id": "e7", "items": [
+          { "kind": "output", "id": "e8", "type": "COIL", "a": "%Q0.2" }
+        ]}
+      ]}
+    ]
+  }
+}
+```
+
+The existing 24 level JSON files, mission progression, commissioning test descriptions, dark/light themes and machinery simulations are retained. **Saved V4 programs are automatically converted when opened in V5**, and the storage key has not changed. This is a one-way program-format upgrade: after V5 saves a converted program, the older V4 application cannot interpret the V5 network tree. Keep a copy of the previous release if you may need to roll back.
+
+The old V4 branch-ending coils were treated as terminal paths that did not rejoin later logic. Their migrated representation retains this simulated behaviour and their wire is visually left unconnected at the right junction. Newly built parallel coil paths are normal connected paths and can feed later logic when applicable.
+
+## Hosting
+
+Deploy the **whole `factory-lab/` directory**, including `assets/` and `levels/`, on GitHub Pages. `index.html` loads the mission index and individual JSON files using `fetch()`. Opening the HTML by double-clicking it from disk is not supported by some browsers; use a local HTTP server (e.g., `python -m http.server 8000`) or the deployed site.
+
+## Important limitations
+
+This editor is a TIA-Portal-**inspired** teaching interface, not a clone of Siemens' proprietary LAD compiler. It supports nested LAD topology and the simulated instructions already supplied by Factory Lab, but does not model all Siemens instruction constraints, EN/ENO behaviours, asynchronous process timing, retained DB semantics, or hardware/safety execution. Scans and timer updates are quantised to 100 ms. Use real TIA Portal/PLCSIM for formal validation and hardware testing.

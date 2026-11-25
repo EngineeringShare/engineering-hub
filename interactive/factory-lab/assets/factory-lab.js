@@ -14,15 +14,44 @@ const missions=loaded.missions,sandbox=loaded.sandbox;
 const types={NO:'NO contact',NC:'NC contact',COIL:'Coil',SET:'Set coil',RESET:'Reset coil',TON:'TON',TOF:'TOF',CTU:'CTU',TP:'TP',EQ:'== Int',NE:'<> Int',GT:'> Int',GE:'>= Int',LT:'< Int',LE:'<= Int',RISE:'Rising edge',FALL:'Falling edge',MOVE:'MOVE',ADD:'ADD Int',SUB:'SUB Int'};
 const blockType=x=>['TON','TOF','CTU','TP'].includes(x);const compareType=x=>['EQ','NE','GT','GE','LT','LE'].includes(x);const mathType=x=>['MOVE','ADD','SUB'].includes(x);const contactType=x=>['NO','NC','RISE','FALL'].includes(x)||compareType(x);const compareLabel={EQ:'==',NE:'≠',GT:'>',GE:'≥',LT:'<',LE:'≤'};
 function symbol(type){if(compareType(type)||mathType(type)||type==='RISE'||type==='FALL')return `<svg viewBox="0 0 46 24" aria-hidden="true"><rect x="3" y="2" width="40" height="20" rx="2" fill="none" stroke="currentColor"/><text x="23" y="16" text-anchor="middle" fill="currentColor" font-size="11">${compareLabel[type]||({RISE:'P',FALL:'N'})[type]||type}</text></svg>`;let inner=type==='NO'||type==='NC'?`<path d="M0 12H16 M16 3V21 M30 3V21 M30 12H46"/>${type==='NC'?'<path d="M13 22L33 2"/>':''}`:`<path d="M0 12H14 M17 3Q7 12 17 21 M29 3Q39 12 29 21 M32 12H46"/>${type==='SET'||type==='RESET'?`<text x="23" y="15.5" text-anchor="middle" font-size="10" fill="currentColor" stroke="none">${type==='SET'?'S':'R'}</text>`:''}`;return `<svg viewBox="0 0 46 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">${inner}</svg>`}
-const baseProgram=()=>[n([[[]]],null,'')];const key='engineering-share-factory-lab-v1',dataKey='engineering-share-factory-lab-v4';let saved={programs:{},done:{},current:0};try{const oldIds=['conveyor','cooling','packing','start-stop','reverse','delay','run-on','batch','staged','alarm','guard-bypass','pump','sandbox'];let v=JSON.parse(localStorage.getItem(dataKey));if(!v){let old=JSON.parse(localStorage.getItem(key));if(old?.programs&&old?.done){v={programs:{},done:{},current:oldIds[old.current]};oldIds.forEach((id,i)=>{if(old.programs[i])v.programs[id]=old.programs[i];if(old.done[i])v.done[id]=true})}}if(v){[...missions,sandbox].forEach((m,i)=>{if(v.programs?.[m.id])saved.programs[i]=v.programs[m.id];if(v.done?.[m.id])saved.done[i]=true});saved.current=Math.max(0,[...missions,sandbox].findIndex(m=>m.id===v.current))}}catch{};
+/* V5 tree-backed LAD networks; baseProgram defined below. */const key='engineering-share-factory-lab-v1',dataKey='engineering-share-factory-lab-v4';let saved={programs:{},done:{},current:0};try{const oldIds=['conveyor','cooling','packing','start-stop','reverse','delay','run-on','batch','staged','alarm','guard-bypass','pump','sandbox'];let v=JSON.parse(localStorage.getItem(dataKey));if(!v){let old=JSON.parse(localStorage.getItem(key));if(old?.programs&&old?.done){v={programs:{},done:{},current:oldIds[old.current]};oldIds.forEach((id,i)=>{if(old.programs[i])v.programs[id]=old.programs[i];if(old.done[i])v.done[id]=true})}}if(v){[...missions,sandbox].forEach((m,i)=>{if(v.programs?.[m.id])saved.programs[i]=v.programs[m.id];if(v.done?.[m.id])saved.done[i]=true});saved.current=Math.max(0,[...missions,sandbox].findIndex(m=>m.id===v.current))}}catch{};
 let current=Number(saved.current);if(!Number.isInteger(current)||current<0||current>missions.length)current=0;
 let mission,program,selected='NO',history=[],future=[],state,mode='STOP',hintLevel=0,modalApply=null,modalFocus=null,toastTimer;
 function persist(){try{saved.current=current;saved.programs[current]=copy(program);let v={programs:{},done:{},current:mission.id};[...missions,sandbox].forEach((m,i)=>{if(saved.programs[i])v.programs[m.id]=saved.programs[i];if(saved.done[i])v.done[m.id]=true});localStorage.setItem(dataKey,JSON.stringify(v))}catch{}}
 function tags(m=mission){return [...m.ins,...m.outs,...(m.mem||[])]}
 function initial(m){return {bits:Object.fromEntries(tags(m).map(t=>[t.a,t.kind==='INT'?Number(t.d||0):!!t.d])),inst:{},edges:{},plant:{},scan:0,time:0,flows:[]}}
 function read(st,a){if(a==='TRUE')return true;if(a==='FALSE')return false;if(typeof a==='number')return a;if(a?.endsWith('.Q'))return !!st.inst[a.slice(0,-2)]?.q;return st.bits[a]??false}
-// A network may drive several coils. Branch-end coils consume their path;
-// they do not rejoin the parallel contact group and cannot bypass later contacts.
+// V5 editable network tree: series of contact/output nodes and arbitrarily nested parallel paths.
+// Legacy V4 networks are migrated at load time; old progression storage remains readable.
+let nextNodeId=0;
+const uid=()=>`e${++nextNodeId}`;
+const opNode=o=>({kind:contactType(o.type)?'contact':'output',id:uid(),...copy(o)});
+const seq=items=>({kind:'series',id:uid(),items});
+function migrateNetwork(net){
+ if(net.tree?.kind==='series'){
+  const observe=obj=>{if(/^e\d+$/.test(obj.id||''))nextNodeId=Math.max(nextNodeId,+obj.id.slice(1));else obj.id=uid()};const walk=s=>{observe(s);for(const el of s.items){observe(el);if(el.kind==='parallel')el.paths.forEach(walk)}};
+  walk(net.tree);return net;
+ }
+ const items=[];
+ (net.groups||[[[]]]).forEach((g,gi)=>{
+  const paths=g.map((path,pi)=>{
+   const entries=path.map(opNode);
+   const bo=net.branchOutputs?.[`${gi}:${pi}`];
+   if(bo)entries.push({...opNode(bo),legacyEnd:true});
+   return seq(entries);
+  });
+  if(paths.length>1)items.push({kind:'parallel',id:uid(),paths});
+  else items.push(...paths[0]?.items||[]);
+ });
+ if(net.out)items.push(opNode(net.out));
+ for(const out of net.parallelOutputs||[])if(out)items.push(opNode(out));
+ net.tree=seq(items);delete net.groups;delete net.out;delete net.parallelOutputs;delete net.branchOutputs;
+ return net;
+}
+const modernProgram=p=>p.map(net=>migrateNetwork(net));
+const baseProgram=()=>[{name:'',tree:seq([])}];
+function walkNodes(series,cb){for(const node of series.items){cb(node);if(node.kind==='parallel')for(const path of node.paths)walkNodes(path,cb)}}
+function networkOutputs(net){let a=[];walkNodes(net.tree,x=>{if(x.kind==='output')a.push(x)});return a}
 function executeOutput(o,power,st,dt){
  if(!o)return false;
  if(blockType(o.type)){
@@ -42,43 +71,34 @@ function executeOutput(o,power,st,dt){
  else if(o.type==='RESET'&&power)st.bits[o.a]=false;
  return read(st,o.a);
 }
-function networkOutputs(net){
- const branch=[];
- net.groups.forEach((g,gi)=>g.forEach((_,pi)=>{const o=net.branchOutputs?.[`${gi}:${pi}`];if(o)branch.push(o)}));
- return [...branch,...(net.out?[net.out]:[]),...(net.parallelOutputs||[])];
+
+function evaluateContact(c,st,ni,dt){
+ const a=read(st,c.a),b=read(st,c.b);
+ if(compareType(c.type))return ({EQ:a===b,NE:a!==b,GT:a>b,GE:a>=b,LT:a<b,LE:a<=b})[c.type];
+ if(c.type==='RISE'||c.type==='FALL'){
+  let prior=!!st.edges[c.id];st.edges[c.id]=!!a;
+  return c.type==='RISE'?!!a&&!prior:!a&&prior;
+ }
+ return c.type==='NC'?!a:!!a;
 }
 function tick(p,st,dt=100){
  st.flows=[];
- p.forEach((net,ni)=>{
-  let power=true;
-  let nf={groups:[],out:false,result:false,parallelOutputs:[]};
-  net.groups.forEach((g,gi)=>{
-   const incoming=power;
-   const paths=g.map((path,pi)=>{
-    let v=incoming,cs=[];
-    path.forEach((c,ci)=>{
-     const a=read(st,c.a),b=read(st,c.b);
-     let pass;
-     if(compareType(c.type))pass=({EQ:a===b,NE:a!==b,GT:a>b,GE:a>=b,LT:a<b,LE:a<=b})[c.type];
-     else if(c.type==='RISE'||c.type==='FALL'){
-      const key=`${ni}-${gi}-${pi}-${ci}`,prev=!!st.edges[key];
-      pass=c.type==='RISE'?!!a&&!prev:!a&&prev;
-      st.edges[key]=!!a;
-     }else pass=c.type==='NC'?!a:!!a;
-     v=v&&pass;cs.push(v);
-    });
-    const branchCoil=net.branchOutputs?.[`${gi}:${pi}`];
-    if(branchCoil)executeOutput(branchCoil,v,st,dt);
-    return {on:v,contacts:cs,terminal:!!branchCoil};
-   });
-   power=paths.some(x=>x.on&&!x.terminal);
-   nf.groups.push({on:power,incoming,paths});
-  });
-  nf.out=power;
-  nf.result=executeOutput(net.out,power,st,dt);
-  (net.parallelOutputs||[]).forEach(o=>{nf.parallelOutputs.push(power);executeOutput(o,power,st,dt)});
-  st.flows.push(nf);
- });
+ function calculate(series,incoming,flow,ni){
+  let power=incoming;
+  for(const node of series.items){
+   if(node.kind==='contact'){const pass=evaluateContact(node,st,ni,dt);power=power&&pass}
+   else if(node.kind==='output'){flow[node.id]=power;executeOutput(node,power,st,dt);if(node.legacyEnd)power=false}
+   else if(node.kind==='parallel'){
+    const outputs=node.paths.map(path=>calculate(path,power,flow,ni));
+    power=outputs.some(Boolean);
+   }
+   flow[node.id]=power;
+  }
+  return power;
+ }
+ for(let ni=0;ni<p.length;ni++){
+  const flow={};flow.rail=true;flow.result=calculate(p[ni].tree,true,flow,ni);st.flows.push(flow);
+ }
  st.scan++;st.time+=dt;return st;
 }
 function compile(p,m){
@@ -87,64 +107,68 @@ function compile(p,m){
  const intTags=new Set(tags(m).filter(t=>t.kind==='INT').map(t=>t.a));
  const intOperand=a=>intTags.has(a)||(Number.isInteger(a)&&a>=-32768&&a<=32767);
  const instances=new Map(),writes=new Map();
- p.forEach((net,i)=>networkOutputs(net).forEach(o=>{
-  if(blockType(o.type)){
-   if(!/^[A-Za-z_][A-Za-z0-9_]{0,29}$/.test(o.a))errors.push(`Network ${i+1}: invalid instance name.`);
-   if(instances.has(o.a))errors.push(`Network ${i+1}: instance ${o.a} is already used.`);
-   instances.set(o.a,i);
-  }
- }));
- const operand=a=>validTags.has(a)||a==='TRUE'||a==='FALSE'||(a?.endsWith('.Q')&&instances.has(a.slice(0,-2)));
+ p.forEach((net,i)=>networkOutputs(net).forEach(o=>{if(blockType(o.type)){
+  if(!/^[A-Za-z_][A-Za-z0-9_]{0,29}$/.test(o.a||''))errors.push(`Network ${i+1}: invalid instance name.`);
+  if(instances.has(o.a))errors.push(`Network ${i+1}: ${o.a} is already used as an instance.`);
+  instances.set(o.a,i);
+ }}));
+ const operand=a=>validTags.has(a)||a==='TRUE'||a==='FALSE'||(typeof a==='string'&&a.endsWith('.Q')&&instances.has(a.slice(0,-2)));
  p.forEach((net,i)=>{
-  const label=`Network ${i+1}: `;
-  const outs=networkOutputs(net);
-  if(!outs.length)errors.push(label+'missing output instruction.');
-  if(!net.groups.length)errors.push(label+'no logic paths.');
-  net.groups.forEach((g,gi)=>{
-   if(!g.length)errors.push(label+'group has no paths.');
-   if(g.length>1&&g.some((path,pi)=>!path.length&&!net.branchOutputs?.[`${gi}:${pi}`]))errors.push(label+'parallel branch has an empty path (unintended bypass).');
-   g.forEach((path,pi)=>{
-    path.forEach(c=>{
-     if(!contactType(c.type)||(compareType(c.type)?!intOperand(c.a)||!intOperand(c.b):!operand(c.a)))errors.push(label+'unassigned or invalid contact operand '+(c.a||'(blank)')+'.');
-     if(c.a?.endsWith('.Q')&&instances.get(c.a.slice(0,-2))>i)warnings.push(label+'reads an instance Q before its network executes.');
-    });
-    if(net.branchOutputs?.[`${gi}:${pi}`]&&g.length<2)errors.push(label+'a path-end coil requires a parallel branch.');
+  const label=`Network ${i+1}: `,outs=networkOutputs(net);
+  if(!outs.length)errors.push(label+'missing an output instruction.');
+  if(!net.tree?.items)errors.push(label+'invalid ladder network.');
+  const verify=s=>{
+   s.items.forEach((node,index)=>{
+    if(node.kind==='parallel'){
+     if(node.paths.length<2)errors.push(label+'parallel group needs at least two paths.');
+     for(const path of node.paths){
+      if(!path.items.length)errors.push(label+'an empty parallel path would bypass the other paths.');
+      verify(path);
+     }
+    }else if(node.kind==='contact'){
+     if(!contactType(node.type)||(compareType(node.type)?!intOperand(node.a)||!intOperand(node.b):!operand(node.a)))
+      errors.push(label+'unassigned or invalid contact '+(node.a||'(blank)')+'.');
+     if(typeof node.a==='string'&&node.a.endsWith('.Q')&&instances.get(node.a.slice(0,-2))>i)
+      warnings.push(label+'reads an instance Q before its network executes.');
+    }else if(node.kind==='output'){
+     if(blockType(node.type)){
+      if(!Number.isInteger(node.p)||node.p<1||(node.type==='CTU'?node.p>32767:node.p>3600000))errors.push(label+'invalid preset value.');
+      if(node.type==='CTU'&&!operand(node.r))errors.push(label+'invalid counter reset operand.');
+     }else if(mathType(node.type)){
+      if(!intTags.has(node.a)||node.a.startsWith('%I')||!intOperand(node.src)||(node.type!=='MOVE'&&!intOperand(node.rhs)))errors.push(label+'invalid INT instruction operands.');
+     }else{
+      if(!['COIL','SET','RESET'].includes(node.type)||!validTags.has(node.a)||node.a.startsWith('%I'))errors.push(label+'coil must write a declared output or memory bit.');
+      let w=writes.get(node.a)||[];w.push(node.type);writes.set(node.a,w);
+     }
+     if(node.legacyEnd&&index<s.items.length-1)warnings.push(label+'legacy branch termination leaves following instructions without power.');
+    }else errors.push(label+'unknown network instruction.');
    });
-   if(g.every((path,pi)=>!!net.branchOutputs?.[`${gi}:${pi}`])&&gi<net.groups.length-1)warnings.push(label+'all paths end in branch coils; subsequent series logic receives FALSE.');
-  });
-  const branchIds=new Set();
-  net.groups.forEach((g,gi)=>g.forEach((_,pi)=>branchIds.add(`${gi}:${pi}`)));
-  Object.keys(net.branchOutputs||{}).forEach(k=>{if(!branchIds.has(k))errors.push(label+'a branch coil refers to a deleted path.');});
-  if((net.parallelOutputs||[]).some(o=>!o))errors.push(label+'parallel output is missing its instruction.');
-  const branchSet=new Set(Object.values(net.branchOutputs||{}));
-  outs.forEach(o=>{
-   if((branchSet.has(o)||(net.parallelOutputs||[]).includes(o))&&!['COIL','SET','RESET'].includes(o.type)){
-    errors.push(label+'parallel output branches support coils, set and reset only.');return;
-   }
-   if(blockType(o.type)){
-    if(!Number.isInteger(o.p)||o.p<1||(o.type==='CTU'?o.p>32767:o.p>3600000))errors.push(label+'invalid preset value.');
-    if(o.type==='CTU'&&!operand(o.r))errors.push(label+'invalid CTU reset operand.');
-   }else if(mathType(o.type)){
-    if(!intTags.has(o.a)||o.a.startsWith('%I')||!intOperand(o.src)||(o.type!=='MOVE'&&!intOperand(o.rhs)))errors.push(label+'invalid INT instruction operands.');
-   }else{
-    if(!['COIL','SET','RESET'].includes(o.type)||!validTags.has(o.a)||o.a.startsWith('%I'))errors.push(label+'coil must write a declared output or memory bit.');
-    let w=writes.get(o.a)||[];w.push(o.type);writes.set(o.a,w);
-   }
-  });
+  };
+  if(net.tree?.items)verify(net.tree);
  });
- writes.forEach((w,a)=>{if(w.length>1&&w.includes('COIL'))warnings.push(`${a}: multiple writes including a standard coil; later instructions may overwrite earlier ones.`)});
+ writes.forEach((w,a)=>{if(w.length>1&&w.includes('COIL'))warnings.push(`${a}: multiple writes including an ordinary coil; later writes may overwrite earlier ones.`)});
  return {errors:[...new Set(errors)],warnings:[...new Set(warnings)]};
 }
+
 function runTests(p,m){return m.tests.map(tc=>{let st=initial(m);for(const step of tc.steps){Object.entries(step.in).forEach(([a,v])=>st.bits[a]=tags(m).find(t=>t.a===a)?.kind==='INT'?Number(v):!!v);for(let k=0;k<step.ms;k+=100)tick(p,st);let mismatches=Object.entries(step.expect).filter(([a,v])=>read(st,a)!==(tags(m).find(t=>t.a===a)?.kind==='INT'?Number(v):!!v));if(mismatches.length)return {name:tc.name,ok:false,detail:`${step.label||'Input combination'} · ${mismatches.map(([a,v])=>`${tagName(a,m)} expected ${Number(v)}, got ${+read(st,a)}`).join('; ')} · inputs: ${m.ins.map(t=>`${t.n}=${+read(st,t.a)}`).join(', ')}`}}return {name:tc.name,ok:true,detail:`${tc.steps.length} checkpoint${tc.steps.length===1?'':'s'} passed`}})}
 function tagName(a,m=mission){return tags(m).find(t=>t.a===a)?.n||a||'Unassigned'}
-function instNames(){return program.map(n=>n.out).filter(o=>o&&blockType(o.type)&&o.a).map(o=>o.a)}
+function instNames(){return program.flatMap(networkOutputs).filter(o=>blockType(o.type)&&o.a).map(o=>o.a)}
 function timeText(ms){if(ms%1000===0)return `T#${ms/1000}s`;return `T#${ms}ms`}
 function parseTime(s){s=s.trim().toLowerCase();if(s.startsWith('t#'))s=s.slice(2);if(s.startsWith('time#'))s=s.slice(5);const m=s.match(/^(\d+(?:\.\d+)?)(ms|s|m)?$/);if(!m)return NaN;return Math.round(Number(m[1])*(m[2]==='ms'?1:m[2]==='m'?60000:1000))}
 function toast(msg){const e=$('#toast');e.textContent=msg;e.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.classList.add('hidden'),2600)}
-function load(i){if(program)persist();current=i;mission=missions[i]||sandbox;program=copy(saved.programs[i]||mission.starter||baseProgram());history=[];future=[];selected='NO';hintLevel=0;mode='STOP';state=initial(mission);$('#hintBox').classList.add('hidden');$('#missionCode').textContent=i===missions.length?'OPEN LAB':`MISSION ${String(i+1).padStart(2,'0')} / ${mission.level}`;$('#missionTitle').textContent=mission.title;$('#brief').innerHTML=`<div>${esc(mission.brief)}</div>${mission.requirements?.length?`<div class="requirements-label">Operating requirements</div><ul>${mission.requirements.map(q=>`<li>${esc(q)}</li>`).join('')}</ul>`:''}`;$('#objective').textContent='Learning focus: '+mission.objective;$('#hintBtn').disabled=!mission.hints;$('#testBtn').disabled=!mission.tests.length;$('#checks').innerHTML=`<p>${mission.tests.length?'Build a program, run it manually, then test it against the mission requirements.':'Free lab: compile and monitor your program using the controls above.'}</p>`;renderAll();persist()}
+function load(i){if(program)persist();current=i;mission=missions[i]||sandbox;program=modernProgram(copy(saved.programs[i]||mission.starter||baseProgram()));history=[];future=[];selected='NO';hintLevel=0;mode='STOP';state=initial(mission);$('#hintBox').classList.add('hidden');$('#missionCode').textContent=i===missions.length?'OPEN LAB':`MISSION ${String(i+1).padStart(2,'0')} / ${mission.level}`;$('#missionTitle').textContent=mission.title;$('#brief').innerHTML=`<div>${esc(mission.brief)}</div>${mission.requirements?.length?`<div class="requirements-label">Operating requirements</div><ul>${mission.requirements.map(q=>`<li>${esc(q)}</li>`).join('')}</ul>`:''}`;$('#objective').textContent='Learning focus: '+mission.objective;$('#demoBtn').classList.toggle('hidden',i!==missions.length);$('#hintBtn').disabled=!mission.hints;$('#testBtn').disabled=!mission.tests.length;$('#checks').innerHTML=`<p>${mission.tests.length?'Build a program, run it manually, then test it against the mission requirements.':'Free lab: compile and monitor your program using the controls above.'}</p>`;renderAll();persist()}
 function firstIncomplete(){const i=missions.findIndex((_,i)=>!saved.done[i]);return i<0?missions.length:i}
 function canOpen(i){return Number.isInteger(i)&&i>=0&&i<=missions.length&&(i===missions.length||i<=firstIncomplete())}
-function missionStatus(i){if(!canOpen(i))return 'locked';if(saved.done[i])return 'done';let p=saved.programs[i];let baseline=missions[i].starter||baseProgram();return p&&JSON.stringify(p)!==JSON.stringify(baseline)?'started':'available'}
+function missionStatus(i){
+ if(!canOpen(i))return 'locked';if(saved.done[i])return 'done';
+ const p=saved.programs[i];if(!p)return 'available';
+ // Ignore generated node IDs when deciding whether the student has edited a starter.
+ const signature=programs=>JSON.stringify(programs,(key,val)=>key==='id'?undefined:val);
+ const baseline=modernProgram(copy(missions[i].starter||baseProgram()));
+ const candidate=modernProgram(copy(p));
+ return signature(candidate)===signature(baseline)?'available':'started';
+}
+
 const missionGroups=loaded.groups;
 const lockIcon='<svg class="lock-icon" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>';
 function updateNext(){const b=$('#nextBtn'),note=$('#nextNote'),lab=current===missions.length,last=current===missions.length-1,passed=!!saved.done[current];b.classList.toggle('hidden',lab);b.disabled=lab||!passed;b.textContent=last?'Finish training →':'Next mission →';note.classList.toggle('hidden',lab||passed);note.textContent=lab||passed?'':'Pass the commissioning tests to '+(last?'finish training.':'unlock the next mission.')}
@@ -155,86 +179,178 @@ function openMission(i){if(!canOpen(i)){toast('Complete the earlier missions to 
 function setTheme(theme){const light=theme==='light';document.documentElement.dataset.theme=light?'light':'dark';$('#themeBtn').textContent=light?'☾ Dark mode':'☀ Light mode';$('#themeBtn').setAttribute('aria-label',light?'Switch to dark mode':'Switch to light mode');try{localStorage.setItem(key+'-theme',light?'light':'dark')}catch{}}
 $('#themeBtn').onclick=()=>setTheme(document.documentElement.dataset.theme==='light'?'dark':'light');$('#menuBtn').onclick=showMenu;$('#resumeBtn').onclick=()=>openMission(+$('#resumeBtn').dataset.target);$('#menuGuideBtn').onclick=()=>$('#helpBtn').click();
 let preferredTheme='dark';try{preferredTheme=localStorage.getItem(key+'-theme')||'dark'}catch{};setTheme(preferredTheme);
-function renderTools(){const hasInt=tags().some(t=>t.kind==='INT');const groups=[['NO','NC','RISE','FALL'],['COIL','SET','RESET'],['TON','TOF','TP','CTU'],...(hasInt?[['EQ','NE','GT','GE','LT','LE'],['MOVE','ADD','SUB']]:[])];const items=groups.map(g=>g.map(type=>`<button class="tool ${type===selected?'selected':''}" data-tool="${type}" draggable="true" aria-pressed="${type===selected}" title="${esc(types[type])}">${blockType(type)||mathType(type)?`<span style="font:700 11px ui-monospace,monospace;border:1px solid currentColor;padding:2px 4px;border-radius:3px">${type}</span>`:symbol(type)}${blockType(type)||mathType(type)||compareType(type)?'':esc(types[type])}</button>`).join(''));$('#tools').innerHTML=items.join('<div class="tool-sep"></div>')+`<div class="tool-sep"></div><button class="mini" id="undoBtn" ${!history.length?'disabled':''} title="Undo">↶ Undo</button><button class="mini" id="redoBtn" ${!future.length?'disabled':''} title="Redo">↷</button>`;$('#toolHint').textContent=contactType(selected)?`${types[selected]} selected · click or drag to a + contact insertion point.`:`${types[selected]} selected · click or drag to an output slot, ＋ Coil on a branch, or ＋ Parallel coil.`}
+function renderTools(){const hasInt=tags().some(t=>t.kind==='INT');const groups=[['NO','NC','RISE','FALL'],['COIL','SET','RESET'],['TON','TOF','TP','CTU'],...(hasInt?[['EQ','NE','GT','GE','LT','LE'],['MOVE','ADD','SUB']]:[])];const items=groups.map(g=>g.map(type=>`<button class="tool ${type===selected?'selected':''}" data-tool="${type}" draggable="true" aria-pressed="${type===selected}" title="${esc(types[type])}">${blockType(type)||mathType(type)?`<span style="font:700 11px ui-monospace,monospace;border:1px solid currentColor;padding:2px 4px;border-radius:3px">${type}</span>`:symbol(type)}${blockType(type)||mathType(type)||compareType(type)?'':esc(types[type])}</button>`).join(''));$('#tools').innerHTML=items.join('<div class="tool-sep"></div>')+`<div class="tool-sep"></div><button class="mini" id="undoBtn" ${!history.length?'disabled':''} title="Undo">↶ Undo</button><button class="mini" id="redoBtn" ${!future.length?'disabled':''} title="Redo">↷</button>`;$('#toolHint').textContent=`${types[selected]} selected · drag onto any wire to insert, or onto a symbol to replace it. Hover a symbol to add a parallel branch.`}
 function edit(mut){history.push(copy(program));if(history.length>50)history.shift();future=[];mut();invalidate()}
 function invalidate(){mode='STOP';state=initial(mission);delete saved.done[current];$('#checks').innerHTML='<p>Program edited. Compile or run it, then repeat commissioning tests.</p>';persist();renderAll()}
 function undo(redo=false){const from=redo?future:history,to=redo?history:future;if(!from.length)return;to.push(copy(program));program=from.pop();invalidate()}
 function renderAll(){progress();renderTools();renderEditor();renderWatch();renderPlant();updateLive()}
-function branchCoilHTML(o,ni,gi,pi){
- const attrs=`data-n="${ni}" data-g="${gi}" data-p="${pi}"`;
- if(!o)return `<button class="path-output-slot" data-act="pathout" ${attrs} title="Place a coil at the end of this path">＋ Coil</button>`;
- return `<div class="branch-terminal" data-branch-terminal="${ni}-${gi}-${pi}"><div class="cell"><span class="addr">${esc(o.a)}</span><button class="symbol" data-act="editpathout" ${attrs} title="Edit branch output">${symbol(o.type)}</button><span class="tag">${esc(tagName(o.a))}</span></div><button class="branch-remove" data-act="delpathout" ${attrs} title="Remove branch coil">×</button></div>`;
-}
+// True nested LAD canvas. A wire or symbol is a drop target, not a fixed slot.
+let selectedRef=null,rangeRef=null;
+const eachSeries=(net,path='')=>{
+ let series=net.tree;
+ if(path)for(const item of path.split('/')){const [pid,idx]=item.split(':');const parallel=series.items.find(n=>n.id===pid&&n.kind==='parallel');if(!parallel||!parallel.paths[+idx])return null;series=parallel.paths[+idx]}
+ return series;
+};
+function findNode(net,id){let found=null;function search(s,path){s.items.forEach((node,i)=>{if(node.id===id)found={series:s,path,index:i,node};if(node.kind==='parallel')node.paths.forEach((p,pi)=>search(p,path+(path?'/':'')+node.id+':'+pi))})}search(net.tree,'');return found}
+function nodeLayout(n){if(n.kind!=='parallel')return {w:blockType(n.type)||mathType(n.type)?144:124,h:98};const paths=n.paths.map(seriesLayout);return {w:Math.max(166,...paths.map(p=>p.w))+72,h:paths.reduce((sum,p)=>sum+p.h,0)+18*(paths.length-1),paths}}
+function seriesLayout(series){const items=series.items.map(nodeLayout);return {w:72+items.reduce((sum,l)=>sum+l.w+40,0),h:Math.max(100,...items.map(l=>l.h)),items}}
 function renderEditor(){
  const e=$('#editor'),top=e.scrollTop,left=e.scrollLeft;
  $('#networkCount').textContent=`${program.length} network${program.length===1?'':'s'}`;
- e.innerHTML=program.map((net,ni)=>{
-  const outputBank=(net.parallelOutputs||[]).map((o,ix)=>`<div class="output-row"><div class="extra-terminal" data-extra-terminal="${ni}-${ix}">${terminalHTML(o,ni,'extra',ix)}</div><button class="branch-remove" data-act="delextraout" data-n="${ni}" data-x="${ix}" title="Remove parallel output">×</button></div>`).join('');
-  const groups=net.groups.map((g,gi)=>{
-   const joining=g.map((_,pi)=>!net.branchOutputs?.[`${gi}:${pi}`]?pi:-1).filter(pi=>pi>=0);
-   const merge=joining.length>1?`<span class="join-vertical" style="top:${36+76*joining[0]}px;height:${76*(joining[joining.length-1]-joining[0])}px"></span>`:'';
-   const paths=g.map((path,pi)=>{
-    const b=net.branchOutputs?.[`${gi}:${pi}`],attrs=`data-n="${ni}" data-g="${gi}" data-p="${pi}"`;
-    const contacts=path.map((c,ci)=>`<button class="insert" data-act="insert" ${attrs} data-c="${ci}" title="Insert contact before">+</button><div class="cell" data-contact="${ni}-${gi}-${pi}-${ci}"><span class="addr">${esc(c.a||'???')}</span><button class="symbol ${!c.a?'unset':''}" data-act="contact" ${attrs} data-c="${ci}" title="Edit ${esc(c.a)}">${symbol(c.type)}</button><span class="tag">${compareType(c.type)?esc(compareLabel[c.type]+' '+c.b):esc(tagName(c.a))}</span><button class="delete" data-act="delcontact" ${attrs} data-c="${ci}" title="Delete contact">×</button></div>`).join('');
-    return `<div class="path ${b?'path-ended':''}" data-path="${ni}-${gi}-${pi}">${contacts}<button class="insert" data-act="insert" ${attrs} data-c="${path.length}" title="Add contact">+</button>${g.length>1||b?branchCoilHTML(b,ni,gi,pi):''}${g.length>1?`<button class="path-remove" data-act="delpath" ${attrs} title="Remove parallel path">× path</button>`:''}</div>`;
-   }).join('');
-   return `<div class="group ${g.length>1?'parallel':''}" data-group="${ni}-${gi}"><div class="paths">${paths}${merge}</div><div class="group-actions"><button data-act="branch" data-n="${ni}" data-g="${gi}" title="Add a parallel path to this group">＋ Branch</button><button data-act="delgroup" data-n="${ni}" data-g="${gi}" title="Remove this group">×</button><button data-act="series" data-n="${ni}" data-g="${gi}" title="Insert a new series group after this one">＋ Series</button></div></div><div class="wire" data-wire="${ni}-${gi}"></div>`;
-  }).join('');
-  return `<article class="network"><div class="network-head"><strong>NETWORK ${ni+1}</strong><input aria-label="Network ${ni+1} comment" placeholder="Add network comment…" value="${esc(net.name)}" data-comment="${ni}"><button data-act="up" data-n="${ni}" ${ni===0?'disabled':''} title="Move network up">↑</button><button data-act="down" data-n="${ni}" ${ni===program.length-1?'disabled':''} title="Move network down">↓</button><button data-act="delnet" data-n="${ni}" title="Delete network">×</button></div><div class="diagram"><div class="circuit"><div class="rail"></div><div class="lead" data-lead="${ni}"></div>${groups}<div class="output-bank ${(net.parallelOutputs||[]).length?'has-parallel':''}"><div class="output-row"><div class="terminal" data-terminal="${ni}">${terminalHTML(net.out,ni)}</div></div>${outputBank}<button class="add-parallel-out" data-act="addextraout" data-n="${ni}" title="Add another output driven by the same rung conditions">＋ Parallel coil</button></div><div class="lead endwire" data-endwire="${ni}"></div><div class="rail"></div></div></div><div class="after-network"><button data-act="prepend" data-n="${ni}">＋ Series before</button>${net.out?`<button data-act="delout" data-n="${ni}">Remove main output</button>`:''}</div></article>`;
+ const html=program.map((net,ni)=>{
+  const layout=seriesLayout(net.tree),cw=Math.max(680,layout.w+85),ch=Math.max(155,layout.h+46);
+  let wires=[],items=[];
+  const line=(x1,y1,x2,y2,key)=>wires.push(`<path d="M${x1} ${y1}L${x2} ${y2}" class="lad-line" ${key?`data-lwire="${key}"`:''}/>`);
+  const place=(x,y,extra)=>items.push(`<button type="button" class="lad-place" style="left:${x-17}px;top:${y-17}px" data-place="1" data-n="${ni}" data-path="${esc(extra.path)}" data-before="${esc(extra.before||'')}" title="Drop or click to insert an instruction here"><span>+</span></button>`);
+  const op=(node,x,y,path)=>{
+   const live=(selectedRef?.id===node.id?' selected':'');
+   let label=node.kind==='contact'?(compareType(node.type)?`${compareLabel[node.type]} ${node.b}`:tagName(node.a)):(blockType(node.type)?`${node.type} · ${node.p}`:mathType(node.type)?`IN ${node.src} → ${node.a}`:tagName(node.a));
+   const addr=blockType(node.type)?node.a:esc(node.a??'');
+   const pict=blockType(node.type)||mathType(node.type)?`<span class="lad-block-label">${esc(node.type)}</span>`:symbol(node.type);
+   const symClass=blockType(node.type)||mathType(node.type)?'is-block':'';
+   items.push(`<div class="lad-item ${live}" style="left:${x}px;top:${y-47}px;width:${nodeLayout(node).w}px" data-node="${node.id}" data-n="${ni}" data-path="${esc(path)}" draggable="true" title="Drag to move · click to edit · Shift-click to select a range">
+    <span class="lad-addr">${addr}</span><span class="lad-glyph ${symClass}">${pict}</span><span class="lad-tag">${esc(label)}</span>
+    <button type="button" class="lad-wrap above" data-act="wrap" data-n="${ni}" data-id="${node.id}" data-side="above" title="Make a parallel path above this instruction">＋ branch</button>
+    <button type="button" class="lad-wrap below" data-act="wrap" data-n="${ni}" data-id="${node.id}" data-side="below" title="Make a parallel path below this instruction">＋ branch</button>
+    <button type="button" class="lad-trash" data-act="delnode" data-n="${ni}" data-id="${node.id}" title="Delete instruction">×</button>
+   </div>`);
+  };
+  function drawSeries(s,x,cy,path){
+   const shape=seriesLayout(s);let cursor=x,previous=null;
+   for(const node of s.items){
+    const shapeNode=nodeLayout(node),nodeX=cursor+40,nodeY=cy;
+    line(cursor,cy,nodeX,cy,previous?.id);
+    place(cursor+20,cy,{path,before:node.id});
+    if(node.kind==='parallel')drawParallel(node,nodeX,nodeY,shapeNode,path);
+    else op(node,nodeX,nodeY,path);
+    cursor=nodeX+shapeNode.w;previous=node;
+   }
+   line(cursor,cy,cursor+36,cy,previous?.id);
+   place(cursor+18,cy,{path,before:''});
+   return cursor+36;
+  }
+  function drawParallel(node,x,cy,shape,path){
+   const lx=x+22,rx=x+shape.w-22;
+   const top=cy-shape.h/2;
+   let dy=top;const centers=[],joining=[];
+   node.paths.forEach((p,idx)=>{const pl=shape.paths[idx],py=dy+pl.h/2;centers.push(py);const ppath=path+(path?'/':'')+node.id+':'+idx;
+    line(lx,py,lx+14,py);
+    const end=drawSeries(p,lx+14,py,ppath);
+    if(!p.items.at(-1)?.legacyEnd){line(end,py,rx,py);joining.push(py)};
+    items.push(`<button type="button" class="lad-path-remove" data-act="delpath" data-n="${ni}" data-id="${node.id}" data-idx="${idx}" style="left:${rx-6}px;top:${py-31}px" title="Remove this parallel path">×</button>`);
+    dy+=pl.h+18;
+   });
+   line(x,cy,lx,cy);line(lx,centers[0],lx,centers.at(-1));if(joining.length>1)line(rx,joining[0],rx,joining.at(-1));if(joining.length)line(rx,cy,x+shape.w,cy);
+   items.push(`<button type="button" class="lad-addpath" data-act="addpath" data-n="${ni}" data-id="${node.id}" style="left:${lx+11}px;top:${top-15}px" title="Add another parallel path">＋ parallel path</button>`);
+  }
+  const start=25,y=ch/2;line(12,16,12,ch-14);line(12,y,start,y);
+  const end=drawSeries(net.tree,start,y,'');line(end,y,cw-15,y);line(cw-15,16,cw-15,ch-14);
+  return `<article class="network lad-network"><div class="network-head"><strong>NETWORK ${ni+1}</strong><input aria-label="Network ${ni+1} comment" placeholder="Add a network comment…" value="${esc(net.name||'')}" data-comment="${ni}"><button data-act="rangebranch" data-n="${ni}" title="Create a parallel branch around the selected instruction(s)">⤵ Branch selected</button><button data-act="up" data-n="${ni}" ${ni===0?'disabled':''}>↑</button><button data-act="down" data-n="${ni}" ${ni===program.length-1?'disabled':''}>↓</button><button data-act="delnet" data-n="${ni}">×</button></div><div class="lad-canvas-wrap"><div class="lad-canvas" style="width:${cw}px;height:${ch}px"><svg class="lad-wires" width="${cw}" height="${ch}" viewBox="0 0 ${cw} ${ch}" aria-hidden="true">${wires.join('')}</svg>${items.join('')}</div></div></article>`;
  }).join('')+`<button class="add-network" data-act="addnet">＋ Insert new network</button>`;
- e.scrollTop=top;e.scrollLeft=left;
+ e.innerHTML=html;e.scrollTop=top;e.scrollLeft=left;
 }
-function terminalHTML(o,i,slot='main',ix=-1){
- const attrs=slot==='main'?`data-act="output" data-n="${i}"`:`data-act="editextraout" data-n="${i}" data-x="${ix}"`;
- if(!o)return `<button class="slot" ${attrs}>＋ Output</button>`;
- if(mathType(o.type))return `<button class="block" ${attrs}><b>${o.type}</b><span class="pinrow">IN: ${esc(o.src)}</span>${o.type==='MOVE'?'':`<span class="pinrow">IN2: ${esc(o.rhs)}</span>`}<span class="pinrow">OUT: ${esc(o.a)}</span></button>`;
- if(blockType(o.type))return `<button class="block" ${attrs} title="Edit ${o.type} instance"><span class="instance">${esc(o.a)}</span><b>${o.type}${o.type==='CTU'?' · Int':''}</b><span class="pinrow"><span>${o.type==='CTU'?'CU':'IN'}</span><span>Q <span data-bq="${i}">0</span></span></span><span class="pinrow"><span>${o.type==='CTU'?'PV '+o.p:'PT '+timeText(o.p)}</span><span>${o.type==='CTU'?'CV':'ET'} <span data-bv="${i}">0</span></span></span>${o.type==='CTU'?`<span class="pinrow">R: ${esc(o.r)}</span>`:''}</button>`;
- return `<div class="cell"><span class="addr">${esc(o.a)}</span><button class="symbol" ${attrs} title="Edit output">${symbol(o.type)}</button><span class="tag">${esc(tagName(o.a))}</span></div>`;
-}
+
 function option(a,label,sel){return `<option value="${esc(a)}" ${a===sel?'selected':''}>${esc(label)}</option>`}
 function operands(value,write=false){let list=tags().filter(t=>t.kind!=='INT'&&(!write||!t.a.startsWith('%I'))).map(t=>[t.a,`${t.a}  ·  ${t.n}`]);if(!write)list.push(...instNames().map(a=>[a+'.Q',a+'.Q']),['TRUE','TRUE (constant)'],['FALSE','FALSE (constant)']);if(value&&!list.some(x=>x[0]===value))list.unshift([value,value+' (unresolved)']);return option('','Select an operand…',value)+list.map(([a,l])=>option(a,l,value)).join('')}
 function openDialog(html,apply){modalFocus=document.activeElement;$('#modalCard').innerHTML=html;modalApply=apply;$('#modal').classList.remove('hidden');$('#modalCard').querySelector('select,input,button')?.focus()}
 function closeDialog(){$('#modal').classList.add('hidden');modalApply=null;if(modalFocus?.isConnected)modalFocus.focus()}
 function dialogButtons(){return '<div class="error" id="dialogError" role="alert"></div><div class="modal-actions"><button data-modal="close">Cancel</button><button class="primary" data-modal="apply">Apply</button></div>'}
 function intField(id,label,value,write=false){let opts=tags().filter(t=>t.kind==='INT'&&(!write||!t.a.startsWith('%I'))).map(t=>option(t.a,t.a+' · '+t.n,value));if(!write)opts.push(option('#literal','Integer constant',typeof value==='number'||value===''?'#literal':value));return `<div class="field"><label for="${id}">${label}</label><select id="${id}" onchange="document.getElementById('${id}Literal')?.classList.toggle('hidden',this.value!=='#literal')">${option('','Select INT tag…',value)}${opts.join('')}</select>${write?'':`<input id="${id}Literal" type="number" min="-32768" max="32767" class="${typeof value==='number'||value===''?'':'hidden'}" value="${typeof value==='number'?value:0}" aria-label="Integer constant">`}</div>`}function intValue(id){let v=$('#'+id).value;if(v==='#literal'){let raw=$('#'+id+'Literal').value;let n=Number(raw);return raw.trim()&&Number.isInteger(n)&&n>=-32768&&n<=32767?n:null}return v||null}
-function contactDialog(ni,gi,pi,ci,existing,force){const old=existing?program[ni].groups[gi][pi][ci]:null;const type=force||old?.type||selected;if(!contactType(type)){toast('Choose a contact or comparison.');return}function fields(){let tp=$('#dType').value;$('#contactFields').innerHTML=compareType(tp)?intField('dLeft','IN1 · INT tag or number',old?.a??'')+intField('dRight','IN2 · INT tag or number',old?.b??0):`<div class="field"><label for="dAddr">Boolean operand</label><select id="dAddr">${operands(old?.a||'')}</select></div>`}openDialog(`<h3 id="modalTitle">${existing?'Edit':'Insert'} contact</h3><div class="field"><label for="dType">Instruction</label><select id="dType">${Object.keys(types).filter(contactType).map(v=>option(v,types[v],type)).join('')}</select></div><div id="contactFields"></div>${dialogButtons()}`,()=>{let tp=$('#dType').value,a=compareType(tp)?intValue('dLeft'):$('#dAddr').value,b=compareType(tp)?intValue('dRight'):undefined;if(a===''||a===null||b===null)return 'Select valid operands.';let c={type:tp,a};if(compareType(tp))c.b=b;edit(()=>{let path=program[ni].groups[gi][pi];if(existing)path[ci]=c;else path.splice(ci,0,c)});return true});fields();$('#dType').addEventListener('change',fields)}
-function outputDialog(ni,force,location='main',gi=0,pi=0,xi=0){
- const net=program[ni],branchKey=`${gi}:${pi}`;
- const old=location==='main'?net.out:location==='branch'?net.branchOutputs?.[branchKey]:net.parallelOutputs?.[xi];
- let type=force||old?.type||(contactType(selected)?'COIL':selected);
- const coilOnly=location!=='main';
- if(contactType(type)||(coilOnly&&!['COIL','SET','RESET'].includes(type))){toast(coilOnly?'Parallel branches accept coils, SET and RESET.':'Select a coil, IEC block or integer instruction for the output slot.');return}
- const data=old&&old.type===type?old:null;
- function setHere(o){
-  if(location==='main')program[ni].out=o;
-  else if(location==='branch'){program[ni].branchOutputs||={};program[ni].branchOutputs[branchKey]=o}
-  else{program[ni].parallelOutputs||=[];if(xi<program[ni].parallelOutputs.length)program[ni].parallelOutputs[xi]=o;else program[ni].parallelOutputs.push(o)}
- }
+function nodeDialog(ni,path,before,existing,force){
+ const net=program[ni],old=existing?findNode(net,existing)?.node:null;
+ let type=force||old?.type||selected;
+ if(!types[type])type='NO';
  function fields(){
-  const tp=$('#dType').value,isBlock=blockType(tp),o=data&&data.type===tp?data:null;
-  $('#outFields').innerHTML=mathType(tp)?intField('dDest','OUT · INT destination',o?.a||'',true)+intField('dSrc','IN · INT source',o?.src??0)+(tp==='MOVE'?'':intField('dRhs','IN2 · INT source',o?.rhs??1)):
-   isBlock?`<div class="field"><label for="dInstance">Instance DB name</label><input id="dInstance" value="${esc(o?.a||`${tp}_DB_${ni+1}`)}" maxlength="30" autocomplete="off"></div><div class="field"><label for="dPreset">${tp==='CTU'?'PV · preset count':'PT · preset time (e.g. T#5s)'}</label><input id="dPreset" value="${esc(o?(tp==='CTU'?o.p:timeText(o.p)):tp==='CTU'?'3':'T#5s')}" autocomplete="off"></div>${tp==='CTU'?`<div class="field"><label for="dReset">R · reset operand</label><select id="dReset">${operands(o?.r||'FALSE')}</select></div>`:''}<p>In a following network, use the instance .Q bit as a contact. Each block needs its own instance.</p>`:
-   `<div class="field"><label for="dAddr">Destination (output or memory bit)</label><select id="dAddr">${operands(o?.a||'',true)}</select></div>`;
+  const tp=$('#dType').value;
+  if(contactType(tp))$('#nodeFields').innerHTML=compareType(tp)?intField('dLeft','IN1 · INT',old?.a??'')+intField('dRight','IN2 · INT',old?.b??0):`<div class="field"><label for="dAddr">Boolean operand</label><select id="dAddr">${operands(old?.a||'')}</select></div>`;
+  else if(mathType(tp))$('#nodeFields').innerHTML=intField('dDest','OUT · INT destination',old?.a||'',true)+intField('dSrc','IN · INT source',old?.src??0)+(tp==='MOVE'?'':intField('dRhs','IN2 · INT source',old?.rhs??1));
+  else if(blockType(tp))$('#nodeFields').innerHTML=`<div class="field"><label for="dInstance">Instance DB name</label><input id="dInstance" maxlength="30" value="${esc(old?.a||tp+'_DB_'+(ni+1))}"></div><div class="field"><label for="dPreset">${tp==='CTU'?'PV · count':'PT · time (e.g. T#5s)'}</label><input id="dPreset" value="${esc(old?.p?(tp==='CTU'?old.p:timeText(old.p)):tp==='CTU'?'3':'T#5s')}"></div>${tp==='CTU'?`<div class="field"><label for="dReset">R · reset</label><select id="dReset">${operands(old?.r||'FALSE')}</select></div>`:''}`;
+  else $('#nodeFields').innerHTML=`<div class="field"><label for="dAddr">Output or memory bit</label><select id="dAddr">${operands(old?.a||'',true)}</select></div>`;
  }
- openDialog(`<h3 id="modalTitle">${old?'Edit':'Insert'} ${location==='main'?'output instruction':'parallel coil'}</h3><p>${location==='branch'?'This coil is driven by this branch alone and terminates its path. It does not rejoin or bypass the next section of the network.':location==='extra'?'This additional coil receives the same rung condition as the main output.':'Choose the instruction at the end of this network.'}</p><div class="field"><label for="dType">Instruction</label><select id="dType">${Object.keys(types).filter(v=>coilOnly?['COIL','SET','RESET'].includes(v):!contactType(v)).map(v=>option(v,types[v],type)).join('')}</select></div><div id="outFields"></div>${dialogButtons()}`,()=>{
-  const tp=$('#dType').value;let a,p=0,r='FALSE';
-  if(mathType(tp)){
-   const dest=intValue('dDest'),src=intValue('dSrc'),rhs=tp==='MOVE'?0:intValue('dRhs');
-   if(dest===null||src===null||rhs===null)return 'Choose INT operands.';
-   edit(()=>setHere({type:tp,a:dest,src,rhs}));return true;
-  }
-  if(blockType(tp)){
-   a=$('#dInstance').value.trim();
-   if(!/^[A-Za-z_][A-Za-z0-9_]{0,29}$/.test(a))return 'Use a valid instance name (letters, digits and underscore; start with a letter or underscore).';
-   if(program.some((net,ni2)=>networkOutputs(net).some(o=>o!==old&&blockType(o.type)&&o.a===a)))return 'This instance name is already in use.';
-   p=tp==='CTU'?Number($('#dPreset').value):parseTime($('#dPreset').value);
-   if(!Number.isInteger(p)||p<1||p>(tp==='CTU'?32767:3600000))return 'Enter a valid positive preset.';
-   if(tp==='CTU'){r=$('#dReset').value;if(!r)return 'Choose the reset operand.'}
-  }else{a=$('#dAddr').value;if(!a)return 'Select a destination tag.'}
-  edit(()=>setHere(end(tp,a,p,r)));return true;
+ openDialog(`<h3 id="modalTitle">${existing?'Edit':'Insert'} ladder instruction</h3><p>Place contacts, output coils and blocks anywhere in a connected series or branch path. Outputs execute when power reaches them; power continues through to the next instruction.</p><div class="field"><label for="dType">Instruction</label><select id="dType">${Object.keys(types).map(v=>option(v,types[v],v===type?type:'__'))}</select></div><div id="nodeFields"></div>${dialogButtons()}`,()=>{
+  const tp=$('#dType').value;let obj={kind:contactType(tp)?'contact':'output',id:old?.id||uid(),type:tp};
+  if(compareType(tp)){obj.a=intValue('dLeft');obj.b=intValue('dRight');if(obj.a===null||obj.b===null)return 'Select both integer operands.'}
+  else if(contactType(tp)){obj.a=$('#dAddr').value;if(!obj.a)return 'Choose a Boolean operand.'}
+  else if(mathType(tp)){obj.a=intValue('dDest');obj.src=intValue('dSrc');obj.rhs=tp==='MOVE'?0:intValue('dRhs');if(obj.a===null||obj.src===null||obj.rhs===null)return 'Choose valid INT operands.'}
+  else if(blockType(tp)){obj.a=$('#dInstance').value.trim();if(!/^[A-Za-z_][A-Za-z0-9_]{0,29}$/.test(obj.a))return 'Use a valid instance name.';obj.p=tp==='CTU'?Number($('#dPreset').value):parseTime($('#dPreset').value);obj.r=tp==='CTU'?$('#dReset').value:'FALSE';if(!Number.isInteger(obj.p)||obj.p<1||obj.p>(tp==='CTU'?32767:3600000))return 'Invalid preset.';if(tp==='CTU'&&!obj.r)return 'Select a reset signal.';if(program.some(n=>networkOutputs(n).some(o=>o.id!==obj.id&&blockType(o.type)&&o.a===obj.a)))return 'Instance name already exists.'}
+  else {obj.a=$('#dAddr').value;if(!obj.a)return 'Choose an output or memory bit.'}
+  edit(()=>{
+   if(existing){const found=findNode(program[ni],existing);if(found)found.series.items[found.index]=obj}
+   else {const s=eachSeries(program[ni],path);if(!s)return;const index=before?s.items.findIndex(n=>n.id===before):-1;s.items.splice(index<0?s.items.length:index,0,obj)}
+  });
+  selectedRef={ni,id:obj.id};return true;
  });
- fields();$('#dType').addEventListener('change',fields);
+ $('#dType').value=type;fields();$('#dType').addEventListener('change',fields);
 }
+function createBranch(ni,id,side='below',newType=null){
+ const found=findNode(program[ni],id);if(!found)return;
+ const source=found.series.items.splice(found.index,1);
+ const newSide=seq(newType?[{kind:contactType(newType)?'contact':'output',id:uid(),type:newType,a:''}]:[]);
+ const paths=side==='above'?[newSide,seq(source)]:[seq(source),newSide];
+ found.series.items.splice(found.index,0,{kind:'parallel',id:uid(),paths});
+}
+function createBranchRange(ni){
+ if(selectedRef?.ni!==ni){toast('Click an instruction first; Shift-click a second one to select a range.');return}
+ const one=findNode(program[ni],selectedRef.id),two=rangeRef?.ni===ni?findNode(program[ni],rangeRef.id):null;
+ if(!one){toast('Select an instruction first.');return}
+ if(two&&two.series!==one.series){toast('Branch ranges must be in the same series path.');return}
+ edit(()=>{
+  const s=one.series,a=two?Math.min(one.index,two.index):one.index,b=two?Math.max(one.index,two.index):one.index;
+  const members=s.items.splice(a,b-a+1);s.items.splice(a,0,{kind:'parallel',id:uid(),paths:[seq(members),seq([])]});
+ });
+ selectedRef=null;rangeRef=null;
+}
+function editorAction(el){
+ const {act}=el.dataset,ni=+el.dataset.n,id=el.dataset.id,net=program[ni];
+ if(act==='addnet')edit(()=>program.push({name:'',tree:seq([])}));
+ else if(act==='delnet')edit(()=>{program.splice(ni,1);if(!program.length)program=baseProgram()});
+ else if(act==='up'||act==='down')edit(()=>{const j=ni+(act==='up'?-1:1);if(j>=0&&j<program.length)[program[ni],program[j]]=[program[j],program[ni]]});
+ else if(act==='delnode')edit(()=>{const f=findNode(net,id);f?.series.items.splice(f.index,1);selectedRef=null;rangeRef=null});
+ else if(act==='wrap')edit(()=>createBranch(ni,id,el.dataset.side));
+ else if(act==='rangebranch')createBranchRange(ni);
+ else if(act==='addpath')edit(()=>{let f=findNode(net,id);if(f?.node.kind==='parallel')f.node.paths.push(seq([]))});
+ else if(act==='delpath')edit(()=>{let f=findNode(net,id);if(!f||f.node.kind!=='parallel')return;f.node.paths.splice(+el.dataset.idx,1);if(f.node.paths.length===1)f.series.items.splice(f.index,1,...f.node.paths[0].items)});
+}
+function locateTarget(e){
+ const directly=e.target.closest('[data-place], [data-node], [data-act="wrap"]');
+ if(directly)return directly;
+ const canvas=e.target.closest('.lad-canvas');if(!canvas)return null;
+ // Snap drops on any wire to the nearest insertion point within that row.
+ const options=[...canvas.querySelectorAll('[data-place]')];let candidate=null,best=Infinity;
+ for(const item of options){const rect=item.getBoundingClientRect(),dx=Math.abs(e.clientX-(rect.left+rect.width/2)),dy=Math.abs(e.clientY-(rect.top+rect.height/2));
+  const score=dx+dy*2;if(dy<34&&dx<78&&score<best){best=score;candidate=item}
+ }
+ return candidate;
+}
+function insertDragged(type,target,movedId=null,dropEvent=null,sourceNi=null){
+ const ni=+target.dataset.n;
+ if(target.dataset.act==='wrap'){
+  const source=findNode(program[ni],target.dataset.id);if(!source)return;
+  if(movedId){toast('Move an existing instruction onto a wire to reposition it.');return}
+  // Open the operand configuration before modifying the branch.
+  const side=target.dataset.side;
+  edit(()=>createBranch(ni,target.dataset.id,side));
+  const branch=findNode(program[ni],target.dataset.id); // original contact inside newly created parallel
+  // Find the newly created empty path by taking its parallel parent from the network.
+  const root=program[ni].tree;
+  let empty=null;
+  walkNodes(root,n=>{if(n.kind==='parallel'&&n.paths.some(p=>p.items.some(i=>i.id===target.dataset.id))){empty=n;}});
+  if(empty){const idx=side==='above'?0:1,part=empty.paths[idx];let key=branch?.path||'';const prefix=key.includes('/')?key.substring(0,key.lastIndexOf('/')):'';key=prefix+(prefix?'/':'')+empty.id+':'+idx;nodeDialog(ni,key,'',null,type)}
+  return;
+ }
+ if(target.dataset.node){
+  const id=target.dataset.node;
+  if(movedId){if(movedId===id)return;const dest=findNode(program[ni],id);if(!dest)return;edit(()=>{const old=findNode(program[sourceNi??ni],movedId);if(!old)return;const moving=old.node;old.series.items.splice(old.index,1);const place=findNode(program[ni],id);if(place)place.series.items.splice(place.index,0,moving)});return}
+  const rect=target.getBoundingClientRect(),py=(dropEvent?.clientY??(rect.y+rect.height/2))-rect.top;
+  if(py<16||py>rect.height-16){const side=py<16?'above':'below';insertDragged(type,{dataset:{act:'wrap',n:String(ni),id,side}},null,dropEvent);return}
+  nodeDialog(ni,'',null,id,type);return;
+ }
+ const path=target.dataset.path||'',before=target.dataset.before||'';
+ if(movedId){
+  edit(()=>{const source=findNode(program[sourceNi??ni],movedId);if(!source)return;const obj=source.node;source.series.items.splice(source.index,1);const s=eachSeries(program[ni],path);if(!s)return;let index=before?s.items.findIndex(i=>i.id===before):-1;s.items.splice(index<0?s.items.length:index,0,obj)});
+ }else nodeDialog(ni,path,before,null,type);
+}
+
 function renderWatch(){const rows=(list,input)=>list.map(t=>`<div class="io-row"><span class="dot" data-led="${esc(t.a)}"></span><div class="io-info"><b title="${esc(t.n)}">${esc(t.n)}</b><code>${esc(t.a)}</code></div>${t.kind==='INT'?(input?`<input type="range" data-int-input="${esc(t.a)}" min="${t.min??-32768}" max="${t.max??32767}" value="${read(state,t.a)}" aria-label="${esc(t.n)}"><span data-int-value="${esc(t.a)}">${read(state,t.a)}</span>`:`<span class="value" data-int-value="${esc(t.a)}">${read(state,t.a)}</span>`):input?`<button class="toggle" data-input="${esc(t.a)}" aria-label="Toggle ${esc(t.n)}" aria-pressed="false">0 OFF</button>`:`<span class="value" data-value="${esc(t.a)}">0</span>`}</div>`).join('');$('#watch').innerHTML='<div class="tag-header">Inputs · click or slide</div>'+rows(mission.ins,true)+'<div class="tag-header">Digital outputs</div>'+rows(mission.outs,false)+(mission.mem?.length?'<div class="tag-header">Memory tags · BOOL / INT</div>'+rows(mission.mem,false):'');$('#sequenceMonitor').innerHTML=mission.sequence?'<div class="tag-header">Sequence monitor · current INT</div>'+mission.sequence.map(x=>`<div class="seq-row" data-seq="${x.value}"><code>${x.value}</code> ${esc(x.label)}</div>`).join(''):'';$('#instances').innerHTML=instNames().length?'<div class="tag-header">Instance data</div>'+instNames().map(a=>`<div data-instance="${esc(a)}"></div>`).join(''):''}
 function renderPlant(){const k=mission.kind;let scene='';const base=`<defs><linearGradient id="steel" x2="0" y2="1"><stop stop-color="#718b9e"/><stop offset="1" stop-color="#324b5c"/></linearGradient><pattern id="grid" width="18" height="18" patternUnits="userSpaceOnUse"><path d="M18 0H0V18" fill="none" stroke="#3a5262" opacity=".23"/></pattern><linearGradient id="floor" x2="0" y2="1"><stop stop-color="#314656"/><stop offset="1" stop-color="#172934"/></linearGradient></defs><rect x="0" y="0" width="300" height="190" rx="8" fill="url(#grid)"/><path d="M0 154H300V190H0Z" fill="url(#floor)"/><path d="M0 154H300" stroke="#526b79"/><g fill="#7d919d" font-size="8" font-family="monospace"><text x="10" y="15">SIMULATED PROCESS</text><text x="290" y="15" text-anchor="end">CELL 0${current%9+1}</text></g>`;
 const motor=(x,y,idx=0)=>`<g transform="translate(${x} ${y})"><rect x="-20" y="-15" width="39" height="31" rx="4" fill="url(#steel)" stroke="#8aa1ad"/><path d="M-12 -12V12M-5 -12V12M2 -12V12M9 -12V12" stroke="#304757" stroke-width="2"/><circle cx="20" cy="0" r="13" fill="#263b49" stroke="#8aa1ad"/><g class="rotor"><path d="M20 -9V9M11 0H29M14 -6L26 6M14 6L26 -6" stroke="#a4b6bf" stroke-width="2"/></g><circle cx="-14" cy="-21" r="4" fill="#667987" data-output="${idx}"/><path d="M-16 16V22H16V16" stroke="#8397a4" fill="none" stroke-width="3"/></g>`;
@@ -247,54 +363,52 @@ else if(k==='pack'){scene=`<path d="M38 145V48H278V145" fill="none" stroke="#799
 else if(k==='pump'||k==='staged'){scene=`<path d="M56 49V36H127V49M127 120H173V90H256V65" stroke="#65818f" stroke-width="12" fill="none" stroke-linejoin="round"/><rect x="43" y="48" width="97" height="92" rx="12" fill="#223c4b" stroke="#7895a5" stroke-width="3"/><path d="M46 92Q68 85 91 92T137 92V128Q137 137 128 137H54Q46 137 46 128Z" fill="#398ca4" opacity=".78"/><path d="M46 92Q68 85 91 92T137 92" stroke="#79d3e5" stroke-width="2" fill="none"/><path d="M60 140V152M122 140V152" stroke="#879ba8" stroke-width="6"/><path d="M173 90H256V65" stroke="#65818f" stroke-width="12" fill="none"/><circle cx="173" cy="120" r="24" fill="url(#steel)" stroke="#9cb0ba" stroke-width="2"/><path d="M162 120L181 110V130Z" fill="#cad9e0"/><circle cx="173" cy="120" r="5" fill="#283f4e"/><circle cx="203" cy="113" r="5" fill="#667b86" data-output="${k==='staged'?1:0}"/><path d="M173 90H256V65" stroke="#5d8997" stroke-width="3" stroke-dasharray="6 5" fill="none" class="beltmark" data-stroke="${k==='staged'?1:0}"/>${k==='staged'?motor(92,37,0):''}<text x="91" y="166" text-anchor="middle">TANK</text><text x="173" y="166" text-anchor="middle">PUMP</text>`}
 else{scene=`<rect x="95" y="42" width="110" height="106" rx="5" fill="url(#steel)" stroke="#a2b5bf"/><rect x="124" y="87" width="52" height="36" rx="4" fill="#213746" stroke="#8097a3"/><circle cx="139" cy="105" r="5" fill="#8ba0aa"/><circle cx="161" cy="105" r="5" fill="#8ba0aa"/><path d="M150 42V30" stroke="#8196a2" stroke-width="9"/><rect x="130" y="18" width="40" height="25" rx="7" fill="#775b5c" stroke="#a78788" data-output="0"/><path d="M113 26L102 19M187 26L198 19M150 12V5" stroke="#8396a0" stroke-width="2"/><text x="150" y="176" text-anchor="middle">ALARM STATION</text>`}
 $('#plant').innerHTML=`<svg viewBox="0 0 300 190" role="img" aria-label="Animated ${esc(k)} process"><g font-size="9" font-family="monospace" fill="#a5b9c4">${base}<g id="machine">${scene}</g></g></svg>`;$('#plantTitle').textContent=({conveyor:'Motor / belt',reverse:'Bidirectional drive',batch:'Part counting station',fan:'Extraction and cooling',pack:'Pneumatic actuator',pump:'Tank and pump',staged:'Mixer and transfer pump',alarm:'Alarm annunciator'})[k]||mission.title;$('#autoPlantWrap').classList.toggle('hidden',!mission.plant);$('#autoPlant').checked=!!mission.plant;}
-function updateLive(){document.querySelectorAll('[data-int-value]').forEach(e=>e.textContent=read(state,e.dataset.intValue));document.querySelectorAll('[data-int-input]').forEach(e=>{if(document.activeElement!==e)e.value=read(state,e.dataset.intInput)});document.querySelectorAll('[data-seq]').forEach(e=>e.classList.toggle('active',Number(e.dataset.seq)===read(state,mission.sequenceTag||'%MW10')));const running=mode!=='STOP',flows=state.flows;$('#cpuState').textContent=mode;$('#cpuDot').className='dot '+(mode==='RUN'?'on':mode==='PAUSE'?'pause':'');$('#clock').textContent=`${(state.time/1000).toFixed(1)} s · scan ${state.scan}`;$('#pauseBtn').disabled=mode!=='RUN';$('#stopBtn').disabled=mode==='STOP';$('#runBtn').disabled=mode==='RUN';document.querySelectorAll('[data-led]').forEach(e=>e.classList.toggle('on',read(state,e.dataset.led)));document.querySelectorAll('[data-input]').forEach(e=>{let v=read(state,e.dataset.input);e.textContent=v?'1 ON':'0 OFF';e.classList.toggle('on',v);e.setAttribute('aria-pressed',String(v))});document.querySelectorAll('[data-value]').forEach(e=>{let v=read(state,e.dataset.value);e.textContent=v?'1 TRUE':'0 FALSE';e.classList.toggle('on',v)});document.querySelectorAll('[data-instance]').forEach(e=>{let a=e.dataset.instance,o=program.find(n=>n.out?.a===a)?.out,q=state.inst[a];e.textContent=`${a} · Q=${+!!q?.q} · ${o?.type==='CTU'?'CV='+ (q?.cv||0):'ET='+((q?.et||0)/1000).toFixed(1)+'s'}`});const set=(sel,fn)=>document.querySelectorAll(sel).forEach(e=>e.classList.toggle('live',running&&!!fn(e)));const f=(e,key)=>e.dataset[key].split('-').map(Number);set('[data-lead]',e=>!!flows[+e.dataset.lead]);set('[data-group]',e=>{let [a,b]=f(e,'group');return flows[a]?.groups[b]?.paths?.some(p=>p.on)});set('[data-path]',e=>{let [a,b,c]=f(e,'path');return flows[a]?.groups[b]?.paths[c]?.on});set('[data-contact]',e=>{let [a,b,c,d]=f(e,'contact');return flows[a]?.groups[b]?.paths[c]?.contacts[d]});set('[data-wire]',e=>{let [a,b]=f(e,'wire');return flows[a]?.groups[b]?.on});set('[data-terminal]',e=>flows[+e.dataset.terminal]?.out);set('[data-terminal] .cell',e=>flows[+e.parentElement.dataset.terminal]?.out);set('[data-terminal] .block',e=>flows[+e.parentElement.dataset.terminal]?.out);set('[data-endwire]',e=>flows[+e.dataset.endwire]?.out);set('[data-branch-terminal]',e=>{let [a,b,c]=f(e,'branchTerminal');return flows[a]?.groups[b]?.paths[c]?.on});set('[data-extra-terminal]',e=>{let [a,b]=f(e,'extraTerminal');return flows[a]?.parallelOutputs[b]});document.querySelectorAll('[data-bq]').forEach(e=>{let o=program[+e.dataset.bq].out;e.textContent=+!!state.inst[o.a]?.q});document.querySelectorAll('[data-bv]').forEach(e=>{let o=program[+e.dataset.bv].out,q=state.inst[o.a];e.textContent=o.type==='CTU'?q?.cv||0:((q?.et||0)/1000).toFixed(1)+'s'});const outs=mission.outs.map(t=>read(state,t.a)),active=outs.some(Boolean),machine=$('#machine');if(machine){machine.querySelectorAll('[data-lamp]').forEach(e=>e.setAttribute('opacity',outs[+e.dataset.lamp]?1:.18));let fill=$('#tankFill');if(fill){let h=Number(read(state,'%IW2'))*1.13;fill.setAttribute('height',h);fill.setAttribute('y',149-h)}let head=$('#processHead');if(head)head.setAttribute('transform',`translate(0 ${outs[mission.kind==='production'?2:1]?13:0})`);let liquid=$('#liquid');if(liquid)liquid.setAttribute('opacity',mission.kind==='filling'&&outs[2]?1:0);machine.classList.toggle('moving',mode==='RUN'&&(mission.kind==='batch'?read(state,A(0)):active));machine.classList.toggle('spinning',mode==='RUN'&&active);machine.classList.toggle('reverse',!!outs[1]);machine.querySelectorAll('[data-output]').forEach(e=>e.classList.toggle('machine-on',!!outs[+e.dataset.output]));machine.querySelectorAll('[data-stroke]').forEach(e=>e.setAttribute('stroke',outs[+e.dataset.stroke]?'#48d7b5':'#65818f'));if(mission.kind==='pack'){const was=machine.classList.contains('pushed');if(outs[0]){machine.classList.remove('returning');machine.classList.add('pushed')}else if(was){machine.classList.remove('pushed');machine.classList.add('returning')}}}$('#plantDot').classList.toggle('on',active);$('#plantStatusDot').classList.toggle('on',active);$('#plantStatus').textContent=active?(mission.kind==='reverse'?(outs[0]&&outs[1]?'CONFLICT':outs[1]?'Reverse':'Forward'):mission.kind==='batch'?'Batch complete':'Active'):'Standby';$('#plantMode').textContent=mode==='PAUSE'?'· scan paused':mode==='STOP'?'· CPU stopped':''}
+function updateLive(){document.querySelectorAll('[data-int-value]').forEach(e=>e.textContent=read(state,e.dataset.intValue));document.querySelectorAll('[data-int-input]').forEach(e=>{if(document.activeElement!==e)e.value=read(state,e.dataset.intInput)});document.querySelectorAll('[data-seq]').forEach(e=>e.classList.toggle('active',Number(e.dataset.seq)===read(state,mission.sequenceTag||'%MW10')));const running=mode!=='STOP',flows=state.flows;$('#cpuState').textContent=mode;$('#cpuDot').className='dot '+(mode==='RUN'?'on':mode==='PAUSE'?'pause':'');$('#clock').textContent=`${(state.time/1000).toFixed(1)} s · scan ${state.scan}`;$('#pauseBtn').disabled=mode!=='RUN';$('#stopBtn').disabled=mode==='STOP';$('#runBtn').disabled=mode==='RUN';document.querySelectorAll('[data-led]').forEach(e=>e.classList.toggle('on',read(state,e.dataset.led)));document.querySelectorAll('[data-input]').forEach(e=>{let v=read(state,e.dataset.input);e.textContent=v?'1 ON':'0 OFF';e.classList.toggle('on',v);e.setAttribute('aria-pressed',String(v))});document.querySelectorAll('[data-value]').forEach(e=>{let v=read(state,e.dataset.value);e.textContent=v?'1 TRUE':'0 FALSE';e.classList.toggle('on',v)});document.querySelectorAll('[data-instance]').forEach(e=>{let a=e.dataset.instance,o=program.flatMap(networkOutputs).find(n=>n.a===a),q=state.inst[a];e.textContent=`${a} · Q=${+!!q?.q} · ${o?.type==='CTU'?'CV='+ (q?.cv||0):'ET='+((q?.et||0)/1000).toFixed(1)+'s'}`});document.querySelectorAll('.lad-item').forEach(el=>{const ni=+el.dataset.n,flag=state.flows[ni]?.[el.dataset.node];el.classList.toggle('energized',running&&!!flag)});document.querySelectorAll('[data-lwire]').forEach(el=>{const ni=+el.closest('.lad-network').querySelector('[data-n]').dataset.n;el.classList.toggle('live',running&&!!state.flows[ni]?.[el.dataset.lwire])});
+ document.querySelectorAll('[data-instance]').forEach(e=>{const a=e.dataset.instance,o=program.flatMap(networkOutputs).find(x=>x.a===a),q=state.inst[a];e.textContent=`${a} · Q=${+!!q?.q} · ${o?.type==='CTU'?'CV='+(q?.cv||0):'ET='+((q?.et||0)/1000).toFixed(1)+'s'}`});
+ const outs=mission.outs.map(t=>read(state,t.a)),active=outs.some(Boolean),machine=$('#machine');if(machine){machine.querySelectorAll('[data-lamp]').forEach(e=>e.setAttribute('opacity',outs[+e.dataset.lamp]?1:.18));let fill=$('#tankFill');if(fill){let h=Number(read(state,'%IW2'))*1.13;fill.setAttribute('height',h);fill.setAttribute('y',149-h)}let head=$('#processHead');if(head)head.setAttribute('transform',`translate(0 ${outs[mission.kind==='production'?2:1]?13:0})`);let liquid=$('#liquid');if(liquid)liquid.setAttribute('opacity',mission.kind==='filling'&&outs[2]?1:0);machine.classList.toggle('moving',mode==='RUN'&&(mission.kind==='batch'?read(state,A(0)):active));machine.classList.toggle('spinning',mode==='RUN'&&active);machine.classList.toggle('reverse',!!outs[1]);machine.querySelectorAll('[data-output]').forEach(e=>e.classList.toggle('machine-on',!!outs[+e.dataset.output]));machine.querySelectorAll('[data-stroke]').forEach(e=>e.setAttribute('stroke',outs[+e.dataset.stroke]?'#48d7b5':'#65818f'));if(mission.kind==='pack'){const was=machine.classList.contains('pushed');if(outs[0]){machine.classList.remove('returning');machine.classList.add('pushed')}else if(was){machine.classList.remove('pushed');machine.classList.add('returning')}}}$('#plantDot').classList.toggle('on',active);$('#plantStatusDot').classList.toggle('on',active);$('#plantStatus').textContent=active?(mission.kind==='reverse'?(outs[0]&&outs[1]?'CONFLICT':outs[1]?'Reverse':'Forward'):mission.kind==='batch'?'Batch complete':'Active'):'Standby';$('#plantMode').textContent=mode==='PAUSE'?'· scan paused':mode==='STOP'?'· CPU stopped':''}
 function showCompile(c){$('#checks').innerHTML=`<div class="summary-line ${c.errors.length?'fail':'pass'}">${c.errors.length?`${c.errors.length} compile error(s)`:'Compile successful'}</div>${c.errors.map(x=>`<div class="check-row fail"><span>×</span><span>${esc(x)}</span></div>`).join('')}${c.warnings.map(x=>`<div class="check-row warn"><span>!</span><span>${esc(x)}</span></div>`).join('')}<p>${c.errors.length?'Resolve errors before running.':'Compilation checks structure, not whether your sequence meets the brief.'}</p>`}
 function plantTick(){if(!mission.plant||!$('#autoPlant').checked)return;let p=state.plant;let b=state.bits;const move=(key,on,rate=.1)=>p[key]=Math.max(0,Math.min(1,(p[key]||0)+(on?rate:-rate)));const delay=(key,on,threshold=8)=>{p[key]=on?(p[key]||0)+1:0;return p[key]>=threshold};if(mission.plant==='cylinder'){let pos=move('rod',b[B(0)]);b[A(2)]=pos<.01;b[A(3)]=pos>.99}else if(mission.plant==='filling'){let pos=move('nozzle',b[B(1)]);b[A(2)]=pos>.99;b[A(3)]=pos<.01;if(b[B(0)]){if(delay('belt',true,15)){b[A(1)]=!b[A(1)];p.belt=0}}else p.belt=0}else if(mission.plant==='production'){let clamp=move('clamp',b[B(1)]),tool=move('tool',b[B(2)]);b[A(2)]=clamp>.99;b[A(4)]=clamp<.01;b[A(3)]=tool<.01;if(delay('feed',b[B(0)],15))b[A(1)]=true;if(b[B(1)])b[A(1)]=false;if(b[B(3)]){if(delay('exit',true,15)){b[A(5)]=!b[A(5)];p.exit=0}}else p.exit=0}}
 function start(step=false){let c=compile(program,mission);if(c.errors.length){showCompile(c);toast('Fix compilation errors first.');return}mode=step?'PAUSE':'RUN';if(step){plantTick();tick(program,state);}updateLive()}
 function testProgram(){if(!mission.tests.length)return;const c=compile(program,mission);if(c.errors.length){showCompile(c);return}const results=runTests(program,mission),count=results.filter(r=>r.ok).length,ok=count===results.length;if(ok){saved.done[current]=true;persist();progress()}else{delete saved.done[current];persist();progress()}$('#checks').innerHTML=`<div class="summary-line ${ok?'pass':'fail'}">${ok?'✓ Commissioned successfully':`${count} / ${results.length} test cases passed`}</div>${results.map(r=>`<div class="check-row"><span class="${r.ok?'pass':'fail'}">${r.ok?'✓':'×'}</span><span>${esc(r.name)}<small>${esc(r.detail)}</small></span></div>`).join('')}${c.warnings.map(x=>`<div class="check-row warn"><span>!</span><span>${esc(x)}</span></div>`).join('')}<p>${ok?(current===missions.length-1?'All specified checkpoints passed. Training complete! Return to the main menu to review your progress.':'All specified checkpoints passed. Your next mission is now available. Explain why your network works before progressing.'):'Use the first failing checkpoint to reproduce the condition in the watch table and debug your logic.'} Tests start from a separate reset CPU; your live session is unchanged.</p>`;if(ok)toast(current===missions.length-1?'Capstone commissioned!':'Mission commissioned!')}
-// Keep branch output attachments on the same logical path if groups/paths move.
-function remapBranchOutputs(net,mapFn){
- if(!net.branchOutputs)return;
- const result={};
- Object.entries(net.branchOutputs).forEach(([key,out])=>{
-  const [gi,pi]=key.split(':').map(Number),target=mapFn(gi,pi);
-  if(target)result[`${target[0]}:${target[1]}`]=out;
- });
- net.branchOutputs=result;
-}
-function editorAction(el,forced){
- let {act,n:ni,g:gi,p:pi,c:ci,x:xi}=el.dataset;
- ni=+ni;gi=+gi;pi=+pi;ci=+ci;xi=+xi;
- let net=program[ni];
- if(act==='insert'){
-  const tp=forced||selected;
-  if(contactType(tp))contactDialog(ni,gi,pi,ci,false,forced);
-  else if(ci===net.groups[gi][pi].length&&['COIL','SET','RESET'].includes(tp)){
-   if(net.groups[gi].length>1)outputDialog(ni,forced,'branch',gi,pi);
-   else if(gi===net.groups.length-1)outputDialog(ni,forced,net.out?'extra':'main',0,0,(net.parallelOutputs||[]).length);
-   else toast('For an intermediate output, add a parallel path and use + Coil at its end.');
-  }else toast('A coil must terminate a branch or be a parallel output; it cannot go between series contacts.');
+// Drag from instruction palette or move an existing operator. Drop targets cover every wire.
+$('#editor').addEventListener('click',e=>{
+ const a=e.target.closest('[data-act]');if(a){editorAction(a);return}
+ const pl=e.target.closest('[data-place]');if(pl){nodeDialog(+pl.dataset.n,pl.dataset.path||'',pl.dataset.before||'',null,selected);return}
+ const op=e.target.closest('[data-node]');if(op){
+  const ni=+op.dataset.n,id=op.dataset.node;
+  if(e.shiftKey){rangeRef={ni,id};selectedRef||={ni,id};renderEditor();toast('Range selected. Choose Branch selected to create a parallel path.');return}
+  selectedRef={ni,id};rangeRef=null;nodeDialog(ni,'','',id,null);
  }
- else if(act==='contact')contactDialog(ni,gi,pi,ci,true,forced);
- else if(act==='output')outputDialog(ni,forced);
- else if(act==='pathout'||act==='editpathout')outputDialog(ni,forced,'branch',gi,pi);
- else if(act==='addextraout')outputDialog(ni,forced,'extra',0,0,(net.parallelOutputs||[]).length);
- else if(act==='editextraout')outputDialog(ni,forced,'extra',0,0,xi);
- else if(act==='delpathout')edit(()=>{if(net.branchOutputs)delete net.branchOutputs[`${gi}:${pi}`]});
- else if(act==='delextraout')edit(()=>{net.parallelOutputs.splice(xi,1)});
- else if(act==='addnet')edit(()=>program.push(n([[[]]],null,'')));
- else if(act==='delnet')edit(()=>{program.splice(ni,1);if(!program.length)program=baseProgram()});
- else if(act==='up'||act==='down')edit(()=>{let j=ni+(act==='up'?-1:1);if(j>=0&&j<program.length)[program[ni],program[j]]=[program[j],program[ni]]});
- else if(act==='branch')edit(()=>net.groups[gi].push([]));
- else if(act==='series')edit(()=>{net.groups.splice(gi+1,0,[[]]);remapBranchOutputs(net,(g,p)=>[g>gi?g+1:g,p])});
- else if(act==='prepend')edit(()=>{net.groups.unshift([[]]);remapBranchOutputs(net,(g,p)=>[g+1,p])});
- else if(act==='delgroup')edit(()=>{net.groups.splice(gi,1);remapBranchOutputs(net,(g,p)=>g===gi?null:[g>gi?g-1:g,p]);if(!net.groups.length)net.groups.push([[]])});
- else if(act==='delpath')edit(()=>{net.groups[gi].splice(pi,1);remapBranchOutputs(net,(g,p)=>g!==gi?[g,p]:p===pi?null:[g,p>pi?p-1:p]);if(!net.groups[gi].length)net.groups[gi].push([])});
- else if(act==='delcontact')edit(()=>net.groups[gi][pi].splice(ci,1));
- else if(act==='delout')edit(()=>net.out=null);
-}
-$('#editor').addEventListener('click',e=>{let b=e.target.closest('[data-act]');if(b)editorAction(b)});$('#editor').addEventListener('change',e=>{if(e.target.matches('[data-comment]')){program[+e.target.dataset.comment].name=e.target.value;persist()}});$('#tools').addEventListener('click',e=>{let b=e.target.closest('[data-tool]');if(b){selected=b.dataset.tool;renderTools()}else if(e.target.closest('#undoBtn'))undo();else if(e.target.closest('#redoBtn'))undo(true)});$('#tools').addEventListener('dragstart',e=>{let b=e.target.closest('[data-tool]');if(b){e.dataTransfer.setData('text/plain',b.dataset.tool);e.dataTransfer.effectAllowed='copy'}});$('#editor').addEventListener('dragover',e=>{if(e.target.closest('[data-act="insert"],[data-act="contact"],[data-act="output"],[data-act="pathout"],[data-act="editpathout"],[data-act="addextraout"],[data-act="editextraout"],[data-act="pathout"],[data-act="editpathout"],[data-act="addextraout"],[data-act="editextraout"]')){e.preventDefault();e.dataTransfer.dropEffect='copy'}});$('#editor').addEventListener('drop',e=>{let b=e.target.closest('[data-act="insert"],[data-act="contact"],[data-act="output"],[data-act="pathout"],[data-act="editpathout"],[data-act="addextraout"],[data-act="editextraout"],[data-act="pathout"],[data-act="editpathout"],[data-act="addextraout"],[data-act="editextraout"]'),tp=e.dataTransfer.getData('text/plain');if(b&&types[tp]){e.preventDefault();editorAction(b,tp)}});$('#missions').addEventListener('click',e=>{let b=e.target.closest('[data-mission]');if(b){openMission(+b.dataset.mission)}});$('#sandboxBtn').onclick=()=>{openMission(missions.length)};$('#nextBtn').onclick=()=>{if(current>=missions.length||!saved.done[current]){toast('Pass the commissioning tests first.');return}if(current===missions.length-1){showMenu();toast('Training complete — all missions commissioned!')}else openMission(current+1)};$('#hintBtn').onclick=()=>{hintLevel=Math.min(hintLevel+1,mission.hints.length);$('#hintBox').classList.remove('hidden');$('#hintBox').innerHTML=`<b>Engineering hint ${hintLevel}/${mission.hints.length}</b>${mission.hints.slice(0,hintLevel).map(h=>`<p>${esc(h)}</p>`).join('')}`};$('#resetBtn').onclick=()=>{openDialog(`<h3 id="modalTitle">Reset this program?</h3><p>This restores the initial network(s) for the current mission. You can undo the reset.</p>${dialogButtons()}`,()=>{edit(()=>program=copy(mission.starter||baseProgram()));return true})};$('#watch').addEventListener('input',e=>{if(e.target.dataset.intInput){state.bits[e.target.dataset.intInput]=Number(e.target.value);updateLive()}});$('#watch').addEventListener('click',e=>{let b=e.target.closest('[data-input]');if(b){let a=b.dataset.input;if(mission.plant&&$('#autoPlant').checked&&((mission.plant==='cylinder'&&[A(2),A(3)].includes(a))||(mission.plant==='filling'&&[A(1),A(2),A(3)].includes(a))||(mission.plant==='production'&&[A(1),A(2),A(3),A(4),A(5)].includes(a)))){toast('Turn off automatic sensors to override this sensor.');return}state.bits[a]=!state.bits[a];updateLive()}});$('#resetInputsBtn').onclick=()=>{mission.ins.forEach(t=>state.bits[t.a]=t.kind==='INT'?Number(t.d):!!t.d);updateLive()};$('#compileBtn').onclick=()=>showCompile(compile(program,mission));$('#runBtn').onclick=()=>start();$('#stepBtn').onclick=()=>start(true);$('#pauseBtn').onclick=()=>{mode='PAUSE';updateLive()};$('#stopBtn').onclick=()=>{const inputs=Object.fromEntries(mission.ins.map(t=>[t.a,read(state,t.a)]));mode='STOP';state=initial(mission);Object.assign(state.bits,inputs);updateLive()};$('#testBtn').onclick=testProgram;$('#modal').addEventListener('click',e=>{if(e.target===$('#modal')||e.target.closest('[data-modal="close"]'))closeDialog();else if(e.target.closest('[data-modal="apply"]')){let res=modalApply?.();if(res===true)closeDialog();else if($('#dialogError'))$('#dialogError').textContent=res||'Check your settings.'}});document.addEventListener('keydown',e=>{if(!$('#modal').classList.contains('hidden')){if(e.key==='Escape')closeDialog();if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();$('#modalCard [data-modal="apply"]')?.click()}return}if(view==='game'&&(e.ctrlKey||e.metaKey)&&!['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)){if(e.key.toLowerCase()==='z'){e.preventDefault();undo(e.shiftKey)}if(e.key.toLowerCase()==='y'){e.preventDefault();undo(true)}}});
-$('#helpBtn').onclick=()=>openDialog(`<h3 id="modalTitle">Factory Lab / quick guide</h3><div class="reference"><h4>1 · Build in Main [OB1]</h4><p>Choose a contact or comparison, then click or drag to a + on a network. Set its operand in the dialogue. Contacts in one path are in series (AND). Add Branch for parallel (OR), and add Series for an independently positioned condition. Click an existing instruction to edit it; use × to remove it. Return to the main menu at any time; your program is saved and the simulated CPU stops. Pass the commissioning tests to unlock the next mission. You can revisit passed missions and use the free lab at any time.</p><h4>2 · Assign the output</h4><p>Click + Output and select a coil, IEC block or integer instruction. Use + Coil on a parallel path to terminate that path with an independently controlled coil; it does not rejoin the downstream logic. Use + Parallel coil beside a network output to drive more coils from the same final conditions. Coils cannot be chained in series. %I = input, %Q = output, %M = internal memory. NO passes TRUE; NC passes FALSE. The physical wiring of a switch does not determine which LAD contact to use.</p><h4>3 · IEC blocks</h4><p>TON delays switch-on; TOF delays switch-off; TP generates a fixed pulse. PT is preset time and ET is elapsed time. CTU increments on a rising edge (CU), R resets, PV is the preset count, CV is the current count. Q is the block result. Give each block a unique instance DB name and use its .Q contact in a following network. Set/reset coils retain a bit across scans; their write order matters.</p><h4>4 · Commission</h4><p>Compile, Run, toggle inputs, and watch the green logic paths and live tags. Pause or Step scan to see network order. Stop / reset CPU clears outputs, markers and instance state but preserves physical input switches. Edits reset the simulated CPU. Test program runs separate automatic scenarios. Undo and redo work via toolbar or Ctrl+Z / Ctrl+Y.</p><h4>5 · Scope</h4><p>This is a simplified simulator: 100 ms scans, multiple coils on branch ends or in a parallel output bank, series groups of parallel contact paths, fixed mission tags, no actual hardware, no safety PLC, no real persistence across a CPU power cycle and no TIA Portal project import/export. Timers are quantised to scans. Selected sequential missions provide optional virtual sensor feedback. Turn it off to inject sensor faults. INTs are signed 16-bit; MOVE, ADD and SUB write immediately, so network execution order matters. Comparisons accept INT tags and constants. Rising/falling edge contacts track their own operand on every scan. TP pulses are quantised to the scan. The sequence monitor reads Sequence Step; it does not advance the program.</p></div><div class="modal-actions"><button class="primary" data-modal="close">Close guide</button></div>`,null);
+});
+$('#editor').addEventListener('change',e=>{if(e.target.matches('[data-comment]')){program[+e.target.dataset.comment].name=e.target.value;persist()}});
+$('#tools').addEventListener('click',e=>{const b=e.target.closest('[data-tool]');if(b){selected=b.dataset.tool;renderTools()}else if(e.target.closest('#undoBtn'))undo();else if(e.target.closest('#redoBtn'))undo(true)});
+$('#tools').addEventListener('dragstart',e=>{const b=e.target.closest('[data-tool]');if(b){e.dataTransfer.setData('text/plain','tool:'+b.dataset.tool);e.dataTransfer.effectAllowed='copy'}});
+$('#editor').addEventListener('dragstart',e=>{const b=e.target.closest('[data-node]');if(b&&!e.target.closest('[data-act]')){
+ e.dataTransfer.setData('text/plain','node:'+b.dataset.n+':'+b.dataset.node);e.dataTransfer.effectAllowed='move';b.classList.add('dragging');
+}});
+$('#editor').addEventListener('dragend',()=>{$('#editor').querySelectorAll('.dragging,.drop-hover').forEach(e=>e.classList.remove('dragging','drop-hover'))});
+$('#editor').addEventListener('dragover',e=>{const b=locateTarget(e);if(b){e.preventDefault();e.dataTransfer.dropEffect='copy';$('#editor').querySelectorAll('.drop-hover').forEach(x=>x.classList.remove('drop-hover'));b.classList.add('drop-hover')}});
+$('#editor').addEventListener('dragleave',e=>{if(!$('#editor').contains(e.relatedTarget))$('#editor').querySelectorAll('.drop-hover').forEach(x=>x.classList.remove('drop-hover'))});
+$('#editor').addEventListener('drop',e=>{const b=locateTarget(e);if(!b)return;e.preventDefault();
+ let raw=e.dataTransfer.getData('text/plain'),moved=null,type=null;
+ if(raw.startsWith('tool:'))type=raw.slice(5);
+ else if(raw.startsWith('node:')){let parts=raw.split(':');moved=parts[2];type=findNode(program[+parts[1]],moved)?.node.type}
+ else if(types[raw])type=raw;
+ if(!type||!types[type])return;const source=raw.startsWith('node:')?+raw.split(':')[1]:null;insertDragged(type,b,moved,e,source);
+});
+$('#missions').addEventListener('click',e=>{let b=e.target.closest('[data-mission]');if(b){openMission(+b.dataset.mission)}});$('#sandboxBtn').onclick=()=>{openMission(missions.length)};$('#nextBtn').onclick=()=>{if(current>=missions.length||!saved.done[current]){toast('Pass the commissioning tests first.');return}if(current===missions.length-1){showMenu();toast('Training complete — all missions commissioned!')}else openMission(current+1)};$('#hintBtn').onclick=()=>{hintLevel=Math.min(hintLevel+1,mission.hints.length);$('#hintBox').classList.remove('hidden');$('#hintBox').innerHTML=`<b>Engineering hint ${hintLevel}/${mission.hints.length}</b>${mission.hints.slice(0,hintLevel).map(h=>`<p>${esc(h)}</p>`).join('')}`};$('#demoBtn').onclick=()=>{
+ if(current!==missions.length)return;
+ openDialog(`<h3 id="modalTitle">Load a demonstration LAD network?</h3><p>This replaces the current free-lab program. It demonstrates coils in series, a second output branch, and a shared output after the branches. Undo will restore your previous program.</p>${dialogButtons()}`,()=>{
+  const C=(type,a)=>({kind:'contact',id:uid(),type,a});
+  const O=a=>({kind:'output',id:uid(),type:'COIL',a});
+  edit(()=>{program=[{name:'Multiple output coils and parallel paths',tree:seq([
+   C('NO','%I0.0'),{kind:'parallel',id:uid(),paths:[
+    seq([C('NO','%I0.1'),O('%Q0.0'),O('%Q0.1')]),
+    seq([C('NO','%I0.2'),O('%Q0.2')])]},O('%M0.0')])}];});return true;
+ });
+};
+$('#resetBtn').onclick=()=>{openDialog(`<h3 id="modalTitle">Reset this program?</h3><p>This restores the initial network(s) for the current mission. You can undo the reset.</p>${dialogButtons()}`,()=>{edit(()=>program=modernProgram(copy(mission.starter||baseProgram())));return true})};$('#watch').addEventListener('input',e=>{if(e.target.dataset.intInput){state.bits[e.target.dataset.intInput]=Number(e.target.value);updateLive()}});$('#watch').addEventListener('click',e=>{let b=e.target.closest('[data-input]');if(b){let a=b.dataset.input;if(mission.plant&&$('#autoPlant').checked&&((mission.plant==='cylinder'&&[A(2),A(3)].includes(a))||(mission.plant==='filling'&&[A(1),A(2),A(3)].includes(a))||(mission.plant==='production'&&[A(1),A(2),A(3),A(4),A(5)].includes(a)))){toast('Turn off automatic sensors to override this sensor.');return}state.bits[a]=!state.bits[a];updateLive()}});$('#resetInputsBtn').onclick=()=>{mission.ins.forEach(t=>state.bits[t.a]=t.kind==='INT'?Number(t.d):!!t.d);updateLive()};$('#compileBtn').onclick=()=>showCompile(compile(program,mission));$('#runBtn').onclick=()=>start();$('#stepBtn').onclick=()=>start(true);$('#pauseBtn').onclick=()=>{mode='PAUSE';updateLive()};$('#stopBtn').onclick=()=>{const inputs=Object.fromEntries(mission.ins.map(t=>[t.a,read(state,t.a)]));mode='STOP';state=initial(mission);Object.assign(state.bits,inputs);updateLive()};$('#testBtn').onclick=testProgram;$('#modal').addEventListener('click',e=>{if(e.target===$('#modal')||e.target.closest('[data-modal="close"]'))closeDialog();else if(e.target.closest('[data-modal="apply"]')){let res=modalApply?.();if(res===true)closeDialog();else if($('#dialogError'))$('#dialogError').textContent=res||'Check your settings.'}});document.addEventListener('keydown',e=>{if(!$('#modal').classList.contains('hidden')){if(e.key==='Escape')closeDialog();if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();$('#modalCard [data-modal="apply"]')?.click()}return}if(view==='game'&&(e.ctrlKey||e.metaKey)&&!['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)){if(e.key.toLowerCase()==='z'){e.preventDefault();undo(e.shiftKey)}if(e.key.toLowerCase()==='y'){e.preventDefault();undo(true)}}});
+$('#helpBtn').onclick=()=>openDialog(`<h3 id="modalTitle">Factory Lab / Ladder editor guide</h3><div class="reference"><h4>1 · Build as in a LAD network</h4><p>Drag NO/NC contacts, coils, timers, counters, integer comparisons and data operations directly onto a wire. Click a wire's + to insert the selected tool. Click any instruction to edit its operands. Drag an existing instruction onto another wire to move it. Hover over an instruction and use + branch above or below to wrap it in a parallel path. Use + parallel path to extend an existing branch. Nested parallel paths and several coils in sequence are supported.</p><h4>2 · Group instructions</h4><p>Click an instruction to select it, then Shift-click another in the same series path. Press Branch selected to place a parallel branch around that entire range. An empty branch is an unintended bypass and must be filled before compiling. Outputs execute at their position in the path; multiple coils may be fed by the same condition. Network execution order matters when the same destination is written more than once.</p><h4>3 · Monitor and commission</h4><p>Use Compile to check operands and branch continuity. Run or Step scan to inspect live ladder power, watch table signals and machine animations. The test runner checks functional checkpoints and unlocks missions when all tests pass. Use Undo / Redo in the toolbox or Ctrl+Z / Ctrl+Y. The main menu retains saved programs and sequential mission progression.</p><h4>4 · Scope</h4><p>This is an educational LAD-style simulator, not a complete implementation of Siemens TIA Portal. It does not connect to hardware, import TIA projects, or validate real machine safety. IEC timer/counter execution is simplified to 100 ms scans. Network topology can express nested series/parallel logic and branches containing several coils, but not every Siemens instruction or advanced data type is modelled.</p></div><div class="modal-actions"><button class="primary" data-modal="close">Close guide</button></div>`,null);
 showMenu();setInterval(()=>{if(view==='game'&&mode==='RUN'){plantTick();tick(program,state);updateLive()}},100);
 
 }

@@ -40,3 +40,44 @@
 .output-bank .add-parallel-out{align-self:center;position:relative;z-index:2;margin:3px 0 8px;font-size:10px!important;border-style:dashed!important;white-space:nowrap;padding:4px 6px!important}
 .output-bank .output-row:has(.terminal.live)::before,.output-bank .output-row:has(.extra-terminal.live)::before{background:var(--active)}
 .output-bank.has-parallel:has(.terminal.live)::before{background:var(--active)}
+
+/* Factory Lab V5 — topology-aware ladder editor, light canvas in both themes */
+.lad-network{min-width:660px;border:1px solid #c9d5de;border-radius:9px;margin-bottom:14px;background:#fff;overflow:hidden}
+.lad-network .network-head{gap:6px;padding:8px 10px;background:#e7eef4}
+.lad-network .network-head input{flex:1;min-width:130px}
+.lad-network .network-head button{font-size:11px;white-space:nowrap}
+.lad-canvas-wrap{overflow:auto;max-height:670px;min-height:145px;background:linear-gradient(#fff,#fff),repeating-linear-gradient(90deg,#d5dee6 0px,#d5dee6 1px,transparent 1px,transparent 24px)}
+.lad-canvas{position:relative;min-width:660px;margin:auto;isolation:isolate}
+.lad-wires{position:absolute;left:0;top:0;pointer-events:none;z-index:0;overflow:visible}
+.lad-line{fill:none;stroke:#879fb2;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.lad-item{height:96px;position:absolute;z-index:3;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;color:#2d4557;cursor:grab;border:1px solid transparent;border-radius:6px;user-select:none;transition:background .12s,border-color .12s}
+.lad-item:hover,.lad-item.selected{background:#eef7ff;border-color:#aed0ee}
+.lad-item.dragging{opacity:.35}
+.lad-item.drop-hover{background:#d9f6e8;border-color:#218461}
+.lad-item.energized{color:#00865f;background:#e5f9ee}
+.lad-addr{font:10px/1.2 ui-monospace,SFMono-Regular,Consolas,monospace;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis;min-height:14px}
+.lad-tag{font:10px/1.3 'Segoe UI',system-ui,sans-serif;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-height:15px}
+.lad-glyph{height:37px;min-width:62px;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.lad-glyph svg{width:60px;height:32px}
+.lad-glyph.is-block{height:47px;min-width:83px;border:1.5px solid currentColor;border-radius:2px;background:#f2f6f9}
+.lad-block-label{font:700 12px/1 ui-monospace,monospace}
+.lad-wrap,.lad-trash{position:absolute;z-index:6;color:#315b78!important;border:1px solid #b9d0e0!important;background:#f1f8fe!important;padding:2px 6px!important;border-radius:5px;opacity:0;transition:opacity .12s;white-space:nowrap;line-height:1.3;box-shadow:0 2px 6px #0001}
+.lad-wrap{font-size:10px!important;left:50%;transform:translateX(-50%)}
+.lad-wrap.above{top:-14px}.lad-wrap.below{bottom:-14px}
+.lad-trash{right:-4px;top:15px;font-size:13px!important;color:#a43434!important}
+.lad-item:hover .lad-wrap,.lad-item:focus-within .lad-wrap,.lad-item:hover .lad-trash,.lad-item:focus-within .lad-trash{opacity:1}
+.lad-place{position:absolute;z-index:2;width:34px;height:34px;border:1px dashed transparent!important;background:transparent!important;border-radius:7px!important;padding:0!important;display:grid;place-items:center;opacity:.25;color:#597a97!important;font-size:15px!important}
+.lad-place span{background:#f5f9fc;border:1px dashed #9bb6c6;border-radius:5px;padding:0 5px;line-height:20px}
+.lad-place:hover,.lad-place:focus-visible,.lad-place.drop-hover{opacity:1;background:#d6f0fa!important;border:1px dashed #2e82a2!important}
+.lad-place.drop-hover{box-shadow:0 0 0 3px #48d7b533}
+.lad-addpath,.lad-path-remove{position:absolute;z-index:5;white-space:nowrap;border:1px solid #afc8da!important;background:#eaf4fc!important;color:#285376!important;font-size:10px!important;padding:2px 5px!important}
+.lad-path-remove{width:20px;height:20px;opacity:.4}
+.lad-path-remove:hover{opacity:1;color:#a33!important}
+.lad-addpath{opacity:.75}
+.lad-addpath:hover{opacity:1}
+.editor{padding:12px;background:#f0f4f8}
+.editor-note{background:#e5eff7;color:#39596e}
+.lad-network .network-head{position:sticky;left:0;z-index:5}
+@media(max-width:830px){.lad-network{min-width:620px}.lad-network .network-head{flex-wrap:wrap}.lad-canvas-wrap{max-height:560px}.work{grid-template-columns:minmax(0,1fr)}.editor-note{font-size:11px}}
+
+.lad-line.live{stroke:#10a66a;stroke-width:3}.lad-canvas:hover .lad-place{opacity:.48}.lad-canvas .lad-place:hover{opacity:1}
