@@ -11,7 +11,7 @@ const basic=(contacts,out=B(0),name='')=>n(contacts.map(c=>[[c]]),end('COIL',out
 function truth(ins,outs,fn){return Array.from({length:2**ins.length},(_,mask)=>{let input=Object.fromEntries(ins.map((a,i)=>[a,!!(mask&(1<<i))]));let v=fn(...ins.map(a=>input[a]));return {name:'Inputs '+ins.map(a=>+input[a]).join(' / '),steps:[{in:input,ms:100,expect:Object.fromEntries(outs.map((a,i)=>[a,!!(Array.isArray(v)?v[i]:v)]))}]}})}
 const s=(label,input,ms,expect)=>({label,in:input,ms,expect});const test=(name,...steps)=>({name,steps});
 const missions=loaded.missions,sandbox=loaded.sandbox;
-const types={NO:'NO contact',NC:'NC contact',COIL:'Coil',SET:'Set coil',RESET:'Reset coil',TON:'TON',TOF:'TOF',CTU:'CTU',TP:'TP',EQ:'== Int',NE:'<> Int',GT:'> Int',GE:'>= Int',LT:'< Int',LE:'<= Int',RISE:'Rising edge',FALL:'Falling edge',MOVE:'MOVE',ADD:'ADD Int',SUB:'SUB Int'};
+const types={BRANCH:'Parallel branch',NO:'NO contact',NC:'NC contact',COIL:'Coil',SET:'Set coil',RESET:'Reset coil',TON:'TON',TOF:'TOF',CTU:'CTU',TP:'TP',EQ:'== Int',NE:'<> Int',GT:'> Int',GE:'>= Int',LT:'< Int',LE:'<= Int',RISE:'Rising edge',FALL:'Falling edge',MOVE:'MOVE',ADD:'ADD Int',SUB:'SUB Int'};
 const blockType=x=>['TON','TOF','CTU','TP'].includes(x);const compareType=x=>['EQ','NE','GT','GE','LT','LE'].includes(x);const mathType=x=>['MOVE','ADD','SUB'].includes(x);const contactType=x=>['NO','NC','RISE','FALL'].includes(x)||compareType(x);const compareLabel={EQ:'==',NE:'≠',GT:'>',GE:'≥',LT:'<',LE:'≤'};
 function symbol(type){if(compareType(type)||mathType(type)||type==='RISE'||type==='FALL')return `<svg viewBox="0 0 46 24" aria-hidden="true"><rect x="3" y="2" width="40" height="20" rx="2" fill="none" stroke="currentColor"/><text x="23" y="16" text-anchor="middle" fill="currentColor" font-size="11">${compareLabel[type]||({RISE:'P',FALL:'N'})[type]||type}</text></svg>`;let inner=type==='NO'||type==='NC'?`<path d="M0 12H16 M16 3V21 M30 3V21 M30 12H46"/>${type==='NC'?'<path d="M13 22L33 2"/>':''}`:`<path d="M0 12H14 M17 3Q7 12 17 21 M29 3Q39 12 29 21 M32 12H46"/>${type==='SET'||type==='RESET'?`<text x="23" y="15.5" text-anchor="middle" font-size="10" fill="currentColor" stroke="none">${type==='SET'?'S':'R'}</text>`:''}`;return `<svg viewBox="0 0 46 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">${inner}</svg>`}
 /* V5 tree-backed LAD networks; baseProgram defined below. */const key='engineering-share-factory-lab-v1',dataKey='engineering-share-factory-lab-v4';let saved={programs:{},done:{},current:0};try{const oldIds=['conveyor','cooling','packing','start-stop','reverse','delay','run-on','batch','staged','alarm','guard-bypass','pump','sandbox'];let v=JSON.parse(localStorage.getItem(dataKey));if(!v){let old=JSON.parse(localStorage.getItem(key));if(old?.programs&&old?.done){v={programs:{},done:{},current:oldIds[old.current]};oldIds.forEach((id,i)=>{if(old.programs[i])v.programs[id]=old.programs[i];if(old.done[i])v.done[id]=true})}}if(v){[...missions,sandbox].forEach((m,i)=>{if(v.programs?.[m.id])saved.programs[i]=v.programs[m.id];if(v.done?.[m.id])saved.done[i]=true});saved.current=Math.max(0,[...missions,sandbox].findIndex(m=>m.id===v.current))}}catch{};
@@ -179,7 +179,7 @@ function openMission(i){if(!canOpen(i)){toast('Complete the earlier missions to 
 function setTheme(theme){const light=theme==='light';document.documentElement.dataset.theme=light?'light':'dark';$('#themeBtn').textContent=light?'☾ Dark mode':'☀ Light mode';$('#themeBtn').setAttribute('aria-label',light?'Switch to dark mode':'Switch to light mode');try{localStorage.setItem(key+'-theme',light?'light':'dark')}catch{}}
 $('#themeBtn').onclick=()=>setTheme(document.documentElement.dataset.theme==='light'?'dark':'light');$('#menuBtn').onclick=showMenu;$('#resumeBtn').onclick=()=>openMission(+$('#resumeBtn').dataset.target);$('#menuGuideBtn').onclick=()=>$('#helpBtn').click();
 let preferredTheme='dark';try{preferredTheme=localStorage.getItem(key+'-theme')||'dark'}catch{};setTheme(preferredTheme);
-function renderTools(){const hasInt=tags().some(t=>t.kind==='INT');const groups=[['NO','NC','RISE','FALL'],['COIL','SET','RESET'],['TON','TOF','TP','CTU'],...(hasInt?[['EQ','NE','GT','GE','LT','LE'],['MOVE','ADD','SUB']]:[])];const items=groups.map(g=>g.map(type=>`<button class="tool ${type===selected?'selected':''}" data-tool="${type}" draggable="true" aria-pressed="${type===selected}" title="${esc(types[type])}">${blockType(type)||mathType(type)?`<span style="font:700 11px ui-monospace,monospace;border:1px solid currentColor;padding:2px 4px;border-radius:3px">${type}</span>`:symbol(type)}${blockType(type)||mathType(type)||compareType(type)?'':esc(types[type])}</button>`).join(''));$('#tools').innerHTML=items.join('<div class="tool-sep"></div>')+`<div class="tool-sep"></div><button class="mini" id="undoBtn" ${!history.length?'disabled':''} title="Undo">↶ Undo</button><button class="mini" id="redoBtn" ${!future.length?'disabled':''} title="Redo">↷</button>`;$('#toolHint').textContent=`${types[selected]} selected · drag onto any wire to insert, or onto a symbol to replace it. Hover a symbol to add a parallel branch.`}
+function renderTools(){const hasInt=tags().some(t=>t.kind==='INT');const groups=[['NO','NC','RISE','FALL'],['BRANCH'],['COIL','SET','RESET'],['TON','TOF','TP','CTU'],...(hasInt?[['EQ','NE','GT','GE','LT','LE'],['MOVE','ADD','SUB']]:[])];const items=groups.map(g=>g.map(type=>`<button class="tool ${type===selected?'selected':''}" data-tool="${type}" draggable="true" aria-pressed="${type===selected}" title="${esc(types[type])}">${type==='BRANCH'?`<span class="branch-tool-icon" aria-hidden="true">⑂</span>`:blockType(type)||mathType(type)?`<span style="font:700 11px ui-monospace,monospace;border:1px solid currentColor;padding:2px 4px;border-radius:3px">${type}</span>`:symbol(type)}${blockType(type)||mathType(type)||compareType(type)?'':esc(types[type])}</button>`).join(''));$('#tools').innerHTML=items.join('<div class="tool-sep"></div>')+`<div class="tool-sep"></div><button class="mini" id="undoBtn" ${!history.length?'disabled':''} title="Undo">↶ Undo</button><button class="mini" id="redoBtn" ${!future.length?'disabled':''} title="Redo">↷</button>`;$('#toolHint').textContent=selected==='BRANCH'?'Parallel branch selected · drag onto a wire to split it, or onto an instruction to branch around it.':'Drag to insert · drag an existing instruction to a new position · drag Branch from the palette to create parallel paths.'}
 function edit(mut){history.push(copy(program));if(history.length>50)history.shift();future=[];mut();invalidate()}
 function invalidate(){mode='STOP';state=initial(mission);delete saved.done[current];$('#checks').innerHTML='<p>Program edited. Compile or run it, then repeat commissioning tests.</p>';persist();renderAll()}
 function undo(redo=false){const from=redo?future:history,to=redo?history:future;if(!from.length)return;to.push(copy(program));program=from.pop();invalidate()}
@@ -210,24 +210,26 @@ function renderEditor(){
    const symClass=blockType(node.type)||mathType(node.type)?'is-block':'';
    items.push(`<div class="lad-item ${live}" style="left:${x}px;top:${y-47}px;width:${nodeLayout(node).w}px" data-node="${node.id}" data-n="${ni}" data-path="${esc(path)}" draggable="true" title="Drag to move · click to edit · Shift-click to select a range">
     <span class="lad-addr">${addr}</span><span class="lad-glyph ${symClass}">${pict}</span><span class="lad-tag">${esc(label)}</span>
-    <button type="button" class="lad-wrap above" data-act="wrap" data-n="${ni}" data-id="${node.id}" data-side="above" title="Make a parallel path above this instruction">＋ branch</button>
-    <button type="button" class="lad-wrap below" data-act="wrap" data-n="${ni}" data-id="${node.id}" data-side="below" title="Make a parallel path below this instruction">＋ branch</button>
     <button type="button" class="lad-trash" data-act="delnode" data-n="${ni}" data-id="${node.id}" title="Delete instruction">×</button>
    </div>`);
   };
   function drawSeries(s,x,cy,path){
-   const shape=seriesLayout(s);let cursor=x,previous=null;
+   let cursor=x,tail=x;
    for(const node of s.items){
-    const shapeNode=nodeLayout(node),nodeX=cursor+40,nodeY=cy;
-    line(cursor,cy,nodeX,cy,previous?.id);
-    place(cursor+20,cy,{path,before:node.id});
-    if(node.kind==='parallel')drawParallel(node,nodeX,nodeY,shapeNode,path);
-    else op(node,nodeX,nodeY,path);
-    cursor=nodeX+shapeNode.w;previous=node;
+    const dim=nodeLayout(node),nodeX=cursor+40;
+    const terminalPad=node.kind==='parallel'?0:(dim.w-(blockType(node.type)||mathType(node.type)?83:60))/2;
+    const input=nodeX+terminalPad,output=nodeX+dim.w-terminalPad;
+    // Draw straight to the actual terminal on the SVG symbol / function block.
+    line(tail,cy,input,cy,node.id);
+    place((tail+input)/2,cy,{path,before:node.id});
+    if(node.kind==='parallel')drawParallel(node,nodeX,cy,dim,path);
+    else op(node,nodeX,cy,path);
+    cursor=nodeX+dim.w;tail=output;
    }
-   line(cursor,cy,cursor+36,cy,previous?.id);
-   place(cursor+18,cy,{path,before:''});
-   return cursor+36;
+   const finish=cursor+36;
+   line(tail,cy,finish,cy,s.items.at(-1)?.id);
+   place((tail+finish)/2,cy,{path,before:''});
+   return finish;
   }
   function drawParallel(node,x,cy,shape,path){
    const lx=x+22,rx=x+shape.w-22;
@@ -312,43 +314,82 @@ function editorAction(el){
  else if(act==='delpath')edit(()=>{let f=findNode(net,id);if(!f||f.node.kind!=='parallel')return;f.node.paths.splice(+el.dataset.idx,1);if(f.node.paths.length===1)f.series.items.splice(f.index,1,...f.node.paths[0].items)});
 }
 function locateTarget(e){
- const directly=e.target.closest('[data-place], [data-node], [data-act="wrap"]');
- if(directly)return directly;
+ const target=e.target.closest('[data-place], [data-node]');
+ if(target)return target;
  const canvas=e.target.closest('.lad-canvas');if(!canvas)return null;
- // Snap drops on any wire to the nearest insertion point within that row.
- const options=[...canvas.querySelectorAll('[data-place]')];let candidate=null,best=Infinity;
- for(const item of options){const rect=item.getBoundingClientRect(),dx=Math.abs(e.clientX-(rect.left+rect.width/2)),dy=Math.abs(e.clientY-(rect.top+rect.height/2));
-  const score=dx+dy*2;if(dy<34&&dx<78&&score<best){best=score;candidate=item}
+ // Empty wire regions snap to the nearest genuine insertion point on that row.
+ let nearest=null,best=Infinity;
+ for(const place of canvas.querySelectorAll('[data-place]')){
+  const r=place.getBoundingClientRect(),dx=Math.abs(e.clientX-(r.left+r.width/2)),dy=Math.abs(e.clientY-(r.top+r.height/2));
+  const score=dx+2*dy;
+  if(dy<=29&&dx<=85&&score<best){nearest=place;best=score}
  }
- return candidate;
+ return nearest;
+}
+function canDropBranch(ni,target){
+ if(target.dataset.node)return !!findNode(program[ni],target.dataset.node);
+ return !!eachSeries(program[ni],target.dataset.path||'');
+}
+function insertBranchAt(ni,target,event){
+ if(!canDropBranch(ni,target))return;
+ if(target.dataset.node){
+  // Drop over a symbol: wrap that instruction in a new parallel circuit.
+  const node=target.dataset.node,rect=target.getBoundingClientRect();
+  const side=event&&event.clientY<rect.top+rect.height/2?'above':'below';
+  edit(()=>createBranch(ni,node,side));
+ }else{
+  // Drop over a wire: insert a genuine branching junction with two empty paths.
+  // Both paths must be populated before the ladder can compile.
+  const path=target.dataset.path||'',before=target.dataset.before||'';
+  edit(()=>{const s=eachSeries(program[ni],path);if(!s)return;
+   const i=before?s.items.findIndex(n=>n.id===before):-1;
+   s.items.splice(i<0?s.items.length:i,0,{kind:'parallel',id:uid(),paths:[seq([]),seq([])]});
+  });
+ }
+ toast('Branch inserted. Drag instructions onto each path.');
+}
+function moveNode(sourceNi,id,destNi,path,before){
+ const source=findNode(program[sourceNi],id),dest=eachSeries(program[destNi],path);
+ if(!source||!dest)return false;
+ // Prevent nesting a node inside itself or one of its descendants.
+ if(source.node.kind==='parallel'&&path.split('/').some(p=>p.startsWith(source.node.id+':')))return false;
+ if(before===id)return false;
+ const destinationIndex=before?dest.items.findIndex(x=>x.id===before):dest.items.length;
+ if(before&&destinationIndex<0)return false;
+ if(source.series===dest&&(destinationIndex===source.index||destinationIndex===source.index+1))return false;
+ edit(()=>{
+  const f=findNode(program[sourceNi],id);if(!f)return;
+  const moving=f.node;f.series.items.splice(f.index,1);
+  const s=eachSeries(program[destNi],path);if(!s)return;
+  const i=before?s.items.findIndex(x=>x.id===before):s.items.length;
+  s.items.splice(i<0?s.items.length:i,0,moving);
+ });
+ selectedRef={ni:destNi,id};return true;
 }
 function insertDragged(type,target,movedId=null,dropEvent=null,sourceNi=null){
  const ni=+target.dataset.n;
- if(target.dataset.act==='wrap'){
-  const source=findNode(program[ni],target.dataset.id);if(!source)return;
-  if(movedId){toast('Move an existing instruction onto a wire to reposition it.');return}
-  // Open the operand configuration before modifying the branch.
-  const side=target.dataset.side;
-  edit(()=>createBranch(ni,target.dataset.id,side));
-  const branch=findNode(program[ni],target.dataset.id); // original contact inside newly created parallel
-  // Find the newly created empty path by taking its parallel parent from the network.
-  const root=program[ni].tree;
-  let empty=null;
-  walkNodes(root,n=>{if(n.kind==='parallel'&&n.paths.some(p=>p.items.some(i=>i.id===target.dataset.id))){empty=n;}});
-  if(empty){const idx=side==='above'?0:1,part=empty.paths[idx];let key=branch?.path||'';const prefix=key.includes('/')?key.substring(0,key.lastIndexOf('/')):'';key=prefix+(prefix?'/':'')+empty.id+':'+idx;nodeDialog(ni,key,'',null,type)}
-  return;
+ if(type==='BRANCH'){
+  if(movedId){toast('Drag a branch from the toolbar to create a new path.');return}
+  insertBranchAt(ni,target,dropEvent);return;
  }
  if(target.dataset.node){
   const id=target.dataset.node;
-  if(movedId){if(movedId===id)return;const dest=findNode(program[ni],id);if(!dest)return;edit(()=>{const old=findNode(program[sourceNi??ni],movedId);if(!old)return;const moving=old.node;old.series.items.splice(old.index,1);const place=findNode(program[ni],id);if(place)place.series.items.splice(place.index,0,moving)});return}
-  const rect=target.getBoundingClientRect(),py=(dropEvent?.clientY??(rect.y+rect.height/2))-rect.top;
-  if(py<16||py>rect.height-16){const side=py<16?'above':'below';insertDragged(type,{dataset:{act:'wrap',n:String(ni),id,side}},null,dropEvent);return}
-  nodeDialog(ni,'',null,id,type);return;
+  const rect=target.getBoundingClientRect();
+  const before=dropEvent?dropEvent.clientX<rect.left+rect.width/2:true;
+  const f=findNode(program[ni],id);if(!f)return;
+  if(movedId){
+   if(movedId===id)return;
+   const insertBefore=before?id:(f.series.items[f.index+1]?.id||'');
+   if(!moveNode(sourceNi??ni,movedId,ni,f.path,insertBefore))toast('Choose a different insertion point.');
+   return;
+  }
+  // A new operator dropped on a symbol is inserted next to it, not silently replacing it.
+  const insertBefore=before?id:(f.series.items[f.index+1]?.id||'');
+  nodeDialog(ni,f.path,insertBefore,null,type);return;
  }
  const path=target.dataset.path||'',before=target.dataset.before||'';
- if(movedId){
-  edit(()=>{const source=findNode(program[sourceNi??ni],movedId);if(!source)return;const obj=source.node;source.series.items.splice(source.index,1);const s=eachSeries(program[ni],path);if(!s)return;let index=before?s.items.findIndex(i=>i.id===before):-1;s.items.splice(index<0?s.items.length:index,0,obj)});
- }else nodeDialog(ni,path,before,null,type);
+ if(movedId){if(!moveNode(sourceNi??ni,movedId,ni,path,before))toast('Choose a different insertion point.');}
+ else nodeDialog(ni,path,before,null,type);
 }
 
 function renderWatch(){const rows=(list,input)=>list.map(t=>`<div class="io-row"><span class="dot" data-led="${esc(t.a)}"></span><div class="io-info"><b title="${esc(t.n)}">${esc(t.n)}</b><code>${esc(t.a)}</code></div>${t.kind==='INT'?(input?`<input type="range" data-int-input="${esc(t.a)}" min="${t.min??-32768}" max="${t.max??32767}" value="${read(state,t.a)}" aria-label="${esc(t.n)}"><span data-int-value="${esc(t.a)}">${read(state,t.a)}</span>`:`<span class="value" data-int-value="${esc(t.a)}">${read(state,t.a)}</span>`):input?`<button class="toggle" data-input="${esc(t.a)}" aria-label="Toggle ${esc(t.n)}" aria-pressed="false">0 OFF</button>`:`<span class="value" data-value="${esc(t.a)}">0</span>`}</div>`).join('');$('#watch').innerHTML='<div class="tag-header">Inputs · click or slide</div>'+rows(mission.ins,true)+'<div class="tag-header">Digital outputs</div>'+rows(mission.outs,false)+(mission.mem?.length?'<div class="tag-header">Memory tags · BOOL / INT</div>'+rows(mission.mem,false):'');$('#sequenceMonitor').innerHTML=mission.sequence?'<div class="tag-header">Sequence monitor · current INT</div>'+mission.sequence.map(x=>`<div class="seq-row" data-seq="${x.value}"><code>${x.value}</code> ${esc(x.label)}</div>`).join(''):'';$('#instances').innerHTML=instNames().length?'<div class="tag-header">Instance data</div>'+instNames().map(a=>`<div data-instance="${esc(a)}"></div>`).join(''):''}
@@ -373,7 +414,7 @@ function testProgram(){if(!mission.tests.length)return;const c=compile(program,m
 // Drag from instruction palette or move an existing operator. Drop targets cover every wire.
 $('#editor').addEventListener('click',e=>{
  const a=e.target.closest('[data-act]');if(a){editorAction(a);return}
- const pl=e.target.closest('[data-place]');if(pl){nodeDialog(+pl.dataset.n,pl.dataset.path||'',pl.dataset.before||'',null,selected);return}
+ const pl=e.target.closest('[data-place]');if(pl){if(selected==='BRANCH')insertBranchAt(+pl.dataset.n,pl);else nodeDialog(+pl.dataset.n,pl.dataset.path||'',pl.dataset.before||'',null,selected);return}
  const op=e.target.closest('[data-node]');if(op){
   const ni=+op.dataset.n,id=op.dataset.node;
   if(e.shiftKey){rangeRef={ni,id};selectedRef||={ni,id};renderEditor();toast('Range selected. Choose Branch selected to create a parallel path.');return}
@@ -384,11 +425,14 @@ $('#editor').addEventListener('change',e=>{if(e.target.matches('[data-comment]')
 $('#tools').addEventListener('click',e=>{const b=e.target.closest('[data-tool]');if(b){selected=b.dataset.tool;renderTools()}else if(e.target.closest('#undoBtn'))undo();else if(e.target.closest('#redoBtn'))undo(true)});
 $('#tools').addEventListener('dragstart',e=>{const b=e.target.closest('[data-tool]');if(b){e.dataTransfer.setData('text/plain','tool:'+b.dataset.tool);e.dataTransfer.effectAllowed='copy'}});
 $('#editor').addEventListener('dragstart',e=>{const b=e.target.closest('[data-node]');if(b&&!e.target.closest('[data-act]')){
- e.dataTransfer.setData('text/plain','node:'+b.dataset.n+':'+b.dataset.node);e.dataTransfer.effectAllowed='move';b.classList.add('dragging');
+ e.dataTransfer.setData('text/plain','node:'+b.dataset.n+':'+b.dataset.node);e.dataTransfer.setData('application/x-lad-move','1');e.dataTransfer.effectAllowed='move';b.classList.add('dragging');
 }});
-$('#editor').addEventListener('dragend',()=>{$('#editor').querySelectorAll('.dragging,.drop-hover').forEach(e=>e.classList.remove('dragging','drop-hover'))});
-$('#editor').addEventListener('dragover',e=>{const b=locateTarget(e);if(b){e.preventDefault();e.dataTransfer.dropEffect='copy';$('#editor').querySelectorAll('.drop-hover').forEach(x=>x.classList.remove('drop-hover'));b.classList.add('drop-hover')}});
-$('#editor').addEventListener('dragleave',e=>{if(!$('#editor').contains(e.relatedTarget))$('#editor').querySelectorAll('.drop-hover').forEach(x=>x.classList.remove('drop-hover'))});
+$('#editor').addEventListener('dragend',()=>{$('#editor').querySelectorAll('.dragging,.drop-hover,.drop-before,.drop-after').forEach(e=>e.classList.remove('dragging','drop-hover','drop-before','drop-after'))});
+$('#editor').addEventListener('dragover',e=>{const b=locateTarget(e);if(b){e.preventDefault();e.dataTransfer.dropEffect=e.dataTransfer.types.includes('application/x-lad-move')?'move':'copy';
+ $('#editor').querySelectorAll('.drop-hover,.drop-before,.drop-after').forEach(x=>x.classList.remove('drop-hover','drop-before','drop-after'));
+ b.classList.add('drop-hover');if(b.dataset.node){const r=b.getBoundingClientRect();b.classList.add(e.clientX<r.left+r.width/2?'drop-before':'drop-after')}
+ }});
+$('#editor').addEventListener('dragleave',e=>{if(!$('#editor').contains(e.relatedTarget))$('#editor').querySelectorAll('.drop-hover,.drop-before,.drop-after').forEach(x=>x.classList.remove('drop-hover','drop-before','drop-after'))});
 $('#editor').addEventListener('drop',e=>{const b=locateTarget(e);if(!b)return;e.preventDefault();
  let raw=e.dataTransfer.getData('text/plain'),moved=null,type=null;
  if(raw.startsWith('tool:'))type=raw.slice(5);
@@ -408,7 +452,7 @@ $('#missions').addEventListener('click',e=>{let b=e.target.closest('[data-missio
  });
 };
 $('#resetBtn').onclick=()=>{openDialog(`<h3 id="modalTitle">Reset this program?</h3><p>This restores the initial network(s) for the current mission. You can undo the reset.</p>${dialogButtons()}`,()=>{edit(()=>program=modernProgram(copy(mission.starter||baseProgram())));return true})};$('#watch').addEventListener('input',e=>{if(e.target.dataset.intInput){state.bits[e.target.dataset.intInput]=Number(e.target.value);updateLive()}});$('#watch').addEventListener('click',e=>{let b=e.target.closest('[data-input]');if(b){let a=b.dataset.input;if(mission.plant&&$('#autoPlant').checked&&((mission.plant==='cylinder'&&[A(2),A(3)].includes(a))||(mission.plant==='filling'&&[A(1),A(2),A(3)].includes(a))||(mission.plant==='production'&&[A(1),A(2),A(3),A(4),A(5)].includes(a)))){toast('Turn off automatic sensors to override this sensor.');return}state.bits[a]=!state.bits[a];updateLive()}});$('#resetInputsBtn').onclick=()=>{mission.ins.forEach(t=>state.bits[t.a]=t.kind==='INT'?Number(t.d):!!t.d);updateLive()};$('#compileBtn').onclick=()=>showCompile(compile(program,mission));$('#runBtn').onclick=()=>start();$('#stepBtn').onclick=()=>start(true);$('#pauseBtn').onclick=()=>{mode='PAUSE';updateLive()};$('#stopBtn').onclick=()=>{const inputs=Object.fromEntries(mission.ins.map(t=>[t.a,read(state,t.a)]));mode='STOP';state=initial(mission);Object.assign(state.bits,inputs);updateLive()};$('#testBtn').onclick=testProgram;$('#modal').addEventListener('click',e=>{if(e.target===$('#modal')||e.target.closest('[data-modal="close"]'))closeDialog();else if(e.target.closest('[data-modal="apply"]')){let res=modalApply?.();if(res===true)closeDialog();else if($('#dialogError'))$('#dialogError').textContent=res||'Check your settings.'}});document.addEventListener('keydown',e=>{if(!$('#modal').classList.contains('hidden')){if(e.key==='Escape')closeDialog();if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();$('#modalCard [data-modal="apply"]')?.click()}return}if(view==='game'&&(e.ctrlKey||e.metaKey)&&!['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)){if(e.key.toLowerCase()==='z'){e.preventDefault();undo(e.shiftKey)}if(e.key.toLowerCase()==='y'){e.preventDefault();undo(true)}}});
-$('#helpBtn').onclick=()=>openDialog(`<h3 id="modalTitle">Factory Lab / Ladder editor guide</h3><div class="reference"><h4>1 · Build as in a LAD network</h4><p>Drag NO/NC contacts, coils, timers, counters, integer comparisons and data operations directly onto a wire. Click a wire's + to insert the selected tool. Click any instruction to edit its operands. Drag an existing instruction onto another wire to move it. Hover over an instruction and use + branch above or below to wrap it in a parallel path. Use + parallel path to extend an existing branch. Nested parallel paths and several coils in sequence are supported.</p><h4>2 · Group instructions</h4><p>Click an instruction to select it, then Shift-click another in the same series path. Press Branch selected to place a parallel branch around that entire range. An empty branch is an unintended bypass and must be filled before compiling. Outputs execute at their position in the path; multiple coils may be fed by the same condition. Network execution order matters when the same destination is written more than once.</p><h4>3 · Monitor and commission</h4><p>Use Compile to check operands and branch continuity. Run or Step scan to inspect live ladder power, watch table signals and machine animations. The test runner checks functional checkpoints and unlocks missions when all tests pass. Use Undo / Redo in the toolbox or Ctrl+Z / Ctrl+Y. The main menu retains saved programs and sequential mission progression.</p><h4>4 · Scope</h4><p>This is an educational LAD-style simulator, not a complete implementation of Siemens TIA Portal. It does not connect to hardware, import TIA projects, or validate real machine safety. IEC timer/counter execution is simplified to 100 ms scans. Network topology can express nested series/parallel logic and branches containing several coils, but not every Siemens instruction or advanced data type is modelled.</p></div><div class="modal-actions"><button class="primary" data-modal="close">Close guide</button></div>`,null);
+$('#helpBtn').onclick=()=>openDialog(`<h3 id="modalTitle">Factory Lab / Ladder editor guide</h3><div class="reference"><h4>1 · Build as in a LAD network</h4><p>Drag NO/NC contacts, coils, timers, counters, integer comparisons and data operations directly onto a wire. Click a wire's + to insert the selected tool. Click any instruction to edit its operands. Drag an existing instruction onto another wire, or onto the left/right half of another instruction, to move it before/after that symbol. Drag the Branch instruction from the toolbar onto a contact or coil to put a parallel path around it; drag Branch onto a wire to create a new parallel junction. Use + parallel path to extend an existing branch. Nested parallel paths and several coils in sequence are supported.</p><h4>2 · Group instructions</h4><p>Click an instruction to select it, then Shift-click another in the same series path. Press Branch selected to place a parallel branch around that entire range. An empty branch is an unintended bypass and must be filled before compiling. Outputs execute at their position in the path; multiple coils may be fed by the same condition. Network execution order matters when the same destination is written more than once.</p><h4>3 · Monitor and commission</h4><p>Use Compile to check operands and branch continuity. Run or Step scan to inspect live ladder power, watch table signals and machine animations. The test runner checks functional checkpoints and unlocks missions when all tests pass. Use Undo / Redo in the toolbox or Ctrl+Z / Ctrl+Y. The main menu retains saved programs and sequential mission progression.</p><h4>4 · Scope</h4><p>This is an educational LAD-style simulator, not a complete implementation of Siemens TIA Portal. It does not connect to hardware, import TIA projects, or validate real machine safety. IEC timer/counter execution is simplified to 100 ms scans. Network topology can express nested series/parallel logic and branches containing several coils, but not every Siemens instruction or advanced data type is modelled.</p></div><div class="modal-actions"><button class="primary" data-modal="close">Close guide</button></div>`,null);
 showMenu();setInterval(()=>{if(view==='game'&&mode==='RUN'){plantTick();tick(program,state);updateLive()}},100);
 
 }

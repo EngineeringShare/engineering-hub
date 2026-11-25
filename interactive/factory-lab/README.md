@@ -116,3 +116,10 @@ Deploy the **whole `factory-lab/` directory**, including `assets/` and `levels/`
 ## Important limitations
 
 This editor is a TIA-Portal-**inspired** teaching interface, not a clone of Siemens' proprietary LAD compiler. It supports nested LAD topology and the simulated instructions already supplied by Factory Lab, but does not model all Siemens instruction constraints, EN/ENO behaviours, asynchronous process timing, retained DB semantics, or hardware/safety execution. Scans and timer updates are quantised to 100 ms. Use real TIA Portal/PLCSIM for formal validation and hardware testing.
+
+
+## V5.1 editor improvements
+- **Move existing instructions:** drag them onto a wire or the left/right half of another instruction to reposition before/after it, including across networks.
+- **Add branches like instructions:** drag **Branch** from the toolbar onto an existing contact/coil to wrap it, or drop on a wire to insert an empty two-path branch. Complete both paths before compiling. An additional parallel path can be added via the small control on the junction.
+- **Wiring connects to terminals:** ladder lines now meet the ends of the drawn NO/NC/coil symbols and function blocks, not the outer layout boxes.
+- Existing mission files and progression remain unchanged.

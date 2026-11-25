@@ -81,3 +81,18 @@
 @media(max-width:830px){.lad-network{min-width:620px}.lad-network .network-head{flex-wrap:wrap}.lad-canvas-wrap{max-height:560px}.work{grid-template-columns:minmax(0,1fr)}.editor-note{font-size:11px}}
 
 .lad-line.live{stroke:#10a66a;stroke-width:3}.lad-canvas:hover .lad-place{opacity:.48}.lad-canvas .lad-place:hover{opacity:1}
+
+/* V5.1: explicit wire terminals, repositioning feedback, branch palette. */
+.lad-glyph svg{width:60px;height:32px;display:block}
+.lad-glyph.is-block{width:83px;min-width:83px;padding:0}
+.lad-item{cursor:grab}
+.lad-item:active{cursor:grabbing}
+.lad-item.drop-hover{background:rgba(66,169,225,.1)}
+.lad-item.drop-before::before,.lad-item.drop-after::after{content:'';position:absolute;top:18px;bottom:18px;width:4px;border-radius:3px;background:#0d9f84;box-shadow:0 0 0 3px #0d9f8433;pointer-events:none}
+.lad-item.drop-before::before{left:0}
+.lad-item.drop-after::after{right:0}
+.branch-tool-icon{display:inline-flex;width:30px;height:23px;align-items:center;justify-content:center;font-size:25px;font-weight:700;color:var(--teal)}
+.lad-wires .lad-line{stroke-width:2;stroke:#668297}
+.lad-place{opacity:.13}
+.lad-canvas:hover .lad-place{opacity:.38}
+.lad-place.drop-hover{opacity:1}
